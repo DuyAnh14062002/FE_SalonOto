@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import "./Register.scss";
 export default function Register() {
   return (
@@ -33,7 +34,7 @@ export default function Register() {
             <div class="card bg-glass">
               <div class="card-body px-1 py-5">
                 <form>
-                <div class="d-flex justify-content-center">
+                  <div class="d-flex justify-content-center">
                     <div class="form-outline mb-4 w-75">
                       <label class="form-label" for="username">
                         Họ tên
@@ -99,6 +100,11 @@ export default function Register() {
                       <i class="fab fa-facebook-f me-2"></i>Đăng nhập với
                       facebook
                     </button>
+                  </div>
+                  <div className="text-center">
+                    <span>
+                      Bạn đã có tài khoản ? <Link to="/login">Đăng nhập</Link>{" "}
+                    </span>
                   </div>
                 </form>
               </div>

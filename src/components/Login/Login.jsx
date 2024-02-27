@@ -1,5 +1,10 @@
 import "./Login.scss";
+import { Link, useNavigate } from "react-router-dom";
 export default function Login() {
+  const navigate = useNavigate();
+  const handleLogin = () => {
+    navigate("/");
+  };
   return (
     <section class="background-radial-gradient overflow-hidden">
       <div class="container px-4 py-5 px-md-5 text-center text-lg-start my-5">
@@ -55,8 +60,9 @@ export default function Login() {
                   </div>
                   <div class="text-center">
                     <button
-                      type="submit"
+                      type="button"
                       class="btn btn-primary btn-block mb-4 w-75"
+                      onClick={handleLogin}
                     >
                       Đăng nhập
                     </button>
@@ -79,6 +85,12 @@ export default function Login() {
                       <i class="fab fa-facebook-f me-2"></i>Đăng nhập với
                       facebook
                     </button>
+                  </div>
+                  <div className="text-center">
+                    <span>
+                      Bạn chưa có tài khoản ?{" "}
+                      <Link to="/register">Đăng ký</Link>{" "}
+                    </span>
                   </div>
                 </form>
               </div>
