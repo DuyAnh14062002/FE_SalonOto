@@ -49,25 +49,19 @@ export default function Login() {
                   <div class="d-flex justify-content-center">
                     <Input
                       type="text"
-                      className="form-outline w-75"
                       labelName="Tên tài khoản"
                       errorMessage={errors.username?.message}
                       name="username"
                       register={register}
-                      classNameError="invalid-feedback d-block"
-                      classNameInput="form-control"
                     />
                   </div>
                   <div class="d-flex justify-content-center">
                     <Input
                       type="password"
-                      className="form-outline w-75"
                       labelName="Mật khẩu"
                       errorMessage={errors.password?.message}
                       name="password"
                       register={register}
-                      classNameError="invalid-feedback d-block"
-                      classNameInput="form-control"
                     />
                   </div>
                   <div class="text-center">
