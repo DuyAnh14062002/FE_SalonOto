@@ -1,10 +1,8 @@
-import Register from "./components/Register";
+import { RouterProvider } from "react-router-dom";
+import router from "./useRouteElement";
+
 function App() {
-  return (
-    <div className="App">
-      <Register />
-    </div>
-  );
+  return <RouterProvider router={router} />;
 }
 
 export default App;

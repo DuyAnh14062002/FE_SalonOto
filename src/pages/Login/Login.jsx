@@ -1,10 +1,20 @@
+import { useForm } from "react-hook-form";
 import "./Login.scss";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { schema } from "../../utils/rule";
+import { yupResolver } from "@hookform/resolvers/yup";
+import Input from "../../components/Input";
+
+const loginSchema = schema.pick(["username", "password"]);
 export default function Login() {
-  const navigate = useNavigate();
-  const handleLogin = () => {
-    navigate("/");
-  };
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({ resolver: yupResolver(loginSchema) });
+  const onSubmit = handleSubmit((data) => {
+    console.log(data);
+  });
   return (
     <section class="background-radial-gradient overflow-hidden">
       <div class="container px-4 py-5 px-md-5 text-center text-lg-start my-5">
@@ -24,7 +34,6 @@ export default function Login() {
               bạn quản lí Salon Oto của mình một cách hiệu quả
             </p>
           </div>
-
           <div class="col-lg-5 mb-5 mb-lg-0 position-relative">
             <div
               id="radius-shape-1"
@@ -34,35 +43,37 @@ export default function Login() {
               id="radius-shape-2"
               class="position-absolute shadow-5-strong"
             ></div>
-
             <div class="card bg-glass">
               <div class="card-body px-1 py-5">
-                <form>
+                <form onSubmit={onSubmit}>
                   <div class="d-flex justify-content-center">
-                    <div class="form-outline mb-4 w-75">
-                      <label class="form-label" for="username">
-                        Tên tài khoản
-                      </label>
-                      <input type="email" id="username" class="form-control" />
-                    </div>
+                    <Input
+                      type="text"
+                      className="form-outline w-75"
+                      labelName="Tên tài khoản"
+                      errorMessage={errors.username?.message}
+                      name="username"
+                      register={register}
+                      classNameError="invalid-feedback d-block"
+                      classNameInput="form-control"
+                    />
                   </div>
                   <div class="d-flex justify-content-center">
-                    <div class="form-outline mb-4 w-75">
-                      <label class="form-label" for="password">
-                        Mật khẩu
-                      </label>
-                      <input
-                        type="password"
-                        id="password"
-                        class="form-control"
-                      />
-                    </div>
+                    <Input
+                      type="password"
+                      className="form-outline w-75"
+                      labelName="Mật khẩu"
+                      errorMessage={errors.password?.message}
+                      name="password"
+                      register={register}
+                      classNameError="invalid-feedback d-block"
+                      classNameInput="form-control"
+                    />
                   </div>
                   <div class="text-center">
                     <button
-                      type="button"
+                      type="submit"
                       class="btn btn-primary btn-block mb-4 w-75"
-                      onClick={handleLogin}
                     >
                       Đăng nhập
                     </button>
@@ -73,14 +84,14 @@ export default function Login() {
                     <button
                       class="btn btn-block btn-primary w-75"
                       style={{ backgroundColor: "#dd4b39;" }}
-                      type="submit"
+                      type="button"
                     >
                       <i class="fab fa-google me-2"></i> Đăng nhập với google
                     </button>
                     <button
                       class="btn btn-block btn-danger mb-2 w-75 mt-2"
                       style={{ backgroundColor: "#3b5998;" }}
-                      type="submit"
+                      type="button"
                     >
                       <i class="fab fa-facebook-f me-2"></i>Đăng nhập với
                       facebook

@@ -1,6 +1,18 @@
 import { Link } from "react-router-dom";
 import "./Register.scss";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { schema } from "../../utils/rule";
+import Input from "../../components/Input";
 export default function Register() {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({ resolver: yupResolver(schema) });
+  const onSubmit = handleSubmit((data) => {
+    console.log(data);
+  });
   return (
     <section class="background-radial-gradient overflow-hidden">
       <div class="container px-4 py-5 px-md-5 text-center text-lg-start my-5">
@@ -33,46 +45,54 @@ export default function Register() {
 
             <div class="card bg-glass">
               <div class="card-body px-1 py-5">
-                <form>
+                <form onSubmit={onSubmit}>
                   <div class="d-flex justify-content-center">
-                    <div class="form-outline mb-4 w-75">
-                      <label class="form-label" for="username">
-                        Họ tên
-                      </label>
-                      <input type="email" id="username" class="form-control" />
-                    </div>
+                    <Input
+                      type="text"
+                      className="form-outline w-75"
+                      labelName="Họ tên"
+                      name="name"
+                      errorMessage={errors.name?.message}
+                      register={register}
+                      classNameError="invalid-feedback d-block"
+                      classNameInput="form-control"
+                    />
                   </div>
                   <div class="d-flex justify-content-center">
-                    <div class="form-outline mb-4 w-75">
-                      <label class="form-label" for="username">
-                        Tên tài khoản
-                      </label>
-                      <input type="email" id="username" class="form-control" />
-                    </div>
+                    <Input
+                      type="text"
+                      className="form-outline w-75"
+                      labelName="Tên tài khoản"
+                      errorMessage={errors.username?.message}
+                      name="username"
+                      register={register}
+                      classNameError="invalid-feedback d-block"
+                      classNameInput="form-control"
+                    />
                   </div>
                   <div class="d-flex justify-content-center">
-                    <div class="form-outline mb-4 w-75">
-                      <label class="form-label" for="password">
-                        Mật khẩu
-                      </label>
-                      <input
-                        type="password"
-                        id="password"
-                        class="form-control"
-                      />
-                    </div>
+                    <Input
+                      type="password"
+                      className="form-outline w-75"
+                      labelName="Mật khẩu"
+                      errorMessage={errors.password?.message}
+                      name="password"
+                      register={register}
+                      classNameError="invalid-feedback d-block"
+                      classNameInput="form-control"
+                    />
                   </div>
                   <div class="d-flex justify-content-center">
-                    <div class="form-outline mb-4 w-75">
-                      <label class="form-label" for="password">
-                        Nhập lại mật khẩu
-                      </label>
-                      <input
-                        type="password"
-                        id="password"
-                        class="form-control"
-                      />
-                    </div>
+                    <Input
+                      type="password"
+                      className="form-outline w-75"
+                      labelName="Nhập lại mật khẩu"
+                      errorMessage={errors.confirm_password?.message}
+                      name="confirm_password"
+                      register={register}
+                      classNameError="invalid-feedback d-block"
+                      classNameInput="form-control"
+                    />
                   </div>
                   <div class="text-center">
                     <button
@@ -88,14 +108,14 @@ export default function Register() {
                     <button
                       class="btn btn-block btn-primary w-75"
                       style={{ backgroundColor: "#dd4b39;" }}
-                      type="submit"
+                      type="button"
                     >
                       <i class="fab fa-google me-2"></i> Đăng nhập với google
                     </button>
                     <button
                       class="btn btn-block btn-danger mb-2 w-75 mt-2"
                       style={{ backgroundColor: "#3b5998;" }}
-                      type="submit"
+                      type="button"
                     >
                       <i class="fab fa-facebook-f me-2"></i>Đăng nhập với
                       facebook
