@@ -1,5 +1,9 @@
-import React from "react";
+import Navbar from "../../components/Navbar";
 
 export default function HomePage() {
-  return <div>HomePage</div>;
+  const user = {
+    displayName: "John Doe",
+    image: "https://via.placeholder.com/150",
+  };
+  return <Navbar user={user} />;
 }

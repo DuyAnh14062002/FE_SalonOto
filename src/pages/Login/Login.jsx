@@ -5,7 +5,15 @@ import { schema } from "../../utils/rule";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Input from "../../components/Input";
 
+import http from "../../utils/http";
+import authApi from "../../apis/auth.api";
+
 const loginSchema = schema.pick(["username", "password"]);
+const REACT_APP_GOOGLE_CLIENT_ID =
+  "146451497096-20opkm9vb1m2gtjq1pt203jq23mvi6tc.apps.googleusercontent.com";
+const REACT_APP_GOOGLE_AUTHORIZED_REDIRECT_URI =
+  "http://localhost:5000/auth/google/callback";
+
 export default function Login() {
   const {
     register,
@@ -15,13 +23,35 @@ export default function Login() {
   const onSubmit = handleSubmit((data) => {
     console.log(data);
   });
+  const getOauthGoogleUrl = () => {
+    const rootUrl = "https://accounts.google.com/o/oauth2/v2/auth";
+    const options = {
+      redirect_uri: REACT_APP_GOOGLE_AUTHORIZED_REDIRECT_URI,
+      client_id: REACT_APP_GOOGLE_CLIENT_ID,
+      access_type: "offline",
+      response_type: "code",
+      prompt: "consent",
+      scope: ["email", "profile"].join(" "),
+    };
+    const qs = new URLSearchParams(options);
+    return `${rootUrl}?${qs.toString()}`;
+  };
+  const oauthURL = getOauthGoogleUrl();
+  const handleLoginGoogle = async () => {
+    try {
+      const res = await authApi.login("ducba", "ducba123");
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
-    <section class="background-radial-gradient overflow-hidden">
-      <div class="container px-4 py-5 px-md-5 text-center text-lg-start my-5">
-        <div class="row gx-lg-5 align-items-center mb-5">
-          <div class="col-lg-7 mb-5 mb-lg-0" style={{ zIndex: "10" }}>
+    <section className="background-radial-gradient overflow-hidden">
+      <div className="container px-4 py-5 px-md-5 text-center text-lg-start my-5">
+        <div className="row gx-lg-5 align-items-center mb-5">
+          <div className="col-lg-7 mb-5 mb-lg-0" style={{ zIndex: "10" }}>
             <h1
-              class="my-5 display-5 fw-bold ls-tight"
+              className="my-5 display-5 fw-bold ls-tight"
               style={{ color: "hsl(218, 81%, 95%)" }}
             >
               Lựa chọn tốt nhất <br />
@@ -29,24 +59,27 @@ export default function Login() {
                 Cho Salon Oto của bạn
               </span>
             </h1>
-            <p class="mb-4 opacity-70" style={{ color: "hsl(218, 81%, 85%)" }}>
+            <p
+              className="mb-4 opacity-70"
+              style={{ color: "hsl(218, 81%, 85%)" }}
+            >
               Chúng tôi cung cấp cho bạn các gói dịch vụ tốt nhất giúp quản lí
               bạn quản lí Salon Oto của mình một cách hiệu quả
             </p>
           </div>
-          <div class="col-lg-5 mb-5 mb-lg-0 position-relative">
+          <div className="col-lg-5 mb-5 mb-lg-0 position-relative">
             <div
               id="radius-shape-1"
-              class="position-absolute rounded-circle shadow-5-strong"
+              className="position-absolute rounded-circle shadow-5-strong"
             ></div>
             <div
               id="radius-shape-2"
-              class="position-absolute shadow-5-strong"
+              className="position-absolute shadow-5-strong"
             ></div>
-            <div class="card bg-glass">
-              <div class="card-body px-1 py-5">
+            <div className="card bg-glass">
+              <div className="card-body px-1 py-5">
                 <form onSubmit={onSubmit}>
-                  <div class="d-flex justify-content-center">
+                  <div className="d-flex justify-content-center">
                     <Input
                       type="text"
                       labelName="Tên tài khoản"
@@ -55,7 +88,7 @@ export default function Login() {
                       register={register}
                     />
                   </div>
-                  <div class="d-flex justify-content-center">
+                  <div className="d-flex justify-content-center">
                     <Input
                       type="password"
                       labelName="Mật khẩu"
@@ -64,30 +97,32 @@ export default function Login() {
                       register={register}
                     />
                   </div>
-                  <div class="text-center">
+                  <div className="text-center">
                     <button
                       type="submit"
-                      class="btn btn-primary btn-block mb-4 w-75"
+                      className="btn btn-primary btn-block mb-4 w-75"
                     >
                       Đăng nhập
                     </button>
                   </div>
 
-                  <div class="text-center">
+                  <div className="text-center">
                     <p>Hoặc đăng nhập với:</p>
                     <button
-                      class="btn btn-block btn-primary w-75"
+                      className="btn btn-block btn-primary w-75"
                       style={{ backgroundColor: "#dd4b39;" }}
                       type="button"
+                      onClick={handleLoginGoogle}
                     >
-                      <i class="fab fa-google me-2"></i> Đăng nhập với google
+                      <i className="fab fa-google me-2"></i> Đăng nhập với
+                      google
                     </button>
                     <button
-                      class="btn btn-block btn-danger mb-2 w-75 mt-2"
+                      className="btn btn-block btn-danger mb-2 w-75 mt-2"
                       style={{ backgroundColor: "#3b5998;" }}
                       type="button"
                     >
-                      <i class="fab fa-facebook-f me-2"></i>Đăng nhập với
+                      <i className="fab fa-facebook-f me-2"></i>Đăng nhập với
                       facebook
                     </button>
                   </div>
