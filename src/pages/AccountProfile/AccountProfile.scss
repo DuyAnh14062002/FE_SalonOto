@@ -1,0 +1,35 @@
+.user-image {
+  height: 100px;
+  width: 100px;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  border-radius: 50%;
+}
+.row {
+  .profile {
+    box-shadow: 0 3px 6px rgb(229, 225, 225);
+    border-radius: 10px;
+    margin-top: 20px;
+    min-height: 200px;
+    padding: 20px 20px;
+  }
+}
+.update-container {
+  display: flex;
+  align-items: center;
+  border: 1px solid gray;
+  padding: 7px 5px;
+  border-radius: 5px;
+  &:hover {
+    border: 1px solid rgb(30, 141, 233);
+  }
+  i {
+    margin-right: 3px;
+    color: rgb(30, 141, 233);
+  }
+  input {
+    border: none;
+    outline: none;
+  }
+}
