@@ -6,6 +6,12 @@ export const URL_LOGOUT = "logout";
 export const URL_REFRESH_TOKEN = "refresh-access-token";
 
 const authApi = {
+  googleAuth() {
+    return http.get(`/auth/google`);
+  },
+  googleAuthCallback(search) {
+    return http.get(`/auth/google/callback${search}`);
+  },
   registerAccount(body) {
     return http.post(`/auth/${URL_REGISTER}`, body);
   },

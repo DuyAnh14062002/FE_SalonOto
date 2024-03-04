@@ -5,14 +5,9 @@ import { schema } from "../../utils/rule";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Input from "../../components/Input";
 
-import http from "../../utils/http";
 import authApi from "../../apis/auth.api";
 
 const loginSchema = schema.pick(["username", "password"]);
-const REACT_APP_GOOGLE_CLIENT_ID =
-  "146451497096-20opkm9vb1m2gtjq1pt203jq23mvi6tc.apps.googleusercontent.com";
-const REACT_APP_GOOGLE_AUTHORIZED_REDIRECT_URI =
-  "http://localhost:5000/auth/google/callback";
 
 export default function Login() {
   const {
@@ -23,24 +18,10 @@ export default function Login() {
   const onSubmit = handleSubmit((data) => {
     console.log(data);
   });
-  const getOauthGoogleUrl = () => {
-    const rootUrl = "https://accounts.google.com/o/oauth2/v2/auth";
-    const options = {
-      redirect_uri: REACT_APP_GOOGLE_AUTHORIZED_REDIRECT_URI,
-      client_id: REACT_APP_GOOGLE_CLIENT_ID,
-      access_type: "offline",
-      response_type: "code",
-      prompt: "consent",
-      scope: ["email", "profile"].join(" "),
-    };
-    const qs = new URLSearchParams(options);
-    return `${rootUrl}?${qs.toString()}`;
-  };
-  const oauthURL = getOauthGoogleUrl();
+
   const handleLoginGoogle = async () => {
     try {
-      const res = await authApi.login("ducba", "ducba123");
-      console.log(res);
+      await authApi.googleAuth();
     } catch (error) {
       console.log(error);
     }
