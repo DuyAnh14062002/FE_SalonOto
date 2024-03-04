@@ -34,7 +34,7 @@ export default function HomePage() {
               <li> <i class="fa-solid fa-circle-xmark" style={{color: "red"}}></i> quản lí kho phụ tùng</li>
               <li> <i class="fa-solid fa-circle-xmark" style={{color: "red"}}></i> Xem báo cáo thống kê</li>
             </ul>
-            <button class="btn">Đặt ngay</button>
+            <button class="btn">Mua ngay</button>
           </div>
         </div>
         <div class="destination__card">
@@ -48,7 +48,7 @@ export default function HomePage() {
               <li> <i class="fa-solid fa-circle-check" style={{color: "green"}}></i> quản lí kho phụ tùng</li>
               <li> <i class="fa-solid fa-circle-check" style={{color: "green"}}></i> Xem báo cáo thống kê</li>
             </ul>
-            <button class="btn">Đặt ngay</button>
+            <button class="btn">Mua ngay</button>
           </div>
         </div>
         <div class="destination__card">
@@ -60,7 +60,7 @@ export default function HomePage() {
               <li> <i class="fa-solid fa-circle-check" style={{color: "green"}}></i> quản lí đơn hàng</li>
               <li> <i class="fa-solid fa-circle-check" style={{color: "green"}}></i> Xem báo cáo thống kê</li>
             </ul>
-            <button class="btn">Đặt ngay</button>
+            <button class="btn">Mua ngay</button>
           </div>
         </div>
       </div>
