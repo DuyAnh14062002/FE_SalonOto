@@ -1,18 +1,35 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./Register.scss";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { schema } from "../../utils/rule";
 import Input from "../../components/Input";
+import authApi from "../../apis/auth.api";
+import { omit } from "lodash";
+import { toast } from "react-toastify";
 export default function Register() {
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm({ resolver: yupResolver(schema) });
-  const onSubmit = handleSubmit((data) => {
-    console.log(data);
+  const navigate = useNavigate();
+  const onSubmit = handleSubmit(async (data) => {
+    try {
+      const body = omit(data, ["confirm_password"]);
+      const res = await authApi.register(body);
+      if (res.data.status === "success") {
+        toast.success("Đăng ký thành công");
+        navigate("/login");
+      }
+      if (res.data.status === "failed") {
+        toast.error(res.data.msg);
+      }
+    } catch (error) {
+      console.log("error", error);
+    }
   });
+
   return (
     <section className="background-radial-gradient overflow-hidden">
       <div className="container px-4 py-5 px-md-5 text-center text-lg-start my-5">
@@ -53,7 +70,7 @@ export default function Register() {
                     <Input
                       type="text"
                       labelName="Họ tên"
-                      name="name"
+                      name="fullname"
                       errorMessage={errors.name?.message}
                       register={register}
                     />
