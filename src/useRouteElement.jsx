@@ -4,22 +4,23 @@ import HomePage from "./pages/HomePage";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import AccountProfile from "./pages/AccountProfile/AccountProfile";
+import { path } from "./constants/path";
 
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: path.home,
     element: <HomePage />,
   },
   {
-    path: "/register",
+    path: path.register,
     element: <Register />,
   },
   {
-    path: "/login",
+    path: path.login,
     element: <Login />,
   },
   {
-    path: "/AccountProfile",
+    path: path.profile,
     element: <AccountProfile />,
   },
 ]);

@@ -14,7 +14,11 @@
 }
 .container-homepage {
   font-family: "Montserrat", sans-serif;
-  background: linear-gradient(to right, rgba(2, 82, 89, 0.9), rgba(255, 255, 255, 0)),
+  background: linear-gradient(
+      to right,
+      rgba(2, 82, 89, 0.9),
+      rgba(255, 255, 255, 0)
+    ),
     url("../../../public/image/bg.jpg");
   background-position: center center;
   background-size: cover;
@@ -28,26 +32,35 @@
   display: flex;
   flex-direction: column;
 }
-.login {
+.account-profile {
+  width: 200px;
   padding: 0.5rem 1rem;
   display: flex;
   align-items: center;
-  gap: 1rem;
+
   font-weight: 600;
   color: var(--white);
   background-color: var(--primary-color);
   border-radius: 2rem;
   cursor: pointer;
+  .profile-arrow {
+    display: none;
+  }
+
   transition: 0.3s;
   &:hover {
-    background-color: var(--secondary-color);
+    background: #d9e9ff;
+    .profile-arrow {
+      display: block;
+    }
   }
-  span {
+  .icon-user {
     padding: 5px 8px;
     font-size: 1.5rem;
     color: var(--primary-color);
     background-color: var(--white);
     border-radius: 100%;
+    margin-right: 10px;
   }
 }
 .destination__container {
