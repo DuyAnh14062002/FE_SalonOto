@@ -6,6 +6,7 @@ import {
   setProfileToLs,
 } from "./auth";
 import { set } from "lodash";
+import { toast } from "react-toastify";
 class Http {
   instance;
   accessToken;
@@ -103,6 +104,9 @@ class Http {
       .catch((error) => {
         clearLs();
         this.accessToken = "";
+        toast.error(error.response.data.msg || "Something went wrong", {
+          autoClose: 3000,
+        });
         throw error;
       });
   }
