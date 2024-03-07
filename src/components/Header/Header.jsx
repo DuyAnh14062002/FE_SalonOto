@@ -60,10 +60,10 @@ export default function Header(props) {
           {userInfo?.fullname || userInfo?.username}
         </span>
         <div className="profile-arrow">
+          <div className="virtual_class"></div>
           <div className="arrow position-absolute"></div>
           <div className="position-absolute sub-profile">
             <Link to={path.profile}>Thông tin cá nhân</Link>
-
             <Link onClick={handleLogout}>Đăng xuất</Link>
           </div>
         </div>
@@ -116,7 +116,6 @@ export default function Header(props) {
           <div className="arrow position-absolute"></div>
           <div className="position-absolute sub-profile">
             <Link to={path.profile}>Thông tin cá nhân</Link>
-
             <Link onClick={handleLogout}>Đăng xuất</Link>
           </div>
         </div>

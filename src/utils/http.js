@@ -5,7 +5,6 @@ import {
   setAccessTokenToLs,
   setProfileToLs,
 } from "./auth";
-import { set } from "lodash";
 import { toast } from "react-toastify";
 class Http {
   instance;
@@ -26,6 +25,9 @@ class Http {
     // Add a request interceptor
     this.instance.interceptors.request.use(
       (config) => {
+        if (!this.accessToken) {
+          this.accessToken = getAccessTokenFromLs();
+        }
         if (this.accessToken && config.headers) {
           config.headers.authorization = `Bearer ${this.accessToken}`;
           return config;
@@ -83,6 +85,10 @@ class Http {
           }
           clearLs();
           window.location.reload();
+        } else {
+          toast.error(error.response.msg || "Something went wrong", {
+            autoClose: 3000,
+          });
         }
         return Promise.reject(error);
       }

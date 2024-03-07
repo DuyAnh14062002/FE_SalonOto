@@ -114,7 +114,7 @@ export default function Register() {
                   <div className="text-center">
                     <p>Hoặc đăng nhập với:</p>
                     <button
-                      className="btn btn-block btn-primary w-75"
+                      className="btn btn-block btn-danger w-75"
                       style={{ backgroundColor: "#dd4b39;" }}
                       type="button"
                     >
@@ -122,7 +122,7 @@ export default function Register() {
                       google
                     </button>
                     <button
-                      className="btn btn-block btn-danger mb-2 w-75 mt-2"
+                      className="btn btn-block btn-primary mb-2 w-75 mt-2"
                       style={{ backgroundColor: "#3b5998;" }}
                       type="button"
                     >

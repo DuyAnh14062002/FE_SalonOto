@@ -6,7 +6,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import Input from "../../components/Input";
 import authApi from "../../apis/auth.api";
 import { toast } from "react-toastify";
-import { login, loginUser } from "../../redux/slices/UserSlice";
+import { loginUser } from "../../redux/slices/UserSlice";
 import { useDispatch } from "react-redux";
 
 const loginSchema = schema.pick(["username", "password"]);
@@ -115,7 +115,7 @@ export default function Login() {
                   <div className="text-center">
                     <p>Hoặc đăng nhập với:</p>
                     <button
-                      className="btn btn-block btn-primary w-75"
+                      className="btn btn-block btn-danger btn-primary w-75"
                       style={{ backgroundColor: "#dd4b39;" }}
                       type="button"
                       onClick={handleLoginGoogle}
@@ -124,7 +124,7 @@ export default function Login() {
                       google
                     </button>
                     <button
-                      className="btn btn-block btn-danger mb-2 w-75 mt-2"
+                      className="btn btn-block btn-primary  mb-2 w-75 mt-2"
                       style={{ backgroundColor: "#3b5998;" }}
                       type="button"
                       onClick={handleLoginFacebook}
