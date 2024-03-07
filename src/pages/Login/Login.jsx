@@ -1,30 +1,50 @@
 import { useForm } from "react-hook-form";
 import "./Login.scss";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { schema } from "../../utils/rule";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Input from "../../components/Input";
-
 import authApi from "../../apis/auth.api";
+import { toast } from "react-toastify";
+import { login, loginUser } from "../../redux/slices/UserSlice";
+import { useDispatch } from "react-redux";
 
 const loginSchema = schema.pick(["username", "password"]);
 
 export default function Login() {
+  const dispatch = useDispatch();
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm({ resolver: yupResolver(loginSchema) });
-  const onSubmit = handleSubmit((data) => {
-    console.log(data);
+  const navigate = useNavigate();
+  const onSubmit = handleSubmit(async (data) => {
+    try {
+      const res = await authApi.login(data);
+
+      if (res.data.status === "success") {
+        dispatch(loginUser(res.data.user));
+        navigate("/");
+      }
+      if (res.data.status === "failed") {
+        toast.error(res.data.msg);
+      }
+    } catch (error) {
+      console.log("error", error);
+    }
   });
 
   const handleLoginGoogle = async () => {
     try {
-    // let res = await authApi.login({usename: "duyanh", password : "123456"})
-    // console.log("res : ", res)
-    window.open("http://localhost:5000/auth/google","_self")
-   //window.open("http://localhost:5000/auth/facebook","_self")
+      window.open("http://localhost:5000/auth/google", "_self");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const handleLoginFacebook = async () => {
+    try {
+      window.open("http://localhost:5000/auth/facebook", "_self");
     } catch (error) {
       console.log(error);
     }
@@ -105,6 +125,7 @@ export default function Login() {
                       className="btn btn-block btn-danger mb-2 w-75 mt-2"
                       style={{ backgroundColor: "#3b5998;" }}
                       type="button"
+                      onClick={handleLoginFacebook}
                     >
                       <i className="fab fa-facebook-f me-2"></i>Đăng nhập với
                       facebook

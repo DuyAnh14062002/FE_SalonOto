@@ -2,10 +2,23 @@ import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./Header.scss";
 import { path } from "../../constants/path";
+import { useDispatch, useSelector } from "react-redux";
+import { logoutUser } from "../../redux/slices/UserSlice";
+import authApi from "../../apis/auth.api";
 export default function Header(props) {
   const { otherPage } = props;
+  const userInfo = useSelector((state) => state.userSlice.userInfo);
+
+  const dispatch = useDispatch();
   let navigate = useNavigate();
-  let handleLogout = () => {
+  let handleLogout = async () => {
+    try {
+      await authApi.logout({ user_id: userInfo.user_id });
+    } catch (error) {
+      console.log("error:",error)
+    }
+    
+    dispatch(logoutUser());
     navigate("/login");
   };
   return otherPage === true ? (
@@ -48,7 +61,9 @@ export default function Header(props) {
         <span className="icon-user">
           <i className="ri-user-3-fill"></i>
         </span>
-        <span style={{ fontSize: "15px" }}>Đào Duy Anh</span>
+        <span style={{ fontSize: "15px" }}>
+          {userInfo?.fullname || userInfo?.username}
+        </span>
         <div className="profile-arrow">
           <div className="arrow position-absolute"></div>
           <div className="position-absolute sub-profile">
@@ -99,7 +114,9 @@ export default function Header(props) {
         <span className="icon-user">
           <i className="ri-user-3-fill"></i>
         </span>
-        <span style={{ fontSize: "15px" }}>Đào Duy Anh</span>
+        <span style={{ fontSize: "15px" }}>
+          {userInfo?.fullname || userInfo?.username}
+        </span>
         <div className="profile-arrow">
           <div className="arrow position-absolute"></div>
           <div className="position-absolute sub-profile">

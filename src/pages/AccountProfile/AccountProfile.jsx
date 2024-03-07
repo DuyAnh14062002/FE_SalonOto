@@ -1,8 +1,43 @@
+import { useState } from "react";
 import Header from "../../components/Header";
 import "./AccountProfile.scss";
 import { useNavigate } from "react-router-dom";
+import Form from "react-bootstrap/Form";
+import Button from "react-bootstrap/Button";
+import Modal from "react-bootstrap/Modal";
+import authApi from "../../apis/auth.api";
+import { toast } from "react-toastify";
 
 const AccountProfile = () => {
+  const [emailInvite, setEmailInvite] = useState("");
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+  const handleOnChangeEmailInvite = (e) => {
+    setEmailInvite(e.target.value);
+  };
+  const handleSubmitInviteUser = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await authApi.inviteUser({ email: emailInvite });
+      if (res.data.status === "success") {
+        toast.success("Bạn đã mời bạn bè thành công");
+        setEmailInvite("");
+        handleClose();
+      }
+    } catch (error) {}
+  };
+  const handleLinkGoogle = () =>{
+    try {
+      window.open("http://localhost:5000/auth/google", "_self");
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  const handleLinkFacebook = () =>{
+
+  }
   return (
     <>
       <Header otherPage={true} />
@@ -94,14 +129,39 @@ const AccountProfile = () => {
                           <div className="form-group button">
                             <button
                               className="btn btn-primary mt-3"
-                              style={{ marginRight: "3px" }}
+                              style={{ marginRight: "10px" }}
                             >
                               <i className="fa fa-edit"></i> Lưu thay đổi
                             </button>
-                            <button className="btn btn-success mt-3">
-                              <i class="fa-solid fa-user-plus"></i> Mời bạn bè
-                            </button>
                           </div>
+                        </div>
+                        <div className="col-12">
+                        <Button
+                              variant="success"
+                              className="mt-3"
+                              onClick={handleShow}
+                              style={{ marginRight: "10px" }}
+                            >
+                              <i class="fa-solid fa-user-plus"></i> Mời bạn bè
+                            </Button>
+                            <Button
+                              className="mt-3"
+                              style={{ backgroundColor: "red", marginRight: "10px" }}
+                              type="button"
+                              onClick={handleLinkGoogle}
+                            >
+                              <i className="fab fa-google me-2"></i> Liên kết với
+                              google
+                            </Button>
+                            <Button
+                              className="mt-3"
+                              style={{ backgroundColor: "#dd4b39;"  }}
+                              type="button"
+                              onClick={handleLinkFacebook}
+                            >
+                              <i className="fab fa-facebook-f me-2"></i>Liên kết với
+                              facebook
+                            </Button>
                         </div>
                       </div>
                     </div>
@@ -111,6 +171,33 @@ const AccountProfile = () => {
             </div>
           </div>
         </div>
+
+        <Modal show={show} onHide={handleClose}>
+          <Form onSubmit={handleSubmitInviteUser}>
+            <Modal.Header closeButton>
+              <Modal.Title>Mời bạn bè</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <Form.Group md="4">
+                <Form.Label>Email address</Form.Label>
+                <Form.Control
+                  required
+                  type="email"
+                  value={emailInvite}
+                  onChange={handleOnChangeEmailInvite}
+                />
+              </Form.Group>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={handleClose}>
+                Đóng
+              </Button>
+              <Button variant="primary" type="submit">
+                Mời
+              </Button>
+            </Modal.Footer>
+          </Form>
+        </Modal>
       </section>
     </>
   );

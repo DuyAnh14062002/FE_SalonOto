@@ -4,4 +4,8 @@ export const path = {
   register: "/register",
   profile: "/profile",
   logout: "/logout",
+  verifyTokenEMail: "/auth/verify-token-email/:token",
+  loginSocial: "/login-social",
+  callBackFacebook: "/auth/facebook/callback",
+  callBackGoogle: "/auth/google/callback",
 };

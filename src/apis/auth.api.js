@@ -1,32 +1,36 @@
 import http from "../utils/http";
 
-export const URL_LOGIN = "login";
-export const URL_REGISTER = "register";
-export const URL_LOGOUT = "logout";
-export const URL_REFRESH_TOKEN = "refresh-access-token";
-export const URL_FACEBOOK = "facebook";
+export const URL_LOGIN = "/auth/login";
+export const URL_REGISTER = "/auth/register";
+export const URL_LOGOUT = "/auth/logout";
 
 const authApi = {
   googleAuth() {
     return http.get(`/auth/google`);
   },
-  googleAuthCallback(search) {
-    return http.get(`/auth/google/callback${search}`);
+  facebookAuth() {
+    return http.get(`/auth/facebook`);
   },
-  registerAccount(body) {
-    return http.post(`/auth/${URL_REGISTER}`, body);
+  googleAuthCallback(code) {
+    return http.get(`/auth/google/callback?code=${code}`);
+  },
+  facebookAuthCallback(code) {
+    return http.get(`/auth/facebook/callback?code=${code}`);
+  },
+  inviteUser(body) {
+    return http.post(`/auth/invite`, body);
+  },
+  verifyTokenEmail(token) {
+    return http.get(`/auth/verify-invite/${token}`);
+  },
+  register(body) {
+    return http.post(`${URL_REGISTER}`, body);
   },
   login(body) {
-    return http.post(`/auth/${URL_LOGIN}`, body);
+    return http.post(`${URL_LOGIN}`, body);
   },
-  logout() {
-    return http.post(`/auth/${URL_LOGOUT}`);
+  logout(body) {
+    return http.post(`${URL_LOGOUT}`, body);
   },
-  facebook() {
-    return http.get(`/auth/${URL_FACEBOOK}`);
-  },
-  // facebookAuthCallback(search) {
-  //   return http.get(`/auth/google/callback${search}`);
-  // },
 };
 export default authApi;
