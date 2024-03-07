@@ -13,7 +13,7 @@ export default function LoginSocialFaceBook() {
   useEffect(() => {
     const login = async () => {
       const data = Object.fromEntries([...params]);
-      const res = await authApi.facebookAuthCallback(data.code)
+      const res = await authApi.facebookAuthCallback(data.code);
       setAccessTokenToLs(res.data.accessToken);
       const user = await userApi.getUserById(res.data.user.user_id);
       dispatch(loginUser(user.data));

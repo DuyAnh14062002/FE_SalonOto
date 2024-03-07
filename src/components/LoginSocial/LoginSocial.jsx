@@ -15,23 +15,22 @@ export default function LoginSocial() {
     const login = async () => {
       const data = Object.fromEntries([...params]);
       try {
-        console.log("oke")
-        const res = await authApi.googleAuthCallback(data.code)
-        console.log("res : ", res)
+        const res = await authApi.googleAuthCallback(data.code);
         setAccessTokenToLs(res.data.accessToken);
         const user = await userApi.getUserById(res.data.user.user_id);
         dispatch(loginUser(user.data));
         setProfileToLs(user.data);
         navigate("/");
       } catch (error) {
-        console.log("error: ", error)
+        console.log("error: ", error);
       }
-    
     };
     login();
   }, [params, dispatch, navigate]);
 
-  return <div>
-    <Loading/>
-  </div>;
+  return (
+    <div>
+      <Loading />
+    </div>
+  );
 }

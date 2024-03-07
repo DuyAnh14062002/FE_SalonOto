@@ -34,11 +34,12 @@ nav {
 }
 .virtual_class {
   position: absolute;
-  top: 70px;
-  left: 7px;
+  top: 0;
+  left: 0;
   width: 100%;
-  background: #f00;
-  height: 100%;
+  height: 200%;
+  background: transparent;
+  z-index: 99;
 }
 .sub-profile {
   width: 95%;
