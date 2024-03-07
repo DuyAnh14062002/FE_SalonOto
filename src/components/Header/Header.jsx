@@ -8,11 +8,11 @@ import authApi from "../../apis/auth.api";
 export default function Header(props) {
   const { otherPage } = props;
   const userInfo = useSelector((state) => state.userSlice.userInfo);
-  console.log(userInfo);
+
   const dispatch = useDispatch();
   let navigate = useNavigate();
   let handleLogout = async () => {
-    await authApi.logout();
+    await authApi.logout({ user_id: userInfo.user_id });
     dispatch(logoutUser());
     navigate("/login");
   };

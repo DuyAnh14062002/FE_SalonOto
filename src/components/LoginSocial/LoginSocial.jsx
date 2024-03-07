@@ -12,7 +12,7 @@ export default function LoginSocial() {
   useEffect(() => {
     const login = async () => {
       const data = Object.fromEntries([...params]);
-      setAccessTokenToLs(data.accessToken);
+      setAccessTokenToLs(data.access_token);
       let res = await userApi.getUserById(data.user_id);
       dispatch(loginUser(res.data));
       setProfileToLs(res.data);

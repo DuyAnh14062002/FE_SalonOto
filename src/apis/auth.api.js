@@ -26,8 +26,8 @@ const authApi = {
   login(body) {
     return http.post(`${URL_LOGIN}`, body);
   },
-  logout() {
-    return http.post(`${URL_LOGOUT}`);
+  logout(body) {
+    return http.post(`${URL_LOGOUT}`, body);
   },
 };
 export default authApi;

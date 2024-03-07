@@ -5,6 +5,7 @@ import {
   setAccessTokenToLs,
   setProfileToLs,
 } from "./auth";
+import { set } from "lodash";
 class Http {
   instance;
   accessToken;
@@ -14,12 +15,11 @@ class Http {
     this.accessToken = getAccessTokenFromLs();
     this.refreshTokenRequest = null;
     this.instance = axios.create({
+      withCredentials: true,
       baseURL: "http://localhost:5000",
       timeout: 10000,
       headers: {
         "Content-Type": "application/json",
-        "expire-access-token": 5 * 60 * 60,
-        "expire-refresh-token": 60 * 60 * 24 * 30,
       },
     });
     // Add a request interceptor
@@ -40,25 +40,68 @@ class Http {
     this.instance.interceptors.response.use(
       (response) => {
         const { url } = response.config;
-        console.log("url", url);
+
         if (url === "/auth/login") {
           const data = response.data;
           this.accessToken = data.accessToken;
           setAccessTokenToLs(this.accessToken);
           setProfileToLs(data.user);
         } else if (url === "/auth/logout") {
-          console.log("đã vào đây");
           this.accessToken = "";
-          setAccessTokenToLs(this.accessToken);
           clearLs();
         }
 
         return response;
       },
-      function (error) {
+      (error) => {
+        if (error.response.status === 401) {
+          const config = error.response?.config || { headers: {} };
+          console.log("config", config);
+          const { url } = config;
+
+          if (url !== "/auth/refresh") {
+            this.refreshTokenRequest = this.refreshTokenRequest
+              ? this.refreshTokenRequest
+              : this.handleRefreshToken().finally(() => {
+                  this.refreshTokenRequest = null;
+                });
+
+            return this.refreshTokenRequest.then((access_token) => {
+              console.log("access_token", access_token);
+              // Nghia la chung ta tiep tuc goi lai request cu vua bi loi
+              // i want run one time
+
+              return this.instance({
+                ...config,
+                headers: {
+                  ...config.headers,
+                  authorization: `Bearer ${access_token}`,
+                },
+              });
+            });
+          }
+          clearLs();
+          window.location.reload();
+        }
         return Promise.reject(error);
       }
     );
+  }
+  handleRefreshToken() {
+    return this.instance
+      .post("/auth/refresh")
+      .then((res) => {
+        console.log("res", res);
+        const { accessToken } = res.data;
+        setAccessTokenToLs(accessToken);
+        this.accessToken = accessToken;
+        return accessToken;
+      })
+      .catch((error) => {
+        clearLs();
+        this.accessToken = "";
+        throw error;
+      });
   }
 }
 const http = new Http().instance;
