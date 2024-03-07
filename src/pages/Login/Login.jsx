@@ -38,7 +38,6 @@ export default function Login() {
   const handleLoginGoogle = async () => {
     try {
       window.open("http://localhost:5000/auth/google", "_self");
-      // console.log("res", res);
     } catch (error) {
       console.log(error);
     }
@@ -46,7 +45,6 @@ export default function Login() {
   const handleLoginFacebook = async () => {
     try {
       window.open("http://localhost:5000/auth/facebook", "_self");
-      // console.log("res", res);
     } catch (error) {
       console.log(error);
     }

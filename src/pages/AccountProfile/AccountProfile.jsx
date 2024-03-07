@@ -28,6 +28,16 @@ const AccountProfile = () => {
       }
     } catch (error) {}
   };
+  const handleLinkGoogle = () =>{
+    try {
+      window.open("http://localhost:5000/auth/google", "_self");
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  const handleLinkFacebook = () =>{
+
+  }
   return (
     <>
       <Header otherPage={true} />
@@ -119,19 +129,39 @@ const AccountProfile = () => {
                           <div className="form-group button">
                             <button
                               className="btn btn-primary mt-3"
-                              style={{ marginRight: "3px" }}
+                              style={{ marginRight: "10px" }}
                             >
                               <i className="fa fa-edit"></i> Lưu thay đổi
                             </button>
-
-                            <Button
+                          </div>
+                        </div>
+                        <div className="col-12">
+                        <Button
                               variant="success"
                               className="mt-3"
                               onClick={handleShow}
+                              style={{ marginRight: "10px" }}
                             >
                               <i class="fa-solid fa-user-plus"></i> Mời bạn bè
                             </Button>
-                          </div>
+                            <Button
+                              className="mt-3"
+                              style={{ backgroundColor: "red", marginRight: "10px" }}
+                              type="button"
+                              onClick={handleLinkGoogle}
+                            >
+                              <i className="fab fa-google me-2"></i> Liên kết với
+                              google
+                            </Button>
+                            <Button
+                              className="mt-3"
+                              style={{ backgroundColor: "#dd4b39;"  }}
+                              type="button"
+                              onClick={handleLinkFacebook}
+                            >
+                              <i className="fab fa-facebook-f me-2"></i>Liên kết với
+                              facebook
+                            </Button>
                         </div>
                       </div>
                     </div>

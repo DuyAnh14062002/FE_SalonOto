@@ -9,6 +9,7 @@ import { useSelector } from "react-redux";
 import NotFound from "./pages/NotFound";
 import VerifyTokenEmail from "./pages/VerifyTokenEmail";
 import LoginSocial from "./components/LoginSocial";
+import LoginSocialFaceBook from "./components/LoginSocial/LoginSocialFaceBook";
 
 function ProtectedRoute() {
   const isAuthenticated = useSelector(
@@ -59,8 +60,12 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path: path.loginSocial,
+    path: path.callBackGoogle,
     element: <LoginSocial />,
+  },
+  {
+    path: path.callBackFacebook,
+    element: <LoginSocialFaceBook />,
   },
   {
     path: "*",

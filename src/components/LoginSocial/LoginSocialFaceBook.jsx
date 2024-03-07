@@ -6,32 +6,22 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { loginUser } from "../../redux/slices/UserSlice";
 import authApi from "../../apis/auth.api";
-import Loading from "../Loading/Loading";
-export default function LoginSocial() {
+export default function LoginSocialFaceBook() {
   const [params] = useSearchParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   useEffect(() => {
     const login = async () => {
       const data = Object.fromEntries([...params]);
-      try {
-        console.log("oke")
-        const res = await authApi.googleAuthCallback(data.code)
-        console.log("res : ", res)
-        setAccessTokenToLs(res.data.accessToken);
-        const user = await userApi.getUserById(res.data.user.user_id);
-        dispatch(loginUser(user.data));
-        setProfileToLs(user.data);
-        navigate("/");
-      } catch (error) {
-        console.log("error: ", error)
-      }
-    
+      const res = await authApi.facebookAuthCallback(data.code)
+      setAccessTokenToLs(res.data.accessToken);
+      const user = await userApi.getUserById(res.data.user.user_id);
+      dispatch(loginUser(user.data));
+      setProfileToLs(user.data);
+      navigate("/");
     };
     login();
   }, [params, dispatch, navigate]);
 
-  return <div>
-    <Loading/>
-  </div>;
+  return <div></div>;
 }

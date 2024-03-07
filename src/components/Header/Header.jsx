@@ -12,7 +12,12 @@ export default function Header(props) {
   const dispatch = useDispatch();
   let navigate = useNavigate();
   let handleLogout = async () => {
-    await authApi.logout({ user_id: userInfo.user_id });
+    try {
+      await authApi.logout({ user_id: userInfo.user_id });
+    } catch (error) {
+      console.log("error:",error)
+    }
+    
     dispatch(logoutUser());
     navigate("/login");
   };

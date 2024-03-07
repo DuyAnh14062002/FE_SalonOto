@@ -6,4 +6,6 @@ export const path = {
   logout: "/logout",
   verifyTokenEMail: "/auth/verify-token-email/:token",
   loginSocial: "/login-social",
+  callBackFacebook: "/auth/facebook/callback",
+  callBackGoogle: "/auth/google/callback",
 };
