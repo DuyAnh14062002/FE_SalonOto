@@ -32,7 +32,15 @@ nav {
   transform: translateX(-50%) rotate(45deg);
   z-index: 99;
 }
-
+.virtual_class {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 200%;
+  background: transparent;
+  z-index: 99;
+}
 .sub-profile {
   width: 95%;
   top: 70px;

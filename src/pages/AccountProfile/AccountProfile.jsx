@@ -1,7 +1,6 @@
 import { useState } from "react";
 import Header from "../../components/Header";
 import "./AccountProfile.scss";
-import { useNavigate } from "react-router-dom";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
@@ -28,16 +27,14 @@ const AccountProfile = () => {
       }
     } catch (error) {}
   };
-  const handleLinkGoogle = () =>{
+  const handleLinkGoogle = () => {
     try {
       window.open("http://localhost:5000/auth/google", "_self");
     } catch (error) {
       console.log(error);
     }
-  }
-  const handleLinkFacebook = () =>{
-
-  }
+  };
+  const handleLinkFacebook = () => {};
   return (
     <>
       <Header otherPage={true} />
@@ -136,32 +133,35 @@ const AccountProfile = () => {
                           </div>
                         </div>
                         <div className="col-12">
-                        <Button
-                              variant="success"
-                              className="mt-3"
-                              onClick={handleShow}
-                              style={{ marginRight: "10px" }}
-                            >
-                              <i class="fa-solid fa-user-plus"></i> Mời bạn bè
-                            </Button>
-                            <Button
-                              className="mt-3"
-                              style={{ backgroundColor: "red", marginRight: "10px" }}
-                              type="button"
-                              onClick={handleLinkGoogle}
-                            >
-                              <i className="fab fa-google me-2"></i> Liên kết với
-                              google
-                            </Button>
-                            <Button
-                              className="mt-3"
-                              style={{ backgroundColor: "#dd4b39;"  }}
-                              type="button"
-                              onClick={handleLinkFacebook}
-                            >
-                              <i className="fab fa-facebook-f me-2"></i>Liên kết với
-                              facebook
-                            </Button>
+                          <Button
+                            variant="success"
+                            className="mt-3"
+                            onClick={handleShow}
+                            style={{ marginRight: "10px" }}
+                          >
+                            <i class="fa-solid fa-user-plus"></i> Mời bạn bè
+                          </Button>
+                          <Button
+                            className="mt-3"
+                            style={{
+                              backgroundColor: "red",
+                              marginRight: "10px",
+                            }}
+                            type="button"
+                            onClick={handleLinkGoogle}
+                          >
+                            <i className="fab fa-google me-2"></i> Liên kết với
+                            google
+                          </Button>
+                          <Button
+                            className="mt-3"
+                            style={{ backgroundColor: "#dd4b39;" }}
+                            type="button"
+                            onClick={handleLinkFacebook}
+                          >
+                            <i className="fab fa-facebook-f me-2"></i>Liên kết
+                            với facebook
+                          </Button>
                         </div>
                       </div>
                     </div>

@@ -5,7 +5,6 @@ import {
   setAccessTokenToLs,
   setProfileToLs,
 } from "./auth";
-import { set } from "lodash";
 import { toast } from "react-toastify";
 class Http {
   instance;
@@ -86,6 +85,10 @@ class Http {
           }
           clearLs();
           window.location.reload();
+        } else {
+          toast.error(error.response.msg || "Something went wrong", {
+            autoClose: 3000,
+          });
         }
         return Promise.reject(error);
       }

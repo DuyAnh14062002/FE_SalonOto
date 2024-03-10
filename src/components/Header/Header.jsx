@@ -15,9 +15,9 @@ export default function Header(props) {
     try {
       await authApi.logout({ user_id: userInfo.user_id });
     } catch (error) {
-      console.log("error:",error)
+      console.log("error:", error);
     }
-    
+
     dispatch(logoutUser());
     navigate("/login");
   };
@@ -65,10 +65,10 @@ export default function Header(props) {
           {userInfo?.fullname || userInfo?.username}
         </span>
         <div className="profile-arrow">
+          <div className="virtual_class"></div>
           <div className="arrow position-absolute"></div>
           <div className="position-absolute sub-profile">
             <Link to={path.profile}>Thông tin cá nhân</Link>
-
             <Link onClick={handleLogout}>Đăng xuất</Link>
           </div>
         </div>
@@ -117,11 +117,12 @@ export default function Header(props) {
         <span style={{ fontSize: "15px" }}>
           {userInfo?.fullname || userInfo?.username}
         </span>
+
         <div className="profile-arrow">
+          <div className="virtual_class"></div>
           <div className="arrow position-absolute"></div>
           <div className="position-absolute sub-profile">
             <Link to={path.profile}>Thông tin cá nhân</Link>
-
             <Link onClick={handleLogout}>Đăng xuất</Link>
           </div>
         </div>
