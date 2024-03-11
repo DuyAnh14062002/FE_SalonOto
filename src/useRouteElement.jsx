@@ -10,6 +10,9 @@ import NotFound from "./pages/NotFound";
 import VerifyTokenEmail from "./pages/VerifyTokenEmail";
 import LoginSocial from "./components/LoginSocial";
 import LoginSocialFaceBook from "./components/LoginSocial/LoginSocialFaceBook";
+import ListSalonOto from "./pages/SalonOto/ListSalonOto";
+import HomePageSalon from "./pages/SalonOto/HomePageSalon";
+import DetailCar from "./pages/SalonOto/DetailCar";
 
 function ProtectedRoute() {
   const isAuthenticated = useSelector(
@@ -71,6 +74,18 @@ const router = createBrowserRouter([
     path: "*",
     element: <NotFound />,
   },
+  {
+    path:path.listSalon,
+    element:<ListSalonOto/>
+  },
+  {
+    path:path.salonOto,
+    element:<HomePageSalon/>
+  },
+  {
+    path:path.DetailCar,
+    element:<DetailCar/>
+  }
 ]);
 
 export default router;

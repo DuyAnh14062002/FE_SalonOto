@@ -22,7 +22,7 @@ export default function Header(props) {
     navigate("/login");
   };
   return otherPage === true ? (
-    <nav style={{ backgroundColor: "green", padding: "5px 5px" }}>
+    <nav style={{ backgroundColor: "blue", padding: "5px 5px" }}>
       <div className="nav__logo">
         <img
           src="https://s.bonbanh.com/uploads/users/701283/salon/l_1678849916.jpg"
@@ -38,7 +38,7 @@ export default function Header(props) {
           <Link to="/">Gói dịch vụ</Link>
         </li>
         <li className="link">
-          <Link to="/">Salon Oto</Link>
+          <Link to="/listSalon">Salon Oto</Link>
         </li>
         <li className="link">
           <Link to="/">liên hệ</Link>
@@ -91,7 +91,7 @@ export default function Header(props) {
           <Link to="/">Gói dịch vụ</Link>
         </li>
         <li className="link">
-          <Link to="/">Salon Oto</Link>
+          <Link to="/listSalon">Salon Oto</Link>
         </li>
         <li className="link">
           <Link to="/">liên hệ</Link>

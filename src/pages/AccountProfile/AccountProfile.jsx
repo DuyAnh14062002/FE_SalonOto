@@ -34,7 +34,13 @@ const AccountProfile = () => {
       console.log(error);
     }
   };
-  const handleLinkFacebook = () => {};
+  const handleLinkFacebook = () => {
+    try {
+      window.open("http://localhost:5000/auth/facebook", "_self");
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <>
       <Header otherPage={true} />

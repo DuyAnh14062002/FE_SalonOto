@@ -1,0 +1,179 @@
+.detail-car-container {
+  padding: 20px 180px;
+  min-height: 1550px;
+  .header-menu {
+    span {
+      margin: 0 5px;
+      color: rgb(52, 51, 51);
+    }
+  }
+  .detail-option {
+    height: 50px;
+    width: 100%;
+    background-color: rgb(214, 205, 205);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 150px;
+    margin: 50px 0;
+    .box-sumary {
+      &:hover {
+        color: red;
+        transition: 0.1s;
+      }
+      cursor: pointer;
+      i {
+        margin-right: 5px;
+      }
+    }
+  }
+  .detail-car {
+    height: 500px;
+    display: flex;
+    .car-image {
+      width: 50%;
+      .main-image {
+        background-position: center;
+        background-size: cover;
+        background-repeat: no-repeat;
+        width: 100%;
+        height: 420px;
+        margin: 0 auto;
+      }
+      .sub-image {
+        display: flex;
+        border: 1px solid rgb(54, 54, 50);
+        margin: 10px 0;
+        justify-content: center;
+        align-items: center;
+        .sub-image-item {
+          background-position: center;
+          background-size: cover;
+          background-repeat: no-repeat;
+          width: 17%;
+          margin: 0 5px;
+          padding: 5px 0;
+          height: 81px;
+          cursor: pointer;
+          &:hover {
+            border: 1px solid red;
+            transition: 0.1s;
+          }
+        }
+      }
+    }
+    .specifications-car {
+      width: 50%;
+      margin-left: 20px;
+      .name-car {
+        font-size: 25px;
+        font-weight: 700;
+      }
+      .price-car {
+        color: red;
+      }
+      p {
+        margin: 3px 0;
+      }
+      button {
+        background-color: red;
+        width: 60%;
+        height: 50px;
+        border: none;
+        outline: none;
+        color: white;
+        &:hover {
+          background-color: #000;
+          transition: 0.2s;
+        }
+      }
+    }
+  }
+  .rate-detail {
+    margin: 50px 0;
+    .rate-title {
+      border-bottom: 1px solid black;
+    }
+    .comment-detail {
+      margin: 15px 0;
+    }
+  }
+  .estimate-cost {
+    margin: 20px 0;
+    .title-box {
+      width: 100%;
+      text-align: center;
+      margin: 10px 0;
+      .title-estimate {
+        border-bottom: 2px solid red;
+        font-weight: 800;
+        font-size: 25px;
+      }
+    }
+    .location-register {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 265px;
+      select {
+        width: 450px;
+        border: 1px solid gray;
+        outline: none;
+        padding: 15px 15px;
+        background-color: #fff;
+        cursor: pointer;
+      }
+    }
+    .caculate-cost {
+      padding: 10px 250px;
+      .cost {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 5px 20px;
+      }
+      .Total {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 5px 20px;
+        .price {
+          color: red;
+          font-size: 30px;
+        }
+      }
+    }
+  }
+}
+//=====================RELATE RPODUCT SCSS===============
+
+.relate-product-container {
+  h4 {
+    text-align: center;
+    font-weight: 900;
+    font-size: 20px;
+    font-family: sans-serif;
+    color: black;
+  }
+  .item-relate-product {
+    margin-top: 20px;
+    cursor: pointer;
+    .image-car-relate {
+      background-position: center;
+      background-size: cover;
+      background-repeat: no-repeat;
+      width: 220px;
+      height: 150px;
+      margin: 0 auto;
+    }
+    .name-product-relate {
+      text-align: center;
+      margin: 8px 0;
+    }
+    .price-product-relate {
+      color: red;
+      margin: 8px 0;
+      text-align: center;
+    }
+  }
+}

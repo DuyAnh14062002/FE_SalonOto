@@ -23,7 +23,6 @@ export default function LoginSocial() {
          user_id = user.user_id;
       }
       try {
-<<<<<<< HEAD
         console.log("user_id : ", user_id)
         const res = await authApi.googleAuthCallback(data.code, user_id)
         console.log("res : ", res)
@@ -38,14 +37,6 @@ export default function LoginSocial() {
         }else{ 
           navigate("/profile");
         }
-=======
-        const res = await authApi.googleAuthCallback(data.code);
-        setAccessTokenToLs(res.data.accessToken);
-        const user = await userApi.getUserById(res.data.user.user_id);
-        dispatch(loginUser(user.data));
-        setProfileToLs(user.data);
-        navigate("/");
->>>>>>> 387125cd49b00d403b1d08624893353915a5b7e7
       } catch (error) {
         console.log("error: ", error);
       }

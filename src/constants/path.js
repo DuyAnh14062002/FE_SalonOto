@@ -8,4 +8,7 @@ export const path = {
   loginSocial: "/login-social",
   callBackFacebook: "/auth/facebook/callback",
   callBackGoogle: "/auth/google/callback",
+  listSalon: "/listSalon",
+  salonOto: "/salonOto/:id",
+  DetailCar: "/detail-car/:id",
 };
