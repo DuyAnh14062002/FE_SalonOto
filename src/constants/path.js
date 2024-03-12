@@ -13,4 +13,7 @@ export const path = {
   homeAdmin: "/admin",
   managePackage: "/admin/manage-package",
   manageFeature: "/admin/manage-feature",
+  listSalon: "/listSalon",
+  salonOto: "/salonOto/:id",
+  DetailCar: "/detail-car/:id",
 };

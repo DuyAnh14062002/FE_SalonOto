@@ -15,6 +15,9 @@ import HomeAdmin from "./pages/HomeAdmin";
 import ManagePackage from "./pages/ManagePackage";
 import AdminLayout from "./layouts/AdminLayout";
 import ManageFeature from "./pages/ManageFeature";
+import ListSalonOto from "./pages/SalonOto/ListSalonOto";
+import HomePageSalon from "./pages/SalonOto/HomePageSalon";
+import DetailCar from "./pages/SalonOto/DetailCar";
 
 function ProtectedRoute() {
   const isAuthenticated = useSelector(
@@ -99,6 +102,18 @@ const router = createBrowserRouter([
   {
     path: "*",
     element: <NotFound />,
+  },
+  {
+    path: path.listSalon,
+    element: <ListSalonOto />,
+  },
+  {
+    path: path.salonOto,
+    element: <HomePageSalon />,
+  },
+  {
+    path: path.DetailCar,
+    element: <DetailCar />,
   },
 ]);
 
