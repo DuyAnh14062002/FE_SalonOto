@@ -46,6 +46,9 @@ export default function Header(props) {
         <li className="link">
           <Link to="/">Tin tức</Link>
         </li>
+        <li className="link">
+          <Link to="/admin">Quản lý</Link>
+        </li>
       </ul>
       <div className="search">
         <input type="text" placeholder="Tìm kiếm" />
@@ -98,6 +101,9 @@ export default function Header(props) {
         </li>
         <li className="link">
           <Link to="/">Tin tức</Link>
+        </li>
+        <li className="link">
+          <Link to="/admin">Quản lý</Link>
         </li>
       </ul>
       <div className="search">

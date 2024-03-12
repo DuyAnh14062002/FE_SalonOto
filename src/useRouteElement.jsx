@@ -10,6 +10,11 @@ import NotFound from "./pages/NotFound";
 import VerifyTokenEmail from "./pages/VerifyTokenEmail";
 import LoginSocial from "./components/LoginSocial";
 import LoginSocialFaceBook from "./components/LoginSocial/LoginSocialFaceBook";
+import LoginAdmin from "./pages/LoginAdmin";
+import HomeAdmin from "./pages/HomeAdmin";
+import ManagePackage from "./pages/ManagePackage";
+import AdminLayout from "./layouts/AdminLayout";
+import ManageFeature from "./pages/ManageFeature";
 
 function ProtectedRoute() {
   const isAuthenticated = useSelector(
@@ -59,6 +64,30 @@ const router = createBrowserRouter([
       },
     ],
   },
+  {
+    path: "/admin",
+    element: <AdminLayout />,
+    children: [
+      {
+        path: path.homeAdmin,
+        element: <HomeAdmin />,
+      },
+      {
+        path: path.managePackage,
+        element: <ManagePackage />,
+      },
+      {
+        path: path.manageFeature,
+        element: <ManageFeature />,
+      },
+    ],
+  },
+
+  {
+    path: path.loginAdmin,
+    element: <LoginAdmin />,
+  },
+
   {
     path: path.callBackGoogle,
     element: <LoginSocial />,
