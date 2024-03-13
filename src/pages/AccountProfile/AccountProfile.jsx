@@ -119,7 +119,7 @@ const AccountProfile = () => {
                         </div>
                         <div className="col-lg-4 col-md-4 col-12 ">
                           <div className="update-container">
-                            <i class="fa-regular fa-image"></i>
+                            <i className="fa-regular fa-image"></i>
                             <input
                               type="file"
                               name="image"
@@ -145,7 +145,7 @@ const AccountProfile = () => {
                             onClick={handleShow}
                             style={{ marginRight: "10px" }}
                           >
-                            <i class="fa-solid fa-user-plus"></i> Mời bạn bè
+                            <i className="fa-solid fa-user-plus"></i> Mời bạn bè
                           </Button>
                           <Button
                             className="mt-3"

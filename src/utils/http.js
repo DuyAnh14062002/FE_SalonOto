@@ -57,7 +57,7 @@ class Http {
         return response;
       },
       (error) => {
-        if (error.response.status === 401) {
+        if (error && error.response && error.response.status === 401) {
           const config = error.response?.config || { headers: {} };
           console.log("config", config);
           const { url } = config;

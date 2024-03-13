@@ -7,7 +7,7 @@ export default function AdminHeader() {
       <div className="navbar-brand">
         <Link to="/admin" className="text-decoration-none">
           <i className="fa-solid fa-car"></i>{" "}
-          <span classNameName="mx-2">SALON OTO ADMIN</span>
+          <span className="mx-2">SALON OTO ADMIN</span>
         </Link>
       </div>
       <div className="nav-right">
