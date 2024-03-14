@@ -1,7 +1,11 @@
 import Header from "../../components/Header";
 import "./HomePage.scss";
-
+import { useNavigate } from "react-router-dom";
 export default function HomePage() {
+  let navigate = useNavigate()
+  const ShowDetailPackage = () =>{
+        navigate("/detail-package/:123")
+  }
   return (
     <div className="container-homepage">
       <Header otherPage={false} />
@@ -41,10 +45,10 @@ export default function HomePage() {
             Chúng tôi cung cấp cho bạn các gói dịch vụ tốt nhất giúp quản lí bạn
             quản lí Salon Oto của mình một cách hiệu quả
           </p>
-          <button className="btn">Mua Ngay</button>
+          <button className="btn">Khám phá ngay</button>
         </div>
         <div className="destination__grid">
-          <div className="destination__card">
+          <div className="destination__card" onClick={ShowDetailPackage}> 
             <div className="card__content">
               <h4>Gói Salon oto cơ bản</h4>
               <ul>

@@ -11,4 +11,5 @@ export const path = {
   listSalon: "/listSalon",
   salonOto: "/salonOto/:id",
   DetailCar: "/detail-car/:id",
+  DetailPackage: "/detail-package/:id",
 };

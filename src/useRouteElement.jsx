@@ -13,6 +13,7 @@ import LoginSocialFaceBook from "./components/LoginSocial/LoginSocialFaceBook";
 import ListSalonOto from "./pages/SalonOto/ListSalonOto";
 import HomePageSalon from "./pages/SalonOto/HomePageSalon";
 import DetailCar from "./pages/SalonOto/DetailCar";
+import DetailPackage from "./pages/SalonOto/DetailPackage"
 
 function ProtectedRoute() {
   const isAuthenticated = useSelector(
@@ -85,6 +86,10 @@ const router = createBrowserRouter([
   {
     path:path.DetailCar,
     element:<DetailCar/>
+  },
+  {
+    path: path.DetailPackage,
+    element: <DetailPackage/>
   }
 ]);
 
