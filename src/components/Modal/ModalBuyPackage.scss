@@ -1,0 +1,29 @@
+.choose-payment {
+  .payment-item {
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    border: 1px solid gray;
+    border-radius: 5px;
+    margin: 15px 0;
+    padding: 10px 25px 10px 5px;
+    position: relative;
+    cursor: pointer;
+    .payment-image {
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: contain;
+      width: 40px;
+      height: 40px;
+      border-radius: 3px;
+      margin: 0 5px;
+    }
+    .payment-select {
+      position: absolute;
+      right: 20px;
+    }
+  }
+  .active {
+    background-color: aqua;
+  }
+}

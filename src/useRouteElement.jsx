@@ -10,10 +10,16 @@ import NotFound from "./pages/NotFound";
 import VerifyTokenEmail from "./pages/VerifyTokenEmail";
 import LoginSocial from "./components/LoginSocial";
 import LoginSocialFaceBook from "./components/LoginSocial/LoginSocialFaceBook";
+import LoginAdmin from "./pages/LoginAdmin";
+import HomeAdmin from "./pages/HomeAdmin";
+import ManagePackage from "./pages/ManagePackage";
+import AdminLayout from "./layouts/AdminLayout";
+import ManageFeature from "./pages/ManageFeature";
 import ListSalonOto from "./pages/SalonOto/ListSalonOto";
 import HomePageSalon from "./pages/SalonOto/HomePageSalon";
 import DetailCar from "./pages/SalonOto/DetailCar";
-import DetailPackage from "./pages/SalonOto/DetailPackage"
+import ListPackage from "./pages/SalonOto/ListPackage";
+
 
 function ProtectedRoute() {
   const isAuthenticated = useSelector(
@@ -64,6 +70,30 @@ const router = createBrowserRouter([
     ],
   },
   {
+    path: "/admin",
+    element: <AdminLayout />,
+    children: [
+      {
+        path: path.homeAdmin,
+        element: <HomeAdmin />,
+      },
+      {
+        path: path.managePackage,
+        element: <ManagePackage />,
+      },
+      {
+        path: path.manageFeature,
+        element: <ManageFeature />,
+      },
+    ],
+  },
+
+  {
+    path: path.loginAdmin,
+    element: <LoginAdmin />,
+  },
+
+  {
     path: path.callBackGoogle,
     element: <LoginSocial />,
   },
@@ -76,20 +106,20 @@ const router = createBrowserRouter([
     element: <NotFound />,
   },
   {
-    path:path.listSalon,
-    element:<ListSalonOto/>
+    path: path.listSalon,
+    element: <ListSalonOto />,
   },
   {
-    path:path.salonOto,
-    element:<HomePageSalon/>
+    path: path.salonOto,
+    element: <HomePageSalon />,
   },
   {
     path:path.DetailCar,
     element:<DetailCar/>
   },
   {
-    path: path.DetailPackage,
-    element: <DetailPackage/>
+    path:path.ListPackage,
+    element:<ListPackage/>
   }
 ]);
 

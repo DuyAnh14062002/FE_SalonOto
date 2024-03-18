@@ -57,7 +57,7 @@ class Http {
         return response;
       },
       (error) => {
-        if (error.response.status === 401) {
+        if (error && error.response && error.response.status === 401) {
           const config = error.response?.config || { headers: {} };
           console.log("config", config);
           const { url } = config;
@@ -86,6 +86,7 @@ class Http {
           clearLs();
           window.location.reload();
         } else {
+          console.log("error:", error);
           toast.error(error.response.msg || "Something went wrong", {
             autoClose: 3000,
           });

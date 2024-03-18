@@ -1,13 +1,56 @@
 import Header from "../../components/Header";
+import ModalBuyPackage from "../../components/Modal/ModalBuyPackage";
 import "./HomePage.scss";
 import { useNavigate } from "react-router-dom";
+import { Modal } from "reactstrap";
+import { useState, useEffect } from 'react';
+import {path} from "./../../constants/path"
+import packageApi from "../../apis/package.api";
 export default function HomePage() {
+  const [show, setShow] = useState(false);
+  const [packages, setPackages] = useState([]);
+  const [listPackage, setListPackage] = useState([])
   let navigate = useNavigate()
-  const ShowDetailPackage = () =>{
-        navigate("/detail-package/:123")
+  // const ShowDetailPackage = () =>{
+  //       navigate("/detail-package/:123")
+  // }
+  const handleShowModal = () => {
+    setShow(true)
   }
+  const handleHideModal = () => {
+    setShow(false)
+  }
+  const NavigateListPackage = () =>{
+    navigate(`${path.ListPackage}`)
+  }
+  useEffect(() => {
+    const loadingPackage = async() =>{
+      console.log("oke")
+      let res =  await packageApi.getAllPackage()
+      console.log("res : ", res)
+      if(res?.data?.packages?.packages){
+        getPackageForHomePage(res.data.packages.packages)
+       // setPackages(res.data.packages.packages)
+      }
+    }
+    loadingPackage()
+  }, [])
+  const getPackageForHomePage = (packages) =>{
+    const list = [];
+    console.log("package : ", packages)
+    if(packages && packages.length > 0){
+      for(let i = 0; i< 3 ;i++){
+        list.push(packages[i])
+        console.log("list : ", list)
+      }
+      setListPackage(list)
+    }
+  }
+  // const list = packages.slice(0, 3);
+  // console.log("list package 123 : ", list)
   return (
-    <div className="container-homepage">
+    <>
+       <div className="container-homepage">
       <Header otherPage={false} />
       <div className="destination__container">
         <img
@@ -45,163 +88,38 @@ export default function HomePage() {
             Chúng tôi cung cấp cho bạn các gói dịch vụ tốt nhất giúp quản lí bạn
             quản lí Salon Oto của mình một cách hiệu quả
           </p>
-          <button className="btn">Khám phá ngay</button>
+          <button className="btn" onClick={NavigateListPackage}>Khám phá ngay</button>
         </div>
         <div className="destination__grid">
-          <div className="destination__card" onClick={ShowDetailPackage}> 
-            <div className="card__content">
-              <h4>Gói Salon oto cơ bản</h4>
-              <ul>
-                <li>
-                  {" "}
-                  <i
-                    className="fa-solid fa-circle-check"
-                    style={{ color: "green" }}
-                  ></i>{" "}
-                  quản lí xe, thông tin giới thiệu
-                </li>
-                <li>
-                  {" "}
-                  <i
-                    className="fa-solid fa-circle-check"
-                    style={{ color: "green" }}
-                  ></i>{" "}
-                  quản lí tin tức
-                </li>
-                <li>
-                  {" "}
-                  <i
-                    className="fa-solid fa-circle-check"
-                    style={{ color: "green" }}
-                  ></i>{" "}
-                  quản lí bảo hành,bảo dưỡng
-                </li>
-                <li>
-                  {" "}
-                  <i
-                    className="fa-solid fa-circle-xmark"
-                    style={{ color: "red" }}
-                  ></i>{" "}
-                  quản lí Nhân viên
-                </li>
-                <li>
-                  {" "}
-                  <i
-                    className="fa-solid fa-circle-xmark"
-                    style={{ color: "red" }}
-                  ></i>{" "}
-                  quản lí kho phụ tùng
-                </li>
-                <li>
-                  {" "}
-                  <i
-                    className="fa-solid fa-circle-xmark"
-                    style={{ color: "red" }}
-                  ></i>{" "}
-                  Xem báo cáo thống kê
-                </li>
-              </ul>
-              <button className="btn">Mua ngay</button>
+           {listPackage && listPackage.length > 0 && listPackage.map((item) =>{
+            console.log("item : ", item)
+            return(
+              <div className="destination__card"> 
+              <div className="card__content">
+                <h4>{item.name}</h4>
+                <ul>
+                   {item && item.features.length > 0 && item.features.map((feature) =>{
+                    return(
+                      <li>
+                      {" "}
+                      <i
+                        className="fa-solid fa-circle-check"
+                        style={{ color: "green" }}
+                      ></i>{" "}
+                      {feature.name}
+                    </li>
+                    )
+                   } )}
+                </ul>
+                <button className="btn"  onClick={handleShowModal}>Mua ngay</button>
+              </div>
             </div>
-          </div>
-          <div className="destination__card">
-            <div className="card__content">
-              <h4>Gói salon oto nâng cao</h4>
-              <ul>
-                <li>
-                  {" "}
-                  <i
-                    className="fa-solid fa-circle-check"
-                    style={{ color: "green" }}
-                  ></i>{" "}
-                  quản lí xe, thông tin giới thiệu
-                </li>
-                <li>
-                  {" "}
-                  <i
-                    className="fa-solid fa-circle-check"
-                    style={{ color: "green" }}
-                  ></i>{" "}
-                  quản lí tin tức
-                </li>
-                <li>
-                  {" "}
-                  <i
-                    className="fa-solid fa-circle-check"
-                    style={{ color: "green" }}
-                  ></i>{" "}
-                  quản lí bảo hành,bảo dưỡng
-                </li>
-                <li>
-                  {" "}
-                  <i
-                    className="fa-solid fa-circle-check"
-                    style={{ color: "green" }}
-                  ></i>{" "}
-                  quản lí Nhân viên
-                </li>
-                <li>
-                  {" "}
-                  <i
-                    className="fa-solid fa-circle-check"
-                    style={{ color: "green" }}
-                  ></i>{" "}
-                  quản lí kho phụ tùng
-                </li>
-                <li>
-                  {" "}
-                  <i
-                    className="fa-solid fa-circle-check"
-                    style={{ color: "green" }}
-                  ></i>{" "}
-                  Xem báo cáo thống kê
-                </li>
-              </ul>
-              <button className="btn">Mua ngay</button>
-            </div>
-          </div>
-          <div className="destination__card">
-            <div className="card__content">
-              <h4>Gói quản lý phụ tùng</h4>
-              <ul>
-                <li>
-                  {" "}
-                  <i
-                    className="fa-solid fa-circle-check"
-                    style={{ color: "green" }}
-                  ></i>{" "}
-                  quản lí phụ tùng, vật liệu
-                </li>
-                <li>
-                  {" "}
-                  <i
-                    className="fa-solid fa-circle-check"
-                    style={{ color: "green" }}
-                  ></i>{" "}
-                  quản lí đồ chơi, linh kiện
-                </li>
-                <li>
-                  {" "}
-                  <i
-                    className="fa-solid fa-circle-check"
-                    style={{ color: "green" }}
-                  ></i>{" "}
-                  quản lí đơn hàng
-                </li>
-                <li>
-                  {" "}
-                  <i
-                    className="fa-solid fa-circle-check"
-                    style={{ color: "green" }}
-                  ></i>{" "}
-                  Xem báo cáo thống kê
-                </li>
-              </ul>
-              <button className="btn">Mua ngay</button>
-            </div>
-          </div>
+            )
+           })}
         </div>
       </div>
     </div>
+    <ModalBuyPackage show = {show} handleHideModal = {handleHideModal} />
+    </>
   );
 }

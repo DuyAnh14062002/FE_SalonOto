@@ -11,19 +11,11 @@ const authApi = {
   facebookAuth() {
     return http.get(`/auth/facebook`);
   },
-  googleAuthCallback(code, userId) {
-    return http.get(`/auth/google/callback?code=${code}`, {
-      headers: {
-        userId: userId,
-      },
-    });
+  googleAuthCallback(code) {
+    return http.get(`/auth/google/callback?code=${code}`);
   },
-  facebookAuthCallback(code, userId) {
-    return http.get(`/auth/facebook/callback?code=${code}`, {
-      headers: {
-        userId: userId,
-      },
-    });
+  facebookAuthCallback(code) {
+    return http.get(`/auth/facebook/callback?code=${code}`);
   },
   inviteUser(body) {
     return http.post(`/auth/invite`, body);

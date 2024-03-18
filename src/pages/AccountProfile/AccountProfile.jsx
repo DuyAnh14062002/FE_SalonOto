@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Header from "../../components/Header";
 import "./AccountProfile.scss";
 import Form from "react-bootstrap/Form";
@@ -6,16 +6,38 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import authApi from "../../apis/auth.api";
 import { toast } from "react-toastify";
-
+import userApi from "../../apis/user.api";
 const AccountProfile = () => {
   const [emailInvite, setEmailInvite] = useState("");
   const [show, setShow] = useState(false);
 
+  const [profile1,setProfile1]=useState({
+       
+  })
+
+  const [profile, setProfile] = useState({
+    fullname:'',
+    phone:'',
+    gender:"",
+    date_of_birth:"",
+    address:""
+  })
+
+  const [image, setImage] = useState(null)
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+
   const handleOnChangeEmailInvite = (e) => {
     setEmailInvite(e.target.value);
   };
+  const getProfile = async() =>{
+    const res = await userApi.getProfile()
+    setProfile1(res.data.profile)
+ }
+  useEffect(() =>{
+    getProfile();
+  }, [])
+
   const handleSubmitInviteUser = async (e) => {
     e.preventDefault();
     try {
@@ -41,6 +63,42 @@ const AccountProfile = () => {
       console.log(error);
     }
   };
+  const handleOnchange = (e) => {
+      setProfile({...profile,[e.target.name]:e.target.value})
+  }
+  const handleImage = (e) => {
+      setImage(e.target.files[0])
+  }
+  const HandleSubmit = async () => {
+      const form = new FormData();
+      if(profile.fullname){
+        form.append("fullname", profile.fullname);
+      }
+      if(profile.phone){
+        form.append("phone", profile.phone);
+      } 
+      if(profile.gender){
+        form.append("gender", profile.gender);
+      }
+      if(profile.address){
+        form.append("address", profile.address);
+      }
+      if(profile.date_of_birth){
+        form.append("date_of_birth", profile.date_of_birth);
+      }
+      if(image){
+        form.append("avatar", image);
+      }
+      const res = await userApi.updateProfile(form)
+      console.log("res update : ", res)
+      if(res.data && res.data.status && res.data.status === "success"){
+           toast.success("Cập nhật thông tin thành công")
+      }else{
+        toast.error("Cập nhật thông tin thất bại")
+      }
+      getProfile()
+      setProfile({})
+  }
   return (
     <>
       <Header otherPage={true} />
@@ -62,7 +120,7 @@ const AccountProfile = () => {
                                   <div
                                     className="user-image"
                                     style={{
-                                      backgroundImage: `url(https://www.phanmemninja.com/wp-content/uploads/2023/07/anh-dai-dien-zalo-mac-dinh-11.jpg)`,
+                                      backgroundImage: `url(${profile && profile1.avatar})`,
                                     }}
                                   ></div>
                                 </div>
@@ -70,19 +128,32 @@ const AccountProfile = () => {
                               <div className="col-lg-3 col-md-4 col-12 ">
                                 <div className="info">
                                   <h4>Họ tên</h4>
-                                  <p>Xuân Giao</p>
+                                  <p>{profile1 && profile1.fullname}</p>
                                 </div>
                               </div>
                               <div className="col-lg-3 col-md-4 col-12">
                                 <div className="info">
-                                  <h4>Email</h4>
-                                  <p>XuanGiao@gmail.com</p>
+                                  <h4>Giới tính</h4>
+                                  <p>{profile1 && profile1.gender}</p>
                                 </div>
                               </div>
                               <div className="col-lg-3 col-md-4 col-12">
                                 <div className="info">
                                   <h4>Số điện thoại</h4>
-                                  <p>0384496705</p>
+                                  <p>{profile1 && profile1.phone}</p>
+                                </div>
+                              </div>
+                              <div className="col-lg-3 col-md-4 col-12"></div>
+                              <div className="col-lg-3 col-md-4 col-12">
+                                <div className="info">
+                                  <h4>Địa chỉ</h4>
+                                  <p>{profile1 && profile1.address}</p>
+                                </div>
+                              </div>
+                              <div className="col-lg-3 col-md-4 col-12">
+                                <div className="info">
+                                  <h4>Ngày sinh</h4>
+                                  <p>{profile1 && profile1.date_of_birth}</p>
                                 </div>
                               </div>
                             </div>
@@ -102,8 +173,23 @@ const AccountProfile = () => {
                             <i className="fa fa-user"></i>
                             <input
                               type="text"
-                              name="name"
+                              name="fullname"
                               placeholder="Họ tên"
+                              value={profile.fullname}
+                              onChange={handleOnchange}
+                            />
+                          </div>
+                        </div>
+                        <div className="col-lg-4 col-md-4 col-12 ">
+                          <div className="update-container">
+                          <i class="fa-solid fa-venus-mars"></i>
+                            <input
+                              type="text"
+                              name="gender"
+                              placeholder="Giới tính"
+                              value={profile.gender}
+                              onChange={handleOnchange}
+
                             />
                           </div>
                         </div>
@@ -112,19 +198,46 @@ const AccountProfile = () => {
                             <i className="fa fa-phone"></i>
                             <input
                               type="tel"
-                              name="Số điện thoại"
+                              name="phone"
                               placeholder="Số điện thoại"
+                              value={profile.phone}
+                              onChange={handleOnchange}
                             />
                           </div>
                         </div>
-                        <div className="col-lg-4 col-md-4 col-12 ">
+                        <div className="col-lg-4 col-md-4 col-12 mt-3">
                           <div className="update-container">
-                            <i class="fa-regular fa-image"></i>
+                          <i class="fa-solid fa-location-dot"></i>
+                            <input
+                              type="text"
+                              name="address"
+                              placeholder="Địa chỉ"
+                              value={profile.address}
+                              onChange={handleOnchange}
+                            />
+                          </div>
+                        </div>
+                        <div className="col-lg-4 col-md-4 col-12 mt-3">
+                          <div className="update-container">
+                          <i class="fa-solid fa-cake-candles"></i>
+                            <input
+                              type="date"
+                              name="date_of_birth"
+                              placeholder="Ngày sinh"
+                              value={profile.date_of_birth}
+                              onChange={handleOnchange}
+                            />
+                          </div>
+                        </div>
+                        <div className="col-lg-4 col-md-4 col-12 mt-3">
+                          <div className="update-container">
+                            <i className="fa-regular fa-image"></i>
                             <input
                               type="file"
-                              name="image"
+                              name="avatar"
                               id="files"
                               className="hidden"
+                              onChange={(e) => handleImage(e)}
                             />
                           </div>
                         </div>
@@ -133,6 +246,7 @@ const AccountProfile = () => {
                             <button
                               className="btn btn-primary mt-3"
                               style={{ marginRight: "10px" }}
+                              onClick={HandleSubmit}
                             >
                               <i className="fa fa-edit"></i> Lưu thay đổi
                             </button>
@@ -145,7 +259,7 @@ const AccountProfile = () => {
                             onClick={handleShow}
                             style={{ marginRight: "10px" }}
                           >
-                            <i class="fa-solid fa-user-plus"></i> Mời bạn bè
+                            <i className="fa-solid fa-user-plus"></i> Mời bạn bè
                           </Button>
                           <Button
                             className="mt-3"

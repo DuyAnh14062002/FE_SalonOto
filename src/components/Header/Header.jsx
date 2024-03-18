@@ -22,7 +22,7 @@ export default function Header(props) {
     navigate("/login");
   };
   return otherPage === true ? (
-    <nav style={{ backgroundColor: "blue", padding: "5px 5px" }}>
+    <nav style={{ backgroundColor: "rgb(1 37 255 / 70%)", padding: "5px 5px" }}>
       <div className="nav__logo">
         <img
           src="https://s.bonbanh.com/uploads/users/701283/salon/l_1678849916.jpg"
@@ -35,7 +35,7 @@ export default function Header(props) {
           <Link to="/">Trang chủ</Link>
         </li>
         <li className="link">
-          <Link to="/">Gói dịch vụ</Link>
+          <Link to={path.ListPackage}>Gói dịch vụ</Link>
         </li>
         <li className="link">
           <Link to="/listSalon">Salon Oto</Link>
@@ -45,6 +45,9 @@ export default function Header(props) {
         </li>
         <li className="link">
           <Link to="/">Tin tức</Link>
+        </li>
+        <li className="link">
+          <Link to="/admin">Quản lý</Link>
         </li>
       </ul>
       <div className="search">
@@ -88,7 +91,7 @@ export default function Header(props) {
           <Link to="/">Trang chủ</Link>
         </li>
         <li className="link">
-          <Link to="/">Gói dịch vụ</Link>
+          <Link to={path.ListPackage}>Gói dịch vụ</Link>
         </li>
         <li className="link">
           <Link to="/listSalon">Salon Oto</Link>
@@ -98,6 +101,9 @@ export default function Header(props) {
         </li>
         <li className="link">
           <Link to="/">Tin tức</Link>
+        </li>
+        <li className="link">
+          <Link to="/admin">Quản lý</Link>
         </li>
       </ul>
       <div className="search">

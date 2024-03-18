@@ -1,0 +1,13 @@
+table {
+  border-collapse: separate;
+  border-spacing: 0 10px;
+}
+.feature {
+  overflow-y: scroll;
+  height: 150px;
+}
+.image-info {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
