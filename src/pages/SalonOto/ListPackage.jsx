@@ -8,9 +8,11 @@ export default function ListPackage() {
   const [show, setShow] = useState(false);
   const [price, setPrice] = useState()
   const [packages, setPackages] = useState([]);
-  const handleShowModal = (price) => {
+  const [packageId, setPackageId] = useState("")
+  const handleShowModal = (price, packageId) => {
     setShow(true)
     setPrice(price)
+    setPackageId(packageId)
   }
   const handleHideModal = () => {
     setShow(false)
@@ -54,13 +56,13 @@ export default function ListPackage() {
                   )
                 })}
               </ul>
-              <button className="btn" onClick={() => handleShowModal(item.price)}>Mua ngay</button>
+              <button className="btn" onClick={() => handleShowModal(item.price, item.package_id)}>Mua ngay</button>
             </div>
           </div>
           )
         })}
       </div>
-      <ModalBuyPackage show={show} handleHideModal={handleHideModal} price = {price} />
+      <ModalBuyPackage show={show} handleHideModal={handleHideModal} price = {price} packageId = {packageId} />
     </>
   )
 }

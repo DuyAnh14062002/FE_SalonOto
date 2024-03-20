@@ -1,9 +1,10 @@
-import { Link } from "react-router-dom";
-import { path } from "../../constants/path";
-
-export default function AdminHeader() {
+import React from 'react'
+import "./AdminSalonHeader.scss"
+import {Link} from "react-router-dom"
+import { path } from '../../../constants/path'
+export default function AdminSalonHeader() {
   return (
-    <nav className="topnav shadow navbar-light bg-white d-flex">
+    <nav className="topnav shadow navbar-light d-flex">
       <div className="navbar-brand">
         <Link to="/admin" className="text-decoration-none">
           <i className="fa-solid fa-car"></i>{" "}
@@ -22,17 +23,11 @@ export default function AdminHeader() {
               <i className="plus-icon fas fa-plus-circle"></i>
             </button>
             <div className="dropdown-menu">
-              <Link className="dropdown-item" to={path.managePackage}>
-                Quản lý gói
+              <Link className="dropdown-item" to={path.manageSalon}>
+                Quản lí Salon
               </Link>
-              <Link className="dropdown-item" to={path.manageFeature}>
-                Quản lý tính năng
-              </Link>
-              <Link className="dropdown-item" to="/">
-                Quản lí tin tức
-              </Link>
-              <Link className="dropdown-item" to="/">
-                Quản lí users
+              <Link className="dropdown-item" to={path.manageCar}>
+                Quản lý xe
               </Link>
             </div>
           </div>
@@ -60,5 +55,5 @@ export default function AdminHeader() {
         </div>
       </div>
     </nav>
-  );
+  )
 }

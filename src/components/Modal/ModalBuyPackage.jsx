@@ -36,7 +36,8 @@ export default function ModalBuyPackage(props) {
        window.open(`${res.data.data.order_url}`, "_self")
       }
      }else if(activeVnPay === true){
-        const res = await paymentApi.paymentVnpay(amount, "");
+        const res = await paymentApi.paymentVnpay(props.packageId);
+        console.log("res payment : ", res)
         if(res?.data?.vnpUrl){
           window.open(`${res.data.vnpUrl}`, "_self")
         }
@@ -47,6 +48,7 @@ export default function ModalBuyPackage(props) {
       }
      }
   }
+  console.log("id package : ", props.packageId)
   return (
     <>
           <Modal show={props.show} onHide={handleHideModal} >

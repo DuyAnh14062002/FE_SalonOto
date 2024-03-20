@@ -18,4 +18,12 @@ export const path = {
   DetailCar: "/detail-car/:id",
   DetailPackage: "/detail-package/:id",
   ListPackage: "/listPackage",
+
+  //========ADMIN SALON PATH=====================
+  adminSalon: "/adminSalon",
+  manageCar: "/adminSalon/manageCar",
+  manageSalon: "/adminSalon/manageSalon",
+
+  //============PAYMENT =========================
+  getResultPayment: "/payment/vnpay",
 };

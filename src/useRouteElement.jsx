@@ -19,8 +19,11 @@ import ListSalonOto from "./pages/SalonOto/ListSalonOto";
 import HomePageSalon from "./pages/SalonOto/HomePageSalon";
 import DetailCar from "./pages/SalonOto/DetailCar";
 import ListPackage from "./pages/SalonOto/ListPackage";
-
-
+import AdminSalon from "./pages/AdminSalon/AdminSalonHeader/AdminSalonHeader";
+import ManageCar from "./pages/AdminSalon/ManageCar"
+import ManageSalon from "./pages/AdminSalon/ManageSalon"
+import AdminSalonLayout from "./pages/AdminSalon/AdminSalonLayout/AdminSalonLayout";
+import ResultPayment from "./pages/ResultPayment";
 function ProtectedRoute() {
   const isAuthenticated = useSelector(
     (state) => state.userSlice.isAuthenticated
@@ -69,6 +72,7 @@ const router = createBrowserRouter([
       },
     ],
   },
+  //==========Route admin===============
   {
     path: "/admin",
     element: <AdminLayout />,
@@ -84,6 +88,21 @@ const router = createBrowserRouter([
       {
         path: path.manageFeature,
         element: <ManageFeature />,
+      },
+    ],
+  },
+  //===========Route admin salon=================
+  {
+    path: "/adminSalon",
+    element: <AdminSalonLayout />,
+    children: [
+      {
+        path: path.manageSalon,
+        element: <ManageSalon />,
+      },
+      {
+        path: path.manageCar,
+        element: <ManageCar />,
       },
     ],
   },
@@ -120,6 +139,10 @@ const router = createBrowserRouter([
   {
     path:path.ListPackage,
     element:<ListPackage/>
+  },
+  {
+    path: path.getResultPayment,
+    element: <ResultPayment/>
   }
 ]);
 

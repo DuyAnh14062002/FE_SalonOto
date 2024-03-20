@@ -47,7 +47,7 @@ export default function Header(props) {
           <Link to="/">Tin tức</Link>
         </li>
         <li className="link">
-          <Link to="/admin">Quản lý</Link>
+          <Link to={path.adminSalon}>Quản lý</Link>
         </li>
       </ul>
       <div className="search">
@@ -103,7 +103,7 @@ export default function Header(props) {
           <Link to="/">Tin tức</Link>
         </li>
         <li className="link">
-          <Link to="/admin">Quản lý</Link>
+          <Link to={path.adminSalon}>Quản lý</Link>
         </li>
       </ul>
       <div className="search">
