@@ -13,7 +13,6 @@ export default function ManageSalon() {
   const [banner, setBanner] = useState()
     const fetchDataSalon = async() =>{
     const res = await salonApi.getSalonInfor()
-    console.log("res salon : ", res)
     if(res?.data?.salon){
       setSalon(res.data.salon)
     }

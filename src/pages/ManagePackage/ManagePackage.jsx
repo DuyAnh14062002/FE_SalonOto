@@ -146,9 +146,9 @@ export default function ManagePackage() {
       handleClose();
       fetchData();
       setAllFeaturesChecked();
-      toast.success("Thêm tính năng thành công");
+      toast.success("Thêm gói thành công");
     } catch (error) {
-      toast.error("Thêm tính năng thất bại");
+      toast.error("Thêm gói thất bại");
     } finally {
       setIsLoading(false);
     }
@@ -370,7 +370,7 @@ export default function ManagePackage() {
                 />
               </Form.Group>
               <Form.Group className="mt-3">
-                <Form.Label>Giá</Form.Label>
+                <Form.Label>Giá 1 tháng</Form.Label>
                 <Form.Control
                   required
                   type="text"
@@ -442,7 +442,7 @@ export default function ManagePackage() {
                 />
               </Form.Group>
               <Form.Group className="mt-3">
-                <Form.Label>Giá</Form.Label>
+                <Form.Label>Giá 1 tháng</Form.Label>
                 <Form.Control
                   required
                   type="text"
@@ -518,7 +518,7 @@ export default function ManagePackage() {
                 />
               </Form.Group>
               <Form.Group className="mt-3">
-                <Form.Label>Giá</Form.Label>
+                <Form.Label>Giá 1 tháng</Form.Label>
                 <Form.Control
                   required
                   type="text"

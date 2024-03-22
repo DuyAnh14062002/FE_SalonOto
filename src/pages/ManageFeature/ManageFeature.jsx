@@ -14,13 +14,14 @@ export default function ManageFeature() {
   const [feature, setFeature] = useState({
     name: "",
     description: "",
+    keyMap: ""
   });
 
   const [featureChoose, setFeatureChoose] = useState(null);
 
   const fetchData = async () => {
     const res = await featureApi.getAllFeature();
-    console.log("res:",res)
+    console.log("res feature:",res)
     if (res?.data?.features?.features) {
       const features = res.data.features.features.reverse();
       setFeatures(features);
@@ -39,7 +40,7 @@ export default function ManageFeature() {
   const handleShow = () => setShow(true);
   const handleShowEdit = (feature) => {
     setFeatureChoose(feature);
-    setFeature({ name: feature.name, description: feature.description });
+    setFeature({ name: feature.name, description: feature.description, keyMap: feature.keyMap });
     setShowEdit(true);
   };
   const handleCloseEdit = () => {
@@ -125,6 +126,7 @@ export default function ManageFeature() {
                   </th>
                   <th scope="col">Tên tính năng</th>
                   <th scope="col">Mô tả tính năng</th>
+                  <th scope="col">keyMap</th>
                   <th scope="col" className="text-center">
                     Tác vụ
                   </th>
@@ -141,7 +143,7 @@ export default function ManageFeature() {
 
                       <td>{feature.name}</td>
                       <td>{feature.description}</td>
-
+                      <td>{feature.keyMap}</td>
                       <td className="text-center">
                         <button
                           className="btn btn-success btn-sm rounded-0 text-white mx-2"
@@ -230,7 +232,6 @@ export default function ManageFeature() {
                   required
                   type="text"
                   name="name"
-                  value={feature.name}
                   onChange={onChange}
                 />
               </Form.Group>
@@ -241,7 +242,15 @@ export default function ManageFeature() {
                   as="textarea"
                   name="description"
                   rows={5}
-                  value={feature.description}
+                  onChange={onChange}
+                />
+              </Form.Group>
+              <Form.Group md="4">
+                <Form.Label>KeyMap</Form.Label>
+                <Form.Control
+                  required
+                  type="text"
+                  name="keyMap"
                   onChange={onChange}
                 />
               </Form.Group>
@@ -280,6 +289,16 @@ export default function ManageFeature() {
                   as="textarea"
                   rows={5}
                   value={feature.description}
+                  onChange={onChange}
+                />
+              </Form.Group>
+              <Form.Group md="4">
+                <Form.Label>KeyMap</Form.Label>
+                <Form.Control
+                  required
+                  name="keyMap"
+                  type="text"
+                  value={feature.keyMap}
                   onChange={onChange}
                 />
               </Form.Group>

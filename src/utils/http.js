@@ -43,7 +43,6 @@ class Http {
     this.instance.interceptors.response.use(
       (response) => {
         const { url } = response.config;
-
         if (url === "/auth/login") {
           const data = response.data;
           this.accessToken = data.accessToken;
@@ -53,7 +52,6 @@ class Http {
           this.accessToken = "";
           clearLs();
         }
-
         return response;
       },
       (error) => {

@@ -2,7 +2,11 @@ import React from 'react'
 import "./AdminSalonHeader.scss"
 import {Link} from "react-router-dom"
 import { path } from '../../../constants/path'
+import { useSelector } from "react-redux";
 export default function AdminSalonHeader() {
+  const userInfo = useSelector(
+    (state) => state.userSlice.userInfo
+  );
   return (
     <nav className="topnav shadow navbar-light d-flex">
       <div className="navbar-brand">
@@ -41,13 +45,13 @@ export default function AdminSalonHeader() {
               data-bs-toggle="dropdown"
             >
               <i className="fa-solid fa-user mx-2"></i>
-              <span>DUC BA</span>
+              <span>{userInfo.fullname}</span>
             </button>
             <div className="dropdown-menu dropdown-menu-right">
               <Link className="dropdown-item" to="/">
                 Tài khoản
               </Link>
-              <Link className="dropdown-item" to={path.loginAdmin}>
+              <Link className="dropdown-item" to="/">
                 Thoát
               </Link>
             </div>

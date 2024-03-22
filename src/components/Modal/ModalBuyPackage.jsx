@@ -10,9 +10,16 @@ export default function ModalBuyPackage(props) {
   const [activeZaloPayment, setActiveZaloPayment] = useState(false)
   const [activeVisaPayment, setActiveVisaPayment] = useState(false)
   const [activeVnPay, setActiveVnPay] = useState(false)
+
+  const [activeMonth3, setActiveMonth3] = useState(false)
+  const [activeMonth6, setActiveMonth6] = useState(false)
+  const [activeMonth12, setActiveMonth12] = useState(false)
+
+  const [month, setMonth] = useState()
   const handleHideModal = () =>{
     props.handleHideModal()
   }
+
   const HandleActiveZaloPay = () =>{
     setActiveVisaPayment(false)
     setActiveZaloPayment(true)
@@ -28,6 +35,25 @@ export default function ModalBuyPackage(props) {
     setActiveVisaPayment(false)
     setActiveZaloPayment(false)
   }
+
+  const HandleActiveMonth3 = () =>{
+    setActiveMonth3(true)
+    setActiveMonth6(false)
+    setActiveMonth12(false)
+    setMonth(3)
+  }
+  const HandleActiveMonth6 = () =>{
+    setActiveMonth3(false)
+    setActiveMonth6(true)
+    setActiveMonth12(false)
+    setMonth(6)
+  }
+  const HandleActiveMonth12 = () =>{
+    setActiveMonth3(false)
+    setActiveMonth6(false)
+    setActiveMonth12(true)
+    setMonth(12)
+  }
   const handlePayMent = async (e, amount) => {
      e.preventDefault();
      if(activeZaloPayment === true){
@@ -36,8 +62,7 @@ export default function ModalBuyPackage(props) {
        window.open(`${res.data.data.order_url}`, "_self")
       }
      }else if(activeVnPay === true){
-        const res = await paymentApi.paymentVnpay(props.packageId);
-        console.log("res payment : ", res)
+        const res = await paymentApi.paymentVnpay(props.packageId, month);
         if(res?.data?.vnpUrl){
           window.open(`${res.data.vnpUrl}`, "_self")
         }
@@ -48,7 +73,6 @@ export default function ModalBuyPackage(props) {
       }
      }
   }
-  console.log("id package : ", props.packageId)
   return (
     <>
           <Modal show={props.show} onHide={handleHideModal} >
@@ -59,7 +83,15 @@ export default function ModalBuyPackage(props) {
             <Modal.Body>
               <Card.Body md="4">
                 <Card.Title>Gói salon oto cơ bản</Card.Title>
-                <Card.Text style={{color: "#4ABAB9"}}>Giá: {props.price}đ</Card.Text>
+                <Card.Text style={{color: "#4ABAB9"}}>Giá: {props.price}đ/Tháng</Card.Text>
+              </Card.Body>
+              <Card.Body md="4">
+                <Card.Title>Chọn thời hạn: </Card.Title>
+                <div className='duration'>
+                  <div className={activeMonth3 === true ? 'duration-item 3-month active-month' :'duration-item 3-month'} onClick={HandleActiveMonth3}>3 tháng</div>
+                  <div className={activeMonth6 === true ? 'duration-item 6-month active-month' : 'duration-item 6-month'} onClick={HandleActiveMonth6}>6 tháng</div>
+                  <div className={activeMonth12 === true ? 'duration-item 12-month active-month' : 'duration-item 12-month'} onClick={HandleActiveMonth12}>12 tháng</div>
+                </div>
               </Card.Body>
               <Card.Body style={{borderTop : "1px dotted black"}}>
               <Card.Title>Chọn phương thức thanh toán</Card.Title>

@@ -27,3 +27,18 @@
     background-color: aqua;
   }
 }
+.duration {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  .duration-item {
+    padding: 5px 10px;
+    background-color: rgb(130, 130, 134);
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+}
+.active-month {
+  background-color: rgb(26, 181, 47) !important;
+}

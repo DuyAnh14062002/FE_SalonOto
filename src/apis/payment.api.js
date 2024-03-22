@@ -12,9 +12,10 @@ const paymentApi = {
     return http.post("/payment/queryOrder", { app_trans_id: id });
   },
 
-  paymentVnpay(package_id) {
+  paymentVnpay(package_id, month) {
     return http.post("/payment/create_payment_url", {
       package_id: package_id,
+      months: month,
     });
   },
 };

@@ -32,7 +32,9 @@ const AccountProfile = () => {
   };
   const getProfile = async() =>{
     const res = await userApi.getProfile()
-    setProfile1(res.data.profile)
+    if(res?.data?.profile){
+      setProfile1(res.data.profile)
+    }
  }
   useEffect(() =>{
     getProfile();
@@ -91,7 +93,7 @@ const AccountProfile = () => {
       }
       const res = await userApi.updateProfile(form)
       console.log("res update : ", res)
-      if(res.data && res.data.status && res.data.status === "success"){
+      if(res?.data?.status && res.data.status === "success"){
            toast.success("Cập nhật thông tin thành công")
       }else{
         toast.error("Cập nhật thông tin thất bại")
@@ -120,7 +122,7 @@ const AccountProfile = () => {
                                   <div
                                     className="user-image"
                                     style={{
-                                      backgroundImage: `url(${profile && profile1.avatar})`,
+                                      backgroundImage: `url(${profile1 && profile1.avatar})`,
                                     }}
                                   ></div>
                                 </div>

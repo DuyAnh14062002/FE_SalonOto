@@ -1,14 +1,16 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./Header.scss";
 import { path } from "../../constants/path";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutUser } from "../../redux/slices/UserSlice";
 import authApi from "../../apis/auth.api";
+import purchaseApi from "../../apis/purchase.api";
 export default function Header(props) {
   const { otherPage } = props;
+  const [purchasedPackages, setPurchasedPackages] = useState([])
   const userInfo = useSelector((state) => state.userSlice.userInfo);
-
+  
   const dispatch = useDispatch();
   let navigate = useNavigate();
   let handleLogout = async () => {
@@ -21,6 +23,16 @@ export default function Header(props) {
     dispatch(logoutUser());
     navigate("/login");
   };
+  useEffect(() =>{
+    const loading = async() =>{
+         let res = await purchaseApi.getPurchase()
+         console.log("res get purchase : ", res)
+         if(res?.data?.purchasedPackages){
+          setPurchasedPackages(res.data.purchasedPackages)
+         }
+    }
+    loading()
+  },[])
   return otherPage === true ? (
     <nav style={{ backgroundColor: "rgb(1 37 255 / 70%)", padding: "5px 5px" }}>
       <div className="nav__logo">
@@ -46,9 +58,9 @@ export default function Header(props) {
         <li className="link">
           <Link to="/">Tin tức</Link>
         </li>
-        <li className="link">
+        {purchasedPackages && purchasedPackages.length > 0 && <li className="link">
           <Link to={path.adminSalon}>Quản lý</Link>
-        </li>
+        </li>}
       </ul>
       <div className="search">
         <input type="text" placeholder="Tìm kiếm" />
@@ -102,9 +114,9 @@ export default function Header(props) {
         <li className="link">
           <Link to="/">Tin tức</Link>
         </li>
-        <li className="link">
+        {purchasedPackages && purchasedPackages.length > 0 && <li className="link">
           <Link to={path.adminSalon}>Quản lý</Link>
-        </li>
+        </li>}
       </ul>
       <div className="search">
         <input type="text" placeholder="Tìm kiếm" />

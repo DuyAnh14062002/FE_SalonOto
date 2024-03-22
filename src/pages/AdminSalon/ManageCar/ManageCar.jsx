@@ -17,6 +17,7 @@ export default function ManageCar() {
  const [image, setImage] = useState("")
  const [salon, setSalon] = useState({});
  const fetchDataSalon = async() =>{
+  console.log("oke")
   const res = await salonApi.getSalonInfor()
   console.log("res salon : ", res)
   if(res?.data?.salon?.cars){
@@ -58,6 +59,7 @@ useEffect(() => {
     console.log("car : ", car)
   }
    const onChange = (e) => {
+      console.log("car : ", car)
       setCar({...car, [e.target.name] : e.target.value})
    }
    const handleOnChangeImage = (e) =>{
@@ -98,30 +100,66 @@ useEffect(() => {
 
    const handleAddCar = async () =>{
     const form = new FormData();
-    form.append("name", car.name);
-    form.append("description", car.description);
-    form.append("email", car.email);
-    form.append("origin", car.origin);
-    form.append("brand", car.brand);
-    form.append("model", car.model);
-    form.append("type", car.type);
-    form.append("capacity", car.capacity);
-    form.append("door", car.door);
-    form.append("seat", car.seat);
-    form.append("kilometer", car.kilometer);
-    form.append("gear", car.gear);
-    form.append("inColor", car.inColor);
-    form.append("outColor", car.outColor);
-    form.append("price", car.price);
-    form.append("salonSalonId", salon.salon_id)
+    console.log("car add : ", car)
+    if(car.name){
+      form.append("name", car.name);
+    }
+    if(car.description){
+      form.append("description", car.description);
+    }
+    if(car.email){
+      form.append("email", car.email);
+    }
+    if(car.origin){
+      form.append("origin", car.origin);
+    }
+    if(car.brand){
+      form.append("brand", car.brand);
+    }
+    if(car.model){
+      form.append("model", car.model);
+    }
+    if(car.type)
+    {
+      form.append("type", car.type);
+    }
+    if(car.capacity){
+      form.append("capacity", car.capacity);
+    }
+    if(car.door){
+      form.append("door", car.door);
+    }
+    if(car.seat){
+      form.append("seat", car.seat);
+    }
+    if(car.kilometer){
+      form.append("kilometer", car.kilometer);
+    }
+    if( car.gear){
+      form.append("gear", car.gear);
+    }
+    if(car.inColor){
+      form.append("inColor", car.inColor);
+    }
+    if(car.outColor){
+      form.append("outColor", car.outColor);
+    }
+    if(car.price){
+      form.append("price", car.price);
+    }
+    if(salon.salon_id){
+      form.append("salonSalonId", salon.salon_id)
+    }
     if(image){
       form.append("image", image);
     }
-     let res =  await carApi.addCar(form)
+    let res =  await carApi.addCar(form)
     fetchDataSalon()
-    handleCloseUpdate();
+    handleCloseAdd();
     if(res?.data?.status && res.data.status === "success"){
+      setCar({})
       toast.success("Thêm thông tin xe thành công")
+      console.log("car after add : ", car)
     }else{
       toast.error("Thêm thông tin xe thất bại")
     }
