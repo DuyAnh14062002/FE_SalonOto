@@ -25,6 +25,7 @@ import ManageSalon from "./pages/AdminSalon/ManageSalon";
 import AdminSalonLayout from "./pages/AdminSalon/AdminSalonLayout/AdminSalonLayout";
 import ResultPayment from "./pages/ResultPayment";
 import Contact from "./pages/SalonOto/Contact";
+import Booking from "./pages/SalonOto/Booking";
 function ProtectedRoute() {
   const isAuthenticated = useSelector(
     (state) => state.userSlice.isAuthenticated
@@ -106,6 +107,10 @@ const router = createBrowserRouter([
         element: <ManageCar />,
       },
     ],
+  },
+  {
+    path: path.booking,
+    element: <Booking />,
   },
   {
     path: "salonOto/contact",

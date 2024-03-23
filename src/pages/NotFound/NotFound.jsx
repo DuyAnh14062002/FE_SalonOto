@@ -11,7 +11,7 @@ export default function NotFound() {
           <span className="text-danger">Opps!</span> Page not found.
         </p>
         <p className="lead">The page you’re looking for doesn’t exist.</p>
-        <Link to={path.home} className="btn btn-primary">
+        <Link to={path.home} className="btn btn-primary" type="button">
           Go Home
         </Link>
       </div>

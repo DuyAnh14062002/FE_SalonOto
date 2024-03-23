@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { path } from "./../../constants/path";
 import HeaderSalon from "../../components/Header/HeaderSalon";
 import "./HomePageSalon.scss";
@@ -13,11 +13,27 @@ export default function HomePageSalon() {
     <div>
       <HeaderSalon />
       <div
-        className="banner-salon"
+        className="banner-salon position-relative"
         style={{
           backgroundImage: `url(https://bizweb.dktcdn.net/100/437/558/themes/836129/assets/slider_1.jpg?1699270212851)`,
         }}
-      ></div>
+      >
+        <div className="booking position-absolute bottom-0 left-0 w-100">
+          <div className="container">
+            <div className="box-booking d-flex align-items-center flex-column py-5">
+              <h1 className="salon-name text-uppercase fw-bold">
+                Salon Oto Đức Thiện
+              </h1>
+              <p className="text-white text-uppercase">
+                Trao niềm tin - Trao giá trị
+              </p>
+              <Link to="/booking" className="btn-booking">
+                Đặt lịch ngay
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
       <div className="search-oto-container">
         <div className="search-box">
           <div className="Head-title">

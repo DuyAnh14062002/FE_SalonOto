@@ -19,7 +19,7 @@ export default function HeaderSalon() {
         }}
       ></div>
       <div className="main-menu">
-        <ul>
+        <ul className="d-flex align-items-center">
           <Link to="/salonOto/:123" className="item-menu">
             Trang chủ
           </Link>
@@ -30,6 +30,15 @@ export default function HeaderSalon() {
           <Link to="/salonOto/contact" className="item-menu">
             Liên hệ
           </Link>
+          <div class="text-dark position-relative">
+            <i class="fa-regular fa-bell fs-4"></i>
+            <span
+              class="badge rounded-pill badge-notification bg-danger position-absolute"
+              style={{ top: "-10px", left: "17px" }}
+            >
+              9
+            </span>
+          </div>
         </ul>
       </div>
     </div>

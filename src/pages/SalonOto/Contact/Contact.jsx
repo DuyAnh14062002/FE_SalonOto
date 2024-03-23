@@ -1,5 +1,5 @@
 import React from "react";
-import HeaderSalon from "../../components/Header/HeaderSalon";
+import HeaderSalon from "../../../components/Header/HeaderSalon";
 import "./Contact.scss";
 export default function Contact() {
   function convertToGoogleMapIframeAddress(address) {
