@@ -6,16 +6,19 @@ import purchaseApi from '../../../apis/purchase.api';
 export default function AdminSalonSidebar(props) {
   const [listKeyMap, setlistKeyMap] = useState([])
   
+  const removeDuplicate = (data) =>{
+    return data.filter((value, index) => data.indexOf(value) === index)
+  }
   const getListKeyMap = (purchasedPackage) => {
      let list = []
-     console.log("purchase : ", purchasedPackage)
     purchasedPackage.forEach((item => {
-      console.log("item : ", item)
       item.features.forEach((i) => {
           list.push(i.keyMap)
       })
     }))
-    setlistKeyMap(list)
+   let listAfter = removeDuplicate(list)
+    setlistKeyMap(listAfter)
+
   }
   useEffect(() => {
     const loading  = async () =>{
@@ -26,7 +29,8 @@ export default function AdminSalonSidebar(props) {
     }
     loading()
   }, [])
-  console.log("list keymap : ", listKeyMap)
+
+  console.log("list keyMap : ", listKeyMap)
   return (
     <div id="page-body" className="d-flex">
     <div id="sidebar">
@@ -39,10 +43,8 @@ export default function AdminSalonSidebar(props) {
             Dashboard
           </Link>
         </li> */}
-        {listKeyMap && listKeyMap.length > 0 && listKeyMap.map((keyMap) =>{
-          console.log("key map : ", keyMap)
+        {listKeyMap && listKeyMap.length > 0 && listKeyMap.map((keyMap) => {
           if(keyMap === "f1"){
-            console.log("oke 1")
             return(
             <li className="nav-link">
             <Link to={path.manageSalon} className="text-decoration-none">
@@ -55,7 +57,6 @@ export default function AdminSalonSidebar(props) {
           
           }
           if(keyMap === "f2"){
-            console.log("oke 2")
             return(
             <li className="nav-link">
             <Link to={path.manageCar} className="text-decoration-none ">

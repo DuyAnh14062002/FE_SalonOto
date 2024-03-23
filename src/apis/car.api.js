@@ -14,6 +14,12 @@ const carApi = {
   deleteCar(id) {
     return http.delete(`/cars/${id}`);
   },
+  getAllCar() {
+    return http.get("/cars");
+  },
+  getDetailCar(id) {
+    return http.get(`cars/${id}`);
+  },
 };
 
 export default carApi;
