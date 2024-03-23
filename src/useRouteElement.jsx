@@ -20,10 +20,11 @@ import HomePageSalon from "./pages/SalonOto/HomePageSalon";
 import DetailCar from "./pages/SalonOto/DetailCar";
 import ListPackage from "./pages/SalonOto/ListPackage";
 import AdminSalon from "./pages/AdminSalon/AdminSalonHeader/AdminSalonHeader";
-import ManageCar from "./pages/AdminSalon/ManageCar"
-import ManageSalon from "./pages/AdminSalon/ManageSalon"
+import ManageCar from "./pages/AdminSalon/ManageCar";
+import ManageSalon from "./pages/AdminSalon/ManageSalon";
 import AdminSalonLayout from "./pages/AdminSalon/AdminSalonLayout/AdminSalonLayout";
 import ResultPayment from "./pages/ResultPayment";
+import Contact from "./pages/SalonOto/Contact";
 function ProtectedRoute() {
   const isAuthenticated = useSelector(
     (state) => state.userSlice.isAuthenticated
@@ -106,7 +107,10 @@ const router = createBrowserRouter([
       },
     ],
   },
-
+  {
+    path: "salonOto/contact",
+    element: <Contact />,
+  },
   {
     path: path.loginAdmin,
     element: <LoginAdmin />,
@@ -133,17 +137,17 @@ const router = createBrowserRouter([
     element: <HomePageSalon />,
   },
   {
-    path:path.DetailCar,
-    element:<DetailCar/>
+    path: path.DetailCar,
+    element: <DetailCar />,
   },
   {
-    path:path.ListPackage,
-    element:<ListPackage/>
+    path: path.ListPackage,
+    element: <ListPackage />,
   },
   {
     path: path.getResultPayment,
-    element: <ResultPayment/>
-  }
+    element: <ResultPayment />,
+  },
 ]);
 
 export default router;

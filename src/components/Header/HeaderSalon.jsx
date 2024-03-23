@@ -4,13 +4,13 @@ import { Link, useNavigate } from "react-router-dom";
 
 export default function HeaderSalon() {
   const navigate = useNavigate();
-  const backListSalon = () => {
-    navigate("/listSalon");
-  };
+  // const backListSalon = () => {
+  //   navigate("/listSalon");
+  // };
   return (
     <div className="container-header">
       <div className="back-home">
-        <i className="fa-solid fa-arrow-left" onClick={backListSalon}></i>
+        {/* <i className="fa-solid fa-arrow-left" onClick={backListSalon}></i> */}
       </div>
       <div
         className="logo"
@@ -27,7 +27,9 @@ export default function HeaderSalon() {
           <Link className="item-menu">Tin tức</Link>
           <Link className="item-menu">Dịch vụ</Link>
           <Link className="item-menu">Bảo dưỡng</Link>
-          <Link className="item-menu">Liên hệ</Link>
+          <Link to="/salonOto/contact" className="item-menu">
+            Liên hệ
+          </Link>
         </ul>
       </div>
     </div>

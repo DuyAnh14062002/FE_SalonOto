@@ -11,25 +11,24 @@ const AccountProfile = () => {
   const [emailInvite, setEmailInvite] = useState("");
   const [show, setShow] = useState(false);
 
-  const [profile1,setProfile1]=useState({
-       
-  })
+  const [profile1, setProfile1] = useState({});
 
   const [profile, setProfile] = useState({
-    fullname:'',
-    phone:'',
-    gender:"",
-    date_of_birth:"",
-    address:""
-  })
+    fullname: "",
+    phone: "",
+    gender: "",
+    date_of_birth: "",
+    address: "",
+  });
 
-  const [image, setImage] = useState(null)
+  const [image, setImage] = useState(null);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
   const handleOnChangeEmailInvite = (e) => {
     setEmailInvite(e.target.value);
   };
+<<<<<<< Updated upstream
   const getProfile = async() =>{
     const res = await userApi.getProfile()
     if(res?.data?.profile){
@@ -37,8 +36,18 @@ const AccountProfile = () => {
     }
  }
   useEffect(() =>{
+=======
+  const getProfile = async () => {
+    const res = await userApi.getProfile();
+    console.log("res profile : ", res);
+    if (res?.data?.profile) {
+      setProfile1(res.data.profile);
+    }
+  };
+  useEffect(() => {
+>>>>>>> Stashed changes
     getProfile();
-  }, [])
+  }, []);
 
   const handleSubmitInviteUser = async (e) => {
     e.preventDefault();
@@ -66,12 +75,13 @@ const AccountProfile = () => {
     }
   };
   const handleOnchange = (e) => {
-      setProfile({...profile,[e.target.name]:e.target.value})
-  }
+    setProfile({ ...profile, [e.target.name]: e.target.value });
+  };
   const handleImage = (e) => {
-      setImage(e.target.files[0])
-  }
+    setImage(e.target.files[0]);
+  };
   const HandleSubmit = async () => {
+<<<<<<< Updated upstream
       const form = new FormData();
       if(profile.fullname){
         form.append("fullname", profile.fullname);
@@ -101,6 +111,37 @@ const AccountProfile = () => {
       getProfile()
       setProfile({})
   }
+=======
+    const form = new FormData();
+    if (profile.fullname) {
+      form.append("fullname", profile.fullname);
+    }
+    if (profile.phone) {
+      form.append("phone", profile.phone);
+    }
+    if (profile.gender) {
+      form.append("gender", profile.gender);
+    }
+    if (profile.address) {
+      form.append("address", profile.address);
+    }
+    if (profile.date_of_birth) {
+      form.append("date_of_birth", profile.date_of_birth);
+    }
+    if (image) {
+      form.append("avatar", image);
+    }
+    const res = await userApi.updateProfile(form);
+    console.log("res update : ", res);
+    if (res?.data?.status === "success") {
+      toast.success("Cập nhật thông tin thành công");
+    } else {
+      toast.error("Cập nhật thông tin thất bại");
+    }
+    getProfile();
+    setProfile({});
+  };
+>>>>>>> Stashed changes
   return (
     <>
       <Header otherPage={true} />
@@ -122,7 +163,13 @@ const AccountProfile = () => {
                                   <div
                                     className="user-image"
                                     style={{
+<<<<<<< Updated upstream
                                       backgroundImage: `url(${profile1 && profile1.avatar})`,
+=======
+                                      backgroundImage: `url(${
+                                        profile1 && profile1.avatar
+                                      })`,
+>>>>>>> Stashed changes
                                     }}
                                   ></div>
                                 </div>
@@ -184,14 +231,13 @@ const AccountProfile = () => {
                         </div>
                         <div className="col-lg-4 col-md-4 col-12 ">
                           <div className="update-container">
-                          <i class="fa-solid fa-venus-mars"></i>
+                            <i class="fa-solid fa-venus-mars"></i>
                             <input
                               type="text"
                               name="gender"
                               placeholder="Giới tính"
                               value={profile.gender}
                               onChange={handleOnchange}
-
                             />
                           </div>
                         </div>
@@ -209,7 +255,7 @@ const AccountProfile = () => {
                         </div>
                         <div className="col-lg-4 col-md-4 col-12 mt-3">
                           <div className="update-container">
-                          <i class="fa-solid fa-location-dot"></i>
+                            <i class="fa-solid fa-location-dot"></i>
                             <input
                               type="text"
                               name="address"
@@ -221,7 +267,7 @@ const AccountProfile = () => {
                         </div>
                         <div className="col-lg-4 col-md-4 col-12 mt-3">
                           <div className="update-container">
-                          <i class="fa-solid fa-cake-candles"></i>
+                            <i class="fa-solid fa-cake-candles"></i>
                             <input
                               type="date"
                               name="date_of_birth"
