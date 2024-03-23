@@ -28,24 +28,13 @@ const AccountProfile = () => {
   const handleOnChangeEmailInvite = (e) => {
     setEmailInvite(e.target.value);
   };
-<<<<<<< Updated upstream
-  const getProfile = async() =>{
-    const res = await userApi.getProfile()
-    if(res?.data?.profile){
-      setProfile1(res.data.profile)
-    }
- }
-  useEffect(() =>{
-=======
   const getProfile = async () => {
     const res = await userApi.getProfile();
-    console.log("res profile : ", res);
     if (res?.data?.profile) {
       setProfile1(res.data.profile);
     }
   };
   useEffect(() => {
->>>>>>> Stashed changes
     getProfile();
   }, []);
 
@@ -81,37 +70,6 @@ const AccountProfile = () => {
     setImage(e.target.files[0]);
   };
   const HandleSubmit = async () => {
-<<<<<<< Updated upstream
-      const form = new FormData();
-      if(profile.fullname){
-        form.append("fullname", profile.fullname);
-      }
-      if(profile.phone){
-        form.append("phone", profile.phone);
-      } 
-      if(profile.gender){
-        form.append("gender", profile.gender);
-      }
-      if(profile.address){
-        form.append("address", profile.address);
-      }
-      if(profile.date_of_birth){
-        form.append("date_of_birth", profile.date_of_birth);
-      }
-      if(image){
-        form.append("avatar", image);
-      }
-      const res = await userApi.updateProfile(form)
-      console.log("res update : ", res)
-      if(res?.data?.status && res.data.status === "success"){
-           toast.success("Cập nhật thông tin thành công")
-      }else{
-        toast.error("Cập nhật thông tin thất bại")
-      }
-      getProfile()
-      setProfile({})
-  }
-=======
     const form = new FormData();
     if (profile.fullname) {
       form.append("fullname", profile.fullname);
@@ -141,7 +99,6 @@ const AccountProfile = () => {
     getProfile();
     setProfile({});
   };
->>>>>>> Stashed changes
   return (
     <>
       <Header otherPage={true} />
@@ -163,13 +120,9 @@ const AccountProfile = () => {
                                   <div
                                     className="user-image"
                                     style={{
-<<<<<<< Updated upstream
-                                      backgroundImage: `url(${profile1 && profile1.avatar})`,
-=======
                                       backgroundImage: `url(${
                                         profile1 && profile1.avatar
                                       })`,
->>>>>>> Stashed changes
                                     }}
                                   ></div>
                                 </div>

@@ -36,18 +36,11 @@ export default function HomePage() {
   }, []);
   const getPackageForHomePage = (packages) => {
     const list = [];
-<<<<<<< Updated upstream
-    console.log("package : ", packages)
-    if(packages && packages.length > 0){
-      for(let i = 0; i< packages.length ;i++){
-        list.push(packages[i])
-        console.log("list : ", list)
-=======
+    console.log("package : ", packages);
     if (packages && packages.length > 0) {
-      for (let i = 0; i < 3; i++) {
+      for (let i = 0; i < packages.length; i++) {
         list.push(packages[i]);
         console.log("list : ", list);
->>>>>>> Stashed changes
       }
       setListPackage(list);
     }
