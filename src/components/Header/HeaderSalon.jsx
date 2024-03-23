@@ -2,7 +2,9 @@ import React from "react";
 import "./HeaderSalon.scss";
 import { Link, useNavigate } from "react-router-dom";
 
-export default function HeaderSalon() {
+export default function HeaderSalon(props) {
+ 
+  const idSalon=localStorage.getItem("idSalon")
   const navigate = useNavigate();
   const backListSalon = () => {
     navigate("/listSalon");
@@ -20,14 +22,16 @@ export default function HeaderSalon() {
       ></div>
       <div className="main-menu">
         <ul>
-          <Link to="/salonOto/:123" className="item-menu">
+          <Link to ={`/salonOto/${idSalon}`} className="item-menu">
             Trang chủ
           </Link>
           <Link className="item-menu">Giới thiệu</Link>
           <Link className="item-menu">Tin tức</Link>
           <Link className="item-menu">Dịch vụ</Link>
           <Link className="item-menu">Bảo dưỡng</Link>
-          <Link className="item-menu">Liên hệ</Link>
+          <Link to="/salonOto/contact" className="item-menu">
+            Liên hệ
+          </Link>
         </ul>
       </div>
     </div>

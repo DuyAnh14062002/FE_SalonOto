@@ -59,56 +59,6 @@ export default function ListSalonOto() {
             </div>
           </div>
         </section>
-
-        {/* <div className="title-list-insurance ">
-        <h2>DANH SÁCH CÁC GÓI BẢO HIỂM</h2>
-      </div>
-      <div className="insuranceItemTemplate row">
-        {arrInsurance &&
-          arrInsurance.map((item, index) => {
-            return (
-              <div
-                className="col-12 col-md-6 col-lg-4 insurance-item-container "
-                onClick={handleDetailInsurance}
-              >
-                <div className="insurance-item mb-4">
-                  <div className="card">
-                    <div
-                      data-id="thumbnail"
-                      className="card-img-top"
-                      // style={{ backgroundImage: `url("${item.image}")` }}
-                    ></div>
-
-                    <div className="card-body">
-                      <h5 data-id="title" className="card-title">
-                        {item.name}
-                      </h5>
-
-                      <p data-id="description" className="card-text">
-                        {item.title}
-                      </p>
-
-                      <p className="card-text">
-                        <div className="price">
-                          <small className="price-title">Giá: </small>
-                          <small className="text-price font-weight-bold">
-                            {item.price} Vnd
-                          </small>
-                        </div>
-                        <div className="period">
-                          <small className="period-title">Thời hạn: </small>
-                          <small className="period-text font-weight-bold">
-                            {item.period}
-                          </small>
-                        </div>
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
-      </div> */}
       </div>
     </div>
   );

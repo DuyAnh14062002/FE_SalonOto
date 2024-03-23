@@ -10,12 +10,15 @@ import salonApi from "../../apis/salon.api";
 export default function HomePageSalon() {
   const navigate = useNavigate();
   const params = useParams();
-
+  
   const [listCar, setListCar] = useState([])
   const NavigateDetailCar = (id) => {
     navigate(`/detail-car/${id}`);
   };
   useEffect(() => {
+    if(params.id){
+      localStorage.setItem("idSalon",params.id)
+    }
     const loading = async () =>{
       let res = await salonApi.getDetailSalon(params.id);
       if(res?.data?.salon?.cars){
@@ -23,7 +26,7 @@ export default function HomePageSalon() {
       }
     }
     loading()
-  }, [params.id])
+  }, [params])
   return (
     <div>
       <HeaderSalon />

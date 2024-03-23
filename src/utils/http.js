@@ -9,7 +9,6 @@ import { toast } from "react-toastify";
 class Http {
   instance;
   accessToken;
-  refreshToken;
   refreshTokenRequest;
   constructor() {
     this.accessToken = getAccessTokenFromLs();
@@ -56,7 +55,7 @@ class Http {
       },
       (error) => {
         if (error && error.response && error.response.status === 401) {
-          const config = error.response?.config || { headers: {} };
+          const config = error?.response?.config;
           console.log("config", config);
           const { url } = config;
 
@@ -64,7 +63,9 @@ class Http {
             this.refreshTokenRequest = this.refreshTokenRequest
               ? this.refreshTokenRequest
               : this.handleRefreshToken().finally(() => {
-                  this.refreshTokenRequest = null;
+                  setTimeout(() => {
+                    this.refreshTokenRequest = null;
+                  }, 10);
                 });
 
             return this.refreshTokenRequest.then((access_token) => {
@@ -76,7 +77,7 @@ class Http {
                 ...config,
                 headers: {
                   ...config.headers,
-                  authorization: `Bearer ${access_token}`,
+                  Authorization: `Bearer ${access_token}`,
                 },
               });
             });
@@ -85,7 +86,7 @@ class Http {
           window.location.reload();
         } else {
           console.log("error:", error);
-          toast.error(error.response.msg || "Something went wrong", {
+          toast.error(error?.response?.msg || "Something went wrong", {
             autoClose: 3000,
           });
         }
@@ -97,7 +98,7 @@ class Http {
     return this.instance
       .post("/auth/refresh")
       .then((res) => {
-        console.log("res", res);
+        console.log("res refresh token", res);
         const { accessToken } = res.data;
         setAccessTokenToLs(accessToken);
         this.accessToken = accessToken;
@@ -106,7 +107,7 @@ class Http {
       .catch((error) => {
         clearLs();
         this.accessToken = "";
-        toast.error(error.response.data.msg || "Something went wrong", {
+        toast.error(error.response.data?.msg || "Something went wrong", {
           autoClose: 3000,
         });
         throw error;

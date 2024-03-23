@@ -198,8 +198,12 @@ useEffect(() => {
       form.append("salonSalonId", salon.salon_id)
     }
     if(image){
-      form.append("image", image);
+      console.log("image : ", image)
+      image.forEach((item) =>{
+        form.append("image", item)
+      })
     }
+    setIsLoading(true)
     let res =  await carApi.addCar(form)
     fetchDataSalon()
     handleCloseAdd();
@@ -207,8 +211,10 @@ useEffect(() => {
       setCar({})
       toast.success("Thêm thông tin xe thành công")
       console.log("car after add : ", car)
+      setIsLoading(false)
     }else{
       toast.error("Thêm thông tin xe thất bại")
+      setIsLoading(false)
     }
    }
    const handleDelete = async () =>{

@@ -45,6 +45,7 @@ export default function DetailCar() {
   return (
     <>
       <HeaderSalon />
+
       <div className="detail-car-container">
         <div className="header-menu">
           <span>Trang chủ</span>
