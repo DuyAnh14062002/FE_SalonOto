@@ -26,6 +26,8 @@ import AdminSalonLayout from "./pages/AdminSalon/AdminSalonLayout/AdminSalonLayo
 import ResultPayment from "./pages/ResultPayment";
 import Contact from "./pages/SalonOto/Contact";
 import Booking from "./pages/SalonOto/Booking";
+import Appointment from "./pages/Appointment";
+import AppointmentSalon from "./pages/AdminSalon/AppointmentSalon";
 function ProtectedRoute() {
   const isAuthenticated = useSelector(
     (state) => state.userSlice.isAuthenticated
@@ -72,6 +74,30 @@ const router = createBrowserRouter([
         path: path.profile,
         element: <AccountProfile />,
       },
+      {
+        path: path.appointment,
+        element: <Appointment />,
+      },
+      {
+        path: path.listSalon,
+        element: <ListSalonOto />,
+      },
+      {
+        path: path.salonOto,
+        element: <HomePageSalon />,
+      },
+      {
+        path: path.DetailCar,
+        element: <DetailCar />,
+      },
+      {
+        path: path.ListPackage,
+        element: <ListPackage />,
+      },
+      {
+        path: path.getResultPayment,
+        element: <ResultPayment />,
+      },
     ],
   },
   //==========Route admin===============
@@ -106,6 +132,10 @@ const router = createBrowserRouter([
         path: path.manageCar,
         element: <ManageCar />,
       },
+      {
+        path: path.appointmentSalon,
+        element: <AppointmentSalon />,
+      },
     ],
   },
   {
@@ -132,26 +162,6 @@ const router = createBrowserRouter([
   {
     path: "*",
     element: <NotFound />,
-  },
-  {
-    path: path.listSalon,
-    element: <ListSalonOto />,
-  },
-  {
-    path: path.salonOto,
-    element: <HomePageSalon />,
-  },
-  {
-    path: path.DetailCar,
-    element: <DetailCar />,
-  },
-  {
-    path: path.ListPackage,
-    element: <ListPackage />,
-  },
-  {
-    path: path.getResultPayment,
-    element: <ResultPayment />,
   },
 ]);
 

@@ -1,19 +1,24 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./DetailCar.scss";
 import HeaderSalon from "../../components/Header/HeaderSalon";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import FooterSalon from "../../components/Footer/FooterSalon";
+import { useParams } from "react-router-dom";
+import carApi from "../../apis/car.api";
 export default function DetailCar() {
+  const [car, setCar] = useState({})
+  const [images, setImages] = useState([])
+  const [mainImage, setMainImage] = useState("")
   const responsive = {
     superLargeDesktop: {
       // the naming can be any, depends on you.
       breakpoint: { max: 4000, min: 3000 },
-      items: 5,
+      items: 4,
     },
     desktop: {
       breakpoint: { max: 3000, min: 1024 },
-      items: 5,
+      items: 4,
     },
     tablet: {
       breakpoint: { max: 1024, min: 464 },
@@ -25,22 +30,33 @@ export default function DetailCar() {
     },
   };
 
+  const params = useParams();
+  useEffect(() => {
+    const loading = async () =>{
+       let res = await carApi.getDetailCar(params.id)
+       if(res?.data?.car){
+        setCar(res.data.car)
+        setImages(res.data.car.image)
+        setMainImage(res.data.car.image[0])
+       }
+    }
+    loading()
+  }, [params.id])
   return (
     <>
       <HeaderSalon />
 
       <div className="detail-car-container">
         <div className="header-menu">
-          <span>Trang chủ</span>{" "}
-          <span>
-            {" "}
-            <i className="fa-solid fa-angle-right"></i>{" "}
-          </span>{" "}
-          <span>Xe mazda</span>{" "}
+          <span>Trang chủ</span>
           <span>
             <i className="fa-solid fa-angle-right"></i>
-          </span>{" "}
-          <span>mazda 3</span>
+          </span>
+          <span>{car.brand}</span>
+          <span>
+            <i className="fa-solid fa-angle-right"></i>
+          </span>
+          <span>{car.name}</span>
         </div>
         <div className="detail-option">
           <div className="sumary">
@@ -67,44 +83,37 @@ export default function DetailCar() {
             <div
               className="main-image"
               style={{
-                backgroundImage: `url(https://bizweb.dktcdn.net/100/437/558/products/z4887061899879-10dac384e4991ed265f9f67a1e3c84f9.jpg?v=1702520973857)`,
+                backgroundImage: `url(${mainImage})`,
               }}
             ></div>
-            <div className="sub-image">
-              <div
-                className="sub-image-item"
-                style={{
-                  backgroundImage: `url(https://bizweb.dktcdn.net/100/437/558/products/z4887061899879-10dac384e4991ed265f9f67a1e3c84f9.jpg?v=1702520973857)`,
-                }}
-              ></div>
-              <div
-                className="sub-image-item"
-                style={{
-                  backgroundImage: `url(https://bizweb.dktcdn.net/100/437/558/products/z4887061886414-08fd47bb22f61c7bc3b3e9ba40c73a75.jpg?v=1702520975280)`,
-                }}
-              ></div>
-              <div
-                className="sub-image-item"
-                style={{
-                  backgroundImage: `url(https://bizweb.dktcdn.net/100/437/558/products/z4887061882451-a26a67b469c393fcc93eaf6dba21a4d3.jpg?v=1702520976273)`,
-                }}
-              ></div>
-            </div>
+             <Carousel responsive={responsive} className="sub-image" showArrows={true}>
+             {images && images.length > 0 && images.map((image) => {
+                return (
+                  <div
+                  className="sub-image-item"
+                  style={{
+                    backgroundImage: `url(${image})`,
+                  }}
+                  onClick={() => setMainImage(image)}
+                ></div>
+                )
+              })}
+             </Carousel>
           </div>
           <div className="specifications-car">
-            <h4 className="name-car">Mazda 3 Sport 2021</h4>
-            <h4 className="price-car">515.000.000 đ</h4>
-            <p>Hẵng sản xuất : Mazda</p>
-            <p>Model xe : 3 Sport</p>
-            <p>Dòng xe : Hatchback</p>
-            <p>Dung tích xe: 1.5</p>
-            <p>Số cửa : 4</p>
-            <p>Số ghế ngồi : 5</p>
-            <p>Số km đã đi : 32.000 km</p>
-            <p>Hộp số : Số tự động</p>
-            <p>Năm sản xuất : 2021</p>
-            <p>Màu nội thất : Đen</p>
-            <p>Màu ngoại thất : Trắng</p>
+            <h4 className="name-car">{car.name}</h4>
+            <h4 className="price-car">{car.price} đ</h4>
+            <p>Hẵng sản xuất : {car.brand}</p>
+            <p>Model xe : {car.model}</p>
+            <p>Dòng xe : {car.type}</p>
+            <p>Dung tích xe: {car.capacity}</p>
+            <p>Số cửa : {car.door}</p>
+            <p>Số ghế ngồi : {car.seat}</p>
+            <p>Số km đã đi : {car.kilometer} km</p>
+            <p>Hộp số : {car.gear}</p>
+            <p>Năm sản xuất : {car.origin}</p>
+            <p>Màu nội thất : {car.inColor}</p>
+            <p>Màu ngoại thất : {car.outColor}</p>
             <button className="call-hotline">GỌI HOTLINE 0384496705</button>
           </div>
         </div>

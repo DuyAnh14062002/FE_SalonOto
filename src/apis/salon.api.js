@@ -15,6 +15,14 @@ const salonApi = {
       headers: { "content-type": "multipart/form-data" },
     });
   },
+
+  getAllSalon() {
+    return http.get("/salons");
+  },
+
+  getDetailSalon(id) {
+    return http.get(`/salons/${id}`);
+  },
 };
 
 export default salonApi;

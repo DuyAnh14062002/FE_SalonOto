@@ -176,6 +176,7 @@ export default function ManagePackage() {
       );
       console.log(res);
       setPkg({});
+      setFile(null);
       handleCloseEdit();
       fetchData();
       setAllFeaturesChecked();
@@ -215,7 +216,7 @@ export default function ManagePackage() {
                   style={{ width: "65%" }}
                   placeholder="Nhập tên gói dịch vụ"
                 />
-                <button className="btn btn-primary mx-2 px-2" >Tìm kiếm</button>
+                <button className="btn btn-primary mx-2 px-2">Tìm kiếm</button>
               </div>
               <button className="btn btn-success" onClick={handleShow}>
                 Thêm gói

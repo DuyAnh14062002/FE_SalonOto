@@ -1,13 +1,29 @@
-import React from "react";
-import HeaderSalon from "../../../components/Header/HeaderSalon";
+import { useState, useEffect } from "react";
 import "./Contact.scss";
+import HeaderSalon from "../../../components/Header/HeaderSalon";
+import salonApi from "../../../apis/salon.api";
 export default function Contact() {
+  const [salon, setSalon] = useState({});
+  const idSalon = localStorage.getItem("idSalon");
+  console.log("idsalon : ", idSalon);
   function convertToGoogleMapIframeAddress(address) {
     var normalizedAddress = address.replace(/ /g, "%20");
     return normalizedAddress;
   }
-
-  const address = "kí túc xá khu B,phường Đông Hòa,tỉnh Bình dương";
+  useEffect(() => {
+    const loading = async () => {
+      let res = await salonApi.getDetailSalon(idSalon);
+      if (res?.data?.salon) {
+        setSalon(res.data.salon);
+      }
+    };
+    loading();
+  }, [idSalon]);
+  console.log("salon contact : ", salon);
+  let address = "";
+  if (salon.address) {
+    address = salon.address;
+  }
   const iframeAddress = convertToGoogleMapIframeAddress(address);
   return (
     <div>
@@ -17,15 +33,13 @@ export default function Contact() {
         <div className="row gx-5">
           <div className="col-md-6">
             <div class="border-0 mb-3 mt-5 contact-detail">
-              <p>SALON Ô TÔ BÌNH DƯƠNG</p>
+              <p style={{ textTransform: "uppercase" }}>{salon.name}</p>
 
               <p>Địa chỉ: {address}</p>
 
-              <p>Phone: 0966 444 550 ( Mr. Anh ) - 0384891853 ( Mr.Ba )</p>
+              <p>Phone: {salon.phoneNumber} ( Mr. Anh )</p>
 
-              <p>Mail: badang0509@gmail.com</p>
-
-              <p>Website: salonotobinhduong.com</p>
+              <p>Mail: {salon.email}</p>
             </div>
             <div className="map">
               <iframe

@@ -8,9 +8,9 @@ import authApi from "../../apis/auth.api";
 import purchaseApi from "../../apis/purchase.api";
 export default function Header(props) {
   const { otherPage } = props;
-  const [purchasedPackages, setPurchasedPackages] = useState([])
+  const [purchasedPackages, setPurchasedPackages] = useState([]);
   const userInfo = useSelector((state) => state.userSlice.userInfo);
-  
+
   const dispatch = useDispatch();
   let navigate = useNavigate();
   let handleLogout = async () => {
@@ -23,16 +23,15 @@ export default function Header(props) {
     dispatch(logoutUser());
     navigate("/login");
   };
-  useEffect(() =>{
-    const loading = async() =>{
-         let res = await purchaseApi.getPurchase()
-         console.log("res get purchase : ", res)
-         if(res?.data?.purchasedPackages){
-          setPurchasedPackages(res.data.purchasedPackages)
-         }
-    }
-    loading()
-  },[])
+  useEffect(() => {
+    const loading = async () => {
+      let res = await purchaseApi.getPurchase();
+      if (res?.data?.purchasedPackages) {
+        setPurchasedPackages(res.data.purchasedPackages);
+      }
+    };
+    loading();
+  }, []);
   return otherPage === true ? (
     <nav style={{ backgroundColor: "rgb(1 37 255 / 70%)", padding: "5px 5px" }}>
       <div className="nav__logo">
@@ -53,14 +52,19 @@ export default function Header(props) {
           <Link to="/listSalon">Salon Oto</Link>
         </li>
         <li className="link">
-          <Link to="/">liên hệ</Link>
+          <Link to="/">Liên hệ</Link>
         </li>
         <li className="link">
           <Link to="/">Tin tức</Link>
         </li>
-        {purchasedPackages && purchasedPackages.length > 0 && <li className="link">
-          <Link to={path.adminSalon}>Quản lý</Link>
-        </li>}
+        {purchasedPackages && purchasedPackages.length > 0 && (
+          <li className="link">
+            <Link to={path.adminSalon}>Quản lý</Link>
+          </li>
+        )}
+        <li className="link">
+          <Link to="/appointment">Quản lý lịch hẹn</Link>
+        </li>
       </ul>
       <div className="search">
         <input type="text" placeholder="Tìm kiếm" />
@@ -109,14 +113,19 @@ export default function Header(props) {
           <Link to="/listSalon">Salon Oto</Link>
         </li>
         <li className="link">
-          <Link to="/">liên hệ</Link>
+          <Link to="/">Liên hệ</Link>
         </li>
         <li className="link">
           <Link to="/">Tin tức</Link>
         </li>
-        {purchasedPackages && purchasedPackages.length > 0 && <li className="link">
-          <Link to={path.adminSalon}>Quản lý</Link>
-        </li>}
+        {purchasedPackages && purchasedPackages.length > 0 && (
+          <li className="link">
+            <Link to={path.adminSalon}>Quản lý</Link>
+          </li>
+        )}
+        <li className="link">
+          <Link to="/appointment">Quản lý lịch hẹn</Link>
+        </li>
       </ul>
       <div className="search">
         <input type="text" placeholder="Tìm kiếm" />

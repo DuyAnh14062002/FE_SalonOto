@@ -44,3 +44,19 @@
     }
   }
 }
+.notify {
+  text-decoration: none;
+  color: #000;
+  &:hover {
+    background: #d5d2d2;
+    text-decoration: none;
+    color: #000;
+  }
+  .notify-title {
+    text-decoration: none;
+  }
+}
+.popover-body {
+  padding: 0;
+  width: 275px;
+}

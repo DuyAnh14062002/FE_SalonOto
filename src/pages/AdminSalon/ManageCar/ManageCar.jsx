@@ -1,5 +1,5 @@
 import React from 'react'
-import { Form,Image, } from "react-bootstrap";
+import { Form,Image,Spinner } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import {Link} from "react-router-dom";
@@ -7,14 +7,16 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import salonApi from '../../../apis/salon.api';
 import carApi from '../../../apis/car.api';
+import { forEach } from 'lodash';
 export default function ManageCar() {
  const [cars, setCars] = useState([])
+ const [isLoading, setIsLoading] = useState(false);
  const [car, setCar] = useState("")
  const [showInfor, setShowInfor] = useState(false)
  const [showUpdate, setShowUpdate] = useState(false)
  const [showAdd, setShowAdd] = useState(false)
  const [showDelete, setShowDelete] = useState(false)
- const [image, setImage] = useState("")
+ const [image, setImage] = useState([])
  const [salon, setSalon] = useState({});
  const fetchDataSalon = async() =>{
   console.log("oke")
@@ -63,44 +65,15 @@ useEffect(() => {
       setCar({...car, [e.target.name] : e.target.value})
    }
    const handleOnChangeImage = (e) =>{
-    setImage(e.target.files[0])
+    const listImage = [];
+    for(let i = 0; i< e.target.files.length;i++){
+      listImage.push(e.target.files[i])
+    }
+    setImage(listImage)
    }
 
    const handleUpdateCar = async() =>{
     const form = new FormData();
-    form.append("name", car.name);
-    form.append("description", car.description);
-    form.append("email", car.email);
-    form.append("origin", car.origin);
-    form.append("brand", car.brand);
-    form.append("model", car.model);
-    form.append("type", car.type);
-    form.append("capacity", car.capacity);
-    form.append("door", car.door);
-    form.append("seat", car.seat);
-    form.append("kilometer", car.kilometer);
-    form.append("gear", car.gear);
-    form.append("inColor", car.inColor);
-    form.append("outColor", car.outColor);
-    form.append("price", car.price);
-    if(image){
-      form.append("image", image);
-    }
-   let res =  await carApi.updateCar(car.car_id, form)
-    
-    fetchDataSalon()
-    handleCloseUpdate();
-    if(res?.data?.status && res.data.status === "success"){
-      toast.success("Cập nhật thông tin xe thành công")
-    }else{
-      toast.error("Cập nhật thông tin xe thất bại")
-    }
-    
-   }
-
-   const handleAddCar = async () =>{
-    const form = new FormData();
-    console.log("car add : ", car)
     if(car.name){
       form.append("name", car.name);
     }
@@ -151,8 +124,86 @@ useEffect(() => {
       form.append("salonSalonId", salon.salon_id)
     }
     if(image){
-      form.append("image", image);
+      console.log("image : ", image)
+      image.forEach((item) =>{
+        form.append("image", item)
+      })
     }
+    setIsLoading(true);
+   let res =  await carApi.updateCar(car.car_id, form)
+    console.log("res update : ", res)
+    fetchDataSalon()
+    handleCloseUpdate();
+    if(res?.data?.status && res.data.status === "success"){
+      toast.success("Cập nhật thông tin xe thành công")
+      setIsLoading(false)
+    }else{
+      toast.error("Cập nhật thông tin xe thất bại")
+      setIsLoading(false)
+    }
+    
+   }
+
+   const handleAddCar = async (e) =>{
+    e.preventDefault();
+    setIsLoading(true)
+    const form = new FormData();
+    if(car.name){
+      form.append("name", car.name);
+    }
+    if(car.description){
+      form.append("description", car.description);
+    }
+    if(car.email){
+      form.append("email", car.email);
+    }
+    if(car.origin){
+      form.append("origin", car.origin);
+    }
+    if(car.brand){
+      form.append("brand", car.brand);
+    }
+    if(car.model){
+      form.append("model", car.model);
+    }
+    if(car.type)
+    {
+      form.append("type", car.type);
+    }
+    if(car.capacity){
+      form.append("capacity", car.capacity);
+    }
+    if(car.door){
+      form.append("door", car.door);
+    }
+    if(car.seat){
+      form.append("seat", car.seat);
+    }
+    if(car.kilometer){
+      form.append("kilometer", car.kilometer);
+    }
+    if( car.gear){
+      form.append("gear", car.gear);
+    }
+    if(car.inColor){
+      form.append("inColor", car.inColor);
+    }
+    if(car.outColor){
+      form.append("outColor", car.outColor);
+    }
+    if(car.price){
+      form.append("price", car.price);
+    }
+    if(salon.salon_id){
+      form.append("salonSalonId", salon.salon_id)
+    }
+    if(image){
+      console.log("image : ", image)
+      image.forEach((item) =>{
+        form.append("image", item)
+      })
+    }
+    setIsLoading(true)
     let res =  await carApi.addCar(form)
     fetchDataSalon()
     handleCloseAdd();
@@ -160,8 +211,10 @@ useEffect(() => {
       setCar({})
       toast.success("Thêm thông tin xe thành công")
       console.log("car after add : ", car)
+      setIsLoading(false)
     }else{
       toast.error("Thêm thông tin xe thất bại")
+      setIsLoading(false)
     }
    }
    const handleDelete = async () =>{
@@ -310,8 +363,8 @@ useEffect(() => {
                 <Form.Control
                   type="text"
                   rows={4}
-                  value={car.origin}
-                  name='origin'
+                  value={car.type}
+                  name='type'
                 />
               </Form.Group>
               <Form.Group className="mt-3">
@@ -319,8 +372,8 @@ useEffect(() => {
                 <Form.Control
                   type="text"
                   rows={4}
-                  value={car.type}
-                  name='type'
+                  value={car.origin}
+                  name='origin'
                 />
               </Form.Group>
               <Form.Group className="mt-3">
@@ -465,8 +518,8 @@ useEffect(() => {
                 <Form.Control
                   type="text"
                   rows={4}
-                  value={car.origin}
-                  name='origin'
+                  value={car.type}
+                  name='type'
                   onChange={onChange}
                 />
               </Form.Group>
@@ -475,8 +528,8 @@ useEffect(() => {
                 <Form.Control
                   type="text"
                   rows={4}
-                  value={car.type}
-                  name='type'
+                  value={car.origin}
+                  name='origin'
                   onChange={onChange}
                 />
               </Form.Group>
@@ -574,24 +627,29 @@ useEffect(() => {
               className='mt-3'
               >
                <Form.Label style = {{marginRight : "3px"}}>Hình ảnh</Form.Label><br/>
-               <input type='file' onChange={(e) => handleOnChangeImage(e)}/> 
+               <input type='file' multiple= "true" onChange={(e) => handleOnChangeImage(e)}/> 
               </Form.Group>
             </Modal.Body>
             <Modal.Footer>
               <Button variant="secondary" onClick={handleCloseInfor}>
                 Đóng
               </Button>
-              <Button variant="primary" onClick={handleUpdateCar}>
-                Cập nhật
+              <Button
+                variant="primary"
+                onClick={handleUpdateCar}
+                disabled={isLoading}
+              >
+                {isLoading && <Spinner animation="border" size="sm" />}
+                <span className="mx-2">Cập nhật</span>
               </Button>
             </Modal.Footer>
           </Form>
     </Modal>
     
     <Modal show={showAdd} onHide={handleCloseAdd}>
-          <Form noValidate>
+          <Form onSubmit= {handleAddCar}>
             <Modal.Header closeButton>
-              <Modal.Title> Thông tin xe chi tiết</Modal.Title>
+              <Modal.Title> Thêm xe mới </Modal.Title>
             </Modal.Header>
             <Modal.Body>
               <Form.Group className="mt-4">
@@ -615,6 +673,7 @@ useEffect(() => {
               <Form.Group className="mt-3">
                 <Form.Label>Nhãn hiệu</Form.Label>
                 <Form.Control
+                  required
                   type="text"
                   rows={4}
                   name='brand'
@@ -625,15 +684,7 @@ useEffect(() => {
               <Form.Group className="mt-3">
                 <Form.Label>Dòng xe</Form.Label>
                 <Form.Control
-                  type="text"
-                  rows={4}
-                  name='origin'
-                  onChange={onChange}
-                />
-              </Form.Group>
-              <Form.Group className="mt-3">
-                <Form.Label>Năm sản xuất</Form.Label>
-                <Form.Control
+                  required
                   type="text"
                   rows={4}
                   name='type'
@@ -641,8 +692,19 @@ useEffect(() => {
                 />
               </Form.Group>
               <Form.Group className="mt-3">
+                <Form.Label>Năm sản xuất</Form.Label>
+                <Form.Control
+                  required
+                  type="text"
+                  rows={4}
+                  name='origin'
+                  onChange={onChange}
+                />
+              </Form.Group>
+              <Form.Group className="mt-3">
                 <Form.Label>Số cửa</Form.Label>
                 <Form.Control
+                required
                   type="text"
                   rows={4}
                   name='door'
@@ -652,6 +714,7 @@ useEffect(() => {
               <Form.Group className="mt-3">
                 <Form.Label>Số ghế ngồi</Form.Label>
                 <Form.Control
+                  required
                   type="text"
                   rows={4}
                   name='seat'
@@ -661,6 +724,7 @@ useEffect(() => {
               <Form.Group className="mt-3">
                 <Form.Label>Hộp số</Form.Label>
                 <Form.Control
+                  required
                   type="text"
                   rows={4}
                   name='gear'
@@ -670,6 +734,7 @@ useEffect(() => {
               <Form.Group className="mt-3">
                 <Form.Label>Dung tích xe</Form.Label>
                 <Form.Control
+                  required
                   type="text"
                   rows={4}
                   name='capacity'
@@ -679,6 +744,7 @@ useEffect(() => {
               <Form.Group className="mt-3">
                 <Form.Label>Số Kilomet đã đi</Form.Label>
                 <Form.Control
+                  required
                   type="text"
                   rows={4}
                   name='kilometer'
@@ -725,15 +791,20 @@ useEffect(() => {
               className='mt-3'
               >
                <Form.Label style = {{marginRight : "3px"}}>Hình ảnh</Form.Label><br/>
-               <input type='file' onChange={(e) => handleOnChangeImage(e)}/> 
+               <input type='file' onChange={(e) => handleOnChangeImage(e)} multiple="true"/> 
               </Form.Group>
             </Modal.Body>
             <Modal.Footer>
               <Button variant="secondary" onClick={handleCloseAdd}>
                 Đóng
               </Button>
-              <Button variant="primary" onClick={handleAddCar}>
-                Thêm
+              <Button
+                variant="primary"
+                disabled={isLoading}
+                type='submit'
+              >
+                {isLoading && <Spinner animation="border" size="sm" />}
+                <span className="mx-2">Thêm</span>
               </Button>
             </Modal.Footer>
           </Form>

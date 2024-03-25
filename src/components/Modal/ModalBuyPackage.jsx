@@ -6,6 +6,7 @@ import "./ModalBuyPackage.scss"
 import {useState} from "react"
 import paymentApi from '../../apis/payment.api';
 import { Navigate } from 'react-router';
+import { toast } from 'react-toastify';
 export default function ModalBuyPackage(props) {
   const [activeZaloPayment, setActiveZaloPayment] = useState(false)
   const [activeVisaPayment, setActiveVisaPayment] = useState(false)
@@ -56,22 +57,29 @@ export default function ModalBuyPackage(props) {
   }
   const handlePayMent = async (e, amount) => {
      e.preventDefault();
-     if(activeZaloPayment === true){
-      const res = await paymentApi.createPayment(amount, "");
-      if(res.data && res.data.data && res.data.data.order_url){
-       window.open(`${res.data.data.order_url}`, "_self")
-      }
-     }else if(activeVnPay === true){
-        const res = await paymentApi.paymentVnpay(props.packageId, month);
-        if(res?.data?.vnpUrl){
-          window.open(`${res.data.vnpUrl}`, "_self")
-        }
+     if(activeVisaPayment === false && activeVnPay === false && activeZaloPayment === false){
+      toast.error("bạn phải chọn ít nhất 1 phương thức thanh toán")
      }else{
-      const res = await paymentApi.createPayment(amount, "CC");
-      if(res.data && res.data.data && res.data.data.order_url){
-        window.open(`${res.data.data.order_url}`, "_self")
-      }
+      if(activeZaloPayment === true){
+        const res = await paymentApi.createPayment(amount, "");
+        if(res.data && res.data.data && res.data.data.order_url){
+         window.open(`${res.data.data.order_url}`, "_self")
+        }
+       }else if(activeVnPay === true){
+          const res = await paymentApi.paymentVnpay(props.packageId, month);
+          if(res?.data?.vnpUrl){
+            window.open(`${res.data.vnpUrl}`, "_self")
+          }else{
+            toast.error("Bạn đã mua gói dịch vụ này rồi. Vui lòng chọn mua gói khác")
+          }
+       }else{
+        const res = await paymentApi.createPayment(amount, "CC");
+        if(res.data && res.data.data && res.data.data.order_url){
+          window.open(`${res.data.data.order_url}`, "_self")
+        }
+       }
      }
+     
   }
   return (
     <>

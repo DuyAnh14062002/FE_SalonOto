@@ -41,18 +41,17 @@
         margin: 0 auto;
       }
       .sub-image {
-        display: flex;
         border: 1px solid rgb(54, 54, 50);
         margin: 10px 0;
-        justify-content: center;
-        align-items: center;
+        // li {
+        //   margin: 0 5px;
+        // }
         .sub-image-item {
           background-position: center;
           background-size: cover;
           background-repeat: no-repeat;
-          width: 17%;
-          margin: 0 5px;
-          padding: 5px 0;
+          width: 98%;
+          //margin-left: 3px;
           height: 81px;
           cursor: pointer;
           &:hover {
@@ -176,4 +175,8 @@
       text-align: center;
     }
   }
+}
+.react-multi-carousel-track {
+  margin: 0 auto !important;
+  padding-left: 1px !important;
 }

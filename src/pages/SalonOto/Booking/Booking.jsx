@@ -1,8 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import HeaderSalon from "../../../components/Header/HeaderSalon";
 import "./Booking.scss";
 import "react-calendar/dist/Calendar.css";
 import Calendar from "react-calendar";
+import salonApi from "../../../apis/salon.api";
+import appointmentApi from "../../../apis/appointment.api";
+import { toast } from "react-toastify";
 export default function Booking() {
   const arrayTime = [
     "8:00",
@@ -29,6 +32,20 @@ export default function Booking() {
   const [note, setNote] = useState("");
   const [errorTime, setErrorTime] = useState(false);
   const [value, setValue] = useState(new Date());
+
+  const [salon, setSalon] = useState({});
+  const idSalon = localStorage.getItem("idSalon");
+  console.log("idsalon : ", idSalon);
+
+  useEffect(() => {
+    const fetchSalon = async () => {
+      let res = await salonApi.getDetailSalon(idSalon);
+      if (res?.data?.salon) {
+        setSalon(res.data.salon);
+      }
+    };
+    fetchSalon();
+  }, [idSalon]);
   const isPastTime = (timeStr) => {
     if (value > new Date()) {
       return false;
@@ -48,7 +65,7 @@ export default function Booking() {
     setValue(value);
     setSelectedTime(null);
   };
-  const handleBooking = (e) => {
+  const handleBooking = async (e) => {
     e.preventDefault();
     const date = value;
     if (!selectedTime) {
@@ -56,9 +73,25 @@ export default function Booking() {
       return;
     } else {
       setErrorTime(false);
-      console.log("date", date);
-      console.log("time", selectedTime);
-      console.log("note", note);
+      const [hours, minutes] = selectedTime.split(":");
+
+      // Thiết lập giờ và phút cho ngày được chọn
+      date.setHours(parseInt(hours, 10), parseInt(minutes, 10), 0, 0);
+      try {
+        const res = await appointmentApi.createAppointment({
+          salonId: idSalon,
+          date,
+          description: note,
+        });
+        if (res?.data?.status === "success") {
+          setNote("");
+          setSelectedTime(null);
+          setValue(new Date());
+          toast.success("Đặt lịch hẹn thành công");
+        }
+      } catch (error) {
+        toast.error("Đặt lịch hẹn thất bại");
+      }
     }
   };
   return (
@@ -77,7 +110,7 @@ export default function Booking() {
                   ></i>
                   <div className="mx-2">
                     <span className="fw-bold">Tên salon</span>
-                    <p className="text-uppercase">SALON Ô TÔ BÌNH DƯƠNG</p>
+                    <p className="text-uppercase">{salon?.name}</p>
                   </div>
                 </div>
               </div>
@@ -89,9 +122,7 @@ export default function Booking() {
                   ></i>
                   <div className="mx-2">
                     <span className="fw-bold">Địa chỉ</span>
-                    <p className="text-uppercase">
-                      kí túc xá khu B,phường Đông Hòa,tỉnh Bình dương
-                    </p>
+                    <p className="text-uppercase">{salon?.address}</p>
                   </div>
                 </div>
               </div>
@@ -115,7 +146,7 @@ export default function Booking() {
                   ></i>
                   <div className="mx-2">
                     <span className="fw-bold">Số điện thoại</span>
-                    <p className="text-uppercase">0124356789</p>
+                    <p className="text-uppercase">{salon?.phoneNumber}</p>
                   </div>
                 </div>
               </div>

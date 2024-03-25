@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { setAccessTokenToLs, setProfileToLs } from "../../utils/auth";
-import userApi from "../../apis/user.api";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { loginUser } from "../../redux/slices/UserSlice";
@@ -17,7 +16,6 @@ export default function LoginSocial() {
       const data = Object.fromEntries([...params]);
       try {
         const res = await authApi.googleAuthCallback(data.code);
-        console.log("res : ", res);
         if (res.data.accessToken) {
           setAccessTokenToLs(res.data.accessToken);
         }
