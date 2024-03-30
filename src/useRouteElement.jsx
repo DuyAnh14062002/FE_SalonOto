@@ -19,7 +19,6 @@ import ListSalonOto from "./pages/SalonOto/ListSalonOto";
 import HomePageSalon from "./pages/SalonOto/HomePageSalon";
 import DetailCar from "./pages/SalonOto/DetailCar";
 import ListPackage from "./pages/SalonOto/ListPackage";
-import AdminSalon from "./pages/AdminSalon/AdminSalonHeader/AdminSalonHeader";
 import ManageCar from "./pages/AdminSalon/ManageCar";
 import ManageSalon from "./pages/AdminSalon/ManageSalon";
 import AdminSalonLayout from "./pages/AdminSalon/AdminSalonLayout/AdminSalonLayout";
@@ -28,6 +27,8 @@ import Contact from "./pages/SalonOto/Contact";
 import Booking from "./pages/SalonOto/Booking";
 import Appointment from "./pages/Appointment";
 import AppointmentSalon from "./pages/AdminSalon/AppointmentSalon";
+import NotificationDetailSalon from "./pages/SalonOto/NotificationDetailSalon";
+import NotificationDetailUser from "./pages/NotificationDetailUser/";
 function ProtectedRoute() {
   const isAuthenticated = useSelector(
     (state) => state.userSlice.isAuthenticated
@@ -97,6 +98,14 @@ const router = createBrowserRouter([
       {
         path: path.getResultPayment,
         element: <ResultPayment />,
+      },
+      {
+        path: path.notificationDetailSalon,
+        element: <NotificationDetailSalon />,
+      },
+      {
+        path: path.notificationDetailUser,
+        element: <NotificationDetailUser />,
       },
     ],
   },

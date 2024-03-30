@@ -56,7 +56,6 @@ class Http {
       (error) => {
         if (error && error.response && error.response.status === 401) {
           const config = error?.response?.config;
-          console.log("config", config);
           const { url } = config;
 
           if (url !== "/auth/refresh") {
@@ -69,7 +68,6 @@ class Http {
                 });
 
             return this.refreshTokenRequest.then((access_token) => {
-              console.log("access_token", access_token);
               // Nghia la chung ta tiep tuc goi lai request cu vua bi loi
               // i want run one time
 
@@ -98,7 +96,6 @@ class Http {
     return this.instance
       .post("/auth/refresh")
       .then((res) => {
-        console.log("res refresh token", res);
         const { accessToken } = res.data;
         setAccessTokenToLs(accessToken);
         this.accessToken = accessToken;

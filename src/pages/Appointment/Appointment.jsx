@@ -6,7 +6,6 @@ import { toast } from "react-toastify";
 import "./Appointment.scss";
 import appointmentApi from "../../apis/appointment.api";
 import { formatDate, formatTime } from "../../utils/common";
-import Calendar from "react-calendar";
 import { Form } from "react-bootstrap";
 import Header from "../../components/Header";
 
@@ -71,7 +70,6 @@ export default function Appointment() {
   };
   const handleDelete = async () => {
     try {
-      console.log("appointmentId:", appointmentChoose.id);
       await appointmentApi.deleteAppointmentUser({
         id: appointmentChoose.id,
       });

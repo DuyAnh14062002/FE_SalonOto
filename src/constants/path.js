@@ -21,6 +21,8 @@ export const path = {
   booking: "/booking",
   appointment: "/appointment",
   appointmentSalon: "/adminSalon/appointment",
+  notificationDetailSalon: "/notification-salon/:id",
+  notificationDetailUser: "/notification-user/:id",
 
   //========ADMIN SALON PATH=====================
   adminSalon: "/adminSalon",

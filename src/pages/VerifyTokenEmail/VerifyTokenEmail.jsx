@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import authApi from "../../apis/auth.api";
 import { useDispatch } from "react-redux";
@@ -13,7 +12,6 @@ export default function VerifyTokenEmail() {
 
   const verifyToken = async () => {
     const res = await authApi.verifyTokenEmail(token);
-    console.log("res", res);
     if (res.data.status === "success") {
       dispatch(loginUser(res.data.user));
       setAccessTokenToLs(res.data.accessToken);

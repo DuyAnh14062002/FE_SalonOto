@@ -1,13 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { path } from "./../../constants/path";
 import HeaderSalon from "../../components/Header/HeaderSalon";
 import "./HomePageSalon.scss";
 import FooterSalon from "../../components/Footer/FooterSalon";
-import carApi from "../../apis/car.api";
 import { useParams } from "react-router-dom";
 import salonApi from "../../apis/salon.api";
-import { set } from "lodash";
 export default function HomePageSalon() {
   const navigate = useNavigate();
   const params = useParams();

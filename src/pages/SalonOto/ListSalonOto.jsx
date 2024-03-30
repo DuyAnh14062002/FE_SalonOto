@@ -18,7 +18,7 @@ export default function ListSalonOto() {
       }
     };
     loading();
-  });
+  }, []);
   return (
     <div>
       <Header otherPage={true} />

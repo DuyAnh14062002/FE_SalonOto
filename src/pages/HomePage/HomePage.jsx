@@ -2,7 +2,6 @@ import Header from "../../components/Header";
 import ModalBuyPackage from "../../components/Modal/ModalBuyPackage";
 import "./HomePage.scss";
 import { useNavigate } from "react-router-dom";
-import { Modal } from "reactstrap";
 import { useState, useEffect } from "react";
 import { path } from "./../../constants/path";
 import packageApi from "../../apis/package.api";
@@ -24,7 +23,6 @@ export default function HomePage() {
     navigate(`${path.ListPackage}`);
   };
   useEffect(() => {
-    console.log("useEffect");
     const loadingPackage = async () => {
       let res = await packageApi.getAllPackage();
       if (res?.data?.packages?.packages) {
@@ -36,18 +34,14 @@ export default function HomePage() {
   }, []);
   const getPackageForHomePage = (packages) => {
     const list = [];
-    console.log("package : ", packages);
     if (packages && packages.length > 0) {
       for (let i = 0; i < packages.length; i++) {
         list.push(packages[i]);
-        console.log("list : ", list);
       }
       setListPackage(list);
     }
   };
-  // const list = packages.slice(0, 3);
-  // console.log("list package 123 : ", list)
-  console.log("render");
+
   return (
     <>
       <div className="container-homepage">
@@ -96,7 +90,6 @@ export default function HomePage() {
             {listPackage &&
               listPackage.length > 0 &&
               listPackage.map((item) => {
-                console.log("item : ", item);
                 return (
                   <div className="destination__card">
                     <div className="card__content">

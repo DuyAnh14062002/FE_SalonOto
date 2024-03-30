@@ -60,7 +60,6 @@ export default function AdminSalonSidebar(props) {
                 );
               }
               if (keyMap === "f2") {
-                console.log("oke 2");
                 return (
                   <li key={keyMap} className="nav-link">
                     <Link to={path.manageCar} className="text-decoration-none ">

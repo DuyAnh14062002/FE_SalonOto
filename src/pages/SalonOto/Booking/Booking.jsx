@@ -35,7 +35,6 @@ export default function Booking() {
 
   const [salon, setSalon] = useState({});
   const idSalon = localStorage.getItem("idSalon");
-  console.log("idsalon : ", idSalon);
 
   useEffect(() => {
     const fetchSalon = async () => {

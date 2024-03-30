@@ -14,14 +14,13 @@ export default function ManageFeature() {
   const [feature, setFeature] = useState({
     name: "",
     description: "",
-    keyMap: ""
+    keyMap: "",
   });
 
   const [featureChoose, setFeatureChoose] = useState(null);
 
   const fetchData = async () => {
     const res = await featureApi.getAllFeature();
-    console.log("res feature:",res)
     if (res?.data?.features?.features) {
       const features = res.data.features.features.reverse();
       setFeatures(features);
@@ -40,7 +39,11 @@ export default function ManageFeature() {
   const handleShow = () => setShow(true);
   const handleShowEdit = (feature) => {
     setFeatureChoose(feature);
-    setFeature({ name: feature.name, description: feature.description, keyMap: feature.keyMap });
+    setFeature({
+      name: feature.name,
+      description: feature.description,
+      keyMap: feature.keyMap,
+    });
     setShowEdit(true);
   };
   const handleCloseEdit = () => {
