@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
-import HeaderSalon from "../../components/Header/HeaderSalon";
+import { useState, useEffect } from "react";
 import "./Contact.scss";
-import salonApi from "../../apis/salon.api";
+import HeaderSalon from "../../../components/Header/HeaderSalon";
+import salonApi from "../../../apis/salon.api";
 export default function Contact() {
   const [salon, setSalon] = useState({})
   const idSalon=localStorage.getItem("idSalon")
@@ -10,10 +10,10 @@ export default function Contact() {
     return normalizedAddress;
   }
   useEffect(() => {
-    const loading = async () =>{
+    const loading = async () => {
       let res = await salonApi.getDetailSalon(idSalon);
-      if(res?.data?.salon){
-        setSalon(res.data.salon)
+      if (res?.data?.salon) {
+        setSalon(res.data.salon);
       }
     }
     loading()
@@ -31,7 +31,7 @@ export default function Contact() {
         <div className="row gx-5">
           <div className="col-md-6">
             <div class="border-0 mb-3 mt-5 contact-detail">
-              <p style={{textTransform : "uppercase"}}>{salon.name}</p>
+              <p style={{ textTransform: "uppercase" }}>{salon.name}</p>
 
               <p>Địa chỉ: {address}</p>
 

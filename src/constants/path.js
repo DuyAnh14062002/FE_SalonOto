@@ -18,6 +18,11 @@ export const path = {
   DetailCar: "/detail-car/:id",
   DetailPackage: "/detail-package/:id",
   ListPackage: "/listPackage",
+  booking: "/booking",
+  appointment: "/appointment",
+  appointmentSalon: "/adminSalon/appointment",
+  notificationDetailSalon: "/notification-salon/:id",
+  notificationDetailUser: "/notification-user/:id",
 
   //========ADMIN SALON PATH=====================
   adminSalon: "/adminSalon",

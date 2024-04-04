@@ -23,7 +23,6 @@ export default function Login() {
   const onSubmit = handleSubmit(async (data) => {
     try {
       const res = await authApi.login(data);
-      console.log("res : ", res)
       if (res.data.status === "success") {
         dispatch(loginUser(res.data.user));
         setProfile(res.data.user)

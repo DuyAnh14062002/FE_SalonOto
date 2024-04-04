@@ -1,13 +1,12 @@
 import React, { useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { setAccessTokenToLs, setProfileToLs } from "../../utils/auth";
-import userApi from "../../apis/user.api";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { loginUser } from "../../redux/slices/UserSlice";
 import authApi from "../../apis/auth.api";
 import Loading from "../Loading/Loading";
-import { useSelector } from "react-redux";
+
 export default function LoginSocialFaceBook() {
   const [params] = useSearchParams();
   const navigate = useNavigate();
@@ -16,16 +15,15 @@ export default function LoginSocialFaceBook() {
     const login = async () => {
       const data = Object.fromEntries([...params]);
       try {
-        const res = await authApi.facebookAuthCallback(data.code)
-        console.log("res : ", res)
-        if(res.data.accessToken){
+        const res = await authApi.facebookAuthCallback(data.code);
+        if (res.data.accessToken) {
           setAccessTokenToLs(res.data.accessToken);
         }
-        if(res.data.user){
+        if (res.data.user) {
           dispatch(loginUser(res.data.user));
           setProfileToLs(res.data.user);
           navigate("/");
-        }else{ 
+        } else {
           navigate("/profile");
         }
       } catch (error) {

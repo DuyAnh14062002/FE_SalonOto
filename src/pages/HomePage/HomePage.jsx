@@ -2,7 +2,6 @@ import Header from "../../components/Header";
 import ModalBuyPackage from "../../components/Modal/ModalBuyPackage";
 import "./HomePage.scss";
 import { useNavigate } from "react-router-dom";
-import { Modal } from "reactstrap";
 import { useState, useEffect } from "react";
 import { path } from "./../../constants/path";
 import packageApi from "../../apis/package.api";
@@ -42,8 +41,7 @@ export default function HomePage() {
       setListPackage(list);
     }
   };
-  // const list = packages.slice(0, 3);
-  // console.log("list package 123 : ", list)
+ 
   return (
     <>
       <div className="container-homepage">

@@ -110,3 +110,19 @@ nav {
     color: var(--primary-color);
   }
 }
+.notify {
+  text-align: left;
+  background: #fff;
+  outline: none;
+  border: none;
+  color: #000;
+  &:hover {
+    background: #d5d2d2;
+    text-decoration: none;
+    color: #000;
+  }
+}
+.popover-body {
+  padding: 0;
+  width: 275px;
+}
