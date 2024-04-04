@@ -1,0 +1,117 @@
+.list-role-container {
+  height: 500px;
+  width: 100%;
+  border: 1px solid green;
+  padding: 0;
+  border: 1px solid rgb(218, 215, 215);
+  border-radius: 10px;
+  margin-top: 20px;
+  .permisstion-text {
+    border-bottom: 1px solid rgb(218, 215, 215);
+    padding: 10px 0;
+    margin: 0 12px;
+  }
+  .list-role-box {
+    width: 100%;
+    padding: 0 20px;
+    .list-role {
+      border: 1px solid gray;
+      border-radius: 10px;
+      margin-top: 25px;
+      .role-item {
+        display: flex;
+        cursor: pointer;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 25px;
+        border-bottom: 1px solid gray;
+        border-top: 1px solid gray;
+        &:last-child {
+          border-bottom: none;
+        }
+        &:first-child {
+          border-top: none;
+        }
+        .left-role-item {
+          display: flex;
+          align-items: center;
+          i {
+            margin-right: 5px;
+          }
+        }
+        .right-role-item {
+        }
+      }
+      .role-item-detail-container {
+        padding: 20px;
+        display: flex;
+        flex-wrap: wrap;
+        .role-item-detail {
+          width: 47%;
+          margin-left: 2%;
+          margin-bottom: 2%;
+          display: flex;
+          align-items: center;
+          padding: 5px 10px;
+          border: 1px solid rgb(223, 223, 223);
+          border-radius: 10px;
+          input {
+            margin-right: 5px;
+          }
+          .role-detail {
+            .role-text-top {
+              margin: 0;
+            }
+            .get-method {
+              margin: 0;
+              color: blue;
+              font-weight: bold;
+            }
+            .post-method {
+              margin: 0;
+              color: green;
+              font-weight: bold;
+            }
+            .delete-method {
+              margin: 0;
+              color: red;
+              font-weight: bold;
+            }
+            .patch-method {
+              margin: 0;
+              color: black;
+              font-weight: bold;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+.switch-toggle {
+  width: 50px;
+  height: 25px;
+  background-color: gray;
+  appearance: none;
+  border-radius: 25px;
+  position: relative;
+  cursor: pointer;
+  &::before {
+    content: "";
+    width: 19px;
+    height: 19px;
+    border-radius: 50%;
+    background-color: #fff;
+    position: absolute;
+    top: 3px;
+    left: 3px;
+  }
+  &:checked {
+    background-color: blue;
+  }
+  &:checked::before {
+    left: 28px;
+    background-color: white;
+    transition: 0.1s;
+  }
+}

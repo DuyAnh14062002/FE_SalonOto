@@ -631,7 +631,7 @@ useEffect(() => {
               </Form.Group>
             </Modal.Body>
             <Modal.Footer>
-              <Button variant="secondary" onClick={handleCloseInfor}>
+              <Button variant="secondary" onClick={handleCloseUpdate}>
                 Đóng
               </Button>
               <Button

@@ -5,7 +5,6 @@ import salonApi from "../../apis/salon.api";
 export default function Contact() {
   const [salon, setSalon] = useState({})
   const idSalon=localStorage.getItem("idSalon")
-  console.log("idsalon : ", idSalon)
   function convertToGoogleMapIframeAddress(address) {
     var normalizedAddress = address.replace(/ /g, "%20");
     return normalizedAddress;
@@ -19,7 +18,6 @@ export default function Contact() {
     }
     loading()
   }, [idSalon])
-  console.log("salon contact : ", salon)
   let address = ""
   if(salon.address){
     address = salon.address;

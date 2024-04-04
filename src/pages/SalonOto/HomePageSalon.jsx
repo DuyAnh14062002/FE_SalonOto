@@ -1,10 +1,8 @@
 import React, { useState,useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { path } from "./../../constants/path";
 import HeaderSalon from "../../components/Header/HeaderSalon";
 import "./HomePageSalon.scss";
 import FooterSalon from "../../components/Footer/FooterSalon";
-import carApi from "../../apis/car.api";
 import { useParams } from "react-router-dom";
 import salonApi from "../../apis/salon.api";
 export default function HomePageSalon() {
@@ -23,6 +21,9 @@ export default function HomePageSalon() {
       let res = await salonApi.getDetailSalon(params.id);
       if(res?.data?.salon?.cars){
         setListCar(res.data.salon.cars)
+      }
+      if(res?.data?.salon?.user_id){
+        localStorage.setItem("userIdSalon", res.data.salon.user_id)
       }
     }
     loading()

@@ -64,7 +64,6 @@ export default function AdminSalonSidebar(props) {
                 );
               }
               if (keyMap === "f2") {
-                console.log("oke 2");
                 return (
                   <li className="nav-link">
                     <Link to={path.manageCar} className="text-decoration-none ">
@@ -72,6 +71,18 @@ export default function AdminSalonSidebar(props) {
                         <i className="far fa-folder"></i>
                       </div>
                       Quản lý xe
+                    </Link>
+                  </li>
+                );
+              }
+              if (keyMap === "f3") {
+                return (
+                  <li className="nav-link">
+                    <Link to={path.manageUser} className="text-decoration-none ">
+                      <div className="nav-link-icon d-inline-flex mx-2">
+                        <i className="far fa-folder"></i>
+                      </div>
+                      Quản lý user
                     </Link>
                   </li>
                 );

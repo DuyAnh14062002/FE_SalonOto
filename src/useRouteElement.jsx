@@ -25,6 +25,9 @@ import ManageSalon from "./pages/AdminSalon/ManageSalon";
 import AdminSalonLayout from "./pages/AdminSalon/AdminSalonLayout/AdminSalonLayout";
 import ResultPayment from "./pages/ResultPayment";
 import Contact from "./pages/SalonOto/Contact";
+import Message from "./components/Message";
+import { SocketContext } from "./context/SocketContext";
+import ManageUser from "./pages/AdminSalon/ManageUser";
 function ProtectedRoute() {
   const isAuthenticated = useSelector(
     (state) => state.userSlice.isAuthenticated
@@ -55,7 +58,7 @@ const router = createBrowserRouter([
       {
         path: path.login,
         element: <Login />,
-      },
+      }
     ],
   },
   {
@@ -105,6 +108,10 @@ const router = createBrowserRouter([
         path: path.manageCar,
         element: <ManageCar />,
       },
+      {
+        path: path.manageUser,
+        element: <ManageUser/>
+      }
     ],
   },
   {
@@ -148,6 +155,12 @@ const router = createBrowserRouter([
     path: path.getResultPayment,
     element: <ResultPayment />,
   },
+  {
+    path: path.message,
+    element:<Message/>
+  },{
+
+  }
 ]);
 
 export default router;

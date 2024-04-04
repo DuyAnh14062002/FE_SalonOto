@@ -23,7 +23,10 @@ export const path = {
   adminSalon: "/adminSalon",
   manageCar: "/adminSalon/manageCar",
   manageSalon: "/adminSalon/manageSalon",
-
+  manageUser: "/adminSalon/manageUser",
   //============PAYMENT =========================
   getResultPayment: "/payment/vnpay",
+
+  //=================Messgae,Video call==============
+  message: "/message",
 };

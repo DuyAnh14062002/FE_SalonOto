@@ -6,16 +6,18 @@ import { useDispatch, useSelector } from "react-redux";
 import { logoutUser } from "../../redux/slices/UserSlice";
 import authApi from "../../apis/auth.api";
 import purchaseApi from "../../apis/purchase.api";
+import {useAuthContext} from "./../../context/AuthContext"
 export default function Header(props) {
   const { otherPage } = props;
   const [purchasedPackages, setPurchasedPackages] = useState([])
   const userInfo = useSelector((state) => state.userSlice.userInfo);
-  
   const dispatch = useDispatch();
   let navigate = useNavigate();
+  const {setProfile} = useAuthContext()
   let handleLogout = async () => {
     try {
       await authApi.logout({ user_id: userInfo.user_id });
+      setProfile(null)
     } catch (error) {
       console.log("error:", error);
     }
@@ -23,10 +25,12 @@ export default function Header(props) {
     dispatch(logoutUser());
     navigate("/login");
   };
+  const HandleMessage = () =>{
+     navigate("/message")
+  }
   useEffect(() =>{
     const loading = async() =>{
          let res = await purchaseApi.getPurchase()
-         console.log("res get purchase : ", res)
          if(res?.data?.purchasedPackages){
           setPurchasedPackages(res.data.purchasedPackages)
          }
@@ -68,6 +72,10 @@ export default function Header(props) {
           <i className="ri-search-line"></i>
         </span>
       </div>
+      <div className="container-box">
+      <div className="messenger" onClick={HandleMessage}>
+        <i class="fa-brands fa-facebook-messenger"></i>
+      </div>
       <Link
         to={path.profile}
         className="account-profile"
@@ -88,6 +96,8 @@ export default function Header(props) {
           </div>
         </div>
       </Link>
+      </div>
+     
     </nav>
   ) : (
     <nav>
@@ -124,6 +134,10 @@ export default function Header(props) {
           <i className="ri-search-line"></i>
         </span>
       </div>
+      <div className="container-box">
+      <div className="messenger" onClick={HandleMessage}>
+        <i class="fa-brands fa-facebook-messenger"></i>
+      </div>
       <Link
         to={path.profile}
         className="account-profile"
@@ -135,7 +149,6 @@ export default function Header(props) {
         <span style={{ fontSize: "15px" }}>
           {userInfo?.fullname || userInfo?.username}
         </span>
-
         <div className="profile-arrow">
           <div className="virtual_class"></div>
           <div className="arrow position-absolute"></div>
@@ -145,6 +158,7 @@ export default function Header(props) {
           </div>
         </div>
       </Link>
+      </div>
     </nav>
   );
 }

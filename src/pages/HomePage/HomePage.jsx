@@ -24,7 +24,6 @@ export default function HomePage() {
     navigate(`${path.ListPackage}`);
   };
   useEffect(() => {
-    console.log("useEffect");
     const loadingPackage = async () => {
       let res = await packageApi.getAllPackage();
       if (res?.data?.packages?.packages) {
@@ -36,18 +35,15 @@ export default function HomePage() {
   }, []);
   const getPackageForHomePage = (packages) => {
     const list = [];
-    console.log("package : ", packages);
     if (packages && packages.length > 0) {
       for (let i = 0; i < packages.length; i++) {
         list.push(packages[i]);
-        console.log("list : ", list);
       }
       setListPackage(list);
     }
   };
   // const list = packages.slice(0, 3);
   // console.log("list package 123 : ", list)
-  console.log("render");
   return (
     <>
       <div className="container-homepage">
@@ -95,10 +91,9 @@ export default function HomePage() {
           <div className="destination__grid">
             {listPackage &&
               listPackage.length > 0 &&
-              listPackage.map((item) => {
-                console.log("item : ", item);
+              listPackage.map((item, index) => {
                 return (
-                  <div className="destination__card">
+                  <div className="destination__card" key={index}>
                     <div className="card__content">
                       <h4>{item.name}</h4>
                       <ul>
