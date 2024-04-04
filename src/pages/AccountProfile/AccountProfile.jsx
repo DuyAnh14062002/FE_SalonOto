@@ -90,7 +90,6 @@ const AccountProfile = () => {
       form.append("avatar", image);
     }
     const res = await userApi.updateProfile(form);
-    console.log("res update : ", res);
     if (res?.data?.status === "success") {
       toast.success("Cập nhật thông tin thành công");
     } else {

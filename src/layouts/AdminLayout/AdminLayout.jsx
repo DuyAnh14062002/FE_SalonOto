@@ -4,7 +4,7 @@ import AdminSidebar from "../../components/AdminSidebar";
 import "./AdminLayout.scss";
 export default function AdminLayout({ children }) {
   return (
-    <div id="wrapper" class="nav-fixed">
+    <div id="wrapper" className="nav-fixed">
       <AdminHeader />
       <AdminSidebar />
       <div id="wp-content">
