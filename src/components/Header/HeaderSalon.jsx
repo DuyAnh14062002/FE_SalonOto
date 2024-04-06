@@ -1,31 +1,33 @@
 import React, { useEffect, useState } from "react";
 import "./HeaderSalon.scss";
 import { Link, useNavigate } from "react-router-dom";
-import { OverlayTrigger, Popover } from "react-bootstrap";
+import { Button, Modal, OverlayTrigger, Popover } from "react-bootstrap";
 import notificationApi from "../../apis/notification.api";
 import salonApi from "../../apis/salon.api";
 import { formatTimeDifference } from "../../utils/common";
-import { io } from "socket.io-client";
 import { toast } from "react-toastify";
+import notificationSound from "../../assets/sounds/notification.mp3";
+import { useSocketContext } from "../../context/SocketContext";
+import telephoneRing from "../../assets/sounds/telephone_ring.mp3";
+
+const intervalDuration = 3000;
+let timerId;
 export default function HeaderSalon() {
   const idSalon = localStorage.getItem("idSalon") || "";
-  const profile = JSON.parse(localStorage.getItem("profile"));
+  const userIdSalon = localStorage.getItem("userIdSalon");
+  const userInfor = JSON.parse(localStorage.getItem("profile"));
   const [salon, setSalon] = useState({});
+  const soundPhoneRing = new Audio(telephoneRing);
   const [listNotification, setListNotification] = useState([]);
   const navigate = useNavigate();
-  const backListSalon = () => {
-    navigate("/listSalon");
-  };
-  const fetchAllNotificationSalon = async () => {
-    try {
-      const res = await notificationApi.getAllNotificationSalon({
-        salonId: idSalon,
-      });
-      setListNotification(res.data.notifications);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  const { socket } = useSocketContext();
+  const [showCall, setShowCall] = useState(false);
+  const handleCloseCall = () => setShowCall(false);
+  const handleShowCall = () => setShowCall(true);
+  const [dataResponseFromVideoCall, setDataResponseFromVideoCall] = useState(
+    {}
+  );
+
   useEffect(() => {
     const getSalonInfo = async () => {
       try {
@@ -39,35 +41,76 @@ export default function HeaderSalon() {
   }, []);
 
   useEffect(() => {
-    if (salon.salon_id === idSalon) {
+    if (salon?.salon_id === idSalon) {
       fetchAllNotificationSalon();
     }
-  }, [salon.salon_id, idSalon]);
+  }, [salon?.salon_id, idSalon]);
   //socket
   useEffect(() => {
-    const socket = io("http://localhost:5000", {
-      query: {
-        userId: profile.user_id,
-      },
+    socket?.on("notification", (data) => {
+      const sound = new Audio(notificationSound);
+      sound.play();
+      toast.success(data);
+      if (salon.salon_id === idSalon) {
+        fetchAllNotificationSalon();
+      }
     });
-    socket.on("connect", () => {
-      console.log("socket connected");
-      socket.on("notification", (data) => {
-        toast.success(data);
-        if (salon.salon_id === idSalon) {
-          fetchAllNotificationSalon();
-        }
+    socket?.on("receiveCallVideo", (data) => {
+      soundPhoneRing.play();
+      timerId = setInterval(() => {
+        soundPhoneRing.play();
+      }, intervalDuration);
+
+      setTimeout(() => {
+        handleEndCall();
+      }, 24000);
+      handleShowCall();
+      setDataResponseFromVideoCall({
+        senderName: data.senderName,
+        senderImage: data.senderImage,
+        linkVideoCall: data.linkVideoCall,
+        senderId: data.senderId,
       });
     });
-    socket.on("disconnect", () => {
-      console.log("socket disconnected");
-    });
     return () => {
-      socket.disconnect();
+      socket?.off("notification");
+      socket?.off("receiveCallVideo");
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [profile, salon]);
+  }, [salon, socket]);
+  useEffect(() => {
+    socket?.on("receiveEndCallVideo", () => {
+      toast.error("Cuộc gọi đã kết thúc");
+      handleEndCall();
+    });
+    return () => {
+      socket?.off("receiveEndCallVideo");
+    };
+  }, [socket]);
 
+  const backListSalon = () => {
+    navigate("/listSalon");
+  };
+  const handleMessage = () => {
+    navigate("/message");
+  };
+  const HandleMessageNavigate = () => {
+    navigate("/message");
+  };
+  const fetchAllNotificationSalon = async () => {
+    try {
+      const res = await notificationApi.getAllNotificationSalon({
+        salonId: idSalon,
+      });
+      setListNotification(res.data.notifications);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const handleEndCall = () => {
+    clearInterval(timerId);
+    handleCloseCall();
+  };
   const numberOfNotification = listNotification.filter(
     (notification) => !notification.read
   ).length;
@@ -176,7 +219,23 @@ export default function HeaderSalon() {
       </Popover.Body>
     </Popover>
   );
+  const handleAnswer = () => {
+    socket?.emit("answerCallVideo", {
+      receiverId: dataResponseFromVideoCall.senderId,
+      linkVideoCall: dataResponseFromVideoCall.linkVideoCall,
+    });
+    handleCloseCall();
+    clearInterval(timerId);
+    navigate(dataResponseFromVideoCall.linkVideoCall);
+  };
+  const handleRefuse = () => {
+    handleEndCall();
+    socket?.emit("refuseCallVideo", {
+      receiverId: dataResponseFromVideoCall.senderId,
+    });
 
+    handleCloseCall();
+  };
   return (
     <div className="container-header">
       <div className="back-home">
@@ -200,7 +259,14 @@ export default function HeaderSalon() {
           <Link to="/salonOto/contact" className="item-menu">
             Liên hệ
           </Link>
-          {salon.salon_id === idSalon && (
+          {userIdSalon === userInfor.user_id ? (
+            <div className="messenger mx-3" onClick={HandleMessageNavigate}>
+              <i class="fa-brands fa-facebook-messenger"></i>
+            </div>
+          ) : (
+            <button onClick={handleMessage}>Nhắn tin với salon</button>
+          )}
+          {salon?.salon_id === idSalon && (
             <OverlayTrigger
               trigger="click"
               placement="bottom"
@@ -223,6 +289,31 @@ export default function HeaderSalon() {
           )}
         </ul>
       </div>
+      <Modal show={showCall}>
+        <Modal.Header>
+          <Modal.Title></Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div className="d-flex flex-column justify-content-center align-items-center">
+            <img
+              src={dataResponseFromVideoCall.senderImage}
+              alt="image_user"
+              className="w-25 h-25 rounded-circle"
+            />
+            <div className="mt-3 fw-bold fs-3">
+              {dataResponseFromVideoCall.senderName} đang gọi đến bạn{" "}
+            </div>
+          </div>
+        </Modal.Body>
+        <Modal.Footer className="d-flex justify-content-center">
+          <Button variant="danger" onClick={handleRefuse}>
+            Từ chối
+          </Button>
+          <Button variant="success" className="mx-3" onClick={handleAnswer}>
+            Trả lời
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 }

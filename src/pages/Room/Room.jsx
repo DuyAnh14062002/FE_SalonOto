@@ -1,23 +1,13 @@
 import { ZegoUIKitPrebuilt } from "@zegocloud/zego-uikit-prebuilt";
+import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
+import { randomID } from "../../utils/common";
 
 export default function Room() {
+  const profile = useSelector((state) => state.userSlice.userInfo);
   const { roomId } = useParams();
   const appId = Number(process.env.REACT_APP_APP_ID);
   const serverSecret = process.env.REACT_APP_SERVER_SECRET;
-  function randomID(len) {
-    let result = "";
-    if (result) return result;
-    var chars =
-        "12345qwertyuiopasdfgh67890jklmnbvcxzMNBVCZXASDQWERTYHGFUIOLKJP",
-      maxPos = chars.length,
-      i;
-    len = len || 5;
-    for (i = 0; i < len; i++) {
-      result += chars.charAt(Math.floor(Math.random() * maxPos));
-    }
-    return result;
-  }
 
   let myMeeting = async (element) => {
     const kitToken = ZegoUIKitPrebuilt.generateKitTokenForTest(
@@ -25,7 +15,7 @@ export default function Room() {
       serverSecret,
       roomId,
       randomID(5),
-      "Ba"
+      profile?.fullname
     );
     // Create instance object from Kit Token.
     const zp = ZegoUIKitPrebuilt.create(kitToken);
@@ -39,6 +29,7 @@ export default function Room() {
       showPreJoinView: false,
     });
   };
+
   return (
     <div
       className="myCallContainer"

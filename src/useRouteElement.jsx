@@ -24,6 +24,9 @@ import ManageSalon from "./pages/AdminSalon/ManageSalon";
 import AdminSalonLayout from "./pages/AdminSalon/AdminSalonLayout/AdminSalonLayout";
 import ResultPayment from "./pages/ResultPayment";
 import Contact from "./pages/SalonOto/Contact";
+import Message from "./components/Message";
+import { SocketContext } from "./context/SocketContext";
+import ManageUser from "./pages/AdminSalon/ManageUser";
 import Booking from "./pages/SalonOto/Booking";
 import Appointment from "./pages/Appointment";
 import AppointmentSalon from "./pages/AdminSalon/AppointmentSalon";
@@ -60,7 +63,7 @@ const router = createBrowserRouter([
       {
         path: path.login,
         element: <Login />,
-      },
+      }
     ],
   },
   {
@@ -147,6 +150,10 @@ const router = createBrowserRouter([
         element: <ManageCar />,
       },
       {
+        path: path.manageUser,
+        element: <ManageUser/>
+      },
+      {
         path: path.appointmentSalon,
         element: <AppointmentSalon />,
       },
@@ -177,6 +184,32 @@ const router = createBrowserRouter([
     path: "*",
     element: <NotFound />,
   },
+  {
+    path: path.listSalon,
+    element: <ListSalonOto />,
+  },
+  {
+    path: path.salonOto,
+    element: <HomePageSalon />,
+  },
+  {
+    path: path.DetailCar,
+    element: <DetailCar />,
+  },
+  {
+    path: path.ListPackage,
+    element: <ListPackage />,
+  },
+  {
+    path: path.getResultPayment,
+    element: <ResultPayment />,
+  },
+  {
+    path: path.message,
+    element:<Message/>
+  },{
+
+  }
 ]);
 
 export default router;

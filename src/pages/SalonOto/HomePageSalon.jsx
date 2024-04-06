@@ -24,9 +24,12 @@ export default function HomePageSalon() {
         setSalon(res.data.salon);
         setListCar(res.data.salon.cars);
       }
-    };
-    loading();
-  }, [params]);
+      if(res?.data?.salon?.user_id){
+        localStorage.setItem("userIdSalon", res.data.salon.user_id)
+      }
+    }
+    loading()
+  }, [params])
   return (
     <div>
       <HeaderSalon />

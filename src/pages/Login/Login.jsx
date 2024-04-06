@@ -8,10 +8,11 @@ import authApi from "../../apis/auth.api";
 import { toast } from "react-toastify";
 import { loginUser } from "../../redux/slices/UserSlice";
 import { useDispatch } from "react-redux";
+import { useAuthContext } from '../../context/AuthContext'
 
 const loginSchema = schema.pick(["username", "password"]);
-
 export default function Login() {
+  const {setProfile} = useAuthContext()
   const dispatch = useDispatch();
   const {
     register,
@@ -24,6 +25,7 @@ export default function Login() {
       const res = await authApi.login(data);
       if (res.data.status === "success") {
         dispatch(loginUser(res.data.user));
+        setProfile(res.data.user)
         navigate("/");
       }
       if (res.data.status === "failed") {

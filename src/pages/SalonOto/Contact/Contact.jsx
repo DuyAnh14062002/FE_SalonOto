@@ -3,8 +3,8 @@ import "./Contact.scss";
 import HeaderSalon from "../../../components/Header/HeaderSalon";
 import salonApi from "../../../apis/salon.api";
 export default function Contact() {
-  const [salon, setSalon] = useState({});
-  const idSalon = localStorage.getItem("idSalon");
+  const [salon, setSalon] = useState({})
+  const idSalon=localStorage.getItem("idSalon")
   function convertToGoogleMapIframeAddress(address) {
     var normalizedAddress = address.replace(/ /g, "%20");
     return normalizedAddress;
@@ -15,11 +15,11 @@ export default function Contact() {
       if (res?.data?.salon) {
         setSalon(res.data.salon);
       }
-    };
-    loading();
-  }, [idSalon]);
-  let address = "";
-  if (salon.address) {
+    }
+    loading()
+  }, [idSalon])
+  let address = ""
+  if(salon.address){
     address = salon.address;
   }
   const iframeAddress = convertToGoogleMapIframeAddress(address);

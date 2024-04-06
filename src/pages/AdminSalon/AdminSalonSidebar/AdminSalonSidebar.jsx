@@ -71,6 +71,18 @@ export default function AdminSalonSidebar(props) {
                   </li>
                 );
               }
+              if (keyMap === "f3") {
+                return (
+                  <li className="nav-link">
+                    <Link to={path.manageUser} className="text-decoration-none ">
+                      <div className="nav-link-icon d-inline-flex mx-2">
+                        <i className="far fa-folder"></i>
+                      </div>
+                      Quản lý user
+                    </Link>
+                  </li>
+                );
+              }
             })}
           <li className="nav-link">
             <Link to={path.appointmentSalon} className="text-decoration-none ">

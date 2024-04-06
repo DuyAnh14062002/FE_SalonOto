@@ -1,6 +1,9 @@
 import http from "../utils/http";
 
 const userApi = {
+  getAllUsers() {
+    return http.get("/users");
+  },
   getUserById(id) {
     return http.get(`/users/${id}`);
   },

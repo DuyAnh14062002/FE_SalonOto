@@ -7,7 +7,6 @@ import { path } from "./../../constants/path";
 import packageApi from "../../apis/package.api";
 export default function HomePage() {
   const [show, setShow] = useState(false);
-  const [packages, setPackages] = useState([]);
   const [listPackage, setListPackage] = useState([]);
   let navigate = useNavigate();
   // const ShowDetailPackage = () =>{
@@ -22,6 +21,7 @@ export default function HomePage() {
   const NavigateListPackage = () => {
     navigate(`${path.ListPackage}`);
   };
+
   useEffect(() => {
     const loadingPackage = async () => {
       let res = await packageApi.getAllPackage();
@@ -89,9 +89,9 @@ export default function HomePage() {
           <div className="destination__grid">
             {listPackage &&
               listPackage.length > 0 &&
-              listPackage.map((item) => {
+              listPackage.map((item, index) => {
                 return (
-                  <div className="destination__card">
+                  <div className="destination__card" key={index}>
                     <div className="card__content">
                       <h4>{item.name}</h4>
                       <ul>

@@ -23,6 +23,10 @@ const salonApi = {
   getDetailSalon(id) {
     return http.get(`/salons/${id}`);
   },
+
+  checkOwnSalon() {
+    return http.get("/salons/salonId");
+  },
 };
 
 export default salonApi;
