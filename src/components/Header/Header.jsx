@@ -35,7 +35,9 @@ export default function Header(props) {
   };
   const HandleMessage = () =>{
      navigate("/message")
+    // window.location.reload()
   }
+
   useEffect(() =>{
     const loading = async() =>{
          let res = await purchaseApi.getPurchase()

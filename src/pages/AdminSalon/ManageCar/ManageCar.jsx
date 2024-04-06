@@ -307,7 +307,7 @@ export default function ManageCar() {
           </div>
         </div>
       </div>
-      <Modal show={showInfor} onHide={handleCloseInfor}>
+      <Modal show={showInfor} onHide={handleCloseInfor} backdrop="static">
         <Form noValidate>
           <Modal.Header closeButton>
             <Modal.Title> Thông tin xe chi tiết</Modal.Title>

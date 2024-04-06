@@ -47,10 +47,10 @@ export default function HeaderSalon() {
   }, []);
 
   useEffect(() => {
-    if (salon.salon_id === idSalon) {
+    if (salon?.salon_id === idSalon) {
       fetchAllNotificationSalon();
     }
-  }, [salon.salon_id, idSalon]);
+  }, [salon?.salon_id, idSalon]);
   //socket
   useEffect(() => {
     const socket = io("http://localhost:5000", {
@@ -62,7 +62,7 @@ export default function HeaderSalon() {
       console.log("socket connected");
       socket.on("notification", (data) => {
         toast.success(data);
-        if (salon.salon_id === idSalon) {
+        if (salon?.salon_id === idSalon) {
           fetchAllNotificationSalon();
         }
       });
@@ -215,7 +215,7 @@ export default function HeaderSalon() {
               </div>
             ) : ( <button onClick={handleMessage}>Nhắn tin với salon</button>)
           }
-          {salon.salon_id === idSalon && (
+          {salon?.salon_id === idSalon && (
             <OverlayTrigger
               trigger="click"
               placement="bottom"

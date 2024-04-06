@@ -40,7 +40,7 @@ export default function Message() {
     }
     const sound = new Audio(notificationSound)
     sound.play()
-
+    toast.success("Bạn có một tin nhắn mới")
   }, [messages,setMessages]);
 
   useEffect(() => {
@@ -109,6 +109,7 @@ export default function Message() {
     //let res = await userApi.getAllUsers()
     if (res?.data?.chattingUsers && res.data.chattingUsers.length > 0) {
       setUsers(res.data.chattingUsers);
+      console.log("chatting users : ", res.data.chattingUsers)
       if(user?.salon_id && idSalon === user.salon_id){
         setUser(res.data.chattingUsers[0])
       }
@@ -155,7 +156,7 @@ export default function Message() {
                 >
                   <div
                     className="person-image"
-                    style={{ backgroundImage: `url(${user.image})` }}
+                    style={{ backgroundImage: `url(${user.image})` , marginRight: "2px"}}
                   >
                     {isOnline === true ? (
                       <div className="person-active"></div>
@@ -165,7 +166,11 @@ export default function Message() {
                   </div>
                   <div className="text-box">
                     <div className="message-name">{user.name}</div>
-                    <div className="message-text">You: Ok 11h40 AM</div>
+                    <div className="message-text-sidebar">
+                      <span className="text-sender">{user.message && user.message.sender !== "" ? user.message.sender + ": ": ""}</span> 
+                      <span className="text-message">{user.message && user.message.message} </span>
+                      <span className="text-time">{user.message && user.message.time}</span>
+                    </div>
                   </div>
                 </div>
               );
