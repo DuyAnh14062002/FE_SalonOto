@@ -133,6 +133,8 @@ export default function HeaderSalon() {
   };
   const handleDeleteNotify = async (id) => {
     try {
+      const confirm = window.confirm("Bạn có chắc chắn muốn xóa thông báo?");
+      if (!confirm) return;
       await notificationApi.deleteNotificationSalon({
         id: id,
         salonId: idSalon,
@@ -238,6 +240,7 @@ export default function HeaderSalon() {
 
     handleCloseCall();
   };
+  console.log("listNotification", listNotification);
   return (
     <div className="container-header">
       <div className="back-home">

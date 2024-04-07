@@ -7,12 +7,12 @@ import Modal from "react-bootstrap/Modal";
 import authApi from "../../apis/auth.api";
 import { toast } from "react-toastify";
 import userApi from "../../apis/user.api";
+import salonApi from "../../apis/salon.api";
 const AccountProfile = () => {
   const [emailInvite, setEmailInvite] = useState("");
   const [show, setShow] = useState(false);
-
+  const [salon, setSalon] = useState({});
   const [profile1, setProfile1] = useState({});
-
   const [profile, setProfile] = useState({
     fullname: "",
     phone: "",
@@ -25,6 +25,17 @@ const AccountProfile = () => {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
+  useEffect(() => {
+    const getSalonInfo = async () => {
+      try {
+        const res = await salonApi.getSalonInfor();
+        setSalon(res.data.salon);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getSalonInfo();
+  }, []);
   const handleOnChangeEmailInvite = (e) => {
     setEmailInvite(e.target.value);
   };
@@ -41,9 +52,13 @@ const AccountProfile = () => {
   const handleSubmitInviteUser = async (e) => {
     e.preventDefault();
     try {
-      const res = await authApi.inviteUser({ email: emailInvite });
+      const res = await authApi.inviteUser({
+        email: emailInvite,
+        salonId: salon.salon_id,
+      });
+      console.log("res", res);
       if (res.data.status === "success") {
-        toast.success("Bạn đã mời bạn bè thành công");
+        toast.success("Bạn đã mời người dùng vào salon thành công");
         setEmailInvite("");
         handleClose();
       }
@@ -253,14 +268,18 @@ const AccountProfile = () => {
                           </div>
                         </div>
                         <div className="col-12">
-                          <Button
-                            variant="success"
-                            className="mt-3"
-                            onClick={handleShow}
-                            style={{ marginRight: "10px" }}
-                          >
-                            <i className="fa-solid fa-user-plus"></i> Mời bạn bè
-                          </Button>
+                          {salon && (
+                            <Button
+                              variant="success"
+                              className="mt-3"
+                              onClick={handleShow}
+                              style={{ marginRight: "10px" }}
+                            >
+                              <i className="fa-solid fa-user-plus"></i> Mời bạn
+                              bè
+                            </Button>
+                          )}
+
                           <Button
                             className="mt-3"
                             style={{
@@ -295,7 +314,7 @@ const AccountProfile = () => {
         <Modal show={show} onHide={handleClose}>
           <Form onSubmit={handleSubmitInviteUser}>
             <Modal.Header closeButton>
-              <Modal.Title>Mời bạn bè</Modal.Title>
+              <Modal.Title>Mời người dùng vào salon</Modal.Title>
             </Modal.Header>
             <Modal.Body>
               <Form.Group md="4">

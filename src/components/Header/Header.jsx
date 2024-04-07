@@ -14,7 +14,7 @@ import { toast } from "react-toastify";
 import notificationSound from "../../assets/sounds/notification.mp3";
 import { useSocketContext } from "../../context/SocketContext";
 import telephoneRing from "../../assets/sounds/telephone_ring.mp3";
-
+import userApi from "../../apis/user.api";
 const intervalDuration = 3000;
 let timerId;
 let timeOut;
@@ -48,6 +48,7 @@ export default function Header(props) {
   //socket
   useEffect(() => {
     socket?.on("notification", (data) => {
+      console.log("data", data);
       const sound = new Audio(notificationSound);
       sound.play();
       toast.success(data);
@@ -86,15 +87,17 @@ export default function Header(props) {
       socket?.off("receiveEndCallVideo");
     };
   }, [socket, timeOut]);
+
+  const fetchAllNotificationUser = async () => {
+    try {
+      const res = await notificationApi.getAllNotificationUser();
+      console.log("res notification user", res);
+      setListNotification(res.data.notifications);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   useEffect(() => {
-    const fetchAllNotificationUser = async () => {
-      try {
-        const res = await notificationApi.getAllNotificationUser();
-        setListNotification(res.data.notifications);
-      } catch (error) {
-        console.log(error);
-      }
-    };
     fetchAllNotificationUser();
   }, []);
   useEffect(() => {
@@ -106,16 +109,7 @@ export default function Header(props) {
     };
     loading();
   }, []);
-
-  const fetchAllNotificationUser = async () => {
-    try {
-      const res = await notificationApi.getAllNotificationUser();
-      setListNotification(res.data.notifications);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
+  console.log("listNotification", listNotification);
   let handleLogout = async () => {
     try {
       await authApi.logout({ user_id: userInfo.user_id });
@@ -150,6 +144,9 @@ export default function Header(props) {
   };
   const handleDeleteNotify = async (id) => {
     try {
+      const confirm = window.confirm("Bạn có chắc chắn muốn xóa thông báo?");
+      if (!confirm) return;
+
       await notificationApi.deleteNotificationUser({
         id: id,
       });
@@ -157,6 +154,20 @@ export default function Header(props) {
         (notification) => notification.id !== id
       );
       setListNotification(newListNotification);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const handleAcceptInvite = async (id, token) => {
+    try {
+      await notificationApi.updateNotificationUser({
+        id: id,
+      });
+      await userApi.acceptInvite({
+        token,
+      });
+      toast.success("Chấp nhận lời mời thành công");
+      fetchAllNotificationUser();
     } catch (error) {
       console.log(error);
     }
@@ -173,6 +184,7 @@ export default function Header(props) {
         >
           {listNotification.length > 0 ? (
             listNotification.map((notification) => {
+              console.log("notification", notification);
               const timeNotify = new Date(notification.create_at);
               const timeNow = new Date();
               const timeDifference = timeNow.getTime() - timeNotify.getTime();
@@ -180,53 +192,108 @@ export default function Header(props) {
                 formatTimeDifference(timeDifference);
               return (
                 <button key={notification.id} className="notify p-2">
-                  <div className="d-flex align-items-center">
-                    <img
-                      src={
-                        notification.avatar ||
-                        "https://scontent.fsgn2-5.fna.fbcdn.net/v/t1.30497-1/143086968_2856368904622192_1959732218791162458_n.png?_nc_cat=1&ccb=1-7&_nc_sid=5f2048&_nc_ohc=BCnRaxZCfRkAX8a1rU3&_nc_ht=scontent.fsgn2-5.fna&oh=00_AfD29zpAHOxBSwhZkEnW47vMd-hoaCLBDDjywB4cGeF7YA&oe=662C6938"
-                      }
-                      alt=""
-                      className="rounded-circle"
-                      style={{ width: "56px", height: "56px" }}
-                      onClick={() =>
-                        handleDetailNotification(
-                          notification.id,
-                          notification.data
-                        )
-                      }
-                    />
-                    <div style={{ marginLeft: "10px" }}>
-                      <div
-                        className="notify-title"
-                        style={notification.read ? {} : { fontWeight: "500" }}
+                  {notification.types === "appointment" && (
+                    <div className="d-flex align-items-center">
+                      <img
+                        src={
+                          notification.avatar ||
+                          "https://scontent.fsgn2-5.fna.fbcdn.net/v/t1.30497-1/143086968_2856368904622192_1959732218791162458_n.png?_nc_cat=1&ccb=1-7&_nc_sid=5f2048&_nc_ohc=BCnRaxZCfRkAX8a1rU3&_nc_ht=scontent.fsgn2-5.fna&oh=00_AfD29zpAHOxBSwhZkEnW47vMd-hoaCLBDDjywB4cGeF7YA&oe=662C6938"
+                        }
+                        alt=""
+                        className="rounded-circle"
+                        style={{ width: "56px", height: "56px" }}
                         onClick={() =>
                           handleDetailNotification(
                             notification.id,
                             notification.data
                           )
                         }
-                      >
-                        {notification.description}
-                      </div>
-                      <div
-                        className={
-                          notification.read
-                            ? "text-muted d-flex justify-content-between align-items-center"
-                            : "text-primary d-flex justify-content-between align-items-center"
-                        }
-                        style={notification.read ? {} : { fontWeight: "500" }}
-                      >
-                        <span>{formattedTimeDifference}</span>
+                      />
+                      <div style={{ marginLeft: "10px" }}>
+                        <div
+                          className="notify-title"
+                          style={notification.read ? {} : { fontWeight: "500" }}
+                          onClick={() =>
+                            handleDetailNotification(
+                              notification.id,
+                              notification.data
+                            )
+                          }
+                        >
+                          {notification.description}
+                        </div>
+                        <div
+                          className={
+                            notification.read
+                              ? "text-muted d-flex justify-content-between align-items-center"
+                              : "text-primary d-flex justify-content-between align-items-center"
+                          }
+                          style={notification.read ? {} : { fontWeight: "500" }}
+                        >
+                          <span>{formattedTimeDifference}</span>
 
-                        <i
-                          class="fa-regular fa-trash-can text-danger mx-2"
-                          title="Xóa thông báo"
-                          onClick={() => handleDeleteNotify(notification.id)}
-                        ></i>
+                          <i
+                            class="fa-regular fa-trash-can text-danger mx-2"
+                            title="Xóa thông báo"
+                            onClick={() => handleDeleteNotify(notification.id)}
+                          ></i>
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  )}
+                  {notification.types === "invite" && (
+                    <div className="d-flex align-items-center">
+                      <img
+                        src={
+                          notification.avatar ||
+                          "https://scontent.fsgn2-5.fna.fbcdn.net/v/t1.30497-1/143086968_2856368904622192_1959732218791162458_n.png?_nc_cat=1&ccb=1-7&_nc_sid=5f2048&_nc_ohc=BCnRaxZCfRkAX8a1rU3&_nc_ht=scontent.fsgn2-5.fna&oh=00_AfD29zpAHOxBSwhZkEnW47vMd-hoaCLBDDjywB4cGeF7YA&oe=662C6938"
+                        }
+                        alt=""
+                        className="rounded-circle"
+                        style={{ width: "56px", height: "56px" }}
+                      />
+                      <div style={{ marginLeft: "10px" }}>
+                        <div
+                          className="notify-title"
+                          style={notification.read ? {} : { fontWeight: "500" }}
+                        >
+                          {notification.description}
+                        </div>
+                        <div
+                          className={
+                            notification.read
+                              ? "text-muted mt-1 d-flex justify-content-between align-items-center"
+                              : "text-primary mt-1 d-flex justify-content-between align-items-center"
+                          }
+                          style={notification.read ? {} : { fontWeight: "500" }}
+                        >
+                          <span>{formattedTimeDifference}</span>
+                          <div className="d-flex justify-content-end align-items-center">
+                            {!notification.read && (
+                              <i
+                                className="fa-solid fa-check text-success mx-2"
+                                title="Chấp nhận"
+                                onClick={() =>
+                                  handleAcceptInvite(
+                                    notification.id,
+                                    notification.data
+                                  )
+                                }
+                              ></i>
+                            )}
+
+                            <i
+                              className="fa-regular fa-trash-can text-danger mx-2"
+                              title="Xóa thông báo"
+                              onClick={() =>
+                                handleDeleteNotify(notification.id)
+                              }
+                            ></i>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </button>
               );
             })
@@ -255,7 +322,6 @@ export default function Header(props) {
 
     handleCloseCall();
   };
-  console.log("otherPage", otherPage);
   return otherPage === true ? (
     <nav style={{ backgroundColor: "rgb(1 37 255 / 70%)", padding: "5px 5px" }}>
       <Modal show={showCall} backdrop="static">

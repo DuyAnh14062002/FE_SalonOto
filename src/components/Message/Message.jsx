@@ -13,6 +13,7 @@ import { Button, Modal } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import telephoneRing from "../../assets/sounds/telephone_ring.mp3";
+import noUserImage from "../../assets/images/no-user-image.webp";
 
 const intervalDuration = 3000;
 let timerId;
@@ -210,6 +211,7 @@ export default function Message() {
   };
   const handleShowCall = () => setShowCall(true);
   const handleCallVideo = async () => {
+    console.log("profile", profile);
     let res = "";
     let receiverId = "";
     if (user?.salon_id) {
@@ -242,7 +244,7 @@ export default function Message() {
 
     socket?.emit("callVideo", {
       senderName: profile.fullname,
-      senderImage: profile.avatar,
+      senderImage: profile.avatar || noUserImage,
       linkVideoCall,
       senderId: profile.user_id,
       receiverId,
