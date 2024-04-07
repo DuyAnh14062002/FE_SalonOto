@@ -77,10 +77,8 @@ export default function Header(props) {
   }, [timerId, socket]);
   useEffect(() => {
     socket?.on("receiveEndCallVideo", () => {
-      toast.error("Cuộc gọi đã kết thúc");
       handleEndCall();
-      clearInterval(timerId);
-      handleCloseCall();
+      toast.error("Cuộc gọi đã kết thúc");
     });
     return () => {
       socket?.off("receiveEndCallVideo");

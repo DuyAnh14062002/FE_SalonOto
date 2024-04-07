@@ -27,6 +27,9 @@ export default function Room() {
       },
       showScreenSharingButton: true,
       showPreJoinView: false,
+      onLeaveRoom: () => {
+        window.location.href = "/message";
+      },
     });
   };
 

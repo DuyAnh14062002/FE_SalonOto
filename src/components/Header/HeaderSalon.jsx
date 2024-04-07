@@ -80,8 +80,8 @@ export default function HeaderSalon() {
   }, [salon, socket]);
   useEffect(() => {
     socket?.on("receiveEndCallVideo", () => {
-      toast.error("Cuộc gọi đã kết thúc");
       handleEndCall();
+      toast.error("Cuộc gọi đã kết thúc");
     });
     return () => {
       socket?.off("receiveEndCallVideo");

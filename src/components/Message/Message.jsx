@@ -16,6 +16,7 @@ import telephoneRing from "../../assets/sounds/telephone_ring.mp3";
 
 const intervalDuration = 3000;
 let timerId;
+let timeOut;
 export default function Message() {
   const navigate = useNavigate();
   const profile = useSelector((state) => state.userSlice.userInfo);
@@ -59,18 +60,24 @@ export default function Message() {
       navigate(linkVideoCall);
       window.location.reload();
     });
+
+    return () => {
+      socket?.off("newMessage");
+      socket?.off("receiveAnswerCallVideo");
+    };
+  }, [socket, handleNewMessage]);
+  useEffect(() => {
     socket?.on("receiveRefuseCallVideo", () => {
       soundEndCall.play();
+      clearTimeout(timeOut);
       clearInterval(timerId);
       toast.error("Người dùng từ chối cuộc gọi");
       handleCloseCall();
     });
     return () => {
-      socket?.off("newMessage");
-      socket?.off("receiveAnswerCallVideo");
       socket?.off("receiveRefuseCallVideo");
     };
-  }, [socket, handleNewMessage]);
+  }, [socket, timerId, timeOut]);
   useEffect(() => {
     socket?.on("notification", (data) => {
       const sound = new Audio(notificationSound);
@@ -83,9 +90,10 @@ export default function Message() {
         soundPhoneRing.play();
       }, intervalDuration);
 
-      setTimeout(() => {
+      timeOut = setTimeout(() => {
         handleEndCallForReceiver();
-      }, 24000);
+      }, 30000);
+
       handleShowCallForReceiver();
       setDataResponseFromVideoCall({
         senderName: data.senderName,
@@ -102,9 +110,8 @@ export default function Message() {
   }, [timerId, socket]);
   useEffect(() => {
     socket?.on("receiveEndCallVideo", () => {
+      clearTimeout(timeOut);
       handleEndCallForReceiver();
-      clearInterval(timerId);
-      handleCloseCallForReceiver();
       toast.error("Cuộc gọi đã kết thúc");
     });
     return () => {
@@ -126,7 +133,6 @@ export default function Message() {
   const handleShowCallForReceiver = () => setShowCallForReceiver(true);
   const getDetailSalon = async () => {
     let res = await salonApi.getDetailSalon(idSalon);
-    console.log("res salon : ", res);
     if (res?.data?.salon) {
       setUser(res.data.salon);
     }
@@ -203,7 +209,6 @@ export default function Message() {
     setShowCall(false);
   };
   const handleShowCall = () => setShowCall(true);
-  console.log("user", user);
   const handleCallVideo = async () => {
     let res = "";
     let receiverId = "";
@@ -231,9 +236,9 @@ export default function Message() {
       soundPhoneCall.play();
     }, intervalDuration);
 
-    setTimeout(() => {
+    timeOut = setTimeout(() => {
       handleEndCall();
-    }, 24000);
+    }, 30000);
 
     socket?.emit("callVideo", {
       senderName: profile.fullname,
@@ -265,16 +270,15 @@ export default function Message() {
     navigate(dataResponseFromVideoCall.linkVideoCall);
   };
   const handleRefuse = () => {
-    handleEndCallForReceiver();
+    console.log("refuse");
     socket?.emit("refuseCallVideo", {
       receiverId: dataResponseFromVideoCall.senderId,
     });
-
-    handleCloseCallForReceiver();
+    handleEndCallForReceiver();
   };
   return (
     <div className="message-container">
-      <Modal show={showCallForReceiver}>
+      <Modal show={showCallForReceiver} backdrop="static">
         <Modal.Header>
           <Modal.Title></Modal.Title>
         </Modal.Header>
@@ -396,7 +400,7 @@ export default function Message() {
           </div>
         </div>
       </div>
-      <Modal show={showCall} onHide={handleCloseCall}>
+      <Modal show={showCall} onHide={handleCloseCall} backdrop="static">
         <Modal.Header>
           <Modal.Title></Modal.Title>
         </Modal.Header>
