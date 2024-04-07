@@ -12,6 +12,7 @@ import { Button, Modal } from "react-bootstrap";
 
 const intervalDuration = 3000;
 let timerId;
+let timeOut;
 export default function AdminSalonHeader() {
   const userInfo = useSelector((state) => state.userSlice.userInfo);
   const { socket } = useSocketContext();
@@ -47,7 +48,7 @@ export default function AdminSalonHeader() {
         soundPhoneRing.play();
       }, intervalDuration);
 
-      setTimeout(() => {
+      timeOut = setTimeout(() => {
         handleEndCall();
       }, 24000);
       handleShowCall();
@@ -66,6 +67,7 @@ export default function AdminSalonHeader() {
   }, [salon, socket]);
   useEffect(() => {
     socket?.on("receiveEndCallVideo", () => {
+      clearTimeout(timeOut);
       toast.error("Cuộc gọi đã kết thúc");
       handleEndCall();
     });
@@ -96,7 +98,7 @@ export default function AdminSalonHeader() {
   };
   return (
     <nav className="topnav shadow navbar-light d-flex">
-      <Modal show={showCall}>
+      <Modal show={showCall} backdrop="static">
         <Modal.Header>
           <Modal.Title></Modal.Title>
         </Modal.Header>

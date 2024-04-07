@@ -92,7 +92,7 @@ export default function Message() {
 
       timeOut = setTimeout(() => {
         handleEndCallForReceiver();
-      }, 30000);
+      }, 24000);
 
       handleShowCallForReceiver();
       setDataResponseFromVideoCall({
@@ -238,7 +238,7 @@ export default function Message() {
 
     timeOut = setTimeout(() => {
       handleEndCall();
-    }, 30000);
+    }, 24000);
 
     socket?.emit("callVideo", {
       senderName: profile.fullname,

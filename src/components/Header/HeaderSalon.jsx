@@ -12,6 +12,7 @@ import telephoneRing from "../../assets/sounds/telephone_ring.mp3";
 
 const intervalDuration = 3000;
 let timerId;
+let timeOut;
 export default function HeaderSalon() {
   const idSalon = localStorage.getItem("idSalon") || "";
   const userIdSalon = localStorage.getItem("userIdSalon");
@@ -61,7 +62,7 @@ export default function HeaderSalon() {
         soundPhoneRing.play();
       }, intervalDuration);
 
-      setTimeout(() => {
+      timeOut = setTimeout(() => {
         handleEndCall();
       }, 24000);
       handleShowCall();
@@ -81,6 +82,7 @@ export default function HeaderSalon() {
   useEffect(() => {
     socket?.on("receiveEndCallVideo", () => {
       handleEndCall();
+      clearTimeout(timeOut);
       toast.error("Cuộc gọi đã kết thúc");
     });
     return () => {
@@ -289,7 +291,7 @@ export default function HeaderSalon() {
           )}
         </ul>
       </div>
-      <Modal show={showCall}>
+      <Modal show={showCall} backdrop="static">
         <Modal.Header>
           <Modal.Title></Modal.Title>
         </Modal.Header>

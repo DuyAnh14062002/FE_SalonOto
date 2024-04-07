@@ -17,6 +17,7 @@ import telephoneRing from "../../assets/sounds/telephone_ring.mp3";
 
 const intervalDuration = 3000;
 let timerId;
+let timeOut;
 export default function Header(props) {
   const { otherPage } = props;
   const soundPhoneRing = new Audio(telephoneRing);
@@ -58,7 +59,7 @@ export default function Header(props) {
         soundPhoneRing.play();
       }, intervalDuration);
 
-      setTimeout(() => {
+      timeOut = setTimeout(() => {
         handleEndCall();
       }, 24000);
       handleShowCall();
@@ -77,13 +78,14 @@ export default function Header(props) {
   }, [timerId, socket]);
   useEffect(() => {
     socket?.on("receiveEndCallVideo", () => {
-      handleEndCall();
       toast.error("Cuộc gọi đã kết thúc");
+      handleEndCall();
+      clearTimeout(timeOut);
     });
     return () => {
       socket?.off("receiveEndCallVideo");
     };
-  }, [socket]);
+  }, [socket, timeOut]);
   useEffect(() => {
     const fetchAllNotificationUser = async () => {
       try {
@@ -130,6 +132,7 @@ export default function Header(props) {
   };
   const handleEndCall = () => {
     clearInterval(timerId);
+    clearTimeout(timeOut);
     handleCloseCall();
   };
   const numberOfNotification = listNotification.filter(
@@ -252,8 +255,34 @@ export default function Header(props) {
 
     handleCloseCall();
   };
+  console.log("otherPage", otherPage);
   return otherPage === true ? (
     <nav style={{ backgroundColor: "rgb(1 37 255 / 70%)", padding: "5px 5px" }}>
+      <Modal show={showCall} backdrop="static">
+        <Modal.Header>
+          <Modal.Title></Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div className="d-flex flex-column justify-content-center align-items-center">
+            <img
+              src={dataResponseFromVideoCall.senderImage}
+              alt="image_user"
+              className="w-25 h-25 rounded-circle"
+            />
+            <div className="mt-3 fw-bold fs-3">
+              {dataResponseFromVideoCall.senderName} đang gọi đến bạn{" "}
+            </div>
+          </div>
+        </Modal.Body>
+        <Modal.Footer className="d-flex justify-content-center">
+          <Button variant="danger" onClick={handleRefuse}>
+            Từ chối
+          </Button>
+          <Button variant="success" className="mx-3" onClick={handleAnswer}>
+            Trả lời
+          </Button>
+        </Modal.Footer>
+      </Modal>
       <div className="nav__logo">
         <img
           src="https://s.bonbanh.com/uploads/users/701283/salon/l_1678849916.jpg"
@@ -340,7 +369,7 @@ export default function Header(props) {
     </nav>
   ) : (
     <nav>
-      <Modal show={showCall}>
+      <Modal show={showCall} backdrop="static">
         <Modal.Header>
           <Modal.Title></Modal.Title>
         </Modal.Header>
