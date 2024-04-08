@@ -32,6 +32,7 @@ import Appointment from "./pages/Appointment";
 import AppointmentSalon from "./pages/AdminSalon/AppointmentSalon";
 import NotificationDetailSalon from "./pages/SalonOto/NotificationDetailSalon";
 import NotificationDetailUser from "./pages/NotificationDetailUser/";
+import Room from "./pages/Room";
 function ProtectedRoute() {
   const isAuthenticated = useSelector(
     (state) => state.userSlice.isAuthenticated
@@ -109,6 +110,10 @@ const router = createBrowserRouter([
       {
         path: path.notificationDetailUser,
         element: <NotificationDetailUser />,
+      },
+      {
+        path: path.room,
+        element: <Room />,
       },
     ],
   },

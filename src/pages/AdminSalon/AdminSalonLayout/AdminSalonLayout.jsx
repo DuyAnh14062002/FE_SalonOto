@@ -8,6 +8,8 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import salonApi from '../../../apis/salon.api';
 import { toast } from 'react-toastify';
+import { useDispatch } from 'react-redux';
+import { setsalon } from '../../../redux/slices/SalonSlide';
 
 export default function AdminSalonLayout({ children }) {
   const [statusSalon, setStatusSalon] = useState("")
@@ -15,6 +17,7 @@ export default function AdminSalonLayout({ children }) {
   const [show, setShow] = useState(true)
   const [image, setImage] = useState()
   const [banner, setBanner] = useState()
+  const dispatch = useDispatch();
   const loading = async() => {
     let res = await salonApi.getSalonInfor()
     if(res?.data?.status){
@@ -22,6 +25,7 @@ export default function AdminSalonLayout({ children }) {
     }
     if(res?.data?.salon){
       setSalon(res.data.salon)
+      dispatch(setsalon(res.data.salon))
     }
 }
   useEffect(() => {

@@ -53,6 +53,7 @@
           height: 50px;
           border-radius: 50%;
           position: relative;
+          flex: none;
         }
         .text-box {
           width: 100%;
@@ -66,19 +67,20 @@
             .text-sender {
               margin-right: 5px;
               flex: none;
+              &.text-sender-not-seen {
+                font-weight: bold;
+              }
             }
             .text-message {
               margin-right: 5px;
-              word-break: break-all;
-              display: -webkit-box;
-              -webkit-line-clamp: 3;
-              -webkit-box-orient: horizontal;
-              overflow: hidden;
-              text-overflow: ellipsis;
-              max-width: 75%;
+              max-width: 50%;
+              &.text-message-not-seen {
+                font-weight: bold;
+              }
             }
             .text-time {
               width: 15%;
+              flex: none;
             }
           }
         }
@@ -237,4 +239,7 @@
   60% {
     transform: translate3d(4px, 0, 0);
   }
+}
+.actice-chatting {
+  background-color: rgb(241, 240, 240);
 }

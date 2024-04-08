@@ -6,75 +6,110 @@ import { useDispatch, useSelector } from "react-redux";
 import { logoutUser } from "../../redux/slices/UserSlice";
 import authApi from "../../apis/auth.api";
 import purchaseApi from "../../apis/purchase.api";
-import {useAuthContext} from "./../../context/AuthContext"
-import { OverlayTrigger, Popover } from "react-bootstrap";
+import { useAuthContext } from "./../../context/AuthContext";
+import { Button, Modal, OverlayTrigger, Popover } from "react-bootstrap";
 import { formatTimeDifference } from "../../utils/common";
 import notificationApi from "../../apis/notification.api";
-import { io } from "socket.io-client";
 import { toast } from "react-toastify";
+import notificationSound from "../../assets/sounds/notification.mp3";
+import { useSocketContext } from "../../context/SocketContext";
+import telephoneRing from "../../assets/sounds/telephone_ring.mp3";
+import messageApi from "../../apis/message.api";
 
+const intervalDuration = 3000;
+let timerId;
 export default function Header(props) {
   const { otherPage } = props;
+  const soundPhoneRing = new Audio(telephoneRing);
+  const { socket } = useSocketContext();
   const [purchasedPackages, setPurchasedPackages] = useState([]);
   const userInfo = useSelector((state) => state.userSlice.userInfo);
-  const profile = JSON.parse(localStorage.getItem("profile"));
+  const [numberOfNotificationMessage, setNumberOfNotificationMessage] = useState("")
+  const [dataResponseFromVideoCall, setDataResponseFromVideoCall] = useState(
+    {}
+  );
+  const [showCall, setShowCall] = useState(false);
+  const handleCloseCall = () => setShowCall(false);
+  const handleShowCall = () => setShowCall(true);
   const [listNotification, setListNotification] = useState([]);
   const dispatch = useDispatch();
   let navigate = useNavigate();
-  const {setProfile} = useAuthContext()
-  let handleLogout = async () => {
-    try {
-      await authApi.logout({ user_id: userInfo.user_id });
-      setProfile(null)
-    } catch (error) {
-      console.log("error:", error);
-    }
+  const { setProfile } = useAuthContext();
 
-    dispatch(logoutUser());
-    navigate("/login");
-  };
-  const HandleMessage = () =>{
-     navigate("/message")
-    // window.location.reload()
-  }
 
-  useEffect(() =>{
-    const loading = async() =>{
-         let res = await purchaseApi.getPurchase()
-         if(res?.data?.purchasedPackages){
-          setPurchasedPackages(res.data.purchasedPackages)
-         }
-        }})
-  const fetchAllNotificationUser = async () => {
-    try {
-      const res = await notificationApi.getAllNotificationUser();
-      setListNotification(res.data.notifications);
-    } catch (error) {
-      console.log(error);
+  const loadingAllUser = async () => {
+    let res = await messageApi.getChatingUser();
+    if (res?.data?.chattingUsers && res.data.chattingUsers.length > 0) {
+      const numberOfNotificationMessage = res.data.chattingUsers.filter((user) => user.message &&  user.message.conversation_status === false).length
+      setNumberOfNotificationMessage(numberOfNotificationMessage);
+      }
     }
-  };
+   
+  useEffect(() => {
+     const salonId = localStorage.getItem("idSalon")
+     if(salonId){
+      localStorage.removeItem("idSalon")
+     }
+  },[])
+  
+  useEffect(() => {
+    const loading = async () => {
+      let res = await purchaseApi.getPurchase();
+      if (res?.data?.purchasedPackages) {
+        setPurchasedPackages(res.data.purchasedPackages);
+      }
+    };
+    loading();
+  }, []);
 
   //socket
   useEffect(() => {
-    const socket = io("http://localhost:5000", {
-      query: {
-        userId: profile.user_id,
-      },
+    socket?.on("notification", (data) => {
+      const sound = new Audio(notificationSound);
+      sound.play();
+      toast.success(data);
+      fetchAllNotificationUser();
     });
-    socket.on("connect", () => {
-      console.log("socket connected");
-      socket.on("notification", (data) => {
-        toast.success(data);
-        fetchAllNotificationUser();
+    socket?.on("receiveCallVideo", (data) => {
+      soundPhoneRing.play();
+      timerId = setInterval(() => {
+        soundPhoneRing.play();
+      }, intervalDuration);
+
+      setTimeout(() => {
+        handleEndCall();
+      }, 24000);
+      handleShowCall();
+      setDataResponseFromVideoCall({
+        senderName: data.senderName,
+        senderImage: data.senderImage,
+        linkVideoCall: data.linkVideoCall,
+        senderId: data.senderId,
       });
     });
-    socket.on("disconnect", () => {
-      console.log("socket disconnected");
-    });
+
     return () => {
-      socket.disconnect();
+      socket?.off("notification");
+      socket?.off("receiveCallVideo");
     };
-  }, [profile.user_id]);
+  }, [timerId, socket]);
+  useEffect(() => {
+    socket?.on("receiveEndCallVideo", () => {
+      toast.error("Cuộc gọi đã kết thúc");
+      handleEndCall();
+      clearInterval(timerId);
+      handleCloseCall();
+    });
+
+    socket?.on("newMessage", () => {
+      toast.success("bạn có một tin nhắn mới")
+      loadingAllUser()
+    })
+    return () => {
+      socket?.off("receiveEndCallVideo");
+      socket?.off("newMessage");
+    };
+  }, [socket]);
   useEffect(() => {
     const fetchAllNotificationUser = async () => {
       try {
@@ -95,6 +130,34 @@ export default function Header(props) {
     };
     loading();
   }, []);
+
+  const fetchAllNotificationUser = async () => {
+    try {
+      const res = await notificationApi.getAllNotificationUser();
+      setListNotification(res.data.notifications);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  let handleLogout = async () => {
+    try {
+      await authApi.logout({ user_id: userInfo.user_id });
+      setProfile(null);
+    } catch (error) {
+      console.log("error:", error);
+    }
+
+    dispatch(logoutUser());
+    navigate("/login");
+  };
+  const HandleMessage = () => {
+    navigate("/message");
+  };
+  const handleEndCall = () => {
+    clearInterval(timerId);
+    handleCloseCall();
+  };
 
   const numberOfNotification = listNotification.filter(
     (notification) => !notification.read
@@ -198,6 +261,24 @@ export default function Header(props) {
       </Popover.Body>
     </Popover>
   );
+  // video call
+  const handleAnswer = () => {
+    socket?.emit("answerCallVideo", {
+      receiverId: dataResponseFromVideoCall.senderId,
+      linkVideoCall: dataResponseFromVideoCall.linkVideoCall,
+    });
+    handleCloseCall();
+    clearInterval(timerId);
+    navigate(dataResponseFromVideoCall.linkVideoCall);
+  };
+  const handleRefuse = () => {
+    handleEndCall();
+    socket?.emit("refuseCallVideo", {
+      receiverId: dataResponseFromVideoCall.senderId,
+    });
+
+    handleCloseCall();
+  };
   return otherPage === true ? (
     <nav style={{ backgroundColor: "rgb(1 37 255 / 70%)", padding: "5px 5px" }}>
       <div className="nav__logo">
@@ -254,39 +335,66 @@ export default function Header(props) {
       </ul>
       <div className="search">
         <input type="text" placeholder="Tìm kiếm" />
-        <span>
-          <i className="ri-search-line"></i>
-        </span>
       </div>
       <div className="container-box">
-      <div className="messenger" onClick={HandleMessage}>
-        <i class="fa-brands fa-facebook-messenger"></i>
-      </div>
-      <Link
-        to={path.profile}
-        className="account-profile"
-        style={{ textDecoration: "none", position: "relative" }}
-      >
-        <span className="icon-user">
-          <i className="ri-user-3-fill"></i>
+        <div className="messenger position-relative" onClick={HandleMessage}>
+          <i class="fa-brands fa-facebook-messenger"></i>
+          <span
+          class="badge rounded-pill badge-notification bg-danger position-absolute"
+          style={{ top: "-6px", left: "34px" }}
+        >
+          {numberOfNotificationMessage > 0 && numberOfNotificationMessage}
         </span>
-        <span style={{ fontSize: "15px" }}>
-          {userInfo?.fullname || userInfo?.username}
-        </span>
-        <div className="profile-arrow">
-          <div className="virtual_class"></div>
-          <div className="arrow position-absolute"></div>
-          <div className="position-absolute sub-profile">
-            <Link to={path.profile}>Thông tin cá nhân</Link>
-            <Link onClick={handleLogout}>Đăng xuất</Link>
-          </div>
         </div>
-      </Link>
+        <Link
+          to={path.profile}
+          className="account-profile"
+          style={{ textDecoration: "none", position: "relative" }}
+        >
+          <span className="icon-user">
+            <i className="ri-user-3-fill"></i>
+          </span>
+          <span style={{ fontSize: "15px" }}>
+            {userInfo?.fullname || userInfo?.username}
+          </span>
+          <div className="profile-arrow">
+            <div className="virtual_class"></div>
+            <div className="arrow position-absolute"></div>
+            <div className="position-absolute sub-profile">
+              <Link to={path.profile}>Thông tin cá nhân</Link>
+              <Link onClick={handleLogout}>Đăng xuất</Link>
+            </div>
+          </div>
+        </Link>
       </div>
-     
     </nav>
   ) : (
     <nav>
+      <Modal show={showCall}>
+        <Modal.Header>
+          <Modal.Title></Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div className="d-flex flex-column justify-content-center align-items-center">
+            <img
+              src={dataResponseFromVideoCall.senderImage}
+              alt="image_user"
+              className="w-25 h-25 rounded-circle"
+            />
+            <div className="mt-3 fw-bold fs-3">
+              {dataResponseFromVideoCall.senderName} đang gọi đến bạn{" "}
+            </div>
+          </div>
+        </Modal.Body>
+        <Modal.Footer className="d-flex justify-content-center">
+          <Button variant="danger" onClick={handleRefuse}>
+            Từ chối
+          </Button>
+          <Button variant="success" className="mx-3" onClick={handleAnswer}>
+            Trả lời
+          </Button>
+        </Modal.Footer>
+      </Modal>
       <div className="nav__logo">
         <img
           src="https://s.bonbanh.com/uploads/users/701283/salon/l_1678849916.jpg"
@@ -346,29 +454,35 @@ export default function Header(props) {
         </span>
       </div>
       <div className="container-box">
-      <div className="messenger" onClick={HandleMessage}>
-        <i class="fa-brands fa-facebook-messenger"></i>
-      </div>
-      <Link
-        to={path.profile}
-        className="account-profile"
-        style={{ textDecoration: "none", position: "relative" }}
-      >
-        <span className="icon-user">
-          <i className="ri-user-3-fill"></i>
+        <div className="messenger position-relative" onClick={HandleMessage}>
+          <i class="fa-brands fa-facebook-messenger"></i>
+          <span
+          class="badge rounded-pill badge-notification bg-danger position-absolute"
+          style={{ top: "-6px", left: "34px" }}
+        >
+           {numberOfNotificationMessage > 0 && numberOfNotificationMessage}
         </span>
-        <span style={{ fontSize: "15px" }}>
-          {userInfo?.fullname || userInfo?.username}
-        </span>
-        <div className="profile-arrow">
-          <div className="virtual_class"></div>
-          <div className="arrow position-absolute"></div>
-          <div className="position-absolute sub-profile">
-            <Link to={path.profile}>Thông tin cá nhân</Link>
-            <Link onClick={handleLogout}>Đăng xuất</Link>
-          </div>
         </div>
-      </Link>
+        <Link
+          to={path.profile}
+          className="account-profile"
+          style={{ textDecoration: "none", position: "relative" }}
+        >
+          <span className="icon-user">
+            <i className="ri-user-3-fill"></i>
+          </span>
+          <span style={{ fontSize: "15px" }}>
+            {userInfo?.fullname || userInfo?.username}
+          </span>
+          <div className="profile-arrow">
+            <div className="virtual_class"></div>
+            <div className="arrow position-absolute"></div>
+            <div className="position-absolute sub-profile">
+              <Link to={path.profile}>Thông tin cá nhân</Link>
+              <Link onClick={handleLogout}>Đăng xuất</Link>
+            </div>
+          </div>
+        </Link>
       </div>
     </nav>
   );

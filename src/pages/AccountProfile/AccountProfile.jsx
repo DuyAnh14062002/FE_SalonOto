@@ -90,7 +90,6 @@ const AccountProfile = () => {
       form.append("avatar", image);
     }
     const res = await userApi.updateProfile(form);
-    console.log("res update : ", res);
     if (res?.data?.status === "success") {
       toast.success("Cập nhật thông tin thành công");
     } else {
@@ -98,6 +97,14 @@ const AccountProfile = () => {
     }
     getProfile();
     setProfile({});
+  };
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const day = date.getDate().toString().padStart(2, '0'); // Lấy ngày và thêm số 0 phía trước nếu cần
+    const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Lấy tháng và thêm số 0 phía trước nếu cần
+    const year = date.getFullYear().toString(); // Lấy năm
+    
+    return `${day}/${month}/${year}`;
   };
   return (
     <>
@@ -155,7 +162,7 @@ const AccountProfile = () => {
                               <div className="col-lg-3 col-md-4 col-12">
                                 <div className="info">
                                   <h4>Ngày sinh</h4>
-                                  <p>{profile1 && profile1.date_of_birth}</p>
+                                  <p>{profile1 && formatDate(profile1.date_of_birth)}</p>
                                 </div>
                               </div>
                             </div>

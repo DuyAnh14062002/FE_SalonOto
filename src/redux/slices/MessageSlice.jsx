@@ -1,7 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  messages: []
+  messages: [],
+  isRefuse: false
 };
 
 export const messageSlice = createSlice({
@@ -10,11 +11,14 @@ export const messageSlice = createSlice({
   reducers: {
     getMessage: (state, action) =>{
       state.messages = action.payload
+    },
+    setRefuseCall: (state, action) =>{
+      state.isRefuse = action.payload
     }
   },
 });
 
 // Action creators are generated for each case reducer function
-export const {getMessage } = messageSlice.actions;
+export const {getMessage , setRefuseCall} = messageSlice.actions;
 
 export default messageSlice.reducer;

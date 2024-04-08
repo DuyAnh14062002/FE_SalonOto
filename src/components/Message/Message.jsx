@@ -1,69 +1,146 @@
-import React, { useState, useEffect, useCallback} from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import "./Message.scss";
 import { useNavigate } from "react-router-dom";
 import messageApi from "../../apis/message.api";
-import userApi from "../../apis/user.api";
 import { useSocketContext } from "../../context/SocketContext";
 import salonApi from "../../apis/salon.api";
-import { toast } from "react-toastify";
-import notificationSound from "../../assets/sounds/notification.mp3"
-import classnames from "classnames"
+import notificationSound from "../../assets/sounds/notification.mp3";
+import phoneCallSound from "../../assets/sounds/phone_call.mp3";
+import endCallSound from "../../assets/sounds/end_call.mp3";
 import MessageItem from "./MessageItem";
-// import useListenMessages from './useListtenMessage'
-// import { useDispatch, useSelector } from "react-redux";
-// import { getMessage } from "../../redux/slices/MessageSlice";
+import { randomID } from "../../utils/common";
+import { Button, Modal } from "react-bootstrap";
+import { useSelector} from "react-redux";
+import {setRefuseCall} from "../../redux/slices/MessageSlice"
+import { toast } from "react-toastify";
+import telephoneRing from "../../assets/sounds/telephone_ring.mp3";
+
+const intervalDuration = 3000;
+let timerId;
 export default function Message() {
   const navigate = useNavigate();
+  const profile = useSelector((state) => state.userSlice.userInfo);
+  const soundPhoneCall = new Audio(phoneCallSound);
+  const soundEndCall = new Audio(endCallSound);
   const [text, setText] = useState("");
-  const [change, setChange] = useState(false);
   const [users, setUsers] = useState([]);
   const [user, setUser] = useState({});
+  const [showCall, setShowCall] = useState(false);
   const idSalon = localStorage.getItem("idSalon");
   const [messages, setMessages] = useState([]);
   const { onlineUsers } = useSocketContext();
   const { socket } = useSocketContext();
-  const getDetailSalon = async () => {
-    let res = await salonApi.getDetailSalon(idSalon);
-    console.log("res salon : ", res);
-    if (res?.data?.salon) {
-      setUser(res.data.salon);
-    }
-  };
-  const handleNewMessage = useCallback((newMessage) => {
-   
-    newMessage.shouldShake = true
-    console.log("newMessage:",newMessage)
-    if(newMessage.senderId !== user.id && newMessage.receiverId !== user.id){
+  const soundPhoneRing = new Audio(telephoneRing);
+  const [dataResponseFromVideoCall, setDataResponseFromVideoCall] = useState(
+    {}
+  );
+  const [showCallForReceiver, setShowCallForReceiver] = useState(false);
+  const handleNewMessage = useCallback(
+    (newMessage) => {
+      newMessage.shouldShake = true;
+      if (
+        newMessage.senderId !== user.id &&
+        newMessage.receiverId !== user.id
+      ) {
+        loadingAllUser();
+      } else {
+        setMessages([newMessage, ...messages]);
+      }
+      const sound = new Audio(notificationSound);
+      sound.play();
       loadingAllUser()
-    }else{
-      setMessages([newMessage,...messages ]);
-    }
-    const sound = new Audio(notificationSound)
-    sound.play()
-    toast.success("Bạn có một tin nhắn mới")
-  }, [messages,setMessages]);
-
+      toast("Bạn có một tin nhắn mới")
+    },
+    [messages, setMessages]
+  );
+  // useEffect
   useEffect(() => {
-    socket?.on("newMessage",handleNewMessage)
-    return () => socket?.off("newMessage");
+    socket?.on("newMessage", handleNewMessage);
+    socket?.on("receiveAnswerCallVideo", (data) => {
+      clearInterval(timerId);
+      const linkVideoCall = data.linkVideoCall;
+      navigate(linkVideoCall);
+      window.location.reload();
+    });
+    socket?.on("receiveRefuseCallVideo", () => {
+      soundEndCall.play();
+      clearInterval(timerId);
+      toast.error("Người dùng từ chối cuộc gọi");
+      handleCloseCall();
+    });
+    return () => {
+      socket?.off("newMessage");
+      socket?.off("receiveAnswerCallVideo");
+      socket?.off("receiveRefuseCallVideo");
+    };
   }, [socket, handleNewMessage]);
+  useEffect(() => {
+    socket?.on("notification", (data) => {
+      const sound = new Audio(notificationSound);
+      sound.play();
+      toast.success(data);
+    });
+    socket?.on("receiveCallVideo", (data) => {
+      soundPhoneRing.play();
+      timerId = setInterval(() => {
+        soundPhoneRing.play();
+      }, intervalDuration);
 
+      setTimeout(() => {
+        handleEndCallForReceiver();
+      }, 24000);
+
+      handleShowCallForReceiver();
+      setDataResponseFromVideoCall({
+        senderName: data.senderName,
+        senderImage: data.senderImage,
+        linkVideoCall: data.linkVideoCall,
+        senderId: data.senderId,
+      });
+    });
+
+    return () => {
+      socket?.off("notification");
+      socket?.off("receiveCallVideo");
+    };
+  }, [timerId, socket]);
+  useEffect(() => {
+    socket?.on("receiveEndCallVideo", () => {
+      handleEndCallForReceiver();
+      clearInterval(timerId);
+      handleCloseCallForReceiver();
+      setDataResponseFromVideoCall({
+        ...dataResponseFromVideoCall,
+        senderId:''
+      })
+      toast.error("Cuộc gọi đã kết thúc");
+    });
+    return () => {
+      socket?.off("receiveEndCallVideo");
+    };
+  }, [socket]);
   useEffect(() => {
     getDetailSalon();
   }, [idSalon]);
-
   useEffect(() => {
     loadingAllUser();
   }, []);
-
   useEffect(() => {
     loadingMessage();
   }, [user, idSalon]);
 
-  // const dispatch =  useDispatch()
-  // const messages = useSelector(
-  //   (state) => state.messageSlice.messages
-  // );
+  // end useEffect
+  const handleCloseCallForReceiver = () => setShowCallForReceiver(false);
+  const handleShowCallForReceiver = () => setShowCallForReceiver(true);
+  const getDetailSalon = async () => {
+    if(idSalon){
+      let res = await salonApi.getDetailSalon(idSalon);
+      if (res?.data?.salon) {
+        setUser(res.data.salon);
+      }
+    }
+  };
+
   const backHome = () => {
     navigate("/");
   };
@@ -78,15 +155,14 @@ export default function Message() {
       setText("");
     }
     if (user?.id) {
+      console.log("salon id : ", user.id)
       res = await messageApi.postMessage(user.id, text);
       setText("");
     }
     if (res?.data?.message) {
-      setMessages([res.data.message,...messages]);
+      setMessages([res.data.message, ...messages]);
     }
-    if(users && users.length < 1){
-      loadingAllUser()
-    }
+    loadingAllUser()
   };
   const loadingMessage = async () => {
     let res = {};
@@ -110,12 +186,16 @@ export default function Message() {
     if (res?.data?.chattingUsers && res.data.chattingUsers.length > 0) {
       setUsers(res.data.chattingUsers);
       console.log("chatting users : ", res.data.chattingUsers)
-      if(user?.salon_id && idSalon === user.salon_id){
+      if(!user.id && !user.salon_id && !idSalon){
         setUser(res.data.chattingUsers[0])
       }
     }
   };
-  const handleOnMessage = async(userCurrent) => {
+  const handleOnMessage = async (userCurrent) => {
+    const salonId = localStorage.getItem("idSalon")
+    if(salonId){
+     localStorage.removeItem("idSalon")
+    }
     let res = {};
     if (userCurrent?.salon_id) {
       res = await messageApi.getMessage(userCurrent.salon_id);
@@ -131,10 +211,107 @@ export default function Message() {
       setMessages([]);
     }
     setUser(userCurrent);
+    loadingAllUser()
   };
-  //useListenMessages(messages,setMessages)
+  const handleCloseCall = () => {
+    setShowCall(false);
+  };
+  const handleShowCall = () => setShowCall(true);
+  const handleCallVideo = async () => {
+    let res = "";
+    let receiverId = "";
+    if (user?.salon_id) {
+      receiverId = user.salon_id;
+      res = await messageApi.postMessage(user.salon_id, "Cuộc gọi video");
+      setText("");
+    }
+    if (user?.id) {
+      receiverId = user.id;
+      res = await messageApi.postMessage(user.id, "Cuộc gọi video");
+      setText("");
+    }
+    if (res?.data?.message) {
+      setMessages([res.data.message, ...messages]);
+    }
+    if (users && users.length < 1) {
+      loadingAllUser();
+    }
+    const roomId = randomID(5);
+    const linkVideoCall = `/room/${roomId}`;
+    handleShowCall();
+    soundPhoneCall.play();
+    timerId = setInterval(() => {
+      soundPhoneCall.play();
+    }, intervalDuration);
+
+    setTimeout(() => {
+      handleEndCall();
+    }, 24000);
+
+    socket?.emit("callVideo", {
+      senderName: profile.fullname,
+      senderImage: profile.avatar,
+      linkVideoCall,
+      senderId: profile.user_id,
+      receiverId,
+    });
+  };
+  const handleEndCall = () => {
+    clearInterval(timerId);
+    handleCloseCall();
+    socket?.emit("endCallVideo", {
+      senderId: profile.user_id,
+      receiverId: user.id,
+    });
+  };
+  const handleEndCallForReceiver = () => {
+    clearInterval(timerId);
+    handleCloseCallForReceiver();
+  };
+  const handleAnswer = () => {
+    socket?.emit("answerCallVideo", {
+      receiverId: dataResponseFromVideoCall.senderId,
+      linkVideoCall: dataResponseFromVideoCall.linkVideoCall,
+    });
+    handleCloseCallForReceiver();
+    clearInterval(timerId);
+    navigate(dataResponseFromVideoCall.linkVideoCall);
+  };
+  const handleRefuse = () => {
+    handleEndCallForReceiver();
+    socket?.emit("refuseCallVideo", {
+      receiverId: dataResponseFromVideoCall.senderId,
+    });
+
+    handleCloseCallForReceiver();
+  };
   return (
     <div className="message-container">
+      <Modal show={showCallForReceiver}>
+        <Modal.Header>
+          <Modal.Title></Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div className="d-flex flex-column justify-content-center align-items-center">
+            <img
+              src={dataResponseFromVideoCall.senderImage}
+              alt="image_user"
+              className="w-25 h-25 rounded-circle"
+            />
+            <div className="mt-3 fw-bold fs-3">
+              {dataResponseFromVideoCall.senderName} đang gọi đến bạn{" "}
+            </div>
+          </div>
+        </Modal.Body>
+        <Modal.Footer className="d-flex justify-content-center">
+          <Button variant="danger" onClick={handleRefuse}>
+            Từ chối
+          </Button>
+          <Button variant="success" className="mx-3" onClick={handleAnswer}>
+            Trả lời
+          </Button>
+        </Modal.Footer>
+      </Modal>
       <div className="message-sidebar">
         <div className="message-sidebar-top">
           <span className="title-message">Nhắn tin</span>
@@ -147,16 +324,16 @@ export default function Message() {
         <div className="message-sidebar-bottom">
           {users &&
             users.length > 0 &&
-            users.map((user) => {
-              const isOnline = onlineUsers.includes(user.id); 
+            users.map((u) => {
+              const isOnline = onlineUsers.includes(u.id);
               return (
                 <div
-                  className="message-person"
-                  onClick={() => handleOnMessage(user)}
+                  className={(user.id === u.id || user.salon_id === u.id) ? "message-person actice-chatting" : "message-person"}
+                  onClick={() => handleOnMessage(u)}
                 >
                   <div
                     className="person-image"
-                    style={{ backgroundImage: `url(${user.image})` , marginRight: "2px"}}
+                    style={{ backgroundImage: `url(${u.image})` , marginRight: "2px"}}
                   >
                     {isOnline === true ? (
                       <div className="person-active"></div>
@@ -165,11 +342,11 @@ export default function Message() {
                     )}
                   </div>
                   <div className="text-box">
-                    <div className="message-name">{user.name}</div>
+                    <div className="message-name">{u.name}</div>
                     <div className="message-text-sidebar">
-                      <span className="text-sender">{user.message && user.message.sender !== "" ? user.message.sender + ": ": ""}</span> 
-                      <span className="text-message">{user.message && user.message.message} </span>
-                      <span className="text-time">{user.message && user.message.time}</span>
+                      <span className={u.message && u.message.conversation_status === false ? "text-sender text-sender-not-seen " : "text-sender"}>{u.message && u.message.sender !== "" ? u.message.sender + ": ": ""}</span> 
+                      <span className={u.message && u.message.conversation_status === false ? "text-message text-message-not-seen text-truncate" : "text-message text-truncate"}>{u.message && u.message.message} </span>
+                      <span className="text-time">{u.message && u.message.time}</span>
                     </div>
                   </div>
                 </div>
@@ -192,7 +369,7 @@ export default function Message() {
             </div>
           </div>
           <div className="message-main-top-option">
-            <i class="fa-solid fa-video"></i>
+            <i class="fa-solid fa-video" onClick={handleCallVideo}></i>
             <i class="fa-solid fa-right-from-bracket" onClick={backHome}></i>
           </div>
         </div>
@@ -200,13 +377,19 @@ export default function Message() {
           {messages &&
             messages.length > 0 &&
             messages.map((message, index) => {
-              const shakeClass = message.shouldShake === true ? "shake" : ""
-              if(shakeClass === "shake"){
-                message.shouldShake = false
+              const shakeClass = message.shouldShake === true ? "shake" : "";
+              if (shakeClass === "shake") {
+                message.shouldShake = false;
               }
-              return(
-                <MessageItem message={message.message} user = {user} receiverId = {message.receiverId} key={index} shakeClass = {shakeClass}/>
-              )
+              return (
+                <MessageItem
+                  message={message.message}
+                  user={user}
+                  receiverId={message.receiverId}
+                  key={index}
+                  shakeClass={shakeClass}
+                />
+              );
             })}
         </div>
         <div className="message-main-bottom">
@@ -230,6 +413,23 @@ export default function Message() {
           </div>
         </div>
       </div>
+      <Modal show={showCall} onHide={handleCloseCall}>
+        <Modal.Header>
+          <Modal.Title></Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div className="d-flex flex-column justify-content-center align-items-center">
+            <img src={user.image} alt="image_user" className="w-25 h-25" />
+            <div className="mt-3 fw-bold fs-3">{user.name}</div>
+            <p>Đang gọi...</p>
+          </div>
+        </Modal.Body>
+        <Modal.Footer className="d-flex justify-content-center">
+          <Button variant="danger" onClick={handleEndCall}>
+            Tắt cuộc gọi
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 }
