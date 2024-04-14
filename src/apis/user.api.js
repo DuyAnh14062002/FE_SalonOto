@@ -16,6 +16,9 @@ const userApi = {
       headers: { "content-type": "multipart/form-data" },
     });
   },
+  acceptInvite(body) {
+    return http.post(`/salons/verifyInviteUser`, body);
+  },
 };
 
 export default userApi;

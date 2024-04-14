@@ -18,13 +18,13 @@ export const SocketContextProvider = ({ children }) => {
       let socket = "";
       let res = await salonApi.checkOwnSalon();
       if (res.data.salonId === null) {
-        socket = io("http://localhost:5000", {
+        socket = io("https://server-graduation-thesis-1.onrender.com", {
           query: {
             userId: profile.user_id,
           },
         });
       } else {
-        socket = io("http://localhost:5000", {
+        socket = io("https://server-graduation-thesis-1.onrender.com", {
           query: {
             userId: profile.user_id,
             salonId: res.data.salonId,

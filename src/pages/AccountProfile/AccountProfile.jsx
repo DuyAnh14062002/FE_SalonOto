@@ -7,12 +7,16 @@ import Modal from "react-bootstrap/Modal";
 import authApi from "../../apis/auth.api";
 import { toast } from "react-toastify";
 import userApi from "../../apis/user.api";
-const AccountProfile = () => {
+import salonApi from "../../apis/salon.api";
+import { useLocation, useNavigate } from "react-router-dom";
+const AccountProfile = (props) => {
   const [emailInvite, setEmailInvite] = useState("");
   const [show, setShow] = useState(false);
-
+  const [showCreatePassword, setShowPassword] = useState(false)
+  const [salon, setSalon] = useState({});
   const [profile1, setProfile1] = useState({});
-
+  const [password, setPassword] = useState("")
+  const [retypePassword, setRetypePassword] = useState("")
   const [profile, setProfile] = useState({
     fullname: "",
     phone: "",
@@ -20,14 +24,51 @@ const AccountProfile = () => {
     date_of_birth: "",
     address: "",
   });
-
+  const navigate = useNavigate();
+  const location = useLocation()
   const [image, setImage] = useState(null);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-
+  useEffect(() =>{
+    const createPassword =  location?.state?.createPassword
+    if(createPassword && createPassword === true){
+      setShowPassword(true)
+    }
+  }, [])
+  const handleCloseCreatePassword = () =>{
+     setShowPassword(false)
+  }
+  useEffect(() => {
+    const getSalonInfo = async () => {
+      try {
+        const res = await salonApi.getSalonInfor();
+        setSalon(res.data.salon);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getSalonInfo();
+  }, []);
   const handleOnChangeEmailInvite = (e) => {
     setEmailInvite(e.target.value);
   };
+  const handleSetPassword = async () => {
+     
+    if(password === retypePassword)
+    {
+       let res = await authApi.createNewPassword(password)
+       console.log("res create password : ", res)
+       setShowPassword(false)
+       toast.success("Đặt mật khẩu thành công")
+        navigate("/profile", {
+           state : null
+        })
+    }else{
+      toast.error("Mật khẩu nhập lại không khớp")
+    }
+
+
+  }
   const getProfile = async () => {
     const res = await userApi.getProfile();
     if (res?.data?.profile) {
@@ -41,9 +82,13 @@ const AccountProfile = () => {
   const handleSubmitInviteUser = async (e) => {
     e.preventDefault();
     try {
-      const res = await authApi.inviteUser({ email: emailInvite });
+      const res = await authApi.inviteUser({
+        email: emailInvite,
+        salonId: salon.salon_id,
+      });
+      console.log("res", res);
       if (res.data.status === "success") {
-        toast.success("Bạn đã mời bạn bè thành công");
+        toast.success("Bạn đã mời người dùng vào salon thành công");
         setEmailInvite("");
         handleClose();
       }
@@ -51,14 +96,14 @@ const AccountProfile = () => {
   };
   const handleLinkGoogle = () => {
     try {
-      window.open("http://localhost:5000/auth/google", "_self");
+      window.open("https://server-graduation-thesis-1.onrender.com/auth/google", "_self");
     } catch (error) {
       console.log(error);
     }
   };
   const handleLinkFacebook = () => {
     try {
-      window.open("http://localhost:5000/auth/facebook", "_self");
+      window.open("https://server-graduation-thesis-1.onrender.com/auth/facebook", "_self");
     } catch (error) {
       console.log(error);
     }
@@ -106,6 +151,7 @@ const AccountProfile = () => {
     
     return `${day}/${month}/${year}`;
   };
+  console.log("profile1 : ", profile1)
   return (
     <>
       <Header otherPage={true} />
@@ -162,7 +208,7 @@ const AccountProfile = () => {
                               <div className="col-lg-3 col-md-4 col-12">
                                 <div className="info">
                                   <h4>Ngày sinh</h4>
-                                  <p>{profile1 && formatDate(profile1.date_of_birth)}</p>
+                                  <p>{profile1 && profile1.date_of_birth !== "" ? formatDate(profile1.date_of_birth) : ""}</p>
                                 </div>
                               </div>
                             </div>
@@ -261,16 +307,20 @@ const AccountProfile = () => {
                           </div>
                         </div>
                         <div className="col-12">
+                          {salon && (
+                            <Button
+                              variant="success"
+                              className="mt-3"
+                              onClick={handleShow}
+                              style={{ marginRight: "10px" }}
+                            >
+                              <i className="fa-solid fa-user-plus"></i> Mời bạn
+                              bè
+                            </Button>
+                          )}
+
                           <Button
-                            variant="success"
-                            className="mt-3"
-                            onClick={handleShow}
-                            style={{ marginRight: "10px" }}
-                          >
-                            <i className="fa-solid fa-user-plus"></i> Mời bạn bè
-                          </Button>
-                          <Button
-                            className="mt-3"
+                            className="mt-3 btn-profile"
                             style={{
                               backgroundColor: "red",
                               marginRight: "10px",
@@ -278,15 +328,17 @@ const AccountProfile = () => {
                             type="button"
                             onClick={handleLinkGoogle}
                           >
+                            {profile1 && profile1.google !== null ? ( <span className="tick"><i class="fa-solid fa-circle-check"></i></span>) : ""}
                             <i className="fab fa-google me-2"></i> Liên kết với
                             google
                           </Button>
                           <Button
-                            className="mt-3"
+                            className="mt-3 btn-profile"
                             style={{ backgroundColor: "#dd4b39;" }}
                             type="button"
                             onClick={handleLinkFacebook}
                           >
+                            {profile1 && profile1.facebook !== null ? ( <span className="tick"><i class="fa-solid fa-circle-check"></i></span>) : ""}
                             <i className="fab fa-facebook-f me-2"></i>Liên kết
                             với facebook
                           </Button>
@@ -303,7 +355,7 @@ const AccountProfile = () => {
         <Modal show={show} onHide={handleClose}>
           <Form onSubmit={handleSubmitInviteUser}>
             <Modal.Header closeButton>
-              <Modal.Title>Mời bạn bè</Modal.Title>
+              <Modal.Title>Mời người dùng vào salon</Modal.Title>
             </Modal.Header>
             <Modal.Body>
               <Form.Group md="4">
@@ -322,6 +374,41 @@ const AccountProfile = () => {
               </Button>
               <Button variant="primary" type="submit">
                 Mời
+              </Button>
+            </Modal.Footer>
+          </Form>
+        </Modal>
+        <Modal show={showCreatePassword} onHide={handleCloseCreatePassword} >
+          <Form onSubmit={handleSubmitInviteUser}>
+            <Modal.Header closeButton>
+              <Modal.Title>Tạo mật khẩu cho tài khoản của bạn</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <Form.Group md="4">
+                <Form.Label>Nhập mật khẩu</Form.Label>
+                <Form.Control
+                  required
+                  type="password"
+                  //value={emailInvite}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </Form.Group>
+              <Form.Group md="4">
+                <Form.Label>Xác nhận mật khẩu</Form.Label>
+                <Form.Control
+                  required
+                  type="password"
+                  //value={emailInvite}
+                  onChange={(e) => setRetypePassword(e.target.value)}
+                />
+              </Form.Group>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={handleCloseCreatePassword}>
+                Đóng
+              </Button>
+              <Button variant="primary" type="submit" onClick={handleSetPassword}>
+                Xác nhận
               </Button>
             </Modal.Footer>
           </Form>

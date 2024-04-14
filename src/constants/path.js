@@ -30,6 +30,8 @@ export const path = {
   manageCar: "/adminSalon/manageCar",
   manageSalon: "/adminSalon/manageSalon",
   manageUser: "/adminSalon/manageUser",
+  manageGuarantee: "/adminSalon/manageGuarantee",
+  manageMaintenance: "/adminSalon/manageMaintenance",
   //============PAYMENT =========================
   getResultPayment: "/payment/vnpay",
 

@@ -33,3 +33,16 @@
     outline: none;
   }
 }
+.btn-profile {
+  position: relative;
+  .tick {
+    position: absolute;
+    top: -17px;
+    right: -7px;
+    i {
+      color: green;
+      font-size: 25px;
+      border-radius: 50%;
+    }
+  }
+}

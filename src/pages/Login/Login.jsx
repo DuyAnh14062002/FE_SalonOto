@@ -38,14 +38,14 @@ export default function Login() {
 
   const handleLoginGoogle = async () => {
     try {
-      window.open("http://localhost:5000/auth/google", "_self");
+      window.open("https://server-graduation-thesis-1.onrender.com/auth/google", "_self");
     } catch (error) {
       console.log(error);
     }
   };
   const handleLoginFacebook = async () => {
     try {
-      window.open("http://localhost:5000/auth/facebook", "_self");
+      window.open("https://server-graduation-thesis-1.onrender.com/auth/facebook", "_self");
     } catch (error) {
       console.log(error);
     }

@@ -18,10 +18,10 @@ const authApi = {
     return http.get(`/auth/facebook/callback?code=${code}`);
   },
   inviteUser(body) {
-    return http.post(`/auth/invite`, body);
+    return http.post(`/salons/invite`, body);
   },
   verifyTokenEmail(token) {
-    return http.get(`/auth/verify-invite/${token}`);
+    return http.get(`/salons/verify-invite/${token}`);
   },
   register(body) {
     return http.post(`${URL_REGISTER}`, body);
@@ -31,6 +31,11 @@ const authApi = {
   },
   logout(body) {
     return http.post(`${URL_LOGOUT}`, body);
+  },
+  createNewPassword(newPassword) {
+    return http.post("/auth/change-pw", {
+      newPassword: newPassword,
+    });
   },
 };
 export default authApi;

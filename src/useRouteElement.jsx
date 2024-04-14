@@ -33,6 +33,8 @@ import AppointmentSalon from "./pages/AdminSalon/AppointmentSalon";
 import NotificationDetailSalon from "./pages/SalonOto/NotificationDetailSalon";
 import NotificationDetailUser from "./pages/NotificationDetailUser/";
 import Room from "./pages/Room";
+import ManageMaintenance from "./pages/AdminSalon/ManageMaintenance";
+import ManageGuarantee from "./pages/AdminSalon/ManageGuarantee";
 function ProtectedRoute() {
   const isAuthenticated = useSelector(
     (state) => state.userSlice.isAuthenticated
@@ -157,6 +159,14 @@ const router = createBrowserRouter([
         path: path.appointmentSalon,
         element: <AppointmentSalon />,
       },
+      {
+        path: path.manageMaintenance,
+        element: <ManageMaintenance/>
+      },
+      {
+        path: path.manageGuarantee,
+        element: <ManageGuarantee/>
+      }
     ],
   },
   {

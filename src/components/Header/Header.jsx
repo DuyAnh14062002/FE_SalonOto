@@ -15,14 +15,17 @@ import notificationSound from "../../assets/sounds/notification.mp3";
 import { useSocketContext } from "../../context/SocketContext";
 import telephoneRing from "../../assets/sounds/telephone_ring.mp3";
 import messageApi from "../../apis/message.api";
-
+import userApi from "../../apis/user.api"
+import salonApi from "../../apis/salon.api";
 const intervalDuration = 3000;
 let timerId;
+let timeOut;
 export default function Header(props) {
   const { otherPage } = props;
   const soundPhoneRing = new Audio(telephoneRing);
   const { socket } = useSocketContext();
   const [purchasedPackages, setPurchasedPackages] = useState([]);
+  const [statusSalon, setStatusSalon] = useState(false)
   const userInfo = useSelector((state) => state.userSlice.userInfo);
   const [numberOfNotificationMessage, setNumberOfNotificationMessage] = useState("")
   const [dataResponseFromVideoCall, setDataResponseFromVideoCall] = useState(
@@ -45,6 +48,15 @@ export default function Header(props) {
       }
     }
    
+    const loading = async() => {
+      let res = await salonApi.getSalonInfor()
+      if(res?.data?.status){
+        setStatusSalon(res.data.status)
+      }
+  }
+    useEffect(() => {
+       loading()
+    },[])
   useEffect(() => {
      const salonId = localStorage.getItem("idSalon")
      if(salonId){
@@ -76,7 +88,7 @@ export default function Header(props) {
         soundPhoneRing.play();
       }, intervalDuration);
 
-      setTimeout(() => {
+      timeOut = setTimeout(() => {
         handleEndCall();
       }, 24000);
       handleShowCall();
@@ -97,8 +109,7 @@ export default function Header(props) {
     socket?.on("receiveEndCallVideo", () => {
       toast.error("Cuộc gọi đã kết thúc");
       handleEndCall();
-      clearInterval(timerId);
-      handleCloseCall();
+      clearTimeout(timeOut);
     });
 
     socket?.on("newMessage", () => {
@@ -109,16 +120,17 @@ export default function Header(props) {
       socket?.off("receiveEndCallVideo");
       socket?.off("newMessage");
     };
-  }, [socket]);
+  }, [socket, timeOut]);
+
+  const fetchAllNotificationUser = async () => {
+    try {
+      const res = await notificationApi.getAllNotificationUser();
+      setListNotification(res.data.notifications);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   useEffect(() => {
-    const fetchAllNotificationUser = async () => {
-      try {
-        const res = await notificationApi.getAllNotificationUser();
-        setListNotification(res.data.notifications);
-      } catch (error) {
-        console.log(error);
-      }
-    };
     fetchAllNotificationUser();
   }, []);
   useEffect(() => {
@@ -130,16 +142,6 @@ export default function Header(props) {
     };
     loading();
   }, []);
-
-  const fetchAllNotificationUser = async () => {
-    try {
-      const res = await notificationApi.getAllNotificationUser();
-      setListNotification(res.data.notifications);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   let handleLogout = async () => {
     try {
       await authApi.logout({ user_id: userInfo.user_id });
@@ -156,6 +158,7 @@ export default function Header(props) {
   };
   const handleEndCall = () => {
     clearInterval(timerId);
+    clearTimeout(timeOut);
     handleCloseCall();
   };
 
@@ -174,6 +177,9 @@ export default function Header(props) {
   };
   const handleDeleteNotify = async (id) => {
     try {
+      const confirm = window.confirm("Bạn có chắc chắn muốn xóa thông báo?");
+      if (!confirm) return;
+
       await notificationApi.deleteNotificationUser({
         id: id,
       });
@@ -181,6 +187,20 @@ export default function Header(props) {
         (notification) => notification.id !== id
       );
       setListNotification(newListNotification);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const handleAcceptInvite = async (id, token) => {
+    try {
+      await notificationApi.updateNotificationUser({
+        id: id,
+      });
+      await userApi.acceptInvite({
+        token,
+      });
+      toast.success("Chấp nhận lời mời thành công");
+      fetchAllNotificationUser();
     } catch (error) {
       console.log(error);
     }
@@ -204,53 +224,108 @@ export default function Header(props) {
                 formatTimeDifference(timeDifference);
               return (
                 <button key={notification.id} className="notify p-2">
-                  <div className="d-flex align-items-center">
-                    <img
-                      src={
-                        notification.avatar ||
-                        "https://scontent.fsgn2-5.fna.fbcdn.net/v/t1.30497-1/143086968_2856368904622192_1959732218791162458_n.png?_nc_cat=1&ccb=1-7&_nc_sid=5f2048&_nc_ohc=BCnRaxZCfRkAX8a1rU3&_nc_ht=scontent.fsgn2-5.fna&oh=00_AfD29zpAHOxBSwhZkEnW47vMd-hoaCLBDDjywB4cGeF7YA&oe=662C6938"
-                      }
-                      alt=""
-                      className="rounded-circle"
-                      style={{ width: "56px", height: "56px" }}
-                      onClick={() =>
-                        handleDetailNotification(
-                          notification.id,
-                          notification.data
-                        )
-                      }
-                    />
-                    <div style={{ marginLeft: "10px" }}>
-                      <div
-                        className="notify-title"
-                        style={notification.read ? {} : { fontWeight: "500" }}
+                  {notification.types === "appointment" && (
+                    <div className="d-flex align-items-center">
+                      <img
+                        src={
+                          notification.avatar ||
+                          "https://scontent.fsgn2-5.fna.fbcdn.net/v/t1.30497-1/143086968_2856368904622192_1959732218791162458_n.png?_nc_cat=1&ccb=1-7&_nc_sid=5f2048&_nc_ohc=BCnRaxZCfRkAX8a1rU3&_nc_ht=scontent.fsgn2-5.fna&oh=00_AfD29zpAHOxBSwhZkEnW47vMd-hoaCLBDDjywB4cGeF7YA&oe=662C6938"
+                        }
+                        alt=""
+                        className="rounded-circle"
+                        style={{ width: "56px", height: "56px" }}
                         onClick={() =>
                           handleDetailNotification(
                             notification.id,
                             notification.data
                           )
                         }
-                      >
-                        {notification.description}
-                      </div>
-                      <div
-                        className={
-                          notification.read
-                            ? "text-muted d-flex justify-content-between align-items-center"
-                            : "text-primary d-flex justify-content-between align-items-center"
-                        }
-                        style={notification.read ? {} : { fontWeight: "500" }}
-                      >
-                        <span>{formattedTimeDifference}</span>
+                      />
+                      <div style={{ marginLeft: "10px" }}>
+                        <div
+                          className="notify-title"
+                          style={notification.read ? {} : { fontWeight: "500" }}
+                          onClick={() =>
+                            handleDetailNotification(
+                              notification.id,
+                              notification.data
+                            )
+                          }
+                        >
+                          {notification.description}
+                        </div>
+                        <div
+                          className={
+                            notification.read
+                              ? "text-muted d-flex justify-content-between align-items-center"
+                              : "text-primary d-flex justify-content-between align-items-center"
+                          }
+                          style={notification.read ? {} : { fontWeight: "500" }}
+                        >
+                          <span>{formattedTimeDifference}</span>
 
-                        <i
-                          class="fa-regular fa-trash-can text-danger mx-2"
-                          title="Xóa thông báo"
-                          onClick={() => handleDeleteNotify(notification.id)}
-                        ></i>
+                          <i
+                            class="fa-regular fa-trash-can text-danger mx-2"
+                            title="Xóa thông báo"
+                            onClick={() => handleDeleteNotify(notification.id)}
+                          ></i>
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  )}
+                  {notification.types === "invite" && (
+                    <div className="d-flex align-items-center">
+                      <img
+                        src={
+                          notification.avatar ||
+                          "https://scontent.fsgn2-5.fna.fbcdn.net/v/t1.30497-1/143086968_2856368904622192_1959732218791162458_n.png?_nc_cat=1&ccb=1-7&_nc_sid=5f2048&_nc_ohc=BCnRaxZCfRkAX8a1rU3&_nc_ht=scontent.fsgn2-5.fna&oh=00_AfD29zpAHOxBSwhZkEnW47vMd-hoaCLBDDjywB4cGeF7YA&oe=662C6938"
+                        }
+                        alt=""
+                        className="rounded-circle"
+                        style={{ width: "56px", height: "56px" }}
+                      />
+                      <div style={{ marginLeft: "10px" }}>
+                        <div
+                          className="notify-title"
+                          style={notification.read ? {} : { fontWeight: "500" }}
+                        >
+                          {notification.description}
+                        </div>
+                        <div
+                          className={
+                            notification.read
+                              ? "text-muted mt-1 d-flex justify-content-between align-items-center"
+                              : "text-primary mt-1 d-flex justify-content-between align-items-center"
+                          }
+                          style={notification.read ? {} : { fontWeight: "500" }}
+                        >
+                          <span>{formattedTimeDifference}</span>
+                          <div className="d-flex justify-content-end align-items-center">
+                            {!notification.read && (
+                              <i
+                                className="fa-solid fa-check text-success mx-2"
+                                title="Chấp nhận"
+                                onClick={() =>
+                                  handleAcceptInvite(
+                                    notification.id,
+                                    notification.data
+                                  )
+                                }
+                              ></i>
+                            )}
+
+                            <i
+                              className="fa-regular fa-trash-can text-danger mx-2"
+                              title="Xóa thông báo"
+                              onClick={() =>
+                                handleDeleteNotify(notification.id)
+                              }
+                            ></i>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </button>
               );
             })
@@ -281,6 +356,31 @@ export default function Header(props) {
   };
   return otherPage === true ? (
     <nav style={{ backgroundColor: "rgb(1 37 255 / 70%)", padding: "5px 5px" }}>
+      <Modal show={showCall} backdrop="static">
+        <Modal.Header>
+          <Modal.Title></Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div className="d-flex flex-column justify-content-center align-items-center">
+            <img
+              src={dataResponseFromVideoCall.senderImage}
+              alt="image_user"
+              className="w-25 h-25 rounded-circle"
+            />
+            <div className="mt-3 fw-bold fs-3">
+              {dataResponseFromVideoCall.senderName} đang gọi đến bạn{" "}
+            </div>
+          </div>
+        </Modal.Body>
+        <Modal.Footer className="d-flex justify-content-center">
+          <Button variant="danger" onClick={handleRefuse}>
+            Từ chối
+          </Button>
+          <Button variant="success" className="mx-3" onClick={handleAnswer}>
+            Trả lời
+          </Button>
+        </Modal.Footer>
+      </Modal>
       <div className="nav__logo">
         <img
           src="https://s.bonbanh.com/uploads/users/701283/salon/l_1678849916.jpg"
@@ -304,7 +404,7 @@ export default function Header(props) {
         <li className="link">
           <Link to="/">Tin tức</Link>
         </li>
-        {purchasedPackages && purchasedPackages.length > 0 && (
+        {((purchasedPackages && purchasedPackages.length > 0) || statusSalon === "success") && (
           <li className="link">
             <Link to={path.adminSalon}>Quản lý</Link>
           </li>
@@ -313,7 +413,12 @@ export default function Header(props) {
           <Link to="/appointment">Quản lý lịch hẹn</Link>
         </li>
 
-        <OverlayTrigger
+      </ul>
+      {/* <div className="search">
+        <input type="text" placeholder="Tìm kiếm" />
+      </div> */}
+      <div className="container-box">
+      <OverlayTrigger
           trigger="click"
           placement="bottom"
           overlay={popover}
@@ -332,14 +437,9 @@ export default function Header(props) {
             </span>
           </div>
         </OverlayTrigger>
-      </ul>
-      <div className="search">
-        <input type="text" placeholder="Tìm kiếm" />
-      </div>
-      <div className="container-box">
-        <div className="messenger position-relative" onClick={HandleMessage}>
+        <div className="messenger position-relative" onClick={HandleMessage} style={{marginLeft : "15px"}}>
           <i class="fa-brands fa-facebook-messenger"></i>
-          <span
+        <span
           class="badge rounded-pill badge-notification bg-danger position-absolute"
           style={{ top: "-6px", left: "34px" }}
         >
@@ -370,7 +470,7 @@ export default function Header(props) {
     </nav>
   ) : (
     <nav>
-      <Modal show={showCall}>
+      <Modal show={showCall} backdrop="static">
         <Modal.Header>
           <Modal.Title></Modal.Title>
         </Modal.Header>
@@ -418,7 +518,7 @@ export default function Header(props) {
         <li className="link">
           <Link to="/">Tin tức</Link>
         </li>
-        {purchasedPackages && purchasedPackages.length > 0 && (
+        {((purchasedPackages && purchasedPackages.length > 0) || statusSalon === "success") && (
           <li className="link">
             <Link to={path.adminSalon}>Quản lý</Link>
           </li>
@@ -426,8 +526,15 @@ export default function Header(props) {
         <li className="link">
           <Link to="/appointment">Quản lý lịch hẹn</Link>
         </li>
-
-        <OverlayTrigger
+      </ul>
+      {/* <div className="search">
+        <input type="text" placeholder="Tìm kiếm" />
+        <span>
+          <i className="ri-search-line"></i>
+        </span>
+      </div> */}
+      <div className="container-box">
+      <OverlayTrigger
           trigger="click"
           placement="bottom"
           overlay={popover}
@@ -446,15 +553,7 @@ export default function Header(props) {
             </span>
           </div>
         </OverlayTrigger>
-      </ul>
-      <div className="search">
-        <input type="text" placeholder="Tìm kiếm" />
-        <span>
-          <i className="ri-search-line"></i>
-        </span>
-      </div>
-      <div className="container-box">
-        <div className="messenger position-relative" onClick={HandleMessage}>
+        <div className="messenger position-relative" onClick={HandleMessage} style={{marginLeft : "15px"}}>
           <i class="fa-brands fa-facebook-messenger"></i>
           <span
           class="badge rounded-pill badge-notification bg-danger position-absolute"

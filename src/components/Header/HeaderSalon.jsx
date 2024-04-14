@@ -12,6 +12,7 @@ import telephoneRing from "../../assets/sounds/telephone_ring.mp3";
 
 const intervalDuration = 3000;
 let timerId;
+let timeOut;
 export default function HeaderSalon() {
   const idSalon = localStorage.getItem("idSalon") || "";
   const userIdSalon = localStorage.getItem("userIdSalon");
@@ -61,7 +62,7 @@ export default function HeaderSalon() {
         soundPhoneRing.play();
       }, intervalDuration);
 
-      setTimeout(() => {
+      timeOut = setTimeout(() => {
         handleEndCall();
       }, 24000);
       handleShowCall();
@@ -80,8 +81,9 @@ export default function HeaderSalon() {
   }, [salon, socket]);
   useEffect(() => {
     socket?.on("receiveEndCallVideo", () => {
-      toast.error("Cuộc gọi đã kết thúc");
       handleEndCall();
+      clearTimeout(timeOut);
+      toast.error("Cuộc gọi đã kết thúc");
     });
     return () => {
       socket?.off("receiveEndCallVideo");
@@ -111,7 +113,7 @@ export default function HeaderSalon() {
     clearInterval(timerId);
     handleCloseCall();
   };
-  const numberOfNotification = listNotification.filter(
+  const numberOfNotification = listNotification?.filter(
     (notification) => !notification.read
   ).length;
   const handleDetailNotification = async (id, idAppoint) => {
@@ -131,11 +133,13 @@ export default function HeaderSalon() {
   };
   const handleDeleteNotify = async (id) => {
     try {
+      const confirm = window.confirm("Bạn có chắc chắn muốn xóa thông báo?");
+      if (!confirm) return;
       await notificationApi.deleteNotificationSalon({
         id: id,
         salonId: idSalon,
       });
-      const newListNotification = listNotification.filter(
+      const newListNotification =  listNotification?.filter(
         (notification) => notification.id !== id
       );
       setListNotification(newListNotification);
@@ -153,7 +157,7 @@ export default function HeaderSalon() {
           className="d-flex flex-column"
           style={{ width: "100%", overflowY: "scroll", maxHeight: "400px" }}
         >
-          {listNotification.length > 0 ? (
+          {listNotification?.length > 0 ? (
             listNotification.map((notification) => {
               const timeNotify = new Date(notification.create_at);
               const timeNow = new Date();
@@ -236,6 +240,7 @@ export default function HeaderSalon() {
 
     handleCloseCall();
   };
+  console.log("listNotification", listNotification);
   return (
     <div className="container-header">
       <div className="back-home">
@@ -289,7 +294,7 @@ export default function HeaderSalon() {
           )}
         </ul>
       </div>
-      <Modal show={showCall}>
+      <Modal show={showCall} backdrop="static">
         <Modal.Header>
           <Modal.Title></Modal.Title>
         </Modal.Header>

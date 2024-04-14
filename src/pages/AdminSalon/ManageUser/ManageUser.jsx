@@ -17,13 +17,15 @@ export default function ManageUser() {
   const [employees, setEmployees] = useState([]);
   const [employee, setEmployee] = useState("")
   const [salonId, setSalonId] = useState("")
+  const [salon, setSalon] = useState({})
   const [permission, setPermission] = useState({});
-  const testArr = ["getCar", "postCar", "deleteCar"];
+  //const testArr = ["getCar", "postCar", "deleteCar", "getCalender", "postCalender", "deleteCaleder", "getSalon", "patchSalon"];
 
   const loading = async () => {
     let res = await salonApi.getSalonInfor();
     if (res?.data?.salon) {
       setSalonId(res.data.salon.salon_id)
+      setSalon(res.data.salon)
       let res2 = await permissionApi.getPermission(res.data.salon.salon_id);
       if (res2?.data?.salonDb?.employees) {
         setEmployees(res2.data.salonDb.employees);
@@ -34,6 +36,7 @@ export default function ManageUser() {
     loading();
   }, []);
   const handleShowUpdate = (employee) => {
+    loading()
     let listPermission = employee.permissions
     let objectPermission = {}
     if(listPermission && listPermission.length > 0){
@@ -75,7 +78,7 @@ export default function ManageUser() {
   const handleSavePermission = () => {
     let listPermission = [];
     listPermission = Object.keys(permission).filter(
-      (key) => permission[key] !== ""
+      (key) => permission[key] !== null
     );
    permissionApi.postPermission(salonId, listPermission,employee.user_id );
    toast.success("Cập nhật quyền thành công")
@@ -134,37 +137,41 @@ export default function ManageUser() {
                 {employees &&
                   employees.length > 0 &&
                   employees.map((employee, index) => {
-                      return (
-                        <tr style={{ background: "rgb(247 247 247)" }}>
-                          <td className="text-center">{index +1}</td>
-                          <td>{employee.fullname}</td>
-                          <td>{employee.phone}</td>
-                          <td>{employee.gender}</td>
-                          <td>{employee.address}</td>
-                          <td>{formatDate(employee.date_of_birth)}</td>
-                          <td className="text-center">
-                            <button
-                              className="btn btn-success btn-sm rounded-0 text-white mx-2"
-                              data-toggle="tooltip"
-                              data-placement="top"
-                              title="Edit"
-                              onClick={() => handleShowUpdate(employee)}
-                            >
-                              <i className="fa fa-edit"></i>
-                            </button>
-                            <button
-                              to="/"
-                              className="btn btn-danger btn-sm rounded-0 text-white"
-                              data-toggle="tooltip"
-                              data-placement="top"
-                              title="Delete"
-                              //onClick={() => handleShowDelete(car)}
-                            >
-                              <i className="fa fa-trash"></i>
-                            </button>
-                          </td>
-                        </tr>
-                      );
+                      if(salon.user_id !== employee.user_id){
+                        return (
+                          <tr style={{ background: "rgb(247 247 247)" }}>
+                            <td className="text-center">{index +1}</td>
+                            <td>{employee.fullname}</td>
+                            <td>{employee.phone}</td>
+                            <td>{employee.gender}</td>
+                            <td>{employee.address}</td>
+                            <td>{formatDate(employee.date_of_birth)}</td>
+                            <td className="text-center">
+                              <button
+                                className="btn btn-success btn-sm rounded-0 text-white mx-2"
+                                data-toggle="tooltip"
+                                data-placement="top"
+                                title="Edit"
+                                onClick={() => handleShowUpdate(employee)}
+                              >
+                                <i className="fa fa-edit"></i>
+                              </button>
+                              <button
+                                to="/"
+                                className="btn btn-danger btn-sm rounded-0 text-white"
+                                data-toggle="tooltip"
+                                data-placement="top"
+                                title="Delete"
+                                //onClick={() => handleShowDelete(car)}
+                              >
+                                <i className="fa fa-trash"></i>
+                              </button>
+                            </td>
+                          </tr>
+                        );
+                      }else{
+                        return ""
+                      }
                   })}
               </tbody>
             </table>
@@ -209,10 +216,10 @@ export default function ManageUser() {
                               type="checkbox"
                               className="switch-toggle"
                               checked={
-                                permission.getCar && permission.getCar === "getCar"
+                                permission.getSalon && permission.getSalon === "getSalon"
                               }
-                              value={permission.getCar}
-                              onChange={(e) => handleSetPermission(e, "getCar")}
+                              value={permission.getSalon}
+                              onChange={(e) => handleSetPermission(e, "getSalon")}
                             />
                             <div className="role-detail">
                               <p className="role-text-top">
@@ -225,12 +232,12 @@ export default function ManageUser() {
                             <input
                               type="checkbox"
                               className="switch-toggle"
-                              value={permission.patchCar}
+                              value={permission.patchSalon}
                               checked={
-                                permission.patchCar && permission.patchCar === "patchCar"
+                                permission.patchSalon && permission.patchSalon === "patchSalon"
                               }
                               onChange={(e) =>
-                                handleSetPermission(e, "patchCar")
+                                handleSetPermission(e, "patchSalon")
                               }
                             />
                             <div className="role-detail">
@@ -357,10 +364,10 @@ export default function ManageUser() {
                               type="checkbox"
                               className="switch-toggle"
                               checked={
-                                permission.getCar && permission.getCar === "getCar"
+                                permission.getCalender && permission.getCalender === "getCalender"
                               }
-                              value={permission.getCar}
-                              onChange={(e) => handleSetPermission(e, "getCar")}
+                              value={permission.getCalender}
+                              onChange={(e) => handleSetPermission(e, "getCalender")}
                             />
                             <div className="role-detail">
                               <p className="role-text-top">
@@ -373,12 +380,12 @@ export default function ManageUser() {
                             <input
                               type="checkbox"
                               className="switch-toggle"
-                              value={permission.deleteCar}
+                              value={permission.deleteCalender}
                               checked={
-                                permission.deleteCar && permission.deleteCar === "deleteCar"
+                                permission.deleteCalender && permission.deleteCalender === "deleteCalender"
                               }
                               onChange={(e) =>
-                                handleSetPermission(e, "deleteCar")
+                                handleSetPermission(e, "deleteCalender")
                               }
                             />
                             <div className="role-detail">
@@ -392,12 +399,12 @@ export default function ManageUser() {
                             <input
                               type="checkbox"
                               className="switch-toggle"
-                              value={permission.patchCar}
+                              value={permission.patchCalender}
                               checked={
-                                permission.patchCar && permission.patchCar === "patchCar"
+                                permission.patchCalender && permission.patchCalender === "patchCalender"
                               }
                               onChange={(e) =>
-                                handleSetPermission(e, "patchCar")
+                                handleSetPermission(e, "patchCalender")
                               }
                             />
                             <div className="role-detail">
