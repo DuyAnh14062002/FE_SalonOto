@@ -112,6 +112,8 @@ export default function AppointmentSalon() {
                   <th scope="col" className="text-center">
                     STT
                   </th>
+                  <th scope="col">Hình ảnh xe</th>
+                  <th scope="col">Tên xe</th>
                   <th scope="col">Tên khách hàng</th>
                   <th scope="col">Số điện thoại</th>
                   <th scope="col">Ngày hẹn</th>
@@ -135,6 +137,23 @@ export default function AppointmentSalon() {
                         style={{ background: "rgb(247 247 247)" }}
                       >
                         <td className="text-center">{++index}</td>
+                        <td>
+                          <Link to={`/detail-car/${appointment.car_id}`}>
+                            <img
+                              src={appointment.car.image}
+                              alt="image_car"
+                              style={{ width: "100px" }}
+                            />
+                          </Link>
+                        </td>
+                        <td>
+                          <Link
+                            to={`/detail-car/${appointment.car_id}`}
+                            className="text-decoration-none"
+                          >
+                            {appointment.car.name}{" "}
+                          </Link>
+                        </td>
                         <td>{appointment.user.fullname}</td>
                         <td>{appointment.user.phone}</td>
                         <td>{formatDate(date)}</td>

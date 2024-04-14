@@ -48,7 +48,7 @@ export default function Header(props) {
   //socket
   useEffect(() => {
     socket?.on("notification", (data) => {
-      console.log("data", data);
+      // console.log("data", data);
       const sound = new Audio(notificationSound);
       sound.play();
       toast.success(data);
@@ -91,7 +91,7 @@ export default function Header(props) {
   const fetchAllNotificationUser = async () => {
     try {
       const res = await notificationApi.getAllNotificationUser();
-      console.log("res notification user", res);
+      // console.log("res notification user", res);
       setListNotification(res.data.notifications);
     } catch (error) {
       console.log(error);
@@ -109,7 +109,7 @@ export default function Header(props) {
     };
     loading();
   }, []);
-  console.log("listNotification", listNotification);
+  // console.log("listNotification", listNotification);
   let handleLogout = async () => {
     try {
       await authApi.logout({ user_id: userInfo.user_id });
@@ -184,7 +184,6 @@ export default function Header(props) {
         >
           {listNotification.length > 0 ? (
             listNotification.map((notification) => {
-              console.log("notification", notification);
               const timeNotify = new Date(notification.create_at);
               const timeNow = new Date();
               const timeDifference = timeNow.getTime() - timeNotify.getTime();
@@ -378,7 +377,7 @@ export default function Header(props) {
           </li>
         )}
         <li className="link">
-          <Link to="/appointment">Quản lý lịch hẹn</Link>
+          <Link to="/appointment">Lịch hẹn</Link>
         </li>
 
         <OverlayTrigger
@@ -489,7 +488,7 @@ export default function Header(props) {
           </li>
         )}
         <li className="link">
-          <Link to="/appointment">Quản lý lịch hẹn</Link>
+          <Link to="/appointment">Lịch hẹn</Link>
         </li>
 
         <OverlayTrigger

@@ -4,12 +4,13 @@ import HeaderSalon from "../../components/Header/HeaderSalon";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import FooterSalon from "../../components/Footer/FooterSalon";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import carApi from "../../apis/car.api";
 export default function DetailCar() {
-  const [car, setCar] = useState({})
-  const [images, setImages] = useState([])
-  const [mainImage, setMainImage] = useState("")
+  const [car, setCar] = useState({});
+  const [images, setImages] = useState([]);
+  const navigate = useNavigate();
+  const [mainImage, setMainImage] = useState("");
   const responsive = {
     superLargeDesktop: {
       // the naming can be any, depends on you.
@@ -32,16 +33,25 @@ export default function DetailCar() {
 
   const params = useParams();
   useEffect(() => {
-    const loading = async () =>{
-       let res = await carApi.getDetailCar(params.id)
-       if(res?.data?.car){
-        setCar(res.data.car)
-        setImages(res.data.car.image)
-        setMainImage(res.data.car.image[0])
-       }
-    }
-    loading()
-  }, [params.id])
+    const loading = async () => {
+      let res = await carApi.getDetailCar(params.id);
+      if (res?.data?.car) {
+        setCar(res.data.car);
+        setImages(res.data.car.image);
+        if (res.data.car?.image?.length > 0) {
+          setMainImage(res.data.car?.image[0]);
+        }
+      }
+    };
+    loading();
+  }, [params.id]);
+  const handleAppointment = () => {
+    navigate("/booking", {
+      state: {
+        carId: params.id,
+      },
+    });
+  };
   return (
     <>
       <HeaderSalon />
@@ -86,19 +96,26 @@ export default function DetailCar() {
                 backgroundImage: `url(${mainImage})`,
               }}
             ></div>
-             <Carousel responsive={responsive} className="sub-image" showArrows={true}>
-             {images && images.length > 0 && images.map((image) => {
-                return (
-                  <div
-                  className="sub-image-item"
-                  style={{
-                    backgroundImage: `url(${image})`,
-                  }}
-                  onClick={() => setMainImage(image)}
-                ></div>
-                )
-              })}
-             </Carousel>
+            <Carousel
+              responsive={responsive}
+              className="sub-image"
+              showArrows={true}
+            >
+              {images &&
+                images?.length > 0 &&
+                images.map((image) => {
+                  return (
+                    <div
+                      key={image}
+                      className="sub-image-item"
+                      style={{
+                        backgroundImage: `url(${image})`,
+                      }}
+                      onClick={() => setMainImage(image)}
+                    ></div>
+                  );
+                })}
+            </Carousel>
           </div>
           <div className="specifications-car">
             <h4 className="name-car">{car.name}</h4>
@@ -115,6 +132,9 @@ export default function DetailCar() {
             <p>Màu nội thất : {car.inColor}</p>
             <p>Màu ngoại thất : {car.outColor}</p>
             <button className="call-hotline">GỌI HOTLINE 0384496705</button>
+            <button className="btn mt-3" onClick={handleAppointment}>
+              Đặt lịch xem xe ngay
+            </button>
           </div>
         </div>
         <div className="rate-detail">

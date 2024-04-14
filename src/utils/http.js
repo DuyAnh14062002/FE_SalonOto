@@ -15,7 +15,7 @@ class Http {
     this.refreshTokenRequest = null;
     this.instance = axios.create({
       withCredentials: true,
-      baseURL: "http://localhost:5000",
+      baseURL: "https://server-graduation-thesis-1.onrender.com",
       timeout: 10000,
       headers: {
         "Content-Type": "application/json",

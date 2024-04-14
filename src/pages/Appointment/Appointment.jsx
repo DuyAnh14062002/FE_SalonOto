@@ -25,10 +25,10 @@ export default function Appointment() {
     const res = await appointmentApi.getAllAppointmentUser();
     if (res?.data?.appointments) {
       const appointmentList = res.data.appointments;
+      console.log(appointmentList);
       setAppointmentList(appointmentList);
     }
   };
-
   useEffect(() => {
     // call api to get features
     fetchData();
@@ -99,6 +99,8 @@ export default function Appointment() {
                     STT
                   </th>
                   <th scope="col">Tên salon</th>
+                  <th scope="col">Hình ảnh xe</th>
+                  <th scope="col">Tên xe</th>
                   <th scope="col">Ngày hẹn</th>
                   <th scope="col">Giờ hẹn</th>
                   <th scope="col">Lý do hẹn</th>
@@ -120,6 +122,23 @@ export default function Appointment() {
                       >
                         <td className="text-center">{++index}</td>
                         <td>{appointment.salon}</td>
+                        <td>
+                          <Link to={`/detail-car/${appointment.car_id}`}>
+                            <img
+                              src={appointment.car.image}
+                              alt="image_car"
+                              style={{ width: "100px" }}
+                            />
+                          </Link>
+                        </td>
+                        <td>
+                          <Link
+                            to={`/detail-car/${appointment.car_id}`}
+                            className="text-decoration-none"
+                          >
+                            {appointment.car.name}{" "}
+                          </Link>
+                        </td>
                         <td>{formatDate(date)}</td>
                         <td>{formatTime(date)}</td>
                         <td>{appointment.description}</td>
