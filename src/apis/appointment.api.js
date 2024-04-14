@@ -18,6 +18,9 @@ const appointmentApi = {
   getAllAppointmentSalon(body) {
     return http.post("/appointment/get-appoint-admin", body);
   },
+  getBusyTime(body) {
+    return http.post("/appointment/get-busy-car", body);
+  },
   updateAppointmentSalon(body) {
     return http.patch("/appointment/update-one-admin", body);
   },

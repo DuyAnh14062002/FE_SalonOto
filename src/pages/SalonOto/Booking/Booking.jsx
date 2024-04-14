@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import HeaderSalon from "../../../components/Header/HeaderSalon";
 import "./Booking.scss";
 import "react-calendar/dist/Calendar.css";
@@ -6,6 +7,8 @@ import Calendar from "react-calendar";
 import salonApi from "../../../apis/salon.api";
 import appointmentApi from "../../../apis/appointment.api";
 import { toast } from "react-toastify";
+import carApi from "../../../apis/car.api";
+import { set } from "lodash";
 export default function Booking() {
   const arrayTime = [
     "8:00",
@@ -34,8 +37,30 @@ export default function Booking() {
   const [value, setValue] = useState(new Date());
 
   const [salon, setSalon] = useState({});
+  const [car, setCar] = useState({});
   const idSalon = localStorage.getItem("idSalon");
+  const location = useLocation();
+  const carId = location?.state?.carId || null;
 
+  const [busyTime, setBusyTime] = useState([]);
+  useEffect(() => {
+    const fetchBusyTime = async () => {
+      let res = await appointmentApi.getBusyTime({ salonId: idSalon, carId });
+      setBusyTime(res?.data?.timeBusy);
+    };
+    fetchBusyTime();
+  }, [idSalon, carId]);
+  useEffect(() => {
+    if (carId) {
+      const loading = async () => {
+        let res = await carApi.getDetailCar(carId);
+        if (res?.data?.car) {
+          setCar(res.data.car);
+        }
+      };
+      loading();
+    }
+  }, [carId]);
   useEffect(() => {
     const fetchSalon = async () => {
       let res = await salonApi.getDetailSalon(idSalon);
@@ -46,6 +71,20 @@ export default function Booking() {
     fetchSalon();
   }, [idSalon]);
   const isPastTime = (timeStr) => {
+    const [hours, minutes] = timeStr.split(":");
+    const date = value;
+    // console.log("date1", date);
+    // Thiết lập giờ và phút cho ngày được chọn
+    date.setHours(parseInt(hours, 10), parseInt(minutes, 10), 0, 0);
+
+    for (let i = 0; i < busyTime.length; i++) {
+      const busyDate = new Date(busyTime[i].date);
+      if (date.getTime() === busyDate.getTime()) {
+        console.log("busyTime", busyTime[i].time);
+        return true;
+      }
+    }
+
     if (value > new Date()) {
       return false;
     } else {
@@ -77,11 +116,21 @@ export default function Booking() {
       // Thiết lập giờ và phút cho ngày được chọn
       date.setHours(parseInt(hours, 10), parseInt(minutes, 10), 0, 0);
       try {
-        const res = await appointmentApi.createAppointment({
-          salonId: idSalon,
-          date,
-          description: note,
-        });
+        let res;
+        if (car) {
+          res = await appointmentApi.createAppointment({
+            salonId: idSalon,
+            date,
+            description: "Xem xe",
+            carId,
+          });
+        } else {
+          res = await appointmentApi.createAppointment({
+            salonId: idSalon,
+            date,
+            description: note,
+          });
+        }
         if (res?.data?.status === "success") {
           setNote("");
           setSelectedTime(null);
@@ -93,6 +142,7 @@ export default function Booking() {
       }
     }
   };
+  console.log("car", car);
   return (
     <div>
       <HeaderSalon />
@@ -100,7 +150,9 @@ export default function Booking() {
         <div className="row">
           <div className="col-4" style={{ paddingRight: "70px" }}>
             <div className="information_salon">
-              <h2 className="text-uppercase fw-bold">Đặt lịch hẹn</h2>
+              <h2 className="text-uppercase fw-bold">
+                {carId ? "Đặt lịch hẹn xem xe" : "Đặt lịch hẹn"}
+              </h2>
               <div class="mt-3">
                 <div class="fs-5 d-flex">
                   <i
@@ -119,7 +171,7 @@ export default function Booking() {
                     class="fa-solid fa-location-dot mt-1"
                     style={{ width: "25px" }}
                   ></i>
-                  <div className="mx-2">
+                  <div className="mx-3">
                     <span className="fw-bold">Địa chỉ</span>
                     <p className="text-uppercase">{salon?.address}</p>
                   </div>
@@ -157,7 +209,38 @@ export default function Booking() {
           >
             <form className="booking-form" onSubmit={handleBooking}>
               <div className="row">
-                <div className="col-6">
+                {carId && (
+                  <div className="col-12">
+                    <div className="row">
+                      <div className="col-6">
+                        <h3 class="fw-bold fs-5">Tên xe</h3>
+                        <p className="text-uppercase fs-5">{car?.name}</p>
+                        <h3 class="fw-bold fs-5">Hãng sản xuất</h3>
+                        <p className="text-uppercase fs-5">{car?.brand}</p>
+                        <h3 class="fw-bold fs-5">Nơi sản xuất</h3>
+                        <p className="text-uppercase fs-5">{car?.origin}</p>
+                        <h3 class="fw-bold fs-5">Mô tả</h3>
+                        <p className="text-uppercase fs-5">
+                          {car?.description}
+                        </p>
+                      </div>
+                      <div className="col-6">
+                        <h3 class="fw-bold fs-5">Hình ảnh xe</h3>
+                        <img
+                          src={car?.image?.[0]}
+                          alt="car"
+                          style={{
+                            width: "100%",
+                            height: "300px",
+                            objectFit: "cover",
+                          }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                <div className="col-6 mt-3">
                   <h3 class="fw-bold fs-5">
                     Chọn ngày (<span className="text-danger">*</span>)
                   </h3>
@@ -170,7 +253,7 @@ export default function Booking() {
                     className={"calendar"}
                   />
                 </div>
-                <div className="col-6">
+                <div className="col-6 mt-3">
                   <h3 class="fw-bold fs-5">
                     Chọn thời gian (<span className="text-danger">*</span>)
                   </h3>
@@ -204,23 +287,26 @@ export default function Booking() {
                     </div>
                   )}
                 </div>
-                <div className="col-12">
-                  <div class="mt-3">
-                    <label for="note" class="fw-bold fs-5">
-                      Bạn muốn đặt lịch hẹn để làm gì? (
-                      <span className="text-danger">*</span>)
-                    </label>
-                    <textarea
-                      required
-                      class="form-control"
-                      id="note"
-                      rows="5"
-                      value={note}
-                      onChange={(e) => setNote(e.target.value)}
-                    ></textarea>
+                {!carId && (
+                  <div className="col-12">
+                    <div class="mt-3">
+                      <label for="note" class="fw-bold fs-5">
+                        Bạn muốn đặt lịch hẹn để làm gì? (
+                        <span className="text-danger">*</span>)
+                      </label>
+                      <textarea
+                        required
+                        class="form-control"
+                        id="note"
+                        rows="5"
+                        value={note}
+                        onChange={(e) => setNote(e.target.value)}
+                      ></textarea>
+                    </div>
                   </div>
-                </div>
-                <div className="col-12 mt-3 text-end">
+                )}
+
+                <div className="col-12 mt-3 mb-5 text-end">
                   <button type="submit" class="btn btn-danger">
                     Đặt lịch
                   </button>

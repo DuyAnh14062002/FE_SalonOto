@@ -410,7 +410,7 @@ export default function Header(props) {
           </li>
         )}
         <li className="link">
-          <Link to="/appointment">Quản lý lịch hẹn</Link>
+          <Link to="/appointment">Lịch hẹn</Link>
         </li>
 
       </ul>
@@ -524,7 +524,7 @@ export default function Header(props) {
           </li>
         )}
         <li className="link">
-          <Link to="/appointment">Quản lý lịch hẹn</Link>
+          <Link to="/appointment">Lịch hẹn</Link>
         </li>
       </ul>
       {/* <div className="search">

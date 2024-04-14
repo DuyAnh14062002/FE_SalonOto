@@ -27,6 +27,7 @@ const salonApi = {
   checkOwnSalon() {
     return http.get("/salons/salonId");
   },
+  
 };
 
 export default salonApi;
