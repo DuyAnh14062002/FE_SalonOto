@@ -33,6 +33,8 @@ import NotificationDetailSalon from "./pages/SalonOto/NotificationDetailSalon";
 import NotificationDetailUser from "./pages/NotificationDetailUser/";
 import Room from "./pages/Room";
 import Statistic from "./pages/AdminSalon/Statistic";
+import ManageMaintenance from "./pages/AdminSalon/ManageMaintenance";
+import ManageGuarantee from "./pages/AdminSalon/ManageGuarantee";
 function ProtectedRoute() {
   const isAuthenticated = useSelector(
     (state) => state.userSlice.isAuthenticated
@@ -164,6 +166,14 @@ const router = createBrowserRouter([
       {
         path: path.statistic,
         element: <Statistic />,
+      },
+      {
+        path: path.manageMaintenance,
+        element: <ManageMaintenance />,
+      },
+      {
+        path: path.manageGuarantee,
+        element: <ManageGuarantee />,
       },
     ],
   },

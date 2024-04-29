@@ -23,6 +23,7 @@ export default function LoginSocial() {
           dispatch(loginUser(res.data.user));
           setProfileToLs(res.data.user);
           navigate("/");
+          window.location.reload()
         } else {
           navigate("/profile");
         }

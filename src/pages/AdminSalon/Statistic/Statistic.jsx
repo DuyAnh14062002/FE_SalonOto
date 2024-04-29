@@ -137,7 +137,7 @@ export default function Statistic() {
   const topAccessoryData = {
     labels: topBestSelling?.accessoriesTop
       ?.slice(0, 10)
-      ?.map((accessory) => accessory.name.name),
+      ?.map((accessory) => accessory?.name?.name),
     datasets: [
       {
         label: "Số lượng phụ kiện",

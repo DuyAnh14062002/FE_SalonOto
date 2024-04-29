@@ -113,7 +113,7 @@ export default function HeaderSalon() {
     clearInterval(timerId);
     handleCloseCall();
   };
-  const numberOfNotification = listNotification.filter(
+  const numberOfNotification = listNotification?.filter(
     (notification) => !notification.read
   ).length;
   const handleDetailNotification = async (id, idAppoint) => {
@@ -139,7 +139,7 @@ export default function HeaderSalon() {
         id: id,
         salonId: idSalon,
       });
-      const newListNotification = listNotification.filter(
+      const newListNotification =  listNotification?.filter(
         (notification) => notification.id !== id
       );
       setListNotification(newListNotification);
@@ -157,7 +157,7 @@ export default function HeaderSalon() {
           className="d-flex flex-column"
           style={{ width: "100%", overflowY: "scroll", maxHeight: "400px" }}
         >
-          {listNotification.length > 0 ? (
+          {listNotification?.length > 0 ? (
             listNotification.map((notification) => {
               const timeNotify = new Date(notification.create_at);
               const timeNow = new Date();

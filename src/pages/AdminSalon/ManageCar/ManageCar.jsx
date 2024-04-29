@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import salonApi from "../../../apis/salon.api";
 import carApi from "../../../apis/car.api";
+import userApi from "../../../apis/user.api";
 export default function ManageCar() {
   const [cars, setCars] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -16,6 +17,13 @@ export default function ManageCar() {
   const [showDelete, setShowDelete] = useState(false);
   const [image, setImage] = useState([]);
   const [salon, setSalon] = useState({});
+  const [permissions, setPermission] = useState([]);
+  const loadingUser = async () => {
+    let res = await userApi.getProfile();
+    if (res?.data?.profile?.permissions) {
+      setPermission(res.data.profile.permissions);
+    }
+  };
   const fetchDataSalon = async () => {
     const res = await salonApi.getSalonInfor();
     if (res?.data?.salon?.cars) {
@@ -26,6 +34,7 @@ export default function ManageCar() {
     }
   };
   useEffect(() => {
+    loadingUser();
     fetchDataSalon();
   }, []);
   const handleCloseInfor = () => {
@@ -234,9 +243,12 @@ export default function ManageCar() {
                 />
                 <button className="btn btn-primary mx-2">Tìm kiếm</button>
               </div>
-              <button className="btn btn-success" onClick={handleShowAdd}>
-                Thêm xe mới
-              </button>
+              {(permissions?.includes("OWNER") ||
+                permissions.includes("postCar")) && (
+                <button className="btn btn-success" onClick={handleShowAdd}>
+                  Thêm xe mới
+                </button>
+              )}
             </div>
             <table className="table mt-4 table-hover">
               <thead>
@@ -273,25 +285,31 @@ export default function ManageCar() {
                         >
                           <i className="fa-solid fa-circle-question"></i>
                         </button>
-                        <button
-                          className="btn btn-success btn-sm rounded-0 text-white mx-2"
-                          data-toggle="tooltip"
-                          data-placement="top"
-                          title="Edit"
-                          onClick={() => handleShowUpdate(car)}
-                        >
-                          <i className="fa fa-edit"></i>
-                        </button>
-                        <button
-                          to="/"
-                          className="btn btn-danger btn-sm rounded-0 text-white"
-                          data-toggle="tooltip"
-                          data-placement="top"
-                          title="Delete"
-                          onClick={() => handleShowDelete(car)}
-                        >
-                          <i className="fa fa-trash"></i>
-                        </button>
+                        {(permissions?.includes("OWNER") ||
+                          permissions.includes("patchCar")) && (
+                          <button
+                            className="btn btn-success btn-sm rounded-0 text-white mx-2"
+                            data-toggle="tooltip"
+                            data-placement="top"
+                            title="Edit"
+                            onClick={() => handleShowUpdate(car)}
+                          >
+                            <i className="fa fa-edit"></i>
+                          </button>
+                        )}
+                        {(permissions?.includes("OWNER") ||
+                          permissions.includes("deleteCar")) && (
+                          <button
+                            to="/"
+                            className="btn btn-danger btn-sm rounded-0 text-white"
+                            data-toggle="tooltip"
+                            data-placement="top"
+                            title="Delete"
+                            onClick={() => handleShowDelete(car)}
+                          >
+                            <i className="fa fa-trash"></i>
+                          </button>
+                        )}
                       </td>
                     </tr>
                   ))
@@ -307,7 +325,7 @@ export default function ManageCar() {
           </div>
         </div>
       </div>
-      <Modal show={showInfor} onHide={handleCloseInfor}>
+      <Modal show={showInfor} onHide={handleCloseInfor} backdrop="static">
         <Form noValidate>
           <Modal.Header closeButton>
             <Modal.Title> Thông tin xe chi tiết</Modal.Title>
@@ -431,7 +449,7 @@ export default function ManageCar() {
       <Modal show={showUpdate} onHide={handleCloseUpdate}>
         <Form noValidate>
           <Modal.Header closeButton>
-            <Modal.Title> Thông tin xe chi tiết</Modal.Title>
+            <Modal.Title> Cập nhật thông tin xe</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <Form.Group className="mt-4">

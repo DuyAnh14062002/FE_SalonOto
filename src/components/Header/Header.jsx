@@ -14,7 +14,9 @@ import { toast } from "react-toastify";
 import notificationSound from "../../assets/sounds/notification.mp3";
 import { useSocketContext } from "../../context/SocketContext";
 import telephoneRing from "../../assets/sounds/telephone_ring.mp3";
-import userApi from "../../apis/user.api";
+import messageApi from "../../apis/message.api";
+import userApi from "../../apis/user.api"
+import salonApi from "../../apis/salon.api";
 const intervalDuration = 3000;
 let timerId;
 let timeOut;
@@ -23,7 +25,9 @@ export default function Header(props) {
   const soundPhoneRing = new Audio(telephoneRing);
   const { socket } = useSocketContext();
   const [purchasedPackages, setPurchasedPackages] = useState([]);
+  const [statusSalon, setStatusSalon] = useState(false)
   const userInfo = useSelector((state) => state.userSlice.userInfo);
+  const [numberOfNotificationMessage, setNumberOfNotificationMessage] = useState("")
   const [dataResponseFromVideoCall, setDataResponseFromVideoCall] = useState(
     {}
   );
@@ -35,6 +39,31 @@ export default function Header(props) {
   let navigate = useNavigate();
   const { setProfile } = useAuthContext();
 
+
+  const loadingAllUser = async () => {
+    let res = await messageApi.getChatingUser();
+    if (res?.data?.chattingUsers && res.data.chattingUsers.length > 0) {
+      const numberOfNotificationMessage = res.data.chattingUsers.filter((user) => user.message &&  user.message.conversation_status === false).length
+      setNumberOfNotificationMessage(numberOfNotificationMessage);
+      }
+    }
+   
+    const loading = async() => {
+      let res = await salonApi.getSalonInfor()
+      if(res?.data?.status){
+        setStatusSalon(res.data.status)
+      }
+  }
+    useEffect(() => {
+       loading()
+    },[])
+  useEffect(() => {
+     const salonId = localStorage.getItem("idSalon")
+     if(salonId){
+      localStorage.removeItem("idSalon")
+     }
+  },[])
+  
   useEffect(() => {
     const loading = async () => {
       let res = await purchaseApi.getPurchase();
@@ -48,7 +77,6 @@ export default function Header(props) {
   //socket
   useEffect(() => {
     socket?.on("notification", (data) => {
-      // console.log("data", data);
       const sound = new Audio(notificationSound);
       sound.play();
       toast.success(data);
@@ -83,15 +111,20 @@ export default function Header(props) {
       handleEndCall();
       clearTimeout(timeOut);
     });
+
+    socket?.on("newMessage", () => {
+      toast.success("bạn có một tin nhắn mới")
+      loadingAllUser()
+    })
     return () => {
       socket?.off("receiveEndCallVideo");
+      socket?.off("newMessage");
     };
   }, [socket, timeOut]);
 
   const fetchAllNotificationUser = async () => {
     try {
       const res = await notificationApi.getAllNotificationUser();
-      // console.log("res notification user", res);
       setListNotification(res.data.notifications);
     } catch (error) {
       console.log(error);
@@ -109,7 +142,6 @@ export default function Header(props) {
     };
     loading();
   }, []);
-  // console.log("listNotification", listNotification);
   let handleLogout = async () => {
     try {
       await authApi.logout({ user_id: userInfo.user_id });
@@ -129,6 +161,7 @@ export default function Header(props) {
     clearTimeout(timeOut);
     handleCloseCall();
   };
+
   const numberOfNotification = listNotification.filter(
     (notification) => !notification.read
   ).length;
@@ -372,7 +405,7 @@ export default function Header(props) {
         <li className="link">
           <Link to="/">Tin tức</Link>
         </li>
-        {purchasedPackages && purchasedPackages.length > 0 && (
+        {((purchasedPackages && purchasedPackages.length > 0) || statusSalon === "success") && (
           <li className="link">
             <Link to={path.adminSalon}>Quản lý</Link>
           </li>
@@ -381,7 +414,12 @@ export default function Header(props) {
           <Link to="/appointment">Lịch hẹn</Link>
         </li>
 
-        <OverlayTrigger
+      </ul>
+      {/* <div className="search">
+        <input type="text" placeholder="Tìm kiếm" />
+      </div> */}
+      <div className="container-box">
+      <OverlayTrigger
           trigger="click"
           placement="bottom"
           overlay={popover}
@@ -400,16 +438,14 @@ export default function Header(props) {
             </span>
           </div>
         </OverlayTrigger>
-      </ul>
-      <div className="search">
-        <input type="text" placeholder="Tìm kiếm" />
-        <span>
-          <i className="ri-search-line"></i>
-        </span>
-      </div>
-      <div className="container-box">
-        <div className="messenger" onClick={HandleMessage}>
+        <div className="messenger position-relative" onClick={HandleMessage} style={{marginLeft : "15px"}}>
           <i class="fa-brands fa-facebook-messenger"></i>
+        <span
+          class="badge rounded-pill badge-notification bg-danger position-absolute"
+          style={{ top: "-6px", left: "34px" }}
+        >
+          {numberOfNotificationMessage > 0 && numberOfNotificationMessage}
+        </span>
         </div>
         <Link
           to={path.profile}
@@ -483,7 +519,7 @@ export default function Header(props) {
         <li className="link">
           <Link to="/">Tin tức</Link>
         </li>
-        {purchasedPackages && purchasedPackages.length > 0 && (
+        {((purchasedPackages && purchasedPackages.length > 0) || statusSalon === "success") && (
           <li className="link">
             <Link to={path.adminSalon}>Quản lý</Link>
           </li>
@@ -491,8 +527,15 @@ export default function Header(props) {
         <li className="link">
           <Link to="/appointment">Lịch hẹn</Link>
         </li>
-
-        <OverlayTrigger
+      </ul>
+      {/* <div className="search">
+        <input type="text" placeholder="Tìm kiếm" />
+        <span>
+          <i className="ri-search-line"></i>
+        </span>
+      </div> */}
+      <div className="container-box">
+      <OverlayTrigger
           trigger="click"
           placement="bottom"
           overlay={popover}
@@ -511,16 +554,14 @@ export default function Header(props) {
             </span>
           </div>
         </OverlayTrigger>
-      </ul>
-      <div className="search">
-        <input type="text" placeholder="Tìm kiếm" />
-        <span>
-          <i className="ri-search-line"></i>
-        </span>
-      </div>
-      <div className="container-box">
-        <div className="messenger" onClick={HandleMessage}>
+        <div className="messenger position-relative" onClick={HandleMessage} style={{marginLeft : "15px"}}>
           <i class="fa-brands fa-facebook-messenger"></i>
+          <span
+          class="badge rounded-pill badge-notification bg-danger position-absolute"
+          style={{ top: "-6px", left: "34px" }}
+        >
+           {numberOfNotificationMessage > 0 && numberOfNotificationMessage}
+        </span>
         </div>
         <Link
           to={path.profile}

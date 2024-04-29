@@ -7,6 +7,7 @@ export default function Room() {
   const profile = useSelector((state) => state.userSlice.userInfo);
   const { roomId } = useParams();
   const appId = Number(process.env.REACT_APP_APP_ID);
+  console.log("appId",appId)
   const serverSecret = process.env.REACT_APP_SERVER_SECRET;
 
   let myMeeting = async (element) => {

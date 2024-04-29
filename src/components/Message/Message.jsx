@@ -10,7 +10,8 @@ import endCallSound from "../../assets/sounds/end_call.mp3";
 import MessageItem from "./MessageItem";
 import { randomID } from "../../utils/common";
 import { Button, Modal } from "react-bootstrap";
-import { useSelector } from "react-redux";
+import { useSelector} from "react-redux";
+import {setRefuseCall} from "../../redux/slices/MessageSlice"
 import { toast } from "react-toastify";
 import telephoneRing from "../../assets/sounds/telephone_ring.mp3";
 import noUserImage from "../../assets/images/no-user-image.webp";
@@ -26,6 +27,7 @@ export default function Message() {
   const [text, setText] = useState("");
   const [users, setUsers] = useState([]);
   const [user, setUser] = useState({});
+  const [isCall, setIsCall] = useState(false)
   const [showCall, setShowCall] = useState(false);
   const idSalon = localStorage.getItem("idSalon");
   const [messages, setMessages] = useState([]);
@@ -49,6 +51,12 @@ export default function Message() {
       }
       const sound = new Audio(notificationSound);
       sound.play();
+      loadingAllUser()
+      if(isCall === false){
+        toast("Bạn có một tin nhắn mới")
+      }else{
+        setIsCall(true)
+      }
     },
     [messages, setMessages]
   );
@@ -133,9 +141,11 @@ export default function Message() {
   const handleCloseCallForReceiver = () => setShowCallForReceiver(false);
   const handleShowCallForReceiver = () => setShowCallForReceiver(true);
   const getDetailSalon = async () => {
-    let res = await salonApi.getDetailSalon(idSalon);
-    if (res?.data?.salon) {
-      setUser(res.data.salon);
+    if(idSalon){
+      let res = await salonApi.getDetailSalon(idSalon);
+      if (res?.data?.salon) {
+        setUser(res.data.salon);
+      }
     }
   };
 
@@ -153,15 +163,14 @@ export default function Message() {
       setText("");
     }
     if (user?.id) {
+      console.log("user id : ", user.id)
       res = await messageApi.postMessage(user.id, text);
       setText("");
     }
     if (res?.data?.message) {
       setMessages([res.data.message, ...messages]);
     }
-    if (users && users.length < 1) {
-      loadingAllUser();
-    }
+    loadingAllUser()
   };
   const loadingMessage = async () => {
     let res = {};
@@ -184,12 +193,17 @@ export default function Message() {
     //let res = await userApi.getAllUsers()
     if (res?.data?.chattingUsers && res.data.chattingUsers.length > 0) {
       setUsers(res.data.chattingUsers);
-      if (user?.salon_id && idSalon === user.salon_id) {
-        setUser(res.data.chattingUsers[0]);
+      console.log("chatting users : ", res.data.chattingUsers)
+      if(!user.id && !user.salon_id && !idSalon){
+        setUser(res.data.chattingUsers[0])
       }
     }
   };
   const handleOnMessage = async (userCurrent) => {
+    const salonId = localStorage.getItem("idSalon")
+    if(salonId){
+     localStorage.removeItem("idSalon")
+    }
     let res = {};
     if (userCurrent?.salon_id) {
       res = await messageApi.getMessage(userCurrent.salon_id);
@@ -205,13 +219,14 @@ export default function Message() {
       setMessages([]);
     }
     setUser(userCurrent);
+    loadingAllUser()
   };
   const handleCloseCall = () => {
     setShowCall(false);
   };
   const handleShowCall = () => setShowCall(true);
   const handleCallVideo = async () => {
-    console.log("profile", profile);
+    setIsCall(true)
     let res = "";
     let receiverId = "";
     if (user?.salon_id) {
@@ -317,16 +332,16 @@ export default function Message() {
         <div className="message-sidebar-bottom">
           {users &&
             users.length > 0 &&
-            users.map((user) => {
-              const isOnline = onlineUsers.includes(user.id);
+            users.map((u) => {
+              const isOnline = onlineUsers.includes(u.id);
               return (
                 <div
-                  className="message-person"
-                  onClick={() => handleOnMessage(user)}
+                  className={(user.id === u.id || user.salon_id === u.id) ? "message-person actice-chatting" : "message-person"}
+                  onClick={() => handleOnMessage(u)}
                 >
                   <div
                     className="person-image"
-                    style={{ backgroundImage: `url(${user.image})` }}
+                    style={{ backgroundImage: `url(${u.image})` , marginRight: "2px"}}
                   >
                     {isOnline === true ? (
                       <div className="person-active"></div>
@@ -335,8 +350,12 @@ export default function Message() {
                     )}
                   </div>
                   <div className="text-box">
-                    <div className="message-name">{user.name}</div>
-                    <div className="message-text">You: Ok 11h40 AM</div>
+                    <div className="message-name">{u.name}</div>
+                    <div className="message-text-sidebar">
+                      <span className={u.message && u.message.conversation_status === false ? "text-sender text-sender-not-seen " : "text-sender"}>{u.message && u.message.sender !== "" ? u.message.sender + ": ": ""}</span> 
+                      <span className={u.message && u.message.conversation_status === false ? "text-message text-message-not-seen text-truncate" : "text-message text-truncate"}>{u.message && u.message.message} </span>
+                      <span className="text-time">{u.message && u.message.time}</span>
+                    </div>
                   </div>
                 </div>
               );

@@ -32,5 +32,10 @@ const authApi = {
   logout(body) {
     return http.post(`${URL_LOGOUT}`, body);
   },
+  createNewPassword(newPassword) {
+    return http.post("/auth/change-pw", {
+      newPassword: newPassword,
+    });
+  },
 };
 export default authApi;
