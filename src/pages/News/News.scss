@@ -1,0 +1,103 @@
+.container-news {
+  max-width: 1000px;
+  margin: 0 auto;
+  height: 100vh;
+  .new-title {
+    font-size: 25px;
+    font-weight: bold;
+    text-transform: uppercase;
+    padding: 20px 10px 10px 10px;
+    border-bottom: 1px solid rgb(145, 145, 145);
+  }
+  .body-news {
+    display: flex;
+    .left-news {
+      height: 200px;
+      width: 70%;
+      .new-item {
+        cursor: pointer;
+        display: flex;
+        margin: 15px 0;
+        border-bottom: 1px solid rgb(205, 202, 202);
+        padding-bottom: 10px;
+        .new-item-image {
+          width: 224.4px;
+          height: 149.6px;
+          background-position: center;
+          background-repeat: no-repeat;
+          background-size: contain;
+          margin-right: 10px;
+          &:hover ~ .new-item-content .new-item-content-title {
+            color: blue;
+            transition: 0.2s;
+          }
+        }
+        .new-item-content {
+          height: auto;
+          width: calc(100% - 224px);
+          .new-item-content-title {
+            font-weight: bold;
+            font-size: 20px;
+            &:hover {
+              color: blue;
+              transition: 0.2s;
+            }
+          }
+          .new-item-time {
+            font-size: 15px;
+            color: rgb(184, 181, 181);
+            line-height: 2;
+          }
+          .new-item-description {
+            font-size: 16px;
+            color: rgb(138, 134, 134);
+          }
+        }
+      }
+    }
+    .right-news {
+      //background-color: yellow;
+      height: 200px;
+      width: 30%;
+      margin-left: 25px;
+      margin-top: 15px;
+      .extimate-cost-container {
+        width: 100%;
+        height: auto;
+        border: 1px solid gray;
+        border-radius: 3px;
+        padding: 20px;
+        .cost-title {
+          text-align: center;
+          font-weight: bold;
+          font-size: 20px;
+        }
+        .cost-description {
+          text-align: center;
+          font-size: 16px;
+        }
+        .cost-car-form {
+          margin-top: 15px;
+          .cost-car-label {
+            font-size: 15px;
+          }
+        }
+        .caculate {
+          width: 100%;
+          padding: 10px;
+          background-color: #38addb;
+          text-align: center;
+          margin-top: 15px;
+          font-weight: bold;
+          color: #fff;
+          font-size: 18px;
+          cursor: pointer;
+          &:hover {
+            background-color: blue;
+            transition: 0.2s;
+          }
+        }
+      }
+    }
+  }
+}

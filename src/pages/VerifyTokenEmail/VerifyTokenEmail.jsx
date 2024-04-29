@@ -14,7 +14,7 @@ export default function VerifyTokenEmail() {
     console.log("res", res);
     if (res.data.status === "success") {
       toast.success(
-        "Bạn đã là thành viên của salon. Làm ơn kiểm tra email để đăng nhập"
+        "Bạn đã là thành viên của salon. Vui lòng tạo mật khẩu mới cho tài khoản của bạn."
       );
       setAccessTokenToLs(res.data.accessToken)
       dispatch(loginUser(res.data.user));

@@ -216,10 +216,10 @@ export default function ManageUser() {
                               type="checkbox"
                               className="switch-toggle"
                               checked={
-                                permission.getSalon && permission.getSalon === "getSalon"
+                                permission.R_SL && permission.R_SL === "R_SL"
                               }
-                              value={permission.getSalon}
-                              onChange={(e) => handleSetPermission(e, "getSalon")}
+                              value={permission.R_SL}
+                              onChange={(e) => handleSetPermission(e, "R_SL")}
                             />
                             <div className="role-detail">
                               <p className="role-text-top">
@@ -232,12 +232,12 @@ export default function ManageUser() {
                             <input
                               type="checkbox"
                               className="switch-toggle"
-                              value={permission.patchSalon}
+                              value={permission.U_SL}
                               checked={
-                                permission.patchSalon && permission.patchSalon === "patchSalon"
+                                permission.U_SL && permission.U_SL === "U_SL"
                               }
                               onChange={(e) =>
-                                handleSetPermission(e, "patchSalon")
+                                handleSetPermission(e, "U_SL")
                               }
                             />
                             <div className="role-detail">
@@ -275,10 +275,10 @@ export default function ManageUser() {
                               type="checkbox"
                               className="switch-toggle"
                               checked={
-                                permission.getCar && permission.getCar === "getCar"
+                                permission.R_CAR && permission.R_CAR === "R_CAR"
                               }
-                              value={permission.getCar}
-                              onChange={(e) => handleSetPermission(e, "getCar")}
+                              value={permission.R_CAR}
+                              onChange={(e) => handleSetPermission(e, "R_CAR")}
                             />
                             <div className="role-detail">
                               <p className="role-text-top">
@@ -291,12 +291,12 @@ export default function ManageUser() {
                             <input
                               type="checkbox"
                               className="switch-toggle"
-                              value={permission.postCar}
+                              value={permission.C_CAR}
                               onChange={(e) =>
-                                handleSetPermission(e, "postCar")
+                                handleSetPermission(e, "C_CAR")
                               }
                               checked={
-                                permission.postCar && permission.postCar === "postCar"
+                                permission.C_CAR && permission.C_CAR === "C_CAR"
                               }
                             />
                             <div className="role-detail">
@@ -310,12 +310,12 @@ export default function ManageUser() {
                             <input
                               type="checkbox"
                               className="switch-toggle"
-                              value={permission.deleteCar}
+                              value={permission.D_CAR}
                               checked={
-                                permission.deleteCar && permission.deleteCar === "deleteCar"
+                                permission.D_CAR && permission.D_CAR === "D_CAR"
                               }
                               onChange={(e) =>
-                                handleSetPermission(e, "deleteCar")
+                                handleSetPermission(e, "D_CAR")
                               }
                             />
                             <div className="role-detail">
@@ -329,12 +329,12 @@ export default function ManageUser() {
                             <input
                               type="checkbox"
                               className="switch-toggle"
-                              value={permission.patchCar}
+                              value={permission.U_CAR}
                               checked={
-                                permission.patchCar && permission.patchCar === "patchCar"
+                                permission.U_CAR && permission.U_CAR === "U_CAR"
                               }
                               onChange={(e) =>
-                                handleSetPermission(e, "patchCar")
+                                handleSetPermission(e, "U_CAR")
                               }
                             />
                             <div className="role-detail">
@@ -364,10 +364,10 @@ export default function ManageUser() {
                               type="checkbox"
                               className="switch-toggle"
                               checked={
-                                permission.getCalender && permission.getCalender === "getCalender"
+                                permission.R_APM && permission.R_APM === "R_APM"
                               }
-                              value={permission.getCalender}
-                              onChange={(e) => handleSetPermission(e, "getCalender")}
+                              value={permission.R_APM}
+                              onChange={(e) => handleSetPermission(e, "R_APM")}
                             />
                             <div className="role-detail">
                               <p className="role-text-top">
@@ -380,12 +380,12 @@ export default function ManageUser() {
                             <input
                               type="checkbox"
                               className="switch-toggle"
-                              value={permission.deleteCalender}
+                              value={permission.D_APM}
                               checked={
-                                permission.deleteCalender && permission.deleteCalender === "deleteCalender"
+                                permission.D_APM && permission.D_APM === "D_APM"
                               }
                               onChange={(e) =>
-                                handleSetPermission(e, "deleteCalender")
+                                handleSetPermission(e, "D_APM")
                               }
                             />
                             <div className="role-detail">
@@ -399,12 +399,12 @@ export default function ManageUser() {
                             <input
                               type="checkbox"
                               className="switch-toggle"
-                              value={permission.patchCalender}
+                              value={permission.U_APM}
                               checked={
-                                permission.patchCalender && permission.patchCalender === "patchCalender"
+                                permission.U_APM && permission.U_APM === "U_APM"
                               }
                               onChange={(e) =>
-                                handleSetPermission(e, "patchCalender")
+                                handleSetPermission(e, "U_APM")
                               }
                             />
                             <div className="role-detail">

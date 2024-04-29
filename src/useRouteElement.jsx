@@ -35,6 +35,14 @@ import NotificationDetailUser from "./pages/NotificationDetailUser/";
 import Room from "./pages/Room";
 import ManageMaintenance from "./pages/AdminSalon/ManageMaintenance";
 import ManageGuarantee from "./pages/AdminSalon/ManageGuarantee";
+import News from "./pages/News"
+import DetailNews from "./pages/DetailNews";
+import ManageTransaction from "./pages/AdminSalon/ManageTransaction";
+import ListMaintenance from "./pages/SalonOto/ListMaintenance";
+import ManageBuyCar from "./pages/AdminSalon/ManageBuyCar";
+import ManageBuyMaintenance from "./pages/AdminSalon/ManageBuyMaintenance";
+import ManageAccessory from "./pages/AdminSalon/ManageAccessory";
+import HistoryTransaction from "./components/HistoryTransaction/HistoryTransaction";
 function ProtectedRoute() {
   const isAuthenticated = useSelector(
     (state) => state.userSlice.isAuthenticated
@@ -166,6 +174,22 @@ const router = createBrowserRouter([
       {
         path: path.manageGuarantee,
         element: <ManageGuarantee/>
+      },
+      {
+        path: path.manageTransaction,
+        element: <ManageTransaction/>
+      },
+      {
+        path: path.manageBuyCar,
+        element: <ManageBuyCar/>
+      },
+      {
+        path: path.manageBuyMaintenance,
+        element: <ManageBuyMaintenance/>
+      },
+      {
+        path: path.manageAccessory,
+        element: <ManageAccessory/>
       }
     ],
   },
@@ -218,7 +242,20 @@ const router = createBrowserRouter([
     path: path.message,
     element:<Message/>
   },{
-
+      path: path.news,
+      element: <News />
+  },
+  {
+    path: path.detailNew,
+    element: <DetailNews/>
+  },
+  {
+    path: path.listMaintenance,
+    element: <ListMaintenance/>
+  },
+  {
+    path: path.historyTransaction,
+    element: <HistoryTransaction/>
   }
 ]);
 

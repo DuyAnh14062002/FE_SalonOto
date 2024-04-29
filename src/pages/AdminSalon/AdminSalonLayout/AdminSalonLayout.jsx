@@ -9,7 +9,7 @@ import Modal from "react-bootstrap/Modal";
 import salonApi from '../../../apis/salon.api';
 import { toast } from 'react-toastify';
 import { useDispatch } from 'react-redux';
-import { setsalon } from '../../../redux/slices/SalonSlide';
+import { setsalon } from '../../../redux/slices/SalonSlice';
 
 export default function AdminSalonLayout({ children }) {
   const [statusSalon, setStatusSalon] = useState("")

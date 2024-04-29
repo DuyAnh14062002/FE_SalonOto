@@ -9,6 +9,7 @@ import { toast } from "react-toastify";
 import userApi from "../../apis/user.api";
 import salonApi from "../../apis/salon.api";
 import { useLocation, useNavigate } from "react-router-dom";
+import { path } from "../../constants/path";
 const AccountProfile = (props) => {
   const [emailInvite, setEmailInvite] = useState("");
   const [show, setShow] = useState(false);
@@ -52,8 +53,8 @@ const AccountProfile = (props) => {
   const handleOnChangeEmailInvite = (e) => {
     setEmailInvite(e.target.value);
   };
-  const handleSetPassword = async () => {
-     
+  const handleSetPassword = async (e) => {
+    e.preventDefault()
     if(password === retypePassword)
     {
        let res = await authApi.createNewPassword(password)
@@ -96,14 +97,22 @@ const AccountProfile = (props) => {
   };
   const handleLinkGoogle = () => {
     try {
-      window.open("https://server-graduation-thesis-1.onrender.com/auth/google", "_self");
+      if(profile1?.google != null){
+        toast.error("Bạn đã liên kết tài khoản google rồi")
+      }else{
+        window.open("https://server-graduation-thesis-1.onrender.com/auth/google", "_self");
+      }
     } catch (error) {
       console.log(error);
     }
   };
   const handleLinkFacebook = () => {
     try {
-      window.open("https://server-graduation-thesis-1.onrender.com/auth/facebook", "_self");
+      if(profile1?.facebook != null){
+        toast.error("Bạn đã liên kết tài khoản facebook rồi")
+      }else{
+        window.open("https://server-graduation-thesis-1.onrender.com/auth/facebook", "_self");
+      }
     } catch (error) {
       console.log(error);
     }
@@ -151,7 +160,9 @@ const AccountProfile = (props) => {
     
     return `${day}/${month}/${year}`;
   };
-  console.log("profile1 : ", profile1)
+  const handleShowHistory = () => {
+    navigate(`${path.historyTransaction}`)
+  }
   return (
     <>
       <Header otherPage={true} />
@@ -328,7 +339,7 @@ const AccountProfile = (props) => {
                             type="button"
                             onClick={handleLinkGoogle}
                           >
-                            {profile1 && profile1.google !== null ? ( <span className="tick"><i class="fa-solid fa-circle-check"></i></span>) : ""}
+                            {profile1?.google && ( <span className="tick"><i class="fa-solid fa-circle-check"></i></span>)}
                             <i className="fab fa-google me-2"></i> Liên kết với
                             google
                           </Button>
@@ -338,9 +349,17 @@ const AccountProfile = (props) => {
                             type="button"
                             onClick={handleLinkFacebook}
                           >
-                            {profile1 && profile1.facebook !== null ? ( <span className="tick"><i class="fa-solid fa-circle-check"></i></span>) : ""}
+                            {profile1?.facebook && ( <span className="tick"><i class="fa-solid fa-circle-check"></i></span>)}
                             <i className="fab fa-facebook-f me-2"></i>Liên kết
                             với facebook
+                          </Button>
+                          <Button
+                            className="mt-3 btn-profile"
+                            type="button"
+                            onClick={handleShowHistory}
+                            style={{backgroundColor: "#883342", marginLeft: "10px", border: "none"}}
+                          >
+                            Xem lịch sử giao dịch
                           </Button>
                         </div>
                       </div>
@@ -378,9 +397,9 @@ const AccountProfile = (props) => {
             </Modal.Footer>
           </Form>
         </Modal>
-        <Modal show={showCreatePassword} onHide={handleCloseCreatePassword} >
-          <Form onSubmit={handleSubmitInviteUser}>
-            <Modal.Header closeButton>
+        <Modal show={showCreatePassword} onHide={handleCloseCreatePassword} backdrop="static">
+          <Form onSubmit={handleSetPassword} >
+            <Modal.Header>
               <Modal.Title>Tạo mật khẩu cho tài khoản của bạn</Modal.Title>
             </Modal.Header>
             <Modal.Body>
@@ -404,15 +423,13 @@ const AccountProfile = (props) => {
               </Form.Group>
             </Modal.Body>
             <Modal.Footer>
-              <Button variant="secondary" onClick={handleCloseCreatePassword}>
-                Đóng
-              </Button>
-              <Button variant="primary" type="submit" onClick={handleSetPassword}>
+              <Button variant="primary" type="submit">
                 Xác nhận
               </Button>
             </Modal.Footer>
           </Form>
         </Modal>
+        
       </section>
     </>
   );

@@ -6,11 +6,15 @@ import "react-multi-carousel/lib/styles.css";
 import FooterSalon from "../../components/Footer/FooterSalon";
 import { useParams, useNavigate } from "react-router-dom";
 import carApi from "../../apis/car.api";
+import Button from "react-bootstrap/Button";
+import Modal from "react-bootstrap/Modal";
+import { Form} from "react-bootstrap";
 export default function DetailCar() {
   const [car, setCar] = useState({});
   const [images, setImages] = useState([]);
   const navigate = useNavigate();
   const [mainImage, setMainImage] = useState("");
+  const [showWarranty, setShowWarranty] = useState(false);
   const responsive = {
     superLargeDesktop: {
       // the naming can be any, depends on you.
@@ -52,6 +56,14 @@ export default function DetailCar() {
       },
     });
   };
+  const handleShowDetailWarranty = () => {};
+  const handleCloseWarranty = () => {
+    setShowWarranty(false);
+  };
+  const handleShowWarranty = () => {
+    setShowWarranty(true);
+  };
+  console.log("car : ", car)
   return (
     <>
       <HeaderSalon />
@@ -132,8 +144,11 @@ export default function DetailCar() {
             <p>Màu nội thất : {car.inColor}</p>
             <p>Màu ngoại thất : {car.outColor}</p>
             <button className="call-hotline">GỌI HOTLINE 0384496705</button>
-            <button className="btn mt-3" onClick={handleAppointment}>
+            <button className="btn mt-1" onClick={handleAppointment}>
               Đặt lịch xem xe ngay
+            </button>
+            <button className="btn mt-1" onClick={handleShowWarranty}>
+              Xem chính sách bảo hành
             </button>
           </div>
         </div>
@@ -262,6 +277,49 @@ export default function DetailCar() {
         </div>
       </div>
       <FooterSalon />
+      <Modal show={showWarranty} onHide={handleCloseWarranty}>
+        <Modal.Header closeButton>
+          <Modal.Title>Thông tin bảo hành cho xe</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form.Group className="mt-4">
+            <Form.Label>Số kilomet bảo hành</Form.Label>
+            <Form.Control
+              required
+              type="text"
+              name="limit_kilometer"
+              value={car?.warranties?.limit_kilometer}
+              readOnly
+            />
+          </Form.Group>
+          <Form.Group className="mt-4">
+            <Form.Label>Số tháng bảo hành</Form.Label>
+            <Form.Control
+              required
+              type="text"
+              name="limit_kilometer"
+              value={car?.warranties?.months}
+              readOnly
+            />
+          </Form.Group>
+          <Form.Group className="mt-4">
+            <Form.Label>Chính sách bảo hành</Form.Label>
+            <Form.Control
+              as="textarea"
+              //placeholder="Leave a comment here"
+              style={{ minHeight: '150px' }}
+              value={car?.warranties?.policy}
+              readOnly
+            />
+            
+          </Form.Group>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseWarranty}>
+            Đóng
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </>
   );
 }

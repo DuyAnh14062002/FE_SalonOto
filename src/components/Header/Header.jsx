@@ -17,6 +17,7 @@ import telephoneRing from "../../assets/sounds/telephone_ring.mp3";
 import messageApi from "../../apis/message.api";
 import userApi from "../../apis/user.api"
 import salonApi from "../../apis/salon.api";
+import appointmentApi from "../../apis/appointment.api";
 const intervalDuration = 3000;
 let timerId;
 let timeOut;
@@ -28,6 +29,7 @@ export default function Header(props) {
   const [statusSalon, setStatusSalon] = useState(false)
   const userInfo = useSelector((state) => state.userSlice.userInfo);
   const [numberOfNotificationMessage, setNumberOfNotificationMessage] = useState("")
+  const [numberOfCalender, setNumberOfCalender] = useState([])
   const [dataResponseFromVideoCall, setDataResponseFromVideoCall] = useState(
     {}
   );
@@ -39,6 +41,17 @@ export default function Header(props) {
   let navigate = useNavigate();
   const { setProfile } = useAuthContext();
 
+  const fetchAppointmentApi = async () => {
+    const res = await appointmentApi.getAllAppointmentUser();
+    if (res?.data?.appointments) {
+      const appointmentList = res.data.appointments;
+      let number = res.data.appointments.filter((item) => item.status === 0).length
+      setNumberOfCalender(number)
+    }
+  };
+  useEffect(() => {
+    fetchAppointmentApi();
+  }, []);
 
   const loadingAllUser = async () => {
     let res = await messageApi.getChatingUser();
@@ -72,6 +85,7 @@ export default function Header(props) {
       }
     };
     loading();
+    loadingAllUser()
   }, []);
 
   //socket
@@ -162,7 +176,7 @@ export default function Header(props) {
     handleCloseCall();
   };
 
-  const numberOfNotification = listNotification.filter(
+  const numberOfNotification = listNotification?.filter(
     (notification) => !notification.read
   ).length;
   const handleDetailNotification = async (id, idAppoint) => {
@@ -383,9 +397,10 @@ export default function Header(props) {
       </Modal>
       <div className="nav__logo">
         <img
-          src="https://s.bonbanh.com/uploads/users/701283/salon/l_1678849916.jpg"
+          src="https://res.cloudinary.com/dok6ou3xz/image/upload/v1713170637/salon-car/1000_F_481502134_PBF5iVXkoOkoV3SNXLPSIvXPoaGzwTbv_mru1zy.jpg"
           alt="logo"
           style={{ borderRadius: "50%", cursor: "pointer" }}
+          //https://s.bonbanh.com/uploads/users/701283/salon/l_1678849916.jpg
         />
       </div>
       <ul className="nav__links">
@@ -402,22 +417,28 @@ export default function Header(props) {
           <Link to="/">Liên hệ</Link>
         </li>
         <li className="link">
-          <Link to="/">Tin tức</Link>
+          <Link to={path.news}>Tin tức</Link>
         </li>
         {((purchasedPackages && purchasedPackages.length > 0) || statusSalon === "success") && (
           <li className="link">
             <Link to={path.adminSalon}>Quản lý</Link>
           </li>
         )}
-        <li className="link">
-          <Link to="/appointment">Lịch hẹn</Link>
-        </li>
 
       </ul>
       {/* <div className="search">
         <input type="text" placeholder="Tìm kiếm" />
       </div> */}
       <div className="container-box">
+      <Link className="link position-relative" to="/appointment" >
+          <i class="fa-solid fa-calendar-days" style={{color: "white", fontSize: "25px", marginRight: "25px"}}></i>
+          <span
+          class="badge rounded-pill badge-notification bg-danger position-absolute"
+          style={{ top: "-9px", left: "18px" }}
+        >
+          {numberOfCalender > 0 && numberOfCalender}
+        </span>
+       </Link>
       <OverlayTrigger
           trigger="click"
           placement="bottom"
@@ -497,7 +518,7 @@ export default function Header(props) {
       </Modal>
       <div className="nav__logo">
         <img
-          src="https://s.bonbanh.com/uploads/users/701283/salon/l_1678849916.jpg"
+          src="https://res.cloudinary.com/dok6ou3xz/image/upload/v1713170637/salon-car/1000_F_481502134_PBF5iVXkoOkoV3SNXLPSIvXPoaGzwTbv_mru1zy.jpg"
           alt="logo"
           style={{ borderRadius: "50%" }}
         />
@@ -516,16 +537,13 @@ export default function Header(props) {
           <Link to="/">Liên hệ</Link>
         </li>
         <li className="link">
-          <Link to="/">Tin tức</Link>
+          <Link to={path.news}>Tin tức</Link>
         </li>
         {((purchasedPackages && purchasedPackages.length > 0) || statusSalon === "success") && (
           <li className="link">
             <Link to={path.adminSalon}>Quản lý</Link>
           </li>
         )}
-        <li className="link">
-          <Link to="/appointment">Lịch hẹn</Link>
-        </li>
       </ul>
       {/* <div className="search">
         <input type="text" placeholder="Tìm kiếm" />
@@ -534,6 +552,15 @@ export default function Header(props) {
         </span>
       </div> */}
       <div className="container-box">
+      <Link className="link position-relative" to="/appointment">
+          <i class="fa-solid fa-calendar-days"  style={{color: "white", fontSize: "25px", marginRight: "25px"}}></i>
+          <span
+          class="badge rounded-pill badge-notification bg-danger position-absolute"
+          style={{ top: "-9px", left: "18px" }}
+        >
+          {numberOfCalender > 0 && numberOfCalender}
+        </span>
+       </Link>
       <OverlayTrigger
           trigger="click"
           placement="bottom"

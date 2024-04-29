@@ -75,7 +75,7 @@ export default function ManageSalon() {
           <div className="card-body">
             <div className="my-3 d-flex justify-content-between align-items-center">
               {(permissions?.includes("OWNER") ||
-                permissions.includes("patchSalon")) && (
+                permissions.includes("U_SL")) && (
                 <button className="btn btn-success" onClick={handleShow}>
                   Cập nhật thông tin Salon
                 </button>

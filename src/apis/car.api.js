@@ -11,8 +11,12 @@ const carApi = {
       headers: { "content-type": "multipart/form-data" },
     });
   },
-  deleteCar(id) {
-    return http.delete(`/cars/${id}`);
+  deleteCar(id, salonId) {
+    return http.delete(`/cars/${id}`, {
+      data: {
+        salonId: salonId,
+      },
+    });
   },
   getAllCar() {
     return http.get("/cars");

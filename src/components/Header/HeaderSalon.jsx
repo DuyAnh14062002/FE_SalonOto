@@ -9,6 +9,7 @@ import { toast } from "react-toastify";
 import notificationSound from "../../assets/sounds/notification.mp3";
 import { useSocketContext } from "../../context/SocketContext";
 import telephoneRing from "../../assets/sounds/telephone_ring.mp3";
+import { path } from "../../constants/path";
 
 const intervalDuration = 3000;
 let timerId;
@@ -260,7 +261,7 @@ export default function HeaderSalon() {
           <Link className="item-menu">Giới thiệu</Link>
           <Link className="item-menu">Tin tức</Link>
           <Link className="item-menu">Dịch vụ</Link>
-          <Link className="item-menu">Bảo dưỡng</Link>
+          <Link className="item-menu" to= {path.listMaintenance}>Bảo dưỡng</Link>
           <Link to="/salonOto/contact" className="item-menu">
             Liên hệ
           </Link>

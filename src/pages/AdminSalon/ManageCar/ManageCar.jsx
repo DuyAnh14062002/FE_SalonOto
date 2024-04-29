@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 import salonApi from "../../../apis/salon.api";
 import carApi from "../../../apis/car.api";
 import userApi from "../../../apis/user.api";
+import warrantyApi from "../../../apis/warranty.api";
 export default function ManageCar() {
   const [cars, setCars] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -14,10 +15,14 @@ export default function ManageCar() {
   const [showInfor, setShowInfor] = useState(false);
   const [showUpdate, setShowUpdate] = useState(false);
   const [showAdd, setShowAdd] = useState(false);
+  const [showWarranty, setShowWarranty] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
   const [image, setImage] = useState([]);
   const [salon, setSalon] = useState({});
   const [permissions, setPermission] = useState([]);
+  const [warranties, setWarranties] = useState([]);
+  const [warrantyId, setWarrantyId] = useState("");
+  const [carWanrranty, setCarWarranty] = useState({});
   const loadingUser = async () => {
     let res = await userApi.getProfile();
     if (res?.data?.profile?.permissions) {
@@ -31,6 +36,13 @@ export default function ManageCar() {
     }
     if (res?.data?.salon) {
       setSalon(res.data.salon);
+      loadingWarranty(res.data.salon.salon_id);
+    }
+  };
+  const loadingWarranty = async (id) => {
+    let res = await warrantyApi.getAllWarranty(id);
+    if (res?.data?.warranties) {
+      setWarranties(res.data.warranties);
     }
   };
   useEffect(() => {
@@ -64,6 +76,17 @@ export default function ManageCar() {
     setShowDelete(true);
     setCar(car);
   };
+  const handleShowWarranty = async (item) => {
+    setShowWarranty(true);
+    setCar(item);
+    let res = await carApi.getDetailCar(item.car_id);
+    if (res?.data?.car?.warranties) {
+      setCarWarranty(res.data.car.warranties);
+    }
+  };
+  const handleCloseWarranty = () => {
+    setShowWarranty(false);
+  };
   const onChange = (e) => {
     setCar({ ...car, [e.target.name]: e.target.value });
   };
@@ -77,6 +100,7 @@ export default function ManageCar() {
 
   const handleUpdateCar = async () => {
     const form = new FormData();
+    form.append("salonId", salon.salon_id);
     if (car.name) {
       form.append("name", car.name);
     }
@@ -147,6 +171,7 @@ export default function ManageCar() {
     e.preventDefault();
     setIsLoading(true);
     const form = new FormData();
+    form.append("salonId", salon.salon_id);
     if (car.name) {
       form.append("name", car.name);
     }
@@ -214,7 +239,7 @@ export default function ManageCar() {
     }
   };
   const handleDelete = async () => {
-    let res = await carApi.deleteCar(car.car_id);
+    let res = await carApi.deleteCar(car.car_id, salon.salon_id);
     fetchDataSalon();
     handleCloseDelete();
     if (res?.data?.status && res.data.status === "success") {
@@ -223,6 +248,39 @@ export default function ManageCar() {
       toast.error("Xóa thông tin xe thất bại");
     }
   };
+  const handleChooseWarranty = (item) => {
+    console.log("item warranty : ", item)
+    setWarrantyId(item.warranty_id);
+  };
+  const handleUpdateWarranty = async () => {
+    let res = await warrantyApi.AddWarrantyToCar(
+      salon.salon_id,
+      warrantyId,
+      car.car_id
+    );
+    console.log("res update warranty : ", res)
+    if (res?.data?.status === "success") {
+      toast.success("Cập nhật gói bảo hiểm cho xe thành công");
+      handleCloseWarranty();
+      setWarrantyId("");
+      setCarWarranty("");
+    } else {
+      toast.error("Cập nhật gói bảo hiểm thất bại");
+    }
+  };
+  const HandleRemoveWarranty = async () =>{
+    let res = await warrantyApi.deleteWarranty(salon.salon_id, carWanrranty.warranty_id)
+    console.log("res delete warranty : ", res)
+    if (res?.data?.status === "success") {
+      toast.success("Xóa gói bảo hiểm cho xe thành công");
+      handleCloseWarranty();
+      setWarrantyId("");
+      setCarWarranty("");
+    } else {
+      toast.error("Xóa gói bảo hiểm thất bại");
+    }
+  }
+  console.log("warrantyId : ", warrantyId)
   return (
     <>
       <div id="content" className="container-fluid">
@@ -244,7 +302,7 @@ export default function ManageCar() {
                 <button className="btn btn-primary mx-2">Tìm kiếm</button>
               </div>
               {(permissions?.includes("OWNER") ||
-                permissions.includes("postCar")) && (
+                permissions.includes("C_CAR")) && (
                 <button className="btn btn-success" onClick={handleShowAdd}>
                   Thêm xe mới
                 </button>
@@ -286,7 +344,7 @@ export default function ManageCar() {
                           <i className="fa-solid fa-circle-question"></i>
                         </button>
                         {(permissions?.includes("OWNER") ||
-                          permissions.includes("patchCar")) && (
+                          permissions.includes("U_CAR")) && (
                           <button
                             className="btn btn-success btn-sm rounded-0 text-white mx-2"
                             data-toggle="tooltip"
@@ -298,7 +356,7 @@ export default function ManageCar() {
                           </button>
                         )}
                         {(permissions?.includes("OWNER") ||
-                          permissions.includes("deleteCar")) && (
+                          permissions.includes("D_CAR")) && (
                           <button
                             to="/"
                             className="btn btn-danger btn-sm rounded-0 text-white"
@@ -308,6 +366,18 @@ export default function ManageCar() {
                             onClick={() => handleShowDelete(car)}
                           >
                             <i className="fa fa-trash"></i>
+                          </button>
+                        )}
+                        {(permissions?.includes("OWNER") ||
+                          permissions.includes("U_CAR")) && (
+                          <button
+                            className="btn btn-success btn-sm rounded-0 text-white mx-2"
+                            data-toggle="tooltip"
+                            data-placement="top"
+                            title="Edit"
+                            onClick={() => handleShowWarranty(car)}
+                          >
+                            <i class="fa-solid fa-shield"></i>
                           </button>
                         )}
                       </td>
@@ -618,7 +688,6 @@ export default function ManageCar() {
           </Modal.Footer>
         </Form>
       </Modal>
-
       <Modal show={showAdd} onHide={handleCloseAdd}>
         <Form onSubmit={handleAddCar}>
           <Modal.Header closeButton>
@@ -797,6 +866,52 @@ export default function ManageCar() {
           </Button>
           <Button variant="primary" onClick={handleDelete}>
             Xóa
+          </Button>
+        </Modal.Footer>
+      </Modal>
+      <Modal show={showWarranty} onHide={handleCloseWarranty}>
+        <Modal.Header closeButton>
+          <Modal.Title>Cập nhật bảo hành cho xe</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form.Group className="mt-4">
+            <Button variant="danger" onClick={HandleRemoveWarranty}>Bỏ gói bảo hành</Button>
+          </Form.Group>
+
+          <Form.Group className="mt-4">
+            <Form.Label>Gói bảo hành hiện tại</Form.Label>
+            <Form.Control
+              required
+              type="text"
+              name="name"
+              onChange={onChange}
+              value={carWanrranty.name}
+            />
+          </Form.Group>
+          <Form.Group className="mt-4">
+            <Form.Label>Chọn Gói bảo hành</Form.Label>
+            <Form.Select aria-label="Default select example" onChange={(e)=>setWarrantyId(e.target.value)} value ={warrantyId}>
+              {warranties &&
+                warranties.length > 0 &&
+                warranties.map((item) => {
+                  return (
+                    <option
+                      value={item.warranty_id}
+                      onClick={() => handleChooseWarranty(item)}
+                    >
+                      {item.name}
+                    </option>
+                  );
+                })}
+            </Form.Select>
+          </Form.Group>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseWarranty}>
+            Đóng
+          </Button>
+          <Button variant="primary" onClick={handleUpdateWarranty}>
+            Cập nhật
           </Button>
         </Modal.Footer>
       </Modal>

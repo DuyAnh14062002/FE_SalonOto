@@ -1,0 +1,52 @@
+.maintenance-title {
+  background-color: #cf2e2e;
+  width: 200px;
+  height: 50px;
+  border-radius: 15px;
+  text-align: center;
+  line-height: 50px;
+  margin: 0 auto;
+  color: #fff;
+  font-size: 20px;
+}
+.listMaintenance-container {
+  width: 100%;
+  display: flex;
+  padding: 20px 200px;
+  flex-wrap: wrap;
+  .item-maintenance {
+    margin-top: 25px;
+    width: 23%;
+    min-height: 200px;
+    border: 1px solid red;
+    border-radius: 5px;
+    margin-left: 1%;
+    .top-content {
+      height: 100px;
+      background-color: #cf2e2e;
+      border-top-left-radius: 5px;
+      border-top-right-radius: 5px;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      .name-maintenance {
+        text-align: center;
+        font-weight: 500;
+        color: #f0e8e8;
+        font-size: 20px;
+      }
+      .price {
+        text-align: center;
+        font-weight: bold;
+        color: #fff;
+        font-size: 20px;
+      }
+    }
+    .maintenance-description {
+      padding: 10px;
+      color: red;
+    }
+  }
+}

@@ -125,7 +125,7 @@ export default function Appointment() {
                         <td>
                           <Link to={`/detail-car/${appointment.car_id}`}>
                             <img
-                              src={appointment.car.image}
+                              src={appointment.car.image[0]}
                               alt="image_car"
                               style={{ width: "100px" }}
                             />

@@ -4,16 +4,23 @@ import { path } from "../../../constants/path";
 import "./AdminSalonSidebar.scss";
 import purchaseApi from "../../../apis/purchase.api";
 import userApi from "../../../apis/user.api";
+import { useDispatch, useSelector } from "react-redux";
+import { setSubMenu } from "../../../redux/slices/SalonSlice";
+
 export default function AdminSalonSidebar(props) {
   const [listKeyMap, setlistKeyMap] = useState([]);
-  const [permissions, setPermission] = useState([])
+  const [permissions, setPermission] = useState([]);
+  const submenuTran = useSelector(
+    (state) => state?.salonSlice?.subMenuTran
+  );
+  let dispatch = useDispatch()
 
   const loadingUser = async () => {
-     let res = await userApi.getProfile()
-     if(res?.data?.profile?.permissions){
-      setPermission(res.data.profile.permissions)
-     }
-  }
+    let res = await userApi.getProfile();
+    if (res?.data?.profile?.permissions) {
+      setPermission(res.data.profile.permissions);
+    }
+  };
   const removeDuplicate = (data) => {
     return data.filter((value, index) => data.indexOf(value) === index);
   };
@@ -36,9 +43,11 @@ export default function AdminSalonSidebar(props) {
       }
     };
     loading();
-    loadingUser()
+    loadingUser();
   }, []);
-
+  const handleShowSubMenu = () =>{
+    dispatch(setSubMenu())
+  }
   return (
     <div id="page-body" className="d-flex">
       <div id="sidebar">
@@ -54,7 +63,11 @@ export default function AdminSalonSidebar(props) {
           {listKeyMap &&
             listKeyMap.length > 0 &&
             listKeyMap.map((keyMap) => {
-              if (keyMap === "f1" && permissions && (permissions[0] === "OWNER" || permissions?.includes("getSalon"))) {
+              if (
+                keyMap === "f1" &&
+                permissions &&
+                (permissions[0] === "OWNER" || permissions?.includes("R_SL"))
+              ) {
                 return (
                   <li key={keyMap} className="nav-link">
                     <Link
@@ -69,7 +82,11 @@ export default function AdminSalonSidebar(props) {
                   </li>
                 );
               }
-              if (keyMap === "f2" && permissions && (permissions[0] === "OWNER" || permissions?.includes("getCar"))) {
+              if (
+                keyMap === "f2" &&
+                permissions &&
+                (permissions[0] === "OWNER" || permissions?.includes("R_CAR"))
+              ) {
                 return (
                   <li key={keyMap} className="nav-link">
                     <Link to={path.manageCar} className="text-decoration-none ">
@@ -81,10 +98,17 @@ export default function AdminSalonSidebar(props) {
                   </li>
                 );
               }
-              if (keyMap === "f3" && permissions && permissions[0] === "OWNER") {
+              if (
+                keyMap === "f3" &&
+                permissions &&
+                permissions[0] === "OWNER"
+              ) {
                 return (
                   <li className="nav-link">
-                    <Link to={path.manageUser} className="text-decoration-none ">
+                    <Link
+                      to={path.manageUser}
+                      className="text-decoration-none "
+                    >
                       <div className="nav-link-icon d-inline-flex mx-2">
                         <i className="far fa-folder"></i>
                       </div>
@@ -93,10 +117,17 @@ export default function AdminSalonSidebar(props) {
                   </li>
                 );
               }
-              if (keyMap === "f4" && permissions && (permissions[0] === "OWNER" || permissions?.includes("getCalender"))) {
+              if (
+                keyMap === "f4" &&
+                permissions &&
+                (permissions[0] === "OWNER" || permissions?.includes("R_APM"))
+              ) {
                 return (
                   <li className="nav-link">
-                    <Link to={path.appointmentSalon} className="text-decoration-none ">
+                    <Link
+                      to={path.appointmentSalon}
+                      className="text-decoration-none "
+                    >
                       <div className="nav-link-icon d-inline-flex mx-2">
                         <i className="far fa-folder"></i>
                       </div>
@@ -105,10 +136,17 @@ export default function AdminSalonSidebar(props) {
                   </li>
                 );
               }
-              if (keyMap === "f5" && permissions && (permissions[0] === "OWNER" || permissions?.includes("getCalender"))) {
+              if (
+                keyMap === "f5" &&
+                permissions &&
+                (permissions[0] === "OWNER" || permissions?.includes("R_WRT"))
+              ) {
                 return (
                   <li className="nav-link">
-                    <Link to={path.manageGuarantee} className="text-decoration-none ">
+                    <Link
+                      to={path.manageGuarantee}
+                      className="text-decoration-none "
+                    >
                       <div className="nav-link-icon d-inline-flex mx-2">
                         <i className="far fa-folder"></i>
                       </div>
@@ -117,14 +155,84 @@ export default function AdminSalonSidebar(props) {
                   </li>
                 );
               }
-              if (keyMap === "f6" && permissions && (permissions[0] === "OWNER" || permissions?.includes("getCalender"))) {
+              if (
+                keyMap === "f6" &&
+                permissions &&
+                (permissions[0] === "OWNER" || permissions?.includes("R_MT"))
+              ) {
                 return (
                   <li className="nav-link">
-                    <Link to={path.manageMaintenance} className="text-decoration-none ">
+                    <Link
+                      to={path.manageMaintenance}
+                      className="text-decoration-none "
+                    >
                       <div className="nav-link-icon d-inline-flex mx-2">
                         <i className="far fa-folder"></i>
                       </div>
                       Quản lý bảo dưỡng
+                    </Link>
+                  </li>
+                );
+              }
+              if (
+                keyMap === "f7" &&
+                permissions &&
+                (permissions[0] === "OWNER" || permissions?.includes("R_TR"))
+              ) {
+                return (
+                  <li className="nav-link">
+                    <Link
+                     to={path.manageBuyCar}
+                      className="text-decoration-none "
+                      onClick={handleShowSubMenu}
+                    >
+                      <div className="nav-link-icon d-inline-flex mx-2">
+                        <i className="far fa-folder"></i>
+                      </div>
+                      Quản lý giao dịch
+                    </Link>
+                    {submenuTran === true && <ul className="sub-menu-transaction">
+                      <li>
+                        <Link
+                          to={path.manageBuyCar}
+                          className="text-decoration-none "
+                        >
+                          <div className="nav-link-icon d-inline-flex mx-2">
+                            <i className="far fa-folder"></i>
+                          </div>
+                          Giao dịch mua xe
+                        </Link>
+                      </li>
+                      <li>
+                        <Link
+                          to={path.manageBuyMaintenance}
+                          className="text-decoration-none "
+                        >
+                          <div className="nav-link-icon d-inline-flex mx-2">
+                            <i className="far fa-folder"></i>
+                          </div>
+                          Giao dịch bảo dưỡng
+                        </Link>
+                      </li>
+                    </ul>}
+                  </li>
+                );
+              }
+              if (
+                keyMap === "f8" &&
+                permissions &&
+                (permissions[0] === "OWNER" || permissions?.includes("R_AC"))
+              ) {
+                return (
+                  <li className="nav-link">
+                    <Link
+                      to={path.manageAccessory}
+                      className="text-decoration-none "
+                    >
+                      <div className="nav-link-icon d-inline-flex mx-2">
+                        <i className="far fa-folder"></i>
+                      </div>
+                      Quản lý phụ tùng
                     </Link>
                   </li>
                 );

@@ -14,6 +14,10 @@ export const path = {
   managePackage: "/admin/manage-package",
   manageFeature: "/admin/manage-feature",
   listSalon: "/listSalon",
+  news: "/news",
+  detailNew: "/detailNew/:id",
+  historyTransaction: "/historyTransaction",
+  //================SALON============================
   salonOto: "/salonOto/:id",
   DetailCar: "/detail-car/:id",
   DetailPackage: "/detail-package/:id",
@@ -24,7 +28,7 @@ export const path = {
   notificationDetailSalon: "/notification-salon/:id",
   notificationDetailUser: "/notification-user/:id",
   room: "/room/:roomId",
-
+  listMaintenance: "/listMaintenance",
   //========ADMIN SALON PATH=====================
   adminSalon: "/adminSalon",
   manageCar: "/adminSalon/manageCar",
@@ -32,6 +36,10 @@ export const path = {
   manageUser: "/adminSalon/manageUser",
   manageGuarantee: "/adminSalon/manageGuarantee",
   manageMaintenance: "/adminSalon/manageMaintenance",
+  manageTransaction: "/adminSalon/manageTransaction",
+  manageBuyCar: "adminSalon/manageBuyCar",
+  manageBuyMaintenance: "adminSalon/manageBuyMaintenance",
+  manageAccessory: "adminSalon/manageAccessory",
   //============PAYMENT =========================
   getResultPayment: "/payment/vnpay",
 
