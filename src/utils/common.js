@@ -4,6 +4,7 @@ export const formatCurrency = (number) => {
     currency: "VND",
   }).format(number);
 };
+
 export const formatDate = (date) => {
   const day = date.getDate();
   const month = date.getMonth() + 1;

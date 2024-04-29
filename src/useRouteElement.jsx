@@ -25,7 +25,6 @@ import AdminSalonLayout from "./pages/AdminSalon/AdminSalonLayout/AdminSalonLayo
 import ResultPayment from "./pages/ResultPayment";
 import Contact from "./pages/SalonOto/Contact";
 import Message from "./components/Message";
-import { SocketContext } from "./context/SocketContext";
 import ManageUser from "./pages/AdminSalon/ManageUser";
 import Booking from "./pages/SalonOto/Booking";
 import Appointment from "./pages/Appointment";
@@ -33,6 +32,7 @@ import AppointmentSalon from "./pages/AdminSalon/AppointmentSalon";
 import NotificationDetailSalon from "./pages/SalonOto/NotificationDetailSalon";
 import NotificationDetailUser from "./pages/NotificationDetailUser/";
 import Room from "./pages/Room";
+import Statistic from "./pages/AdminSalon/Statistic";
 function ProtectedRoute() {
   const isAuthenticated = useSelector(
     (state) => state.userSlice.isAuthenticated
@@ -63,7 +63,7 @@ const router = createBrowserRouter([
       {
         path: path.login,
         element: <Login />,
-      }
+      },
     ],
   },
   {
@@ -142,6 +142,10 @@ const router = createBrowserRouter([
     element: <AdminSalonLayout />,
     children: [
       {
+        path: "",
+        element: <Statistic />,
+      },
+      {
         path: path.manageSalon,
         element: <ManageSalon />,
       },
@@ -151,11 +155,15 @@ const router = createBrowserRouter([
       },
       {
         path: path.manageUser,
-        element: <ManageUser/>
+        element: <ManageUser />,
       },
       {
         path: path.appointmentSalon,
         element: <AppointmentSalon />,
+      },
+      {
+        path: path.statistic,
+        element: <Statistic />,
       },
     ],
   },
@@ -206,10 +214,9 @@ const router = createBrowserRouter([
   },
   {
     path: path.message,
-    element:<Message/>
-  },{
-
-  }
+    element: <Message />,
+  },
+  {},
 ]);
 
 export default router;

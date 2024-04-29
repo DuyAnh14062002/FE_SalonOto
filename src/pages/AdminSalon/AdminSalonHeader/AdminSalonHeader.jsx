@@ -159,7 +159,7 @@ export default function AdminSalonHeader() {
               data-bs-toggle="dropdown"
             >
               <i className="fa-solid fa-user mx-2"></i>
-              <span>{userInfo.fullname}</span>
+              <span>{userInfo?.fullname}</span>
             </button>
             <div className="dropdown-menu dropdown-menu-right">
               <Link className="dropdown-item" to="/">

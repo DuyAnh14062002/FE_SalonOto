@@ -191,7 +191,8 @@ export default function Header(props) {
                 formatTimeDifference(timeDifference);
               return (
                 <button key={notification.id} className="notify p-2">
-                  {notification.types === "appointment" && (
+                  {(notification.types === "appointment" ||
+                    notification.types === "permission") && (
                     <div className="d-flex align-items-center">
                       <img
                         src={

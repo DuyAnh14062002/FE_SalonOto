@@ -58,7 +58,7 @@ class Http {
           const config = error?.response?.config;
           const { url } = config;
 
-          if (url !== "/auth/refresh") {
+          if (url !== "/auth/refresh" && !this.refreshTokenRequest) {
             this.refreshTokenRequest = this.refreshTokenRequest
               ? this.refreshTokenRequest
               : this.handleRefreshToken().finally(() => {
