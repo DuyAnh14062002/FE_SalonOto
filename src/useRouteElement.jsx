@@ -35,6 +35,9 @@ import Room from "./pages/Room";
 import Statistic from "./pages/AdminSalon/Statistic";
 import ManageMaintenance from "./pages/AdminSalon/ManageMaintenance";
 import ManageGuarantee from "./pages/AdminSalon/ManageGuarantee";
+import ProcessForm from "./pages/ProcessForm";
+import ManageProcess from "./pages/AdminSalon/ManageProcess";
+import ManageStage from "./pages/AdminSalon/ManageStage";
 function ProtectedRoute() {
   const isAuthenticated = useSelector(
     (state) => state.userSlice.isAuthenticated
@@ -175,7 +178,19 @@ const router = createBrowserRouter([
         path: path.manageGuarantee,
         element: <ManageGuarantee />,
       },
+      {
+        path: path.manageProcess,
+        element: <ManageProcess />,
+      },
+      {
+        path: path.manageStage,
+        element: <ManageStage />,
+      },
     ],
+  },
+  {
+    path: path.processForm,
+    element: <ProcessForm />,
   },
   {
     path: path.booking,

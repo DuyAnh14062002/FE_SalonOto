@@ -24,6 +24,7 @@ export const path = {
   notificationDetailSalon: "/notification-salon/:id",
   notificationDetailUser: "/notification-user/:id",
   room: "/room/:roomId",
+  processForm: "/processForm",
 
   //========ADMIN SALON PATH=====================
   adminSalon: "/adminSalon",
@@ -33,6 +34,8 @@ export const path = {
   statistic: "/adminSalon/statistic",
   manageGuarantee: "/adminSalon/manageGuarantee",
   manageMaintenance: "/adminSalon/manageMaintenance",
+  manageProcess: "/adminSalon/manageProcess",
+  manageStage: "/adminSalon/manageStage",
   //============PAYMENT =========================
   getResultPayment: "/payment/vnpay",
 

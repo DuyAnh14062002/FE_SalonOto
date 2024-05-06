@@ -6,14 +6,14 @@ import purchaseApi from "../../../apis/purchase.api";
 import userApi from "../../../apis/user.api";
 export default function AdminSalonSidebar(props) {
   const [listKeyMap, setlistKeyMap] = useState([]);
-  const [permissions, setPermission] = useState([])
+  const [permissions, setPermission] = useState([]);
 
   const loadingUser = async () => {
-     let res = await userApi.getProfile()
-     if(res?.data?.profile?.permissions){
-      setPermission(res.data.profile.permissions)
-     }
-  }
+    let res = await userApi.getProfile();
+    if (res?.data?.profile?.permissions) {
+      setPermission(res.data.profile.permissions);
+    }
+  };
   const removeDuplicate = (data) => {
     return data.filter((value, index) => data.indexOf(value) === index);
   };
@@ -36,7 +36,7 @@ export default function AdminSalonSidebar(props) {
       }
     };
     loading();
-    loadingUser()
+    loadingUser();
   }, []);
 
   return (
@@ -54,7 +54,12 @@ export default function AdminSalonSidebar(props) {
           {listKeyMap &&
             listKeyMap.length > 0 &&
             listKeyMap.map((keyMap) => {
-              if (keyMap === "f1" && permissions && (permissions[0] === "OWNER" || permissions?.includes("getSalon"))) {
+              if (
+                keyMap === "f1" &&
+                permissions &&
+                (permissions[0] === "OWNER" ||
+                  permissions?.includes("getSalon"))
+              ) {
                 return (
                   <li key={keyMap} className="nav-link">
                     <Link
@@ -69,7 +74,11 @@ export default function AdminSalonSidebar(props) {
                   </li>
                 );
               }
-              if (keyMap === "f2" && permissions && (permissions[0] === "OWNER" || permissions?.includes("getCar"))) {
+              if (
+                keyMap === "f2" &&
+                permissions &&
+                (permissions[0] === "OWNER" || permissions?.includes("getCar"))
+              ) {
                 return (
                   <li key={keyMap} className="nav-link">
                     <Link to={path.manageCar} className="text-decoration-none ">
@@ -81,7 +90,11 @@ export default function AdminSalonSidebar(props) {
                   </li>
                 );
               }
-              if (keyMap === "f3" && permissions && permissions[0] === "OWNER") {
+              if (
+                keyMap === "f3" &&
+                permissions &&
+                permissions[0] === "OWNER"
+              ) {
                 return (
                   <li className="nav-link">
                     <Link
@@ -96,10 +109,18 @@ export default function AdminSalonSidebar(props) {
                   </li>
                 );
               }
-              if (keyMap === "f4" && permissions && (permissions[0] === "OWNER" || permissions?.includes("getCalender"))) {
+              if (
+                keyMap === "f4" &&
+                permissions &&
+                (permissions[0] === "OWNER" ||
+                  permissions?.includes("getCalender"))
+              ) {
                 return (
                   <li className="nav-link">
-                    <Link to={path.appointmentSalon} className="text-decoration-none ">
+                    <Link
+                      to={path.appointmentSalon}
+                      className="text-decoration-none "
+                    >
                       <div className="nav-link-icon d-inline-flex mx-2">
                         <i className="far fa-folder"></i>
                       </div>
@@ -108,10 +129,18 @@ export default function AdminSalonSidebar(props) {
                   </li>
                 );
               }
-              if (keyMap === "f5" && permissions && (permissions[0] === "OWNER" || permissions?.includes("getCalender"))) {
+              if (
+                keyMap === "f5" &&
+                permissions &&
+                (permissions[0] === "OWNER" ||
+                  permissions?.includes("getCalender"))
+              ) {
                 return (
                   <li className="nav-link">
-                    <Link to={path.manageGuarantee} className="text-decoration-none ">
+                    <Link
+                      to={path.manageGuarantee}
+                      className="text-decoration-none "
+                    >
                       <div className="nav-link-icon d-inline-flex mx-2">
                         <i className="far fa-folder"></i>
                       </div>
@@ -120,10 +149,18 @@ export default function AdminSalonSidebar(props) {
                   </li>
                 );
               }
-              if (keyMap === "f6" && permissions && (permissions[0] === "OWNER" || permissions?.includes("getCalender"))) {
+              if (
+                keyMap === "f6" &&
+                permissions &&
+                (permissions[0] === "OWNER" ||
+                  permissions?.includes("getCalender"))
+              ) {
                 return (
                   <li className="nav-link">
-                    <Link to={path.manageMaintenance} className="text-decoration-none ">
+                    <Link
+                      to={path.manageMaintenance}
+                      className="text-decoration-none "
+                    >
                       <div className="nav-link-icon d-inline-flex mx-2">
                         <i className="far fa-folder"></i>
                       </div>
@@ -133,6 +170,22 @@ export default function AdminSalonSidebar(props) {
                 );
               }
             })}
+          <li className="nav-link">
+            <Link to={path.manageProcess} className="text-decoration-none ">
+              <div className="nav-link-icon d-inline-flex mx-2">
+                <i className="far fa-folder"></i>
+              </div>
+              Quản lý quy trình
+            </Link>
+          </li>
+          <li className="nav-link">
+            <Link to={path.manageStage} className="text-decoration-none ">
+              <div className="nav-link-icon d-inline-flex mx-2">
+                <i className="far fa-folder"></i>
+              </div>
+              Quản lý giai đoạn
+            </Link>
+          </li>
           <li className="nav-link">
             <Link to="/" className="text-decoration-none ">
               <div className="nav-link-icon d-inline-flex mx-2">
