@@ -25,7 +25,6 @@ import AdminSalonLayout from "./pages/AdminSalon/AdminSalonLayout/AdminSalonLayo
 import ResultPayment from "./pages/ResultPayment";
 import Contact from "./pages/SalonOto/Contact";
 import Message from "./components/Message";
-import { SocketContext } from "./context/SocketContext";
 import ManageUser from "./pages/AdminSalon/ManageUser";
 import Booking from "./pages/SalonOto/Booking";
 import Appointment from "./pages/Appointment";
@@ -33,6 +32,7 @@ import AppointmentSalon from "./pages/AdminSalon/AppointmentSalon";
 import NotificationDetailSalon from "./pages/SalonOto/NotificationDetailSalon";
 import NotificationDetailUser from "./pages/NotificationDetailUser/";
 import Room from "./pages/Room";
+import Statistic from "./pages/AdminSalon/Statistic";
 import ManageMaintenance from "./pages/AdminSalon/ManageMaintenance";
 import ManageGuarantee from "./pages/AdminSalon/ManageGuarantee";
 import News from "./pages/News"
@@ -43,6 +43,9 @@ import ManageBuyCar from "./pages/AdminSalon/ManageBuyCar";
 import ManageBuyMaintenance from "./pages/AdminSalon/ManageBuyMaintenance";
 import ManageAccessory from "./pages/AdminSalon/ManageAccessory";
 import HistoryTransaction from "./components/HistoryTransaction/HistoryTransaction";
+import CarPost from "./components/CarPost";
+import PostSellCar from "./components/PostSellCar";
+import CarPostDetail from "./components/CarPostDetail";
 function ProtectedRoute() {
   const isAuthenticated = useSelector(
     (state) => state.userSlice.isAuthenticated
@@ -73,7 +76,7 @@ const router = createBrowserRouter([
       {
         path: path.login,
         element: <Login />,
-      }
+      },
     ],
   },
   {
@@ -152,6 +155,10 @@ const router = createBrowserRouter([
     element: <AdminSalonLayout />,
     children: [
       {
+        path: "",
+        element: <Statistic />,
+      },
+      {
         path: path.manageSalon,
         element: <ManageSalon />,
       },
@@ -161,15 +168,19 @@ const router = createBrowserRouter([
       },
       {
         path: path.manageUser,
-        element: <ManageUser/>
+        element: <ManageUser />,
       },
       {
         path: path.appointmentSalon,
         element: <AppointmentSalon />,
       },
       {
+        path: path.statistic,
+        element: <Statistic />,
+      },
+      {
         path: path.manageMaintenance,
-        element: <ManageMaintenance/>
+        element: <ManageMaintenance />,
       },
       {
         path: path.manageGuarantee,
@@ -256,6 +267,19 @@ const router = createBrowserRouter([
   {
     path: path.historyTransaction,
     element: <HistoryTransaction/>
+  },
+  {
+    path: path.postCar,
+    element: <CarPost/>
+  },
+  {
+    path: path.postSellCar,
+    element: <PostSellCar/>
+  }
+  ,
+  {
+    path: path.carPostDetail,
+    element: <CarPostDetail/>
   }
 ]);
 

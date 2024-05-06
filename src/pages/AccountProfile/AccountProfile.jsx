@@ -163,6 +163,9 @@ const AccountProfile = (props) => {
   const handleShowHistory = () => {
     navigate(`${path.historyTransaction}`)
   }
+  const handleShowPostSell = () =>{
+    navigate(`${path.postSellCar}`)
+  }
   return (
     <>
       <Header otherPage={true} />
@@ -359,7 +362,17 @@ const AccountProfile = (props) => {
                             onClick={handleShowHistory}
                             style={{backgroundColor: "#883342", marginLeft: "10px", border: "none"}}
                           >
+                            <i class="fa-solid fa-clock-rotate-left" style={{marginRight : "5px"}}></i>
                             Xem lịch sử giao dịch
+                          </Button>
+                          <Button
+                            className="mt-3 btn-profile"
+                            type="button"
+                            onClick={handleShowPostSell}
+                            style={{backgroundColor: "#fd720d;", marginLeft: "10px", border: "none"}}
+                          >
+                            <i class="fa-solid fa-pen-to-square" style={{marginRight : "5px"}}></i> 
+                            Đăng bài bán xe
                           </Button>
                         </div>
                       </div>
@@ -429,7 +442,7 @@ const AccountProfile = (props) => {
             </Modal.Footer>
           </Form>
         </Modal>
-        
+
       </section>
     </>
   );

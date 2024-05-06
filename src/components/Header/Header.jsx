@@ -238,7 +238,8 @@ export default function Header(props) {
                 formatTimeDifference(timeDifference);
               return (
                 <button key={notification.id} className="notify p-2">
-                  {notification.types === "appointment" && (
+                  {(notification.types === "appointment" ||
+                    notification.types === "permission") && (
                     <div className="d-flex align-items-center">
                       <img
                         src={
@@ -414,7 +415,7 @@ export default function Header(props) {
           <Link to="/listSalon">Salon Oto</Link>
         </li>
         <li className="link">
-          <Link to="/">Liên hệ</Link>
+          <Link to={path.postCar}>Bài đăng</Link>
         </li>
         <li className="link">
           <Link to={path.news}>Tin tức</Link>
@@ -534,7 +535,7 @@ export default function Header(props) {
           <Link to="/listSalon">Salon Oto</Link>
         </li>
         <li className="link">
-          <Link to="/">Liên hệ</Link>
+          <Link to={path.postCar}>Bài đăng</Link>
         </li>
         <li className="link">
           <Link to={path.news}>Tin tức</Link>

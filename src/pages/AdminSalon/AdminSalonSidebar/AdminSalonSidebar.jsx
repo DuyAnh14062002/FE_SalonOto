@@ -52,14 +52,14 @@ export default function AdminSalonSidebar(props) {
     <div id="page-body" className="d-flex">
       <div id="sidebar">
         <ul id="sidebar-menu">
-          {/* <li className="nav-link">
-          <Link to="/admin" className="text-decoration-none">
-            <div className="nav-link-icon d-inline-flex mx-2">
-              <i className="far fa-folder"></i>
-            </div>
-            Dashboard
-          </Link>
-        </li> */}
+          <li className="nav-link">
+            <Link to="/adminSalon/statistic" className="text-decoration-none">
+              <div className="nav-link-icon d-inline-flex mx-2">
+                <i className="far fa-folder"></i>
+              </div>
+              Thống kê
+            </Link>
+          </li>
           {listKeyMap &&
             listKeyMap.length > 0 &&
             listKeyMap.map((keyMap) => {

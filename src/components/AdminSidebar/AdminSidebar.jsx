@@ -12,7 +12,7 @@ export default function AdminSidebar() {
               <div className="nav-link-icon d-inline-flex mx-2">
                 <i className="far fa-folder"></i>
               </div>
-              Dashboard
+              Thống kê
             </Link>
           </li>
           <li className="nav-link">

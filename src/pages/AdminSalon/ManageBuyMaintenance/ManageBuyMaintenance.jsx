@@ -207,7 +207,7 @@ export default function ManageBuyMaintenance() {
     );
     if (res?.data?.status === "success") {
       toast.success("Cập nhật giao dịch bảo dưỡng thành công");
-      handleCloseAdd();
+      handleCloseUpdate();
       setMaintenanceItem({});
       loadingInvoice();
     } else {

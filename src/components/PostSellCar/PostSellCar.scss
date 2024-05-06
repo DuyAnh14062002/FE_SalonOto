@@ -1,0 +1,210 @@
+.body-post-sell {
+  width: 100%;
+  min-height: 100vh;
+  background-color: rgb(246, 243, 243);
+  padding-top: 40px;
+  .post-sell-container {
+    max-width: 1000px;
+    background-color: white;
+    margin: 0 auto;
+    min-height: 100vh;
+    display: flex;
+    padding: 20px 5px 5px 5px;
+    .left-post-sell {
+      width: 72%;
+      .title {
+        font-weight: 700;
+        color: #222;
+        font-size: 16px;
+        margin-bottom: 10px;
+      }
+      .image-post-sell {
+        background-color: #f4f4f4;
+        border-radius: 4px;
+        height: 288px;
+        border: 2px dotted #fe9900;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        cursor: pointer;
+        input {
+          background-color: red;
+          width: 100%;
+          display: none;
+          height: 100%;
+        }
+        i {
+          font-size: 58px;
+          color: #f80;
+        }
+        label {
+          font-size: 14px;
+          color: #8c8c8c;
+        }
+      }
+    }
+    .right-post-sell {
+      margin-left: 20px;
+    }
+    .gear-infor {
+      .gear-title {
+        margin-bottom: 8px;
+        margin-top: 12px;
+        font-size: 14px;
+        color: #8c8c8c;
+        font-weight: 700;
+        margin-bottom: 10px;
+      }
+      .gear-name {
+        border-radius: 15px;
+        padding: 4px 12px;
+        outline: none;
+        border: none;
+        margin-right: 8px;
+        margin-bottom: 8px;
+        &:hover {
+          background-color: #ffe9c2;
+          color: #f80;
+        }
+        &.active {
+          background-color: #ffe9c2;
+          color: #f80;
+        }
+      }
+    }
+    .fuel-infor {
+      .fuel-title {
+        margin-bottom: 8px;
+        font-size: 14px;
+        color: #8c8c8c;
+        font-weight: 700;
+        margin-bottom: 10px;
+      }
+      .fuel-name {
+        border-radius: 15px;
+        padding: 4px 12px;
+        outline: none;
+        border: none;
+        margin-right: 8px;
+        margin-bottom: 8px;
+        &:hover {
+          background-color: #ffe9c2;
+          color: #f80;
+        }
+        &.active {
+          background-color: #ffe9c2;
+          color: #f80;
+        }
+      }
+    }
+    .right-post-sell {
+      .title {
+        font-weight: 700;
+        color: #222;
+        font-size: 16px;
+        margin-bottom: 10px;
+      }
+      .car-detail-input {
+        padding: 12px 14px;
+        border: 1px solid gray;
+        background-color: white;
+        border-radius: 4px;
+        width: 96%;
+        margin: 10px 0;
+      }
+      .infor-post-sell-2 {
+        margin-top: 12px;
+        display: flex;
+        input {
+          width: 92% !important;
+        }
+      }
+    }
+    .is-accessory {
+      margin: 10px 0;
+      span {
+        font-size: 14px;
+        color: #8c8c8c;
+        font-weight: 700;
+        margin-bottom: 10px;
+        display: inline-block;
+      }
+      button {
+        border-radius: 15px;
+        padding: 4px 12px;
+        outline: none;
+        border: none;
+        margin-right: 8px;
+        margin-bottom: 8px;
+        &:hover {
+          background-color: #ffe9c2;
+          color: #f80;
+        }
+        &.active {
+          background-color: #ffe9c2;
+          color: #f80;
+        }
+      }
+    }
+    .is-regis {
+      margin: 10px 0;
+      span {
+        font-size: 14px;
+        color: #8c8c8c;
+        font-weight: 700;
+        margin-bottom: 10px;
+        display: inline-block;
+      }
+      button {
+        border-radius: 15px;
+        padding: 4px 12px;
+        outline: none;
+        border: none;
+        margin-right: 8px;
+        margin-bottom: 8px;
+        &:hover {
+          background-color: #ffe9c2;
+          color: #f80;
+        }
+        &.active {
+          background-color: #ffe9c2;
+          color: #f80;
+        }
+      }
+    }
+    .title-and-description {
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: #222;
+    }
+    textarea {
+      margin-top: 12px;
+      padding: 12px;
+    }
+    .user-infor {
+      margin-top: 10px;
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: #222;
+    }
+    .btn-post-sell-car {
+      color: #fff;
+      background-color: #f80;
+      border-color: #f80;
+      width: 100%;
+      font-size: 1rem;
+      line-height: 1.25;
+      padding: 9px 19px;
+      border-radius: 4px;
+      font-weight: 400;
+      border: none;
+      text-transform: uppercase;
+      margin: 15px 0;
+      &:hover {
+        background-color: rgb(255, 176, 87);
+        transition: 0.1s;
+      }
+    }
+  }
+}

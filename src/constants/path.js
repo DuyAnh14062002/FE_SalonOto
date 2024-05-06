@@ -17,6 +17,9 @@ export const path = {
   news: "/news",
   detailNew: "/detailNew/:id",
   historyTransaction: "/historyTransaction",
+  postCar: "/postCar",
+  postSellCar: "/postSellCar",
+  carPostDetail: "/CarPostDetail/:id",
   //================SALON============================
   salonOto: "/salonOto/:id",
   DetailCar: "/detail-car/:id",
@@ -34,6 +37,7 @@ export const path = {
   manageCar: "/adminSalon/manageCar",
   manageSalon: "/adminSalon/manageSalon",
   manageUser: "/adminSalon/manageUser",
+  statistic: "/adminSalon/statistic",
   manageGuarantee: "/adminSalon/manageGuarantee",
   manageMaintenance: "/adminSalon/manageMaintenance",
   manageTransaction: "/adminSalon/manageTransaction",

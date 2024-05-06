@@ -27,7 +27,12 @@ const salonApi = {
   checkOwnSalon() {
     return http.get("/salons/salonId");
   },
-  
+  getStatistic(body) {
+    return http.post("/invoice/statistics", body);
+  },
+  getTop(body) {
+    return http.post("/invoice/get-top", body);
+  },
 };
 
 export default salonApi;
