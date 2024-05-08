@@ -135,15 +135,15 @@ export default function Statistic() {
   };
 
   const topAccessoryData = {
-    labels: topBestSelling?.accessoriesTop
+    labels: topBestSelling.accessoriesTop
       ?.slice(0, 10)
       ?.map((accessory) => accessory?.name?.name),
     datasets: [
       {
         label: "Số lượng phụ kiện",
-        data: topBestSelling?.accessoriesTop
+        data: topBestSelling.accessoriesTop
           ?.slice(0, 10)
-          ?.map((accessory) => accessory.quantitySold),
+          ?.map((accessory) => accessory?.quantitySold),
         backgroundColor: "rgba(75, 192, 192, 0.6)",
         borderColor: "rgba(75, 192, 192, 1)",
         borderWidth: 1,
@@ -337,13 +337,9 @@ export default function Statistic() {
                 </h2>
                 <Bar
                   data={topAccessoryData}
+                  type="bar"
                   options={{
                     indexAxis: "y",
-                    scales: {
-                      x: {
-                        beginAtZero: true,
-                      },
-                    },
                   }}
                 />
               </div>

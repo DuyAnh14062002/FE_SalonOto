@@ -32,6 +32,7 @@ export const path = {
   notificationDetailUser: "/notification-user/:id",
   room: "/room/:roomId",
   listMaintenance: "/listMaintenance",
+
   //========ADMIN SALON PATH=====================
   adminSalon: "/adminSalon",
   manageCar: "/adminSalon/manageCar",
@@ -41,9 +42,12 @@ export const path = {
   manageGuarantee: "/adminSalon/manageGuarantee",
   manageMaintenance: "/adminSalon/manageMaintenance",
   manageTransaction: "/adminSalon/manageTransaction",
-  manageBuyCar: "adminSalon/manageBuyCar",
-  manageBuyMaintenance: "adminSalon/manageBuyMaintenance",
-  manageAccessory: "adminSalon/manageAccessory",
+  manageBuyCar: "/adminSalon/manageBuyCar",
+  manageBuyMaintenance: "/adminSalon/manageBuyMaintenance",
+  manageAccessory: "/adminSalon/manageAccessory",
+  manageProcess: "/adminSalon/manageProcess",
+  manageStage: "/adminSalon/manageStage",
+  processForm: "/adminSalon/processForm",
   //============PAYMENT =========================
   getResultPayment: "/payment/vnpay",
 

@@ -35,6 +35,9 @@ import Room from "./pages/Room";
 import Statistic from "./pages/AdminSalon/Statistic";
 import ManageMaintenance from "./pages/AdminSalon/ManageMaintenance";
 import ManageGuarantee from "./pages/AdminSalon/ManageGuarantee";
+import ProcessForm from "./pages/ProcessForm";
+import ManageProcess from "./pages/AdminSalon/ManageProcess";
+import ManageStage from "./pages/AdminSalon/ManageStage";
 import News from "./pages/News"
 import DetailNews from "./pages/DetailNews";
 import ManageTransaction from "./pages/AdminSalon/ManageTransaction";
@@ -201,7 +204,19 @@ const router = createBrowserRouter([
       {
         path: path.manageAccessory,
         element: <ManageAccessory/>
-      }
+      },
+      {
+        path: path.manageProcess,
+        element: <ManageProcess />,
+      },
+      {
+        path: path.manageStage,
+        element: <ManageStage />,
+      },
+      {
+        path: path.processForm,
+        element: <ProcessForm />,
+      },
     ],
   },
   {

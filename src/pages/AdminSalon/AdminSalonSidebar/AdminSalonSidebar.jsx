@@ -44,6 +44,7 @@ export default function AdminSalonSidebar(props) {
     };
     loading();
     loadingUser();
+    loadingUser();
   }, []);
   const handleShowSubMenu = () =>{
     dispatch(setSubMenu())
@@ -238,6 +239,22 @@ export default function AdminSalonSidebar(props) {
                 );
               }
             })}
+             <li className="nav-link">
+            <Link to={path.manageProcess} className="text-decoration-none ">
+              <div className="nav-link-icon d-inline-flex mx-2">
+                <i className="far fa-folder"></i>
+              </div>
+              Quản lý quy trình
+            </Link>
+          </li>
+          <li className="nav-link">
+            <Link to={path.manageStage} className="text-decoration-none ">
+              <div className="nav-link-icon d-inline-flex mx-2">
+                <i className="far fa-folder"></i>
+              </div>
+              Quản lý giai đoạn
+            </Link>
+          </li>
           <li className="nav-link">
             <Link to="/" className="text-decoration-none ">
               <div className="nav-link-icon d-inline-flex mx-2">
