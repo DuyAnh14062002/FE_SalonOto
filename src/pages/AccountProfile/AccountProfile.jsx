@@ -372,7 +372,7 @@ const AccountProfile = (props) => {
                             style={{backgroundColor: "#fd720d;", marginLeft: "10px", border: "none"}}
                           >
                             <i class="fa-solid fa-pen-to-square" style={{marginRight : "5px"}}></i> 
-                            Đăng bài bán xe
+                            Giới thiệu bán xe cho Salon
                           </Button>
                         </div>
                       </div>

@@ -80,7 +80,12 @@ export default function CarPostDetail() {
                 <div className="time-post"> <i class="fa-regular fa-clock"></i>  Đăng 2 tuần trước</div>
             </div>
             <div className="car-info-detail">
+              <div className="car-info-detail-left">
 
+              </div>
+              <div className="car-info-detail-right">
+
+              </div>
             </div>
           </div>
           <div className="right-detail">

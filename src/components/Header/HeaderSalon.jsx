@@ -241,7 +241,6 @@ export default function HeaderSalon() {
 
     handleCloseCall();
   };
-  console.log("listNotification", listNotification);
   return (
     <div className="container-header">
       <div className="back-home">
