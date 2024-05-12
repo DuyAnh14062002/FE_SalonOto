@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 import salonApi from "../../../apis/salon.api";
 import processApi from "../../../apis/process.api";
 import userApi from "../../../apis/user.api";
+
 export default function ManageProcess() {
   const [listProcess, setListProcess] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -16,7 +17,11 @@ export default function ManageProcess() {
   const [showDelete, setShowDelete] = useState(false);
   const [salon, setSalon] = useState({});
   const [permissions, setPermission] = useState([]);
-
+  const [selectedProcess, setSelectedProcess] = useState({});
+  const processType = {
+    0: "Quy trình mua xe",
+    1: "Quy trình hoa tiêu",
+  };
   const loadingUser = async () => {
     let res = await userApi.getProfile();
     if (res?.data?.profile?.permissions) {
@@ -25,28 +30,41 @@ export default function ManageProcess() {
   };
   const fetchData = async () => {
     const res = await salonApi.getSalonInfor();
-    if (res?.data?.salon?.process) {
-      setListProcess(res?.data?.salon?.process);
-    }
     if (res?.data?.salon) {
       setSalon(res.data.salon);
+    }
+  };
+  const fetchAllProcess = async () => {
+    const res = await processApi.getAllProcess({
+      salonId: salon.salon_id,
+    });
+    console.log("res:", res);
+    if (res?.data?.data) {
+      setListProcess(res.data.data);
     }
   };
   useEffect(() => {
     fetchData();
     loadingUser();
   }, []);
+  useEffect(() => {
+    if (salon?.salon_id) {
+      fetchAllProcess();
+    }
+  }, [salon.salon_id]);
 
   const handleCloseUpdate = () => {
     setShowUpdate(false);
   };
   const handleShowUpdate = (process) => {
+    setSelectedProcess(process);
+    setProcess(process);
     setShowUpdate(true);
   };
   const handleCloseAdd = () => {
     setShowAdd(false);
   };
-  const handleShowAdd = (car) => {
+  const handleShowAdd = () => {
     setShowAdd(true);
   };
   const handleCloseDelete = () => {
@@ -54,6 +72,7 @@ export default function ManageProcess() {
   };
   const handleShowDelete = (process) => {
     setShowDelete(true);
+    setSelectedProcess(process);
   };
   const onChange = (e) => {
     setProcess({ ...process, [e.target.name]: e.target.value });
@@ -61,12 +80,20 @@ export default function ManageProcess() {
 
   const handleUpdateProcess = async () => {
     setIsLoading(true);
-    let res = await processApi.getAllProcess();
-    fetchData();
+    let res = await processApi.updateProcess({
+      salonId: salon.salon_id,
+      processId: selectedProcess.id,
+      name: process.name,
+      description: process.description,
+      type: Number(process.type),
+    });
+    fetchAllProcess();
     handleCloseUpdate();
     if (res?.data?.status && res.data.status === "success") {
       toast.success("Cập nhật thông tin quy trình thành công");
       setIsLoading(false);
+      setProcess({});
+      setSelectedProcess({});
     } else {
       toast.error("Cập nhật thông tin quy trình thất bại");
       setIsLoading(false);
@@ -76,27 +103,39 @@ export default function ManageProcess() {
   const handleAddProcess = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    let res = await processApi.getAllProcess();
-    fetchData();
+    console.log("process:", process);
+    let res = await processApi.createProcess({
+      salonId: salon.salon_id,
+      name: process.name,
+      description: process.description,
+      type: Number(process.type),
+    });
+    fetchAllProcess();
     handleCloseAdd();
     if (res?.data?.status && res.data.status === "success") {
       toast.success("Thêm thông tin quy trình thành công");
       setIsLoading(false);
+      setProcess({});
     } else {
       toast.error("Thêm thông tin quy trình thất bại");
       setIsLoading(false);
     }
   };
   const handleDelete = async () => {
-    let res = await processApi.getAllProcess();
-    fetchData();
+    let res = await processApi.deleteProcess({
+      salonId: salon.salon_id,
+      processId: selectedProcess.id,
+    });
+    fetchAllProcess();
     handleCloseDelete();
     if (res?.data?.status && res.data.status === "success") {
       toast.success("Xóa thông tin quy trình thành công");
+      setSelectedProcess({});
     } else {
       toast.error("Xóa thông tin quy trình thất bại");
     }
   };
+  console.log("listProcess:", listProcess);
   return (
     <>
       <div id="content" className="container-fluid">
@@ -108,17 +147,7 @@ export default function ManageProcess() {
           </div>
           <div className="card-body">
             <div className="my-3 d-flex justify-content-between align-items-center">
-              <div className="d-flex justify-content-between">
-                <input
-                  type="text"
-                  name="search"
-                  id="search"
-                  className="form-control"
-                  style={{ width: "65%" }}
-                  placeholder="Nhập tên quy trình"
-                />
-                <button className="btn btn-primary mx-2">Tìm kiếm</button>
-              </div>
+              <div className="d-flex justify-content-between"></div>
               {(permissions?.includes("OWNER") ||
                 permissions.includes("postCar")) && (
                 <button className="btn btn-success" onClick={handleShowAdd}>
@@ -134,35 +163,13 @@ export default function ManageProcess() {
                   </th>
                   <th scope="col">Tên quy trình</th>
                   <th scope="col">Mô tả quy trình</th>
-
+                  <th scope="col">Loại quy trình</th>
                   <th scope="col" className="text-center">
                     Tác vụ
                   </th>
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <th scope="row" className="text-center">
-                    1
-                  </th>
-                  <td>Quy trình mua xe</td>
-                  <td>Quy trình mua xe</td>
-                  <td className="text-center">
-                    <button
-                      className="btn btn-warning mx-2"
-                      onClick={handleShowUpdate}
-                    >
-                      Cập nhật
-                    </button>
-                    <button
-                      className="btn btn-danger"
-                      onClick={handleShowDelete}
-                    >
-                      Xóa
-                    </button>
-                  </td>
-                </tr>
-
                 {listProcess && listProcess.length > 0 ? (
                   listProcess.map((process, index) => (
                     <tr key={index} style={{ background: "rgb(247 247 247)" }}>
@@ -170,10 +177,10 @@ export default function ManageProcess() {
 
                       <td>{process.name}</td>
                       <td>{process.description}</td>
-
+                      <td>{processType[process.type]}</td>
                       <td className="text-center">
                         {(permissions?.includes("OWNER") ||
-                          permissions.includes("patchCar")) && (
+                          permissions.includes("patchProcess")) && (
                           <button
                             className="btn btn-success btn-sm rounded-0 text-white mx-2"
                             data-toggle="tooltip"
@@ -185,7 +192,7 @@ export default function ManageProcess() {
                           </button>
                         )}
                         {(permissions?.includes("OWNER") ||
-                          permissions.includes("deleteCar")) && (
+                          permissions.includes("deleteProcess")) && (
                           <button
                             to="/"
                             className="btn btn-danger btn-sm rounded-0 text-white"
@@ -202,9 +209,9 @@ export default function ManageProcess() {
                   ))
                 ) : (
                   <tr>
-                    {/* <td colSpan="6" className="fst-italic">
+                    <td colSpan="6" className="fst-italic">
                       Không có dữ liệu nào
-                    </td> */}
+                    </td>
                   </tr>
                 )}
               </tbody>
@@ -238,9 +245,24 @@ export default function ManageProcess() {
                 onChange={onChange}
               />
             </Form.Group>
+            <Form.Group className="mt-4">
+              <Form.Label>Loại quy trình</Form.Label>
+              <Form.Control
+                required
+                as="select"
+                name="type"
+                value={process.type}
+                onChange={onChange}
+              >
+                <option value="0">Quy trình mua xe</option>
+                <option value="1">Quy trình hoa tiêu</option>
+              </Form.Control>
+            </Form.Group>
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="secondary">Đóng</Button>
+            <Button variant="secondary" onClick={handleCloseUpdate}>
+              Đóng
+            </Button>
             <Button
               variant="primary"
               onClick={handleUpdateProcess}
@@ -277,6 +299,18 @@ export default function ManageProcess() {
                 onChange={onChange}
               />
             </Form.Group>
+            <Form.Group className="mt-4">
+              <Form.Label>Loại quy trình</Form.Label>
+              <Form.Select
+                required
+                name="type"
+                value={process.type}
+                onChange={onChange}
+              >
+                <option value="0">Quy trình mua xe</option>
+                <option value="1">Quy trình hoa tiêu</option>
+              </Form.Select>
+            </Form.Group>
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={handleCloseAdd}>
@@ -294,7 +328,10 @@ export default function ManageProcess() {
           <Modal.Title>Xóa quy trình</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <span>Bạn có chắc chắn muốn xóa quy trình này không ?</span>
+          <span>
+            Bạn có chắc chắn muốn xóa quy trình{" "}
+            <strong>{selectedProcess?.name}</strong> này không ?
+          </span>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleCloseDelete}>
