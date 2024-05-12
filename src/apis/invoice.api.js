@@ -9,7 +9,7 @@ const invoiceApi = {
   getAllInvoiceMaintain() {
     return http.get("/invoice");
   },
-  createBuyCarInvoice(salon_Id, carId, data) {
+  createBuyCarInvoice(salon_Id, carId, data, processId) {
     return http.post("/invoice/create-invoice", {
       salonId: salon_Id,
       carId: carId,
@@ -17,6 +17,7 @@ const invoiceApi = {
       phone: data.phone,
       email: data.email,
       expense: data.expense,
+      processId,
     });
   },
 
@@ -61,6 +62,15 @@ const invoiceApi = {
 
   getInvoiceHistoryForCustomer() {
     return http.post("/invoice/get-invoice-buy-car");
+  },
+  deleteInvoiceBuyCar(body) {
+    return http.post("/invoice/remove", body);
+  },
+  getDetailInvoiceBuyCar(body) {
+    return http.post("/invoice/lookup", body);
+  },
+  updateDoneInvoice(body) {
+    return http.patch("/invoice/tick-done", body);
   },
 };
 
