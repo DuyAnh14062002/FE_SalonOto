@@ -19,6 +19,9 @@ const userApi = {
   acceptInvite(body) {
     return http.post(`/salons/verifyInviteUser`, body);
   },
+  getLegalUser(body) {
+    return http.post("/legals/get-legals-user", body);
+  },
 };
 
 export default userApi;

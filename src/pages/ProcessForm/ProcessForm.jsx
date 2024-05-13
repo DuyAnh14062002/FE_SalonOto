@@ -25,7 +25,6 @@ const ProcessForm = ({
         salonId,
         invoiceId: invoice.invoice_id,
       });
-      console.log("res", res);
       setCheckedDetails(res.data.invoice[0]?.legals_user?.details);
       setPeriodCurrent(res.data.invoice[0]?.legals_user?.current_period);
     } catch (error) {
