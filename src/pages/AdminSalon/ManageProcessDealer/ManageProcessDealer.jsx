@@ -10,8 +10,11 @@ import { formatCurrency } from "../../../utils/common";
 import processApi from "../../../apis/process.api";
 import { set } from "lodash";
 import ProcessForm from "../../ProcessForm/ProcessForm";
+import ProcessFormDealer from "../../ProcessFormDealer";
+import dealerApi from "../../../apis/dealer.api";
 
-export default function ManageBuyCar() {
+export default function ManageProcessDealer() {
+
   const [permissions, setPermission] = useState([]);
   const [showAdd, setShowAdd] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
@@ -28,15 +31,7 @@ export default function ManageBuyCar() {
   const [selectedProcess, setSelectedProcess] = useState("");
   const [listProcess, setListProcess] = useState([]);
   const [selectedInvoice, setSelectedInvoice] = useState({});
-  const [showModalProcess, setShowModalProcess] = useState(false);
 
-  const handleShowProcess = (invoice) => {
-    setSelectedInvoice(invoice);
-    setShowModalProcess(true);
-  };
-  const handleCloseModalProcess = () => {
-    setShowModalProcess(false);
-  };
   const handleFilterChange = (e) => {
     setFilter(e.target.value);
   };
@@ -83,6 +78,7 @@ export default function ManageBuyCar() {
       setSalon(res.data.salon);
     }
   };
+
   useEffect(() => {
     loadingUser();
     fetchDataSalon();
@@ -167,13 +163,45 @@ export default function ManageBuyCar() {
   const handleProcessChange = (event) => {
     setSelectedProcess(event.target.value);
   };
+
+
+
+
+
+
+
+
+
+
+
+  const [transactions , setTransactions] = useState([])
+  const [selectedTransaction, setSelectedTransaction] = useState({});
+  const [showModalProcess, setShowModalProcess] = useState(false);
+
+  const loadingProcess = async() => {
+    let res = await dealerApi.getAllProcess()
+    if(res?.data?.transaction){
+      setTransactions(res.data.transaction)
+    }
+  }
+  useEffect(() => {
+    loadingProcess()
+  }, []);
+  console.log("transactions : ", transactions)
+const handleShowProcess = (item) => {
+    setSelectedTransaction(item);
+    setShowModalProcess(true);
+  };
+  const handleCloseModalProcess = () => {
+    setShowModalProcess(false);
+  };
   return (
     <>
       <div id="content" className="container-fluid">
         <div className="card">
           <div className="card-header fw-bold">
             <h4 className="text-center fw-bold py-1 my-0">
-              Danh sách các giao dịch mua xe
+              Danh sách các giao dịch với hoa tiêu
             </h4>
           </div>
           <div className="card-body">
@@ -205,12 +233,6 @@ export default function ManageBuyCar() {
                   <option value="processing">Giao dịch đang xử lý</option>
                 </select>
               </div>
-              {(permissions?.includes("OWNER") ||
-                permissions.includes("C_BC")) && (
-                <button className="btn btn-success" onClick={handleShowAdd}>
-                  Thêm giao dịch mua xe
-                </button>
-              )}
             </div>
             <table className="table mt-4 table-hover" style={{ width: "100%" }}>
               <thead>
@@ -219,12 +241,9 @@ export default function ManageBuyCar() {
                     STT
                   </th>
                   <th scope="col" style={{ width: "17%" }}>
-                    Tên khách hàng
+                    Tên hoa tiêu
                   </th>
-                  <th scope="col">số điện thoại</th>
-                  <th scope="col">Email</th>
-                  <th scope="col">Tên xe</th>
-                  <th scope="col">Tổng tiền</th>
+                  <th scope="col">Tên qui trình</th>
                   <th scope="col">Trạng thái</th>
                   <th
                     scope="col"
@@ -236,23 +255,20 @@ export default function ManageBuyCar() {
                 </tr>
               </thead>
               <tbody>
-                {filteredInvoices && filteredInvoices.length > 0 ? (
-                  filteredInvoices.map((invoice, index) => (
+                {transactions && transactions.length > 0 ? (
+                  transactions.map((item, index) => (
                     <tr key={index} style={{ background: "rgb(247 247 247)" }}>
                       <td className="text-center">{++index}</td>
 
-                      <td>{invoice.fullname}</td>
-                      <td>{invoice.phone}</td>
-                      <td>{invoice.email}</td>
-                      <td>{invoice.carName}</td>
-                      <td>{formatCurrency(invoice.expense)}</td>
+                      <td>{item?.user?.name}</td>
+                      <td>{item?.process?.name}</td>
                       <td>
-                        {invoice?.done ? (
-                          <span class="badge bg-success">Hoàn thành</span>
-                        ) : (
+                        {item?.status === "pending" ? (
                           <span class="badge bg-warning text-dark">
-                            Đang xử lý
+                             Đang xử lý
                           </span>
+                        ) : (
+                           <span class="badge bg-success">Hoàn thành</span>
                         )}
                       </td>
                       <td className="text-center">
@@ -261,31 +277,10 @@ export default function ManageBuyCar() {
                           data-toggle="tooltip"
                           data-placement="top"
                           title="Xem tiến trình"
-                          onClick={() => handleShowProcess(invoice)}
+                          onClick={() => handleShowProcess(item)}
                         >
                           <i className="fas fa-tasks"></i>
                         </button>
-                        <button
-                          className="btn btn-warning btn-sm rounded-0 text-white mx-2"
-                          data-toggle="tooltip"
-                          data-placement="top"
-                          title="info"
-                          onClick={() => handleShowWarranty(invoice)}
-                        >
-                          <i className="fa-solid fa-circle-question"></i>
-                        </button>
-                        {(permissions?.includes("OWNER") ||
-                          permissions.includes("U_IV")) && (
-                          <button
-                            className="btn btn-success btn-sm rounded-0 text-white"
-                            data-toggle="tooltip"
-                            data-placement="top"
-                            title="Edit"
-                            //onClick={() => handleShowUpdate(maintenance)}
-                          >
-                            <i className="fa fa-edit"></i>
-                          </button>
-                        )}
                         {(permissions?.includes("OWNER") ||
                           permissions.includes("D_IV")) && (
                           <button
@@ -294,7 +289,7 @@ export default function ManageBuyCar() {
                             data-toggle="tooltip"
                             data-placement="top"
                             title="Delete"
-                            onClick={() => handleShowDelete(invoice)}
+                            //onClick={() => handleShowDelete(invoice)}
                           >
                             <i className="fa fa-trash"></i>
                           </button>
@@ -466,12 +461,9 @@ export default function ManageBuyCar() {
           <Modal.Title>Tiến trình</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <ProcessForm
-            invoice={selectedInvoice}
-            salonId={salon.salon_id}
-            carId={carId}
+          <ProcessFormDealer
+            selectedTransaction={selectedTransaction}
             handleCloseModalProcess={handleCloseModalProcess}
-            loadingInvoice={loadingInvoice}
           />
         </Modal.Body>
       </Modal>

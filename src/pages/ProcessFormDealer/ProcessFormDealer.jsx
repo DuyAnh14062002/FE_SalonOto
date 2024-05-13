@@ -1,92 +1,77 @@
 import React, { useEffect, useState } from "react";
-import "./ProcessForm.scss";
+import "./ProcessFormDealer.scss";
 import { Stepper } from "react-form-stepper";
 import processApi from "../../apis/process.api";
 import { toast } from "react-toastify";
 import invoiceApi from "../../apis/invoice.api";
+import dealerApi from "../../apis/dealer.api";
 
-const ProcessForm = ({
+const ProcessFormDealer = ({
   invoice,
   salonId,
   carId,
-  handleCloseModalProcess,
   loadingInvoice,
+
+  handleCloseModalProcess,
+  selectedTransaction
 }) => {
+  console.log("selectedTransaction: ", selectedTransaction)
   const [detailProcess, setDetailProcess] = useState({});
   const [activeStep, setActiveStep] = useState(0);
   const [checkedDetails, setCheckedDetails] = useState([]);
+  const [checkedDetailsId, setCheckedDetailsId] = useState([]);
   const [isNextButtonDisabled, setIsNextButtonDisabled] = useState(true);
   const [periodCurrent, setPeriodCurrent] = useState(null);
-  console.log("detailProcess", detailProcess);
+  const [transaction, setTransaction] = useState({})
+ // const [process, setProcess] = useState([])
 
-  const fetchDetailInvoice = async () => {
-    try {
-      let res = await invoiceApi.getDetailInvoiceBuyCar({
-        salonId,
-        invoiceId: invoice.invoice_id,
-      });
-      console.log("res", res);
-      setCheckedDetails(res.data.invoice[0]?.legals_user?.details);
-      setPeriodCurrent(res.data.invoice[0]?.legals_user?.current_period);
-    } catch (error) {
-      console.log(error);
+  const fetchDetailProcess = async () => {
+    setCheckedDetailsId(selectedTransaction.checked)
+   // setPeriodCurrent()
+    let res = await dealerApi.getConectionById(selectedTransaction.connection.connection_id)
+    if(res?.data?.connection?.process){
+      setDetailProcess(res.data.connection.process)
+    }
+    let res2 = await dealerApi.getDetailProcess(selectedTransaction.transaction_id)
+    if(res2?.data?.transaction?.stage?.stage_id){
+      setPeriodCurrent(res2.data.transaction.stage.stage_id)
     }
   };
+  console.log("detailProcess", detailProcess);
   useEffect(() => {
-    fetchDetailInvoice();
-  }, [invoice, salonId]);
-
-  useEffect(() => {
-    const fetchDetailProcess = async () => {
-      try {
-        let res = await processApi.getAllProcess({
-          salonId,
-          processId: invoice?.legals_user?.processId,
-        });
-        setDetailProcess(res.data.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
     fetchDetailProcess();
   }, [invoice, salonId]);
+
   useEffect(() => {
-    setCheckedDetails(invoice?.legals_user?.details || []);
+  
+  }, [invoice, salonId]);
+  useEffect(() => {
+  
   }, [invoice]);
   useEffect(() => {
-    if (detailProcess?.documents && periodCurrent) {
-      const currentStepIndex = detailProcess.documents.findIndex(
-        (item) => item.period === periodCurrent
-      );
-      console.log("currentStepIndex", currentStepIndex);
-
-      if (currentStepIndex !== -1) {
-        setActiveStep(currentStepIndex);
-      }
-    }
   }, [detailProcess, invoice, periodCurrent]);
   const areAllDetailsChecked = () => {
-    if (detailProcess?.documents?.length > 0) {
-      const currentStepDetails = detailProcess.documents[activeStep]?.details;
+    if (detailProcess?.stages?.length > 0) {
+      const currentStepDetails = detailProcess.stages[activeStep]?.commissionDetails;
       if (!currentStepDetails) return false;
       return currentStepDetails?.every((detail) =>
-        checkedDetails?.includes(detail.name)
+        checkedDetailsId?.includes(detail.id)
       );
     }
   };
   useEffect(() => {
     setIsNextButtonDisabled(!areAllDetailsChecked());
   }, [activeStep, checkedDetails, detailProcess]);
-
-  const steps = detailProcess?.documents?.map((item) => {
+  const steps = detailProcess?.stages?.map((item) => {
     return {
       label: item.name,
-      documents: item?.details?.map((detail) => detail.name),
+      documents : item?.commissionDetails?.map((detail) => ({ name: detail.name, id: detail.id })),
+      commissionRate : item.commissionRate
     };
   });
+  console.log("step : ", steps)
   console.log("detailProcess : ", detailProcess)
-  console.log("invoice : ", invoice)
-  const handleDocumentToggle = (documentName) => {
+  const handleDocumentToggle = (documentName , documentId) => {
     setCheckedDetails((prevDetails) => {
       if (!prevDetails) {
         return [documentName];
@@ -98,86 +83,72 @@ const ProcessForm = ({
         }
       }
     });
+
+    setCheckedDetailsId((prevDetails) => {
+      if (!prevDetails) {
+        return [documentId];
+      } else {
+        if (prevDetails.includes(documentId)) {
+          return prevDetails.filter((detail) => detail !== documentId);
+        } else {
+          return [...prevDetails, documentId];
+        }
+      }
+    })
   };
   const handleNext = async () => {
-    if (invoice?.done) {
+    if (selectedTransaction?.status !== "pending") {
       setActiveStep((prevStep) => prevStep + 1);
     } else {
       if (isNextButtonDisabled) {
         toast.error("Vui lòng chọn đủ các giấy tờ cần thiết");
       } else {
         setActiveStep((prevStep) => prevStep + 1);
-        await processApi.checkDetailUser({
-          salonId,
-          phone: invoice.phone,
-          details: checkedDetails,
-          carId,
-        });
-        await processApi.updatePeriodUser({
-          salonId,
-          phone: invoice.phone,
-          newPeriod: detailProcess.documents[activeStep + 1].period,
-          carId,
-        });
-        fetchDetailInvoice();
+        let res = await dealerApi.nextProcess(selectedTransaction.transaction_id)
+        if(res?.data?.status === "completed"){
+          handleCloseModalProcess()
+          toast.success("Qui Trình đã hoàn thành")
+        }
       }
     }
   };
+  useEffect(() => {
+    if (detailProcess?.stages && periodCurrent) {
+      const currentStepIndex = detailProcess.stages.findIndex(
+        (item) => item.stage_id === periodCurrent
+      );
+      console.log("currentStepIndex", currentStepIndex);
+
+      if (currentStepIndex !== -1) {
+        setActiveStep(currentStepIndex);
+      }
+    }
+  }, [detailProcess, invoice, periodCurrent]);
 
   const handleBack = () => {
     setActiveStep((prevStep) => prevStep - 1);
   };
 
   const handleFinish = async () => {
-    if (isNextButtonDisabled) {
-      toast.error("Vui lòng chọn đủ các giấy tờ cần thiết");
-    } else {
-      await processApi.checkDetailUser({
-        salonId,
-        phone: invoice.phone,
-        details: checkedDetails,
-        carId,
-      });
-      await processApi.updatePeriodUser({
-        salonId,
-        phone: invoice.phone,
-        newPeriod: detailProcess.documents[activeStep].period,
-        carId,
-      });
-      await invoiceApi.updateDoneInvoice({
-        salonId,
-        invoiceId: invoice.invoice_id,
-      });
-      fetchDetailInvoice();
-      toast.success("Tiến trình hoàn tất");
-      handleCloseModalProcess();
-      loadingInvoice(salonId);
-    }
+    
   };
   const handleUpdate = async () => {
-    try {
-      let res = await processApi.checkDetailUser({
-        salonId,
-        phone: invoice.phone,
-        details: checkedDetails,
-        carId,
-      });
-      await processApi.updatePeriodUser({
-        salonId,
-        phone: invoice.phone,
-        newPeriod: detailProcess.documents[activeStep].period,
-        carId,
-      });
-      if (res?.data?.status === "success") {
-        toast.success("Cập nhật thành công");
-        fetchDetailInvoice();
-      }
-    } catch (error) {}
+    let res = await dealerApi.updateProcessCheck(selectedTransaction.transaction_id, checkedDetailsId)
+    console.log("res update : ", res)
+    if(res?.data?.status === "success"){
+       if(res?.data?.transaction?.checked){
+        console.log("oke : ", res.data.transaction.checked)
+        setCheckedDetailsId(res.data.transaction.checked)
+       }
+      toast.success("Cập nhật thành công")
+    }else{
+      toast.error("Cập nhật thất bại")
+    }
   };
 
   return (
     <div className="container">
-      <h1 className="text-center mt-4">{detailProcess?.name}</h1>
+      <h1 className="text-center mt-4">{detailProcess.description}</h1>
       <Stepper
         steps={steps?.map((step) => ({ label: step.label }))}
         activeStep={activeStep}
@@ -201,7 +172,7 @@ const ProcessForm = ({
                 ? "Các giấy tờ cần thiết"
                 : "Thông tin giai đoạn"}
             </h2>
-            {detailProcess?.documents && (
+            {detailProcess?.stages && (
               <ol className="list-group list-group-numbered">
                 {steps[activeStep]?.documents.map((document, index) => (
                   <li
@@ -209,14 +180,14 @@ const ProcessForm = ({
                     className="list-group-item w-100 d-flex align-items-center justify-content-between"
                   >
                     <span style={{ flex: "1 1 80%", paddingLeft: "5px" }}>
-                      {document}
+                      {document.name}
                     </span>
-                    {!invoice?.done && (
+                    {selectedTransaction?.status === "pending" && (
                       <input
                         type="checkbox"
                         className="form-check-input mx-2"
-                        checked={checkedDetails?.includes(document)}
-                        onChange={() => handleDocumentToggle(document)}
+                        checked={checkedDetailsId?.includes(document.id)}
+                        onChange={() => handleDocumentToggle(document.name, document.id)}
                       />
                     )}
                   </li>
@@ -235,7 +206,7 @@ const ProcessForm = ({
             Back
           </button>
         )}
-        {!invoice?.done && (
+        {selectedTransaction?.status === "pending" && (
           <button
             className="buttons__button buttons__button--update"
             onClick={handleUpdate}
@@ -252,10 +223,10 @@ const ProcessForm = ({
             Next
           </button>
         )}
-        {activeStep === steps?.length - 1 && !invoice?.done && (
+        {activeStep === steps?.length - 1 && selectedTransaction?.status === "pending" && (
           <button
             className="buttons__button buttons__button--finish"
-            onClick={handleFinish}
+            onClick={handleNext}
           >
             Finish
           </button>
@@ -265,4 +236,4 @@ const ProcessForm = ({
   );
 };
 
-export default ProcessForm;
+export default ProcessFormDealer;

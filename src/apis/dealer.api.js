@@ -30,6 +30,44 @@ const dealerApi = {
       headers: { "content-type": "multipart/form-data" },
     });
   },
+  getDetailPost(id) {
+    return http.get(`/posts/${id}`);
+  },
+
+  CreateConnecttion(postId, processId) {
+    return http.post("/connections", {
+      postId: postId,
+      processId: processId,
+    });
+  },
+
+  getConectionById(id) {
+    return http.get(`/connections/${id}`);
+  },
+
+  updateConnection(id, status) {
+    return http.patch(`/connections/${id}`, {
+      status: status,
+    });
+  },
+
+  getAllProcess() {
+    return http.get("/transactions");
+  },
+
+  nextProcess(id) {
+    return http.patch(`/transactions/${id}/next`);
+  },
+
+  updateProcessCheck(id, checked) {
+    return http.patch(`/transactions/${id}/details`, {
+      checked: checked,
+    });
+  },
+
+  getDetailProcess(id) {
+    return http.get(`/transactions/${id}`);
+  },
 };
 
 export default dealerApi;

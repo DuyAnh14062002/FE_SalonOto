@@ -18,6 +18,7 @@ import messageApi from "../../apis/message.api";
 import userApi from "../../apis/user.api"
 import salonApi from "../../apis/salon.api";
 import appointmentApi from "../../apis/appointment.api";
+import dealerApi from "../../apis/dealer.api";
 const intervalDuration = 3000;
 let timerId;
 let timeOut;
@@ -139,6 +140,7 @@ export default function Header(props) {
   const fetchAllNotificationUser = async () => {
     try {
       const res = await notificationApi.getAllNotificationUser();
+      console.log("listNotification : ", res)
       setListNotification(res.data.notifications);
     } catch (error) {
       console.log(error);
@@ -219,6 +221,19 @@ export default function Header(props) {
       console.log(error);
     }
   };
+  const handleNavigateDetail = (id) => {
+     navigate(`/detailProcess/${id}`)
+  }
+  const handleConnection = async(id) => {
+       let res = await dealerApi.updateConnection(id, "accepted")
+       console.log("res connection apcept : ", res)
+       if(res?.data?.status === "success"){
+        toast.success("Kết nối thành công vs Salon")
+       }else{
+        toast.error("Kết nối thất bại")
+       }
+  }
+  console.log("notification : ", listNotification)
   const popover = (
     <Popover id="popover-basic">
       <Popover.Header as="h3" className="fw-bold">
@@ -239,8 +254,8 @@ export default function Header(props) {
               return (
                 <button key={notification.id} className="notify p-2">
                   {(notification.types === "appointment" ||
-                    notification.types === "permission") && (
-                    <div className="d-flex align-items-center">
+                    notification.types === "permission" || notification.types === "connection") && (
+                    <div className="d-flex">
                       <img
                         src={
                           notification.avatar ||
@@ -285,6 +300,12 @@ export default function Header(props) {
                             onClick={() => handleDeleteNotify(notification.id)}
                           ></i>
                         </div>
+                        {notification?.types === "connection" ? (
+                        <div className="connection-box">
+                           <button className="see-process" onClick={() =>handleNavigateDetail(notification.data)}>Xem qui trình</button>
+                           <button className="agree-connection" onClick={() => handleConnection(notification.data)}>Kết nối</button>
+                        </div>
+                      ): ""}
                       </div>
                     </div>
                   )}

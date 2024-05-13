@@ -20,6 +20,7 @@ export const path = {
   postCar: "/postCar",
   postSellCar: "/postSellCar",
   carPostDetail: "/CarPostDetail/:id",
+  detailProcess: "/detailProcess/:id",
   //================SALON============================
   salonOto: "/salonOto/:id",
   DetailCar: "/detail-car/:id",
@@ -48,6 +49,7 @@ export const path = {
   manageProcess: "/adminSalon/manageProcess",
   manageStage: "/adminSalon/manageStage",
   processForm: "/adminSalon/processForm",
+  manageDealerProcess: "/adminSalon/manageDealerProcess",
   //============PAYMENT =========================
   getResultPayment: "/payment/vnpay",
 

@@ -55,6 +55,41 @@
           margin-bottom: 5px;
         }
       }
+      .car-info-detail {
+        background-color: #fff;
+        border-radius: 10px;
+        margin-top: 20px;
+        padding: 20px;
+        h3 {
+          color: #222222;
+          font-size: 16px;
+        }
+        .car-infor-box {
+          background-color: #f4f4f4;
+          border-radius: 4px;
+          margin-top: 20px;
+          display: flex;
+          padding: 10px;
+          .car-info-detail-left {
+            width: 50%;
+            .item-detail {
+              margin-top: 10px;
+              margin-bottom: 10px;
+              padding-bottom: 10px;
+              border-bottom: 1px solid black;
+            }
+          }
+          .car-info-detail-right {
+            width: 50%;
+            .item-detail {
+              margin-top: 10px;
+              margin-bottom: 10px;
+              border-bottom: 1px solid black;
+              padding-bottom: 10px;
+            }
+          }
+        }
+      }
     }
     .right-detail {
       margin-left: 10px;
