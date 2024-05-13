@@ -8,7 +8,6 @@ import Modal from "react-bootstrap/Modal";
 import { toast } from "react-toastify";
 import { formatCurrency } from "../../../utils/common";
 import processApi from "../../../apis/process.api";
-import { set } from "lodash";
 import ProcessForm from "../../ProcessForm/ProcessForm";
 
 export default function ManageBuyCar() {
@@ -62,6 +61,10 @@ export default function ManageBuyCar() {
       setListProcess(res.data.data);
       setSelectedProcess(res.data.data[0].id);
     }
+    const res2 = await userApi.getLegalUser({
+      phone: "0935722384",
+    });
+    console.log("res2", res2);
   };
   const loadingInvoice = async (salon_id) => {
     let res = await invoiceApi.getAllInvoiceBuyCar(salon_id);
@@ -130,7 +133,6 @@ export default function ManageBuyCar() {
     //   toast.error("Thêm thông tin giao dịch thất bại")
     // }
   };
-  console.log("carId", carId);
   const handleSetCarId = (e) => {
     setCarId(e.target.value);
   };
