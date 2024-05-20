@@ -223,7 +223,7 @@ export default function ManageFeature() {
             )}
           </div>
         </div>
-        <Modal show={show} onHide={handleClose}>
+        <Modal show={show} onHide={handleClose} backdrop="static">
           <Form onSubmit={handleAddFeature}>
             <Modal.Header closeButton>
               <Modal.Title>Thêm tính năng</Modal.Title>
@@ -268,7 +268,7 @@ export default function ManageFeature() {
             </Modal.Footer>
           </Form>
         </Modal>
-        <Modal show={showEdit} onHide={handleCloseEdit}>
+        <Modal show={showEdit} onHide={handleCloseEdit} backdrop="static">
           <Form>
             <Modal.Header closeButton>
               <Modal.Title>Cập nhật tính năng</Modal.Title>
@@ -316,7 +316,7 @@ export default function ManageFeature() {
             </Modal.Footer>
           </Form>
         </Modal>
-        <Modal show={showDelete} onHide={handleCloseDelete}>
+        <Modal show={showDelete} onHide={handleCloseDelete} backdrop="static">
           <Modal.Header closeButton>
             <Modal.Title>Xóa tính năng</Modal.Title>
           </Modal.Header>

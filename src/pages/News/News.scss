@@ -27,6 +27,11 @@
           background-repeat: no-repeat;
           background-size: contain;
           margin-right: 10px;
+          border-radius: 5px;
+          &:hover {
+            transform: scale(1.01);
+            transition: 0.2s;
+          }
           &:hover ~ .new-item-content .new-item-content-title {
             color: blue;
             transition: 0.2s;
@@ -81,6 +86,9 @@
           .cost-car-label {
             font-size: 15px;
           }
+        }
+        .select-city-form {
+          margin-top: -15px;
         }
         .caculate {
           width: 100%;

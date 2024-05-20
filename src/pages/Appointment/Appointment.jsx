@@ -221,7 +221,12 @@ export default function Appointment() {
           </div>
         </div>
 
-        <Modal show={showEdit} onHide={handleCloseEdit} size="lg">
+        <Modal
+          show={showEdit}
+          onHide={handleCloseEdit}
+          size="lg"
+          backdrop="static"
+        >
           <Form onSubmit={handleEditAppointment}>
             <Modal.Header closeButton>
               <Modal.Title>Cập nhật lịch hẹn</Modal.Title>
@@ -255,7 +260,7 @@ export default function Appointment() {
             </Modal.Footer>
           </Form>
         </Modal>
-        <Modal show={showDelete} onHide={handleCloseDelete}>
+        <Modal show={showDelete} onHide={handleCloseDelete} backdrop="static">
           <Modal.Header closeButton>
             <Modal.Title>Xóa tính năng</Modal.Title>
           </Modal.Header>

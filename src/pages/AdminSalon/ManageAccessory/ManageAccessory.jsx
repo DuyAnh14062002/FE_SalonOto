@@ -8,6 +8,7 @@ import salonApi from "../../../apis/salon.api";
 import carApi from "../../../apis/car.api";
 import userApi from "../../../apis/user.api";
 import AccessoryApi from "../../../apis/accessory.api";
+import { formatCurrency } from "../../../utils/common";
 export default function ManageAccessory() {
   const [isLoading, setIsLoading] = useState(false);
   const [car, setCar] = useState("");
@@ -17,9 +18,9 @@ export default function ManageAccessory() {
   const [salon, setSalon] = useState({});
   const [permissions, setPermission] = useState([]);
 
-  const [accessories, setAccessories] = useState([])
-  const [accessory, setAccessory] = useState({})
-  const [accessoryId, setAccessoryId] = useState("")
+  const [accessories, setAccessories] = useState([]);
+  const [accessory, setAccessory] = useState({});
+  const [accessoryId, setAccessoryId] = useState("");
   const loadingUser = async () => {
     let res = await userApi.getProfile();
     if (res?.data?.profile?.permissions) {
@@ -49,7 +50,7 @@ export default function ManageAccessory() {
   const handleShowUpdate = (accessory) => {
     setShowUpdate(true);
     setAccessoryId(accessory.accessory_id);
-    setAccessory(accessory)
+    setAccessory(accessory);
   };
   const handleCloseAdd = () => {
     setShowAdd(false);
@@ -70,40 +71,40 @@ export default function ManageAccessory() {
 
   const handleAddAccessory = async (e) => {
     e.preventDefault();
-    setIsLoading(true)
-    let res = await AccessoryApi.createAccessory(accessory)
-    if(res?.data?.status === "success"){
-      toast.success("Thêm phụ tùng thành công")
-      handleCloseAdd()
-      loadingAccessory(salon.salon_id)
-      setIsLoading(false)
-      setAccessory({})
-    }else{
-      toast.error("Thêm phụ tùng thất bại")
+    setIsLoading(true);
+    let res = await AccessoryApi.createAccessory(accessory);
+    if (res?.data?.status === "success") {
+      toast.success("Thêm phụ tùng thành công");
+      handleCloseAdd();
+      loadingAccessory(salon.salon_id);
+      setIsLoading(false);
+      setAccessory({});
+    } else {
+      toast.error("Thêm phụ tùng thất bại");
     }
   };
 
   const handleUpdateAccessory = async (e) => {
     e.preventDefault();
-    setIsLoading(true)
-    let res = await AccessoryApi.updateAccessory(accessoryId, accessory)
-    if(res?.data?.status === "success"){
-      toast.success("Cập nhật phụ tùng thành công")
-      handleCloseUpdate()
-      loadingAccessory(salon.salon_id)
-      setIsLoading(false)
-      setAccessory({})
-    }else{
-      toast.error("Cập nhật phụ tùng thất bại")
+    setIsLoading(true);
+    let res = await AccessoryApi.updateAccessory(accessoryId, accessory);
+    if (res?.data?.status === "success") {
+      toast.success("Cập nhật phụ tùng thành công");
+      handleCloseUpdate();
+      loadingAccessory(salon.salon_id);
+      setIsLoading(false);
+      setAccessory({});
+    } else {
+      toast.error("Cập nhật phụ tùng thất bại");
     }
   };
   const handleDelete = async () => {
-    let res = await AccessoryApi.deleteAccessory(accessory.accessory_id)
+    let res = await AccessoryApi.deleteAccessory(accessory.accessory_id);
     if (res?.data?.status === "success") {
       toast.success("Xóa thông tin xe thành công");
-      handleCloseDelete()
+      handleCloseDelete();
       loadingAccessory(salon.salon_id);
-      setAccessory({})
+      setAccessory({});
     } else {
       toast.error("Xóa thông tin xe thất bại");
     }
@@ -114,7 +115,9 @@ export default function ManageAccessory() {
       <div id="content" className="container-fluid">
         <div className="card">
           <div className="card-header fw-bold">
-            <h4 className="text-center fw-bold py-1 my-0">Danh sách các phụ tùng</h4>
+            <h4 className="text-center fw-bold py-1 my-0">
+              Danh sách các phụ tùng
+            </h4>
           </div>
           <div className="card-body">
             <div className="my-3 d-flex justify-content-between align-items-center">
@@ -144,7 +147,9 @@ export default function ManageAccessory() {
                   </th>
                   <th scope="col">Tên phụ tùng</th>
                   <th scope="col">Nhà sản xuất</th>
-                  <th scope="col">giá</th>
+                  <th scope="col" className="text-center">
+                    Giá
+                  </th>
                   <th scope="col" className="text-center">
                     Tác vụ
                   </th>
@@ -158,7 +163,9 @@ export default function ManageAccessory() {
 
                       <td>{item.name}</td>
                       <td>{item.manufacturer}</td>
-                      <td>{item.price}</td>
+                      <td className="text-center">
+                        {formatCurrency(item.price)}
+                      </td>
                       <td className="text-center">
                         {(permissions?.includes("OWNER") ||
                           permissions.includes("U_AC")) && (
@@ -200,13 +207,13 @@ export default function ManageAccessory() {
           </div>
         </div>
       </div>
-      <Modal show={showUpdate} onHide={handleCloseUpdate}>
+      <Modal show={showUpdate} onHide={handleCloseUpdate} backdrop="static">
         <Form noValidate onSubmit={handleUpdateAccessory}>
           <Modal.Header closeButton>
             <Modal.Title> Cập nhật phụ tùng</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-          <Form.Group className="mt-4">
+            <Form.Group className="mt-4">
               <Form.Label>Tên phụ tùng</Form.Label>
               <Form.Control
                 required
@@ -241,18 +248,14 @@ export default function ManageAccessory() {
             <Button variant="secondary" onClick={handleCloseUpdate}>
               Đóng
             </Button>
-            <Button
-              variant="primary"
-              disabled={isLoading}
-              type="submit"
-            >
+            <Button variant="primary" disabled={isLoading} type="submit">
               {isLoading && <Spinner animation="border" size="sm" />}
               <span className="mx-2">Cập nhật</span>
             </Button>
           </Modal.Footer>
         </Form>
       </Modal>
-      <Modal show={showAdd} onHide={handleCloseAdd}>
+      <Modal show={showAdd} onHide={handleCloseAdd} backdrop="static">
         <Form onSubmit={handleAddAccessory}>
           <Modal.Header closeButton>
             <Modal.Title> Thêm phụ tùng mới </Modal.Title>
@@ -297,14 +300,14 @@ export default function ManageAccessory() {
           </Modal.Footer>
         </Form>
       </Modal>
-      <Modal show={showDelete} onHide={handleCloseDelete}>
+      <Modal show={showDelete} onHide={handleCloseDelete} backdrop="static">
         <Modal.Header closeButton>
           <Modal.Title>Xóa phụ tùng</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <span>
-            Bạn có chắc chắn muốn xóa phụ tùng <strong>{accessory?.name}</strong> này
-            không ?
+            Bạn có chắc chắn muốn xóa phụ tùng{" "}
+            <strong>{accessory?.name}</strong> này không ?
           </span>
         </Modal.Body>
         <Modal.Footer>

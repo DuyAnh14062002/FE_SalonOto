@@ -219,7 +219,7 @@ export default function ManageProcess() {
           </div>
         </div>
       </div>
-      <Modal show={showUpdate} onHide={handleCloseUpdate}>
+      <Modal show={showUpdate} onHide={handleCloseUpdate} backdrop="static">
         <Form noValidate>
           <Modal.Header closeButton>
             <Modal.Title> Cập nhật quy trình</Modal.Title>
@@ -275,7 +275,7 @@ export default function ManageProcess() {
         </Form>
       </Modal>
 
-      <Modal show={showAdd} onHide={handleCloseAdd}>
+      <Modal show={showAdd} onHide={handleCloseAdd} backdrop="static">
         <Form onSubmit={handleAddProcess}>
           <Modal.Header closeButton>
             <Modal.Title> Thêm quy trình mới </Modal.Title>
@@ -323,7 +323,7 @@ export default function ManageProcess() {
           </Modal.Footer>
         </Form>
       </Modal>
-      <Modal show={showDelete} onHide={handleCloseDelete}>
+      <Modal show={showDelete} onHide={handleCloseDelete} backdrop="static">
         <Modal.Header closeButton>
           <Modal.Title>Xóa quy trình</Modal.Title>
         </Modal.Header>

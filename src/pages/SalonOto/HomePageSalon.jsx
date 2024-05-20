@@ -24,12 +24,12 @@ export default function HomePageSalon() {
         setSalon(res.data.salon);
         setListCar(res.data.salon.cars);
       }
-      if(res?.data?.salon?.user_id){
-        localStorage.setItem("userIdSalon", res.data.salon.user_id)
+      if (res?.data?.salon?.user_id) {
+        localStorage.setItem("userIdSalon", res.data.salon.user_id);
       }
-    }
-    loading()
-  }, [params])
+    };
+    loading();
+  }, [params]);
   return (
     <div>
       <HeaderSalon />
@@ -71,7 +71,7 @@ export default function HomePageSalon() {
               <span>Từ khóa</span>
               <input
                 className="search-key-input"
-                placeholder="từ khóa..."
+                placeholder="Từ khóa..."
               ></input>
             </div>
             <div className="search-trademark">

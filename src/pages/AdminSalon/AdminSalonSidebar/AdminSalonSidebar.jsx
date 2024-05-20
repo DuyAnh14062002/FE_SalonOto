@@ -10,10 +10,8 @@ import { setSubMenu } from "../../../redux/slices/SalonSlice";
 export default function AdminSalonSidebar(props) {
   const [listKeyMap, setlistKeyMap] = useState([]);
   const [permissions, setPermission] = useState([]);
-  const submenuTran = useSelector(
-    (state) => state?.salonSlice?.subMenuTran
-  );
-  let dispatch = useDispatch()
+  const submenuTran = useSelector((state) => state?.salonSlice?.subMenuTran);
+  let dispatch = useDispatch();
 
   const loadingUser = async () => {
     let res = await userApi.getProfile();
@@ -46,9 +44,10 @@ export default function AdminSalonSidebar(props) {
     loadingUser();
     loadingUser();
   }, []);
-  const handleShowSubMenu = () =>{
-    dispatch(setSubMenu())
-  }
+  const handleShowSubMenu = () => {
+    dispatch(setSubMenu());
+  };
+  console.log("submenuTran", submenuTran);
   return (
     <div id="page-body" className="d-flex">
       <div id="sidebar">
@@ -56,7 +55,7 @@ export default function AdminSalonSidebar(props) {
           <li className="nav-link">
             <Link to="/adminSalon/statistic" className="text-decoration-none">
               <div className="nav-link-icon d-inline-flex mx-2">
-                <i className="far fa-folder"></i>
+                <i className="fa-solid fa-chart-simple"></i>
               </div>
               Thống kê
             </Link>
@@ -76,7 +75,7 @@ export default function AdminSalonSidebar(props) {
                       className="text-decoration-none"
                     >
                       <div className="nav-link-icon d-inline-flex mx-2">
-                        <i className="far fa-folder"></i>
+                        <i className="fa-solid fa-list-check"></i>
                       </div>
                       Quản lý Salon
                     </Link>
@@ -92,7 +91,7 @@ export default function AdminSalonSidebar(props) {
                   <li key={keyMap} className="nav-link">
                     <Link to={path.manageCar} className="text-decoration-none ">
                       <div className="nav-link-icon d-inline-flex mx-2">
-                        <i className="far fa-folder"></i>
+                        <i className="fa-solid fa-car"></i>
                       </div>
                       Quản lý xe
                     </Link>
@@ -111,7 +110,7 @@ export default function AdminSalonSidebar(props) {
                       className="text-decoration-none "
                     >
                       <div className="nav-link-icon d-inline-flex mx-2">
-                        <i className="far fa-folder"></i>
+                        <i className="fa-solid fa-user"></i>
                       </div>
                       Quản lý user
                     </Link>
@@ -130,7 +129,7 @@ export default function AdminSalonSidebar(props) {
                       className="text-decoration-none "
                     >
                       <div className="nav-link-icon d-inline-flex mx-2">
-                        <i className="far fa-folder"></i>
+                        <i className="fa-solid fa-calendar-check"></i>
                       </div>
                       Quản lý lịch hẹn
                     </Link>
@@ -149,7 +148,7 @@ export default function AdminSalonSidebar(props) {
                       className="text-decoration-none "
                     >
                       <div className="nav-link-icon d-inline-flex mx-2">
-                        <i className="far fa-folder"></i>
+                        <i className="fa-solid fa-award"></i>
                       </div>
                       Quản lý bảo hành
                     </Link>
@@ -168,7 +167,7 @@ export default function AdminSalonSidebar(props) {
                       className="text-decoration-none "
                     >
                       <div className="nav-link-icon d-inline-flex mx-2">
-                        <i className="far fa-folder"></i>
+                        <i className="fa-solid fa-screwdriver-wrench"></i>
                       </div>
                       Quản lý bảo dưỡng
                     </Link>
@@ -181,41 +180,48 @@ export default function AdminSalonSidebar(props) {
                 (permissions[0] === "OWNER" || permissions?.includes("R_TR"))
               ) {
                 return (
-                  <li className="nav-link">
+                  <li className="nav-link position-relative">
                     <Link
-                     to={path.manageBuyCar}
-                      className="text-decoration-none "
+                      to={path.manageBuyCar}
+                      className="text-decoration-none"
                       onClick={handleShowSubMenu}
                     >
                       <div className="nav-link-icon d-inline-flex mx-2">
-                        <i className="far fa-folder"></i>
+                        <i className="fa-solid fa-tent-arrow-left-right"></i>
                       </div>
-                      Quản lý giao dịch
+                      <span>Quản lý giao dịch</span>
+                      {submenuTran === false ? (
+                        <i className="transaction fas fa-angle-right"></i>
+                      ) : (
+                        <i className="transaction fas fa-angle-down"></i>
+                      )}
                     </Link>
-                    {submenuTran === true && <ul className="sub-menu-transaction">
-                      <li>
-                        <Link
-                          to={path.manageBuyCar}
-                          className="text-decoration-none "
-                        >
-                          <div className="nav-link-icon d-inline-flex mx-2">
-                            <i className="far fa-folder"></i>
-                          </div>
-                          Giao dịch mua xe
-                        </Link>
-                      </li>
-                      <li>
-                        <Link
-                          to={path.manageBuyMaintenance}
-                          className="text-decoration-none "
-                        >
-                          <div className="nav-link-icon d-inline-flex mx-2">
-                            <i className="far fa-folder"></i>
-                          </div>
-                          Giao dịch bảo dưỡng
-                        </Link>
-                      </li>
-                    </ul>}
+                    {submenuTran === true && (
+                      <ul className="sub-menu-transaction">
+                        <li>
+                          <Link
+                            to={path.manageBuyCar}
+                            className="text-decoration-none "
+                          >
+                            <div className="d-inline-flex mx-2">
+                              <i className="fa-solid fa-circle"></i>
+                            </div>
+                            Giao dịch mua xe
+                          </Link>
+                        </li>
+                        <li>
+                          <Link
+                            to={path.manageBuyMaintenance}
+                            className="text-decoration-none "
+                          >
+                            <div className="d-inline-flex mx-2">
+                              <i className="fa-solid fa-circle"></i>
+                            </div>
+                            Giao dịch bảo dưỡng
+                          </Link>
+                        </li>
+                      </ul>
+                    )}
                   </li>
                 );
               }
@@ -231,7 +237,7 @@ export default function AdminSalonSidebar(props) {
                       className="text-decoration-none "
                     >
                       <div className="nav-link-icon d-inline-flex mx-2">
-                        <i className="far fa-folder"></i>
+                        <i className="fa-solid fa-door-open"></i>
                       </div>
                       Quản lý phụ tùng
                     </Link>
@@ -239,10 +245,10 @@ export default function AdminSalonSidebar(props) {
                 );
               }
             })}
-             <li className="nav-link">
+          <li className="nav-link">
             <Link to={path.manageProcess} className="text-decoration-none ">
               <div className="nav-link-icon d-inline-flex mx-2">
-                <i className="far fa-folder"></i>
+                <i className="fa-solid fa-table-list"></i>
               </div>
               Quản lý quy trình
             </Link>
@@ -250,7 +256,7 @@ export default function AdminSalonSidebar(props) {
           <li className="nav-link">
             <Link to={path.manageStage} className="text-decoration-none ">
               <div className="nav-link-icon d-inline-flex mx-2">
-                <i className="far fa-folder"></i>
+                <i className="fa-solid fa-bars-staggered"></i>
               </div>
               Quản lý giai đoạn
             </Link>
@@ -258,7 +264,7 @@ export default function AdminSalonSidebar(props) {
           <li className="nav-link">
             <Link to="/" className="text-decoration-none ">
               <div className="nav-link-icon d-inline-flex mx-2">
-                <i className="far fa-folder"></i>
+                <i className="fa-solid fa-arrow-rotate-left"></i>
               </div>
               Trở về trang chủ
             </Link>

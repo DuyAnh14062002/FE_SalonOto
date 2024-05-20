@@ -2,7 +2,7 @@ a {
   color: #787272;
 }
 
-.topnav .navbar-brand {
+.topnav-admin .navbar-brand {
   width: 15rem;
   padding-left: 1rem;
   padding-right: 1rem;
@@ -11,11 +11,11 @@ a {
   font-weight: 700;
 }
 
-.topnav {
+.topnav-admin {
   padding-left: 0;
   padding: 10px 0px;
   z-index: 1039;
-  background: linear-gradient(to right, #4463ee, #754da6);
+  background-color: #fff;
 }
 
 #sidebar-toggle {
@@ -65,13 +65,13 @@ a {
   text-transform: uppercase;
 }
 
-.nav-fixed .topnav {
+.nav-fixed .topnav-admin {
   position: fixed;
   top: 0;
   right: 0;
   left: 0;
 }
-.topnav {
+.topnav-admin {
   z-index: 1030 !important;
   position: fixed;
   width: 100%;

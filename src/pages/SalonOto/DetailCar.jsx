@@ -8,7 +8,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import carApi from "../../apis/car.api";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
-import { Form} from "react-bootstrap";
+import { Form } from "react-bootstrap";
 export default function DetailCar() {
   const [car, setCar] = useState({});
   const [images, setImages] = useState([]);
@@ -63,7 +63,7 @@ export default function DetailCar() {
   const handleShowWarranty = () => {
     setShowWarranty(true);
   };
-  console.log("car : ", car)
+  console.log("car : ", car);
   return (
     <>
       <HeaderSalon />
@@ -82,7 +82,7 @@ export default function DetailCar() {
         </div>
         <div className="detail-option">
           <div className="sumary">
-            <div className="box-sumary">
+            <div className="box-sumary ">
               <i className="fa-regular fa-star"></i>
               <span>TỔNG QUAN</span>
             </div>
@@ -153,7 +153,7 @@ export default function DetailCar() {
           </div>
         </div>
         <div className="rate-detail">
-          <h4 className="rate-title">ĐÁNH GIÁ CHI TIẾT</h4>
+          <h4 className="rate-title fw-bold">ĐÁNH GIÁ CHI TIẾT</h4>
           <p className="comment-detail">
             Salon ô tô Đức Thiện vừa về chiếc bán tải Mazda BT50 số tự động 1
             cầu sản xuất 2015 cá nhân 1 chủ từ đầu biển Hà Nội chạy 10 vạn km
@@ -277,7 +277,7 @@ export default function DetailCar() {
         </div>
       </div>
       <FooterSalon />
-      <Modal show={showWarranty} onHide={handleCloseWarranty}>
+      <Modal show={showWarranty} onHide={handleCloseWarranty} backdrop="static">
         <Modal.Header closeButton>
           <Modal.Title>Thông tin bảo hành cho xe</Modal.Title>
         </Modal.Header>
@@ -307,11 +307,10 @@ export default function DetailCar() {
             <Form.Control
               as="textarea"
               //placeholder="Leave a comment here"
-              style={{ minHeight: '150px' }}
+              style={{ minHeight: "150px" }}
               value={car?.warranties?.policy}
               readOnly
             />
-            
           </Form.Group>
         </Modal.Body>
         <Modal.Footer>

@@ -165,7 +165,12 @@ export default function HistoryTransaction() {
           )}
         </tbody>
       </table>
-      <Modal show={showInfor} onHide={handleCloseInfor} size="lg">
+      <Modal
+        show={showInfor}
+        onHide={handleCloseInfor}
+        backdrop="static"
+        size="lg"
+      >
         <Form>
           <Modal.Header closeButton>
             <Modal.Title> Thông tin chi tiết dịch vụ đã bảo dưỡng </Modal.Title>
@@ -225,7 +230,7 @@ export default function HistoryTransaction() {
           </Modal.Footer>
         </Form>
       </Modal>
-      <Modal show={showWarranty} onHide={handleCloseWarranty}>
+      <Modal show={showWarranty} onHide={handleCloseWarranty} backdrop="static">
         <Modal.Header closeButton>
           <Modal.Title>Thông tin bảo hành cho xe</Modal.Title>
         </Modal.Header>

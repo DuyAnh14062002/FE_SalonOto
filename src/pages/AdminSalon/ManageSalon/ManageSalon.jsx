@@ -70,75 +70,74 @@ export default function ManageSalon() {
       <div id="content" className="container-fluid">
         <div className="card">
           <div className="card-header fw-bold">
-            <h4 className="text-center fw-bold py-1 my-0">Quản Lí Salon</h4>
+            <h4 className="text-center fw-bold py-1 my-0">Quản Lý Salon</h4>
           </div>
           <div className="card-body">
-            <div className="my-3 d-flex justify-content-between align-items-center">
+            <div className="my-3 d-flex justify-content-center align-items-center">
               {(permissions?.includes("OWNER") ||
                 permissions.includes("U_SL")) && (
                 <button className="btn btn-success" onClick={handleShow}>
-                  Cập nhật thông tin Salon
+                  Cập nhật thông tin salon
                 </button>
               )}
             </div>
             <div className="row">
-              <div className="col-3" style={{ margin: "10px 0" }}>
-                <label>Tên Salon</label>
-                <br />
-                <input
-                  className="form-group"
-                  style={{ width: "100%" }}
-                  value={salon && salon.name}
-                />
+              <div
+                className="col-3"
+                style={{ margin: "10px 0", fontSize: "18px" }}
+              >
+                <span className="fw-bold text-uppercase">Tên salon</span>
+                <p>{salon && salon.name}</p>
               </div>
-              <div className="col-3" style={{ margin: "10px 0" }}>
-                <label>Địa chỉ</label>
-                <br />
-                <input
-                  className="form-group"
-                  style={{ width: "100%" }}
-                  value={salon && salon.address}
-                />
+              <div
+                className="col-3"
+                style={{ margin: "10px 0", fontSize: "18px" }}
+              >
+                <span className="fw-bold text-uppercase">Địa chỉ</span>
+                <p>{salon && salon.address}</p>
               </div>
-              <div className="col-3" style={{ margin: "10px 0" }}>
-                <label>Email</label>
-                <br />
-                <input
-                  className="form-group"
-                  style={{ width: "100%" }}
-                  value={salon && salon.email}
-                />
+              <div
+                className="col-3"
+                style={{ margin: "10px 0", fontSize: "18px" }}
+              >
+                <span className="fw-bold text-uppercase">Email</span>
+                <p>{salon && salon.email}</p>
               </div>
-              <div className="col-3" style={{ margin: "10px 0" }}>
-                <label>Số điện thoại</label>
-                <br />
-                <input
-                  className="form-group"
-                  style={{ width: "100%" }}
-                  value={salon && salon.phoneNumber}
-                />
+              <div
+                className="col-3"
+                style={{ margin: "10px 0", fontSize: "18px" }}
+              >
+                <span className="fw-bold text-uppercase">Số điện thoại</span>
+                <p>{salon && salon.phoneNumber}</p>
               </div>
-              <div className="col-3" style={{ margin: "10px 0" }}>
-                <label>Ảnh Salon</label>
-                <br />
+              <div className="col-3"></div>
+              <div
+                className="col-3"
+                style={{ margin: "10px 0", fontSize: "18px" }}
+              >
+                <span className="fw-bold text-uppercase">Ảnh Salon</span>
+
                 <div
-                  className="image-salon-admin"
+                  className="image-salon-admin mt-3"
                   style={{ backgroundImage: `url(${salon.image})` }}
                 ></div>
               </div>
-              <div className="col-3" style={{ margin: "10px 0" }}>
-                <label>Ảnh Banner</label>
-                <br />
+              <div
+                className="col-3"
+                style={{ margin: "10px 0", fontSize: "18px" }}
+              >
+                <span className="fw-bold text-uppercase">Ảnh Banner</span>
                 <div
-                  className="banner-salon-admin"
+                  className="banner-salon-admin mt-3"
                   style={{ backgroundImage: `url(${salon.banner})` }}
                 ></div>
               </div>
+              <div className="col-3"></div>
             </div>
           </div>
         </div>
       </div>
-      <Modal show={show} onHide={handleClose}>
+      <Modal show={show} onHide={handleClose} backdrop="static">
         <Form noValidate>
           <Modal.Header closeButton>
             <Modal.Title>Cập nhật thông tin Salon</Modal.Title>

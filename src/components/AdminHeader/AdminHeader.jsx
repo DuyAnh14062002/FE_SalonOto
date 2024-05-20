@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
 import { path } from "../../constants/path";
-
+import "./AdminHeader.scss";
 export default function AdminHeader() {
   return (
-    <nav className="topnav shadow navbar-light bg-white d-flex">
+    <nav className="topnav-admin shadow navbar-light bg-white d-flex">
       <div className="navbar-brand">
         <Link to="/admin" className="text-decoration-none">
           <i className="fa-solid fa-car"></i>{" "}

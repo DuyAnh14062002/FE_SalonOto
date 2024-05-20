@@ -7,6 +7,7 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { toast } from "react-toastify";
 import maintenanceApi from "../../../apis/maintenance.api";
+import { formatCurrency } from "../../../utils/common";
 
 export default function ManageBuyMaintenance() {
   const [permissions, setPermission] = useState([]);
@@ -20,9 +21,9 @@ export default function ManageBuyMaintenance() {
   const [invoiceChoose, setInvoiceChoose] = useState({});
   // const [allMaintenance, setAllMaintenance] = useState([])
   const [searchInput, setSearchInput] = useState("");
-  const [showDelete, setShowDelete] = useState(false)
-  const [showUpdate, setShowUpdate] = useState(false)
-  const [accessory, setAccessory] =useState([])
+  const [showDelete, setShowDelete] = useState(false);
+  const [showUpdate, setShowUpdate] = useState(false);
+  const [accessory, setAccessory] = useState([]);
   const loadingUser = async () => {
     let res = await userApi.getProfile();
     if (res?.data?.profile?.permissions) {
@@ -38,24 +39,24 @@ export default function ManageBuyMaintenance() {
       });
       setMaintenances(newAllMaintenances);
     }
-  }; 
-  const loadingAccessory = async (salon_id) =>{
-    let res = await invoiceApi.getAccessory(salon_id)
-    if(res?.data?.accessory){
-      const allAccessory = res.data.accessory
+  };
+  const loadingAccessory = async (salon_id) => {
+    let res = await invoiceApi.getAccessory(salon_id);
+    if (res?.data?.accessory) {
+      const allAccessory = res.data.accessory;
       const newAllAccessory = allAccessory.map((item) => {
         return { ...item, checked: false };
       });
-       setAccessory(newAllAccessory)
+      setAccessory(newAllAccessory);
     }
-  }
+  };
 
   const fetchDataSalon = async () => {
     const res = await salonApi.getSalonInfor();
     if (res?.data?.salon) {
       loadingMaintenance(res.data.salon.salon_id);
-      loadingAccessory(res.data.salon.salon_id)
-      setSalon(res.data.salon)
+      loadingAccessory(res.data.salon.salon_id);
+      setSalon(res.data.salon);
     }
   };
   const loadingInvoice = async () => {
@@ -73,27 +74,27 @@ export default function ManageBuyMaintenance() {
     setShowAdd(false);
   };
   const handleShowAdd = (car) => {
-      const allAccessory = accessory
-      const newAllAccessory = allAccessory.map((item) => {
-        return { ...item, checked: false };
-      });
-      setAccessory(newAllAccessory)
-      
-      const allMaintenances = maintenances;
-      const newAllMaintenances = allMaintenances.map((item) => {
-        return { ...item, checked: false };
-      });
-      setMaintenances(newAllMaintenances);
-      
-      setShowAdd(true);
+    const allAccessory = accessory;
+    const newAllAccessory = allAccessory.map((item) => {
+      return { ...item, checked: false };
+    });
+    setAccessory(newAllAccessory);
+
+    const allMaintenances = maintenances;
+    const newAllMaintenances = allMaintenances.map((item) => {
+      return { ...item, checked: false };
+    });
+    setMaintenances(newAllMaintenances);
+
+    setShowAdd(true);
   };
   const handleShowDelete = (invoice) => {
-     setShowDelete(true)
-     setInvoiceChoose(invoice)
-  }
+    setShowDelete(true);
+    setInvoiceChoose(invoice);
+  };
   const handleCloseDelete = () => {
-    setShowDelete(false)
- }
+    setShowDelete(false);
+  };
   const handleShowInfor = (invoice) => {
     setInvoiceChoose(invoice);
     setShowInfo(true);
@@ -102,24 +103,26 @@ export default function ManageBuyMaintenance() {
     setShowInfo(false);
   };
   const handleShowUpdate = (invoice) => {
-    console.log("invoice : ", invoice)
+    console.log("invoice : ", invoice);
     setMaintenanceItem(invoice);
     setMaintenances((prev) => {
       return prev?.map((maintenance) => {
-        if(invoice.maintenanceServices.find((f) => f.name === maintenance.name)){
-          return {...maintenance, checked: true}
+        if (
+          invoice.maintenanceServices.find((f) => f.name === maintenance.name)
+        ) {
+          return { ...maintenance, checked: true };
         }
-        return {...maintenance, checked: false}
-      })
-    })
+        return { ...maintenance, checked: false };
+      });
+    });
     setAccessory((prev) =>
-       prev.map((item) => {
-        if(invoice.accessories.find((f) => f?.name === item?.name)){
-          return {...item, checked: true}
+      prev.map((item) => {
+        if (invoice.accessories.find((f) => f?.name === item?.name)) {
+          return { ...item, checked: true };
         }
-        return {...item, checked: false}
-       })
-    )
+        return { ...item, checked: false };
+      })
+    );
     setShowUpdate(true);
   };
   const handleCloseUpdate = () => {
@@ -140,8 +143,8 @@ export default function ManageBuyMaintenance() {
     const listAccessoryChecked = accessory.filter((item) => item.checked);
     const listAccessoryId = listAccessoryChecked.map((item) => ({
       accessory_id: item.accessory_id.toString(),
-      quantity: 1
-    }))
+      quantity: 1,
+    }));
     let res = await invoiceApi.createMaintenanceInvoice(
       maintenanceItem,
       listMaintenanceId,
@@ -177,17 +180,19 @@ export default function ManageBuyMaintenance() {
     }
   };
   const handleDelete = async () => {
-     let res = await invoiceApi.deleteInvoiceMaintenance(invoiceChoose.invoice_id)
-     if(res?.data?.status === "success"){
-       toast.success("Xóa giao dịch thành công")
-       setInvoiceChoose({})
-       handleCloseDelete()
-       loadingInvoice();
-     }else{
-      toast.error("Xóa giao dịch thất bại")
-     }
-  }
-  const handleUpdateMaintenance = async (e) =>{
+    let res = await invoiceApi.deleteInvoiceMaintenance(
+      invoiceChoose.invoice_id
+    );
+    if (res?.data?.status === "success") {
+      toast.success("Xóa giao dịch thành công");
+      setInvoiceChoose({});
+      handleCloseDelete();
+      loadingInvoice();
+    } else {
+      toast.error("Xóa giao dịch thất bại");
+    }
+  };
+  const handleUpdateMaintenance = async (e) => {
     e.preventDefault();
     const listMaintenanceChecked = maintenances.filter((item) => item.checked);
     const listMaintenanceId = listMaintenanceChecked.map((item) => ({
@@ -198,12 +203,12 @@ export default function ManageBuyMaintenance() {
     const listAccessoryChecked = accessory.filter((item) => item.checked);
     const listAccessoryId = listAccessoryChecked.map((item) => ({
       accessory_id: item.accessory_id.toString(),
-      quantity: 1
-    }))
+      quantity: 1,
+    }));
     let res = await invoiceApi.updateInvoiceMaintenance(
       maintenanceItem,
       listMaintenanceId,
-      listAccessoryId,
+      listAccessoryId
     );
     if (res?.data?.status === "success") {
       toast.success("Cập nhật giao dịch bảo dưỡng thành công");
@@ -213,19 +218,19 @@ export default function ManageBuyMaintenance() {
     } else {
       toast.error("Cập nhật giao dịch bảo dưỡng thất bại");
     }
-  }
+  };
   const handleChangeAccessory = (data) => {
-    console.log("data : ", data)
+    console.log("data : ", data);
     const newAllAccessory = accessory.map((item) => {
-      console.log("item : ", item)
+      console.log("item : ", item);
       if (item.accessory_id === data.accessory_id) {
         return { ...item, checked: !item.checked };
       }
       return item;
     });
     setAccessory(newAllAccessory);
-  }
-  console.log("acccessory : ", accessory)
+  };
+  console.log("acccessory : ", accessory);
   return (
     <>
       <div id="content" className="container-fluid">
@@ -272,8 +277,8 @@ export default function ManageBuyMaintenance() {
                   </th>
                   <th scope="col">Tên xe</th>
                   <th scope="col">Tên khách hàng</th>
-                  <th scope="col">email</th>
-                  <th scope="col">số điện thoại</th>
+                  <th scope="col">Email</th>
+                  <th scope="col">Số điện thoại</th>
                   <th scope="col">Tổng chi phí</th>
                   <th
                     scope="col"
@@ -294,7 +299,7 @@ export default function ManageBuyMaintenance() {
                       <td>{invoice.fullname}</td>
                       <td>{invoice.email}</td>
                       <td>{invoice.phone}</td>
-                      <td>{invoice.total}</td>
+                      <td>{formatCurrency(invoice.total)}</td>
                       <td className="text-center">
                         <button
                           className="btn btn-warning btn-sm rounded-0 text-white"
@@ -345,7 +350,7 @@ export default function ManageBuyMaintenance() {
           </div>
         </div>
       </div>
-      <Modal show={showAdd} onHide={handleCloseAdd}>
+      <Modal show={showAdd} onHide={handleCloseAdd} backdrop="static">
         <Form onSubmit={handleAddMaintenance}>
           <Modal.Header closeButton>
             <Modal.Title> Thêm mới giao dịch bảo dưỡng </Modal.Title>
@@ -420,9 +425,7 @@ export default function ManageBuyMaintenance() {
                     key={index}
                     type="checkbox"
                     checked={item.checked}
-                    onChange={() =>
-                      handleChangeAccessory(item)
-                    }
+                    onChange={() => handleChangeAccessory(item)}
                     value={item.accessory_id}
                     label={item?.name}
                   />
@@ -440,7 +443,12 @@ export default function ManageBuyMaintenance() {
           </Modal.Footer>
         </Form>
       </Modal>
-      <Modal show={showInfor} onHide={handleCloseInfor} size="lg">
+      <Modal
+        show={showInfor}
+        onHide={handleCloseInfor}
+        size="lg"
+        backdrop="static"
+      >
         <Form>
           <Modal.Header closeButton>
             <Modal.Title> Thông tin chi tiết dịch vụ đã bảo dưỡng </Modal.Title>
@@ -457,17 +465,16 @@ export default function ManageBuyMaintenance() {
                   </tr>
                 </thead>
                 <tbody>
-                  {
-                    invoiceChoose?.maintenanceServices?.length > 0  && invoiceChoose.maintenanceServices.map((item, index) => {
-                       return(
+                  {invoiceChoose?.maintenanceServices?.length > 0 &&
+                    invoiceChoose.maintenanceServices.map((item, index) => {
+                      return (
                         <tr key={index}>
-                        <td>{item.name}</td>
-                        <td>{item.cost}</td>
-                        <td>{invoiceChoose?.invoiceDate}</td>
-                      </tr>
-                       )
-                    })
-                  }
+                          <td>{item.name}</td>
+                          <td>{item.cost}</td>
+                          <td>{invoiceChoose?.invoiceDate}</td>
+                        </tr>
+                      );
+                    })}
                 </tbody>
               </table>
               <h2 class="text-center">Bảng phụ tùng sửa chữa</h2>
@@ -480,17 +487,16 @@ export default function ManageBuyMaintenance() {
                   </tr>
                 </thead>
                 <tbody>
-                  {
-                    invoiceChoose?.accessories?.length > 0  && invoiceChoose.accessories.map((item, index) => {
-                       return(
+                  {invoiceChoose?.accessories?.length > 0 &&
+                    invoiceChoose.accessories.map((item, index) => {
+                      return (
                         <tr key={index}>
-                        <td>{item.name}</td>
-                        <td>{item.price}</td>
-                        <td>{invoiceChoose?.invoiceDate}</td>
-                      </tr>
-                       )
-                    })
-                  }
+                          <td>{item.name}</td>
+                          <td>{item.price}</td>
+                          <td>{invoiceChoose?.invoiceDate}</td>
+                        </tr>
+                      );
+                    })}
                 </tbody>
               </table>
             </div>
@@ -502,15 +508,12 @@ export default function ManageBuyMaintenance() {
           </Modal.Footer>
         </Form>
       </Modal>
-      <Modal show={showDelete} onHide={handleCloseDelete}>
+      <Modal show={showDelete} onHide={handleCloseDelete} backdrop="static">
         <Modal.Header closeButton>
           <Modal.Title>Xóa giao dịch bảo dưỡng</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <span>
-            Bạn có chắc chắn muốn xóa giao dịch này
-            không ?
-          </span>
+          <span>Bạn có chắc chắn muốn xóa giao dịch này không ?</span>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleCloseDelete}>
@@ -521,7 +524,7 @@ export default function ManageBuyMaintenance() {
           </Button>
         </Modal.Footer>
       </Modal>
-      <Modal show={showUpdate} onHide={handleCloseUpdate}>
+      <Modal show={showUpdate} onHide={handleCloseUpdate} backdrop="static">
         <Form onSubmit={handleUpdateMaintenance}>
           <Modal.Header closeButton>
             <Modal.Title> Cập nhật giao dịch bảo dưỡng </Modal.Title>
@@ -601,9 +604,7 @@ export default function ManageBuyMaintenance() {
                     key={index}
                     type="checkbox"
                     checked={item.checked}
-                    onChange={() =>
-                      handleChangeAccessory(item)
-                    }
+                    onChange={() => handleChangeAccessory(item)}
                     value={item.accessory_id}
                     label={item?.name}
                   />

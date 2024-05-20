@@ -8,6 +8,7 @@ import salonApi from "../../../apis/salon.api";
 import carApi from "../../../apis/car.api";
 import userApi from "../../../apis/user.api";
 import warrantyApi from "../../../apis/warranty.api";
+import { formatCurrency } from "../../../utils/common";
 export default function ManageCar() {
   const [cars, setCars] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -249,7 +250,7 @@ export default function ManageCar() {
     }
   };
   const handleChooseWarranty = (item) => {
-    console.log("item warranty : ", item)
+    console.log("item warranty : ", item);
     setWarrantyId(item.warranty_id);
   };
   const handleUpdateWarranty = async () => {
@@ -258,7 +259,7 @@ export default function ManageCar() {
       warrantyId,
       car.car_id
     );
-    console.log("res update warranty : ", res)
+    console.log("res update warranty : ", res);
     if (res?.data?.status === "success") {
       toast.success("Cập nhật gói bảo hiểm cho xe thành công");
       handleCloseWarranty();
@@ -268,9 +269,12 @@ export default function ManageCar() {
       toast.error("Cập nhật gói bảo hiểm thất bại");
     }
   };
-  const HandleRemoveWarranty = async () =>{
-    let res = await warrantyApi.deleteWarranty(salon.salon_id, carWanrranty.warranty_id)
-    console.log("res delete warranty : ", res)
+  const HandleRemoveWarranty = async () => {
+    let res = await warrantyApi.deleteWarranty(
+      salon.salon_id,
+      carWanrranty.warranty_id
+    );
+    console.log("res delete warranty : ", res);
     if (res?.data?.status === "success") {
       toast.success("Xóa gói bảo hiểm cho xe thành công");
       handleCloseWarranty();
@@ -279,8 +283,8 @@ export default function ManageCar() {
     } else {
       toast.error("Xóa gói bảo hiểm thất bại");
     }
-  }
-  console.log("warrantyId : ", warrantyId)
+  };
+  console.log("warrantyId : ", warrantyId);
   return (
     <>
       <div id="content" className="container-fluid">
@@ -297,7 +301,7 @@ export default function ManageCar() {
                   id="search"
                   className="form-control"
                   style={{ width: "65%" }}
-                  placeholder="Nhập tên tính năng"
+                  placeholder="Nhập tên xe"
                 />
                 <button className="btn btn-primary mx-2">Tìm kiếm</button>
               </div>
@@ -315,9 +319,15 @@ export default function ManageCar() {
                     STT
                   </th>
                   <th scope="col">Tên xe</th>
-                  <th scope="col">nhẵn hiệu</th>
-                  <th scope="col">modal</th>
-                  <th scope="col">giá</th>
+                  <th scope="col" className="text-center">
+                    Nhẵn hiệu
+                  </th>
+                  <th scope="col" className="text-center">
+                    Modal
+                  </th>
+                  <th scope="col" className="text-center">
+                    Giá
+                  </th>
                   <th scope="col" className="text-center">
                     Tác vụ
                   </th>
@@ -330,9 +340,11 @@ export default function ManageCar() {
                       <td className="text-center">{++index}</td>
 
                       <td>{car.name}</td>
-                      <td>{car.brand}</td>
-                      <td>{car.model}</td>
-                      <td>{car.price}</td>
+                      <td className="text-center">{car.brand}</td>
+                      <td className="text-center">{car.model}</td>
+                      <td className="text-center">
+                        {formatCurrency(car.price)}
+                      </td>
                       <td className="text-center">
                         <button
                           className="btn btn-warning btn-sm rounded-0 text-white"
@@ -516,7 +528,7 @@ export default function ManageCar() {
           </Modal.Footer>
         </Form>
       </Modal>
-      <Modal show={showUpdate} onHide={handleCloseUpdate}>
+      <Modal show={showUpdate} onHide={handleCloseUpdate} backdrop="static">
         <Form noValidate>
           <Modal.Header closeButton>
             <Modal.Title> Cập nhật thông tin xe</Modal.Title>
@@ -688,7 +700,7 @@ export default function ManageCar() {
           </Modal.Footer>
         </Form>
       </Modal>
-      <Modal show={showAdd} onHide={handleCloseAdd}>
+      <Modal show={showAdd} onHide={handleCloseAdd} backdrop="static">
         <Form onSubmit={handleAddCar}>
           <Modal.Header closeButton>
             <Modal.Title> Thêm xe mới </Modal.Title>
@@ -850,7 +862,7 @@ export default function ManageCar() {
           </Modal.Footer>
         </Form>
       </Modal>
-      <Modal show={showDelete} onHide={handleCloseDelete}>
+      <Modal show={showDelete} onHide={handleCloseDelete} backdrop="static">
         <Modal.Header closeButton>
           <Modal.Title>Xóa tính năng</Modal.Title>
         </Modal.Header>
@@ -869,13 +881,15 @@ export default function ManageCar() {
           </Button>
         </Modal.Footer>
       </Modal>
-      <Modal show={showWarranty} onHide={handleCloseWarranty}>
+      <Modal show={showWarranty} onHide={handleCloseWarranty} backdrop="static">
         <Modal.Header closeButton>
           <Modal.Title>Cập nhật bảo hành cho xe</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form.Group className="mt-4">
-            <Button variant="danger" onClick={HandleRemoveWarranty}>Bỏ gói bảo hành</Button>
+            <Button variant="danger" onClick={HandleRemoveWarranty}>
+              Bỏ gói bảo hành
+            </Button>
           </Form.Group>
 
           <Form.Group className="mt-4">
@@ -890,7 +904,11 @@ export default function ManageCar() {
           </Form.Group>
           <Form.Group className="mt-4">
             <Form.Label>Chọn Gói bảo hành</Form.Label>
-            <Form.Select aria-label="Default select example" onChange={(e)=>setWarrantyId(e.target.value)} value ={warrantyId}>
+            <Form.Select
+              aria-label="Default select example"
+              onChange={(e) => setWarrantyId(e.target.value)}
+              value={warrantyId}
+            >
               {warranties &&
                 warranties.length > 0 &&
                 warranties.map((item) => {

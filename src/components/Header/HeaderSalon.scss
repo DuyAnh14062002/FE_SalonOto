@@ -12,13 +12,14 @@
       position: relative;
       top: -2px;
       left: -103px;
-      color: blue;
-      border: 1px solid blue;
+      color: #fff;
+      border: 1px solid #fff;
       padding: 2px 5px;
       border-radius: 50%;
       cursor: pointer;
       &:hover {
-        background-color: rgb(24, 184, 237);
+        color: #edeaea;
+        border: 1px solid #edeaea;
         transition: 0.2s;
       }
     }

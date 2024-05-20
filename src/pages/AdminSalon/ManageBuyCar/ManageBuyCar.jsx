@@ -226,7 +226,9 @@ export default function ManageBuyCar() {
                   <th scope="col">số điện thoại</th>
                   <th scope="col">Email</th>
                   <th scope="col">Tên xe</th>
-                  <th scope="col">Tổng tiền</th>
+                  <th scope="col" className="text-center">
+                    Tổng tiền
+                  </th>
                   <th scope="col">Trạng thái</th>
                   <th
                     scope="col"
@@ -247,7 +249,9 @@ export default function ManageBuyCar() {
                       <td>{invoice.phone}</td>
                       <td>{invoice.email}</td>
                       <td>{invoice.carName}</td>
-                      <td>{formatCurrency(invoice.expense)}</td>
+                      <td className="text-center">
+                        {formatCurrency(invoice.expense)}
+                      </td>
                       <td>
                         {invoice?.done ? (
                           <span class="badge bg-success">Hoàn thành</span>
@@ -316,7 +320,7 @@ export default function ManageBuyCar() {
           </div>
         </div>
       </div>
-      <Modal show={showAdd} onHide={handleCloseAdd}>
+      <Modal show={showAdd} onHide={handleCloseAdd} backdrop="static">
         <Form onSubmit={handleAddBuyCar}>
           <Modal.Header closeButton>
             <Modal.Title> Thêm mới giao dịch mua xe</Modal.Title>
@@ -400,7 +404,7 @@ export default function ManageBuyCar() {
           </Modal.Footer>
         </Form>
       </Modal>
-      <Modal show={showDelete} onHide={handleCloseDelete}>
+      <Modal show={showDelete} onHide={handleCloseDelete} backdrop="static">
         <Modal.Header closeButton>
           <Modal.Title>Xóa tính năng</Modal.Title>
         </Modal.Header>
@@ -416,7 +420,7 @@ export default function ManageBuyCar() {
           </Button>
         </Modal.Footer>
       </Modal>
-      <Modal show={showWarranty} onHide={handleCloseWarranty}>
+      <Modal show={showWarranty} onHide={handleCloseWarranty} backdrop="static">
         <Modal.Header closeButton>
           <Modal.Title>Thông tin bảo hành cho xe</Modal.Title>
         </Modal.Header>

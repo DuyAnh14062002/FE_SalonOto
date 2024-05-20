@@ -10,14 +10,17 @@ import userApi from "../../apis/user.api";
 import salonApi from "../../apis/salon.api";
 import { useLocation, useNavigate } from "react-router-dom";
 import { path } from "../../constants/path";
+import { loginUser } from "../../redux/slices/UserSlice";
+import { useDispatch } from "react-redux";
+
 const AccountProfile = (props) => {
   const [emailInvite, setEmailInvite] = useState("");
   const [show, setShow] = useState(false);
-  const [showCreatePassword, setShowPassword] = useState(false)
+  const [showCreatePassword, setShowPassword] = useState(false);
   const [salon, setSalon] = useState({});
   const [profile1, setProfile1] = useState({});
-  const [password, setPassword] = useState("")
-  const [retypePassword, setRetypePassword] = useState("")
+  const [password, setPassword] = useState("");
+  const [retypePassword, setRetypePassword] = useState("");
   const [profile, setProfile] = useState({
     fullname: "",
     phone: "",
@@ -25,20 +28,21 @@ const AccountProfile = (props) => {
     date_of_birth: "",
     address: "",
   });
+  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const location = useLocation()
+  const location = useLocation();
   const [image, setImage] = useState(null);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-  useEffect(() =>{
-    const createPassword =  location?.state?.createPassword
-    if(createPassword && createPassword === true){
-      setShowPassword(true)
+  useEffect(() => {
+    const createPassword = location?.state?.createPassword;
+    if (createPassword && createPassword === true) {
+      setShowPassword(true);
     }
-  }, [])
-  const handleCloseCreatePassword = () =>{
-     setShowPassword(false)
-  }
+  }, []);
+  const handleCloseCreatePassword = () => {
+    setShowPassword(false);
+  };
   useEffect(() => {
     const getSalonInfo = async () => {
       try {
@@ -54,26 +58,26 @@ const AccountProfile = (props) => {
     setEmailInvite(e.target.value);
   };
   const handleSetPassword = async (e) => {
-    e.preventDefault()
-    if(password === retypePassword)
-    {
-       let res = await authApi.createNewPassword(password)
-       console.log("res create password : ", res)
-       setShowPassword(false)
-       toast.success("Đặt mật khẩu thành công")
-        navigate("/profile", {
-           state : null
-        })
-    }else{
-      toast.error("Mật khẩu nhập lại không khớp")
+    e.preventDefault();
+    if (password === retypePassword) {
+      let res = await authApi.createNewPassword(password);
+      console.log("res create password : ", res);
+      setShowPassword(false);
+      toast.success("Đặt mật khẩu thành công");
+      navigate("/profile", {
+        state: null,
+      });
+    } else {
+      toast.error("Mật khẩu nhập lại không khớp");
     }
-
-
-  }
+  };
   const getProfile = async () => {
     const res = await userApi.getProfile();
     if (res?.data?.profile) {
       setProfile1(res.data.profile);
+      setProfile(res.data.profile);
+      dispatch(loginUser(res.data.profile));
+      setProfile(res.data.profile);
     }
   };
   useEffect(() => {
@@ -97,10 +101,13 @@ const AccountProfile = (props) => {
   };
   const handleLinkGoogle = () => {
     try {
-      if(profile1?.google != null){
-        toast.error("Bạn đã liên kết tài khoản google rồi")
-      }else{
-        window.open("https://server-graduation-thesis-1.onrender.com/auth/google", "_self");
+      if (profile1?.google != null) {
+        toast.error("Bạn đã liên kết tài khoản google rồi");
+      } else {
+        window.open(
+          "https://server-graduation-thesis-1.onrender.com/auth/google",
+          "_self"
+        );
       }
     } catch (error) {
       console.log(error);
@@ -108,15 +115,19 @@ const AccountProfile = (props) => {
   };
   const handleLinkFacebook = () => {
     try {
-      if(profile1?.facebook != null){
-        toast.error("Bạn đã liên kết tài khoản facebook rồi")
-      }else{
-        window.open("https://server-graduation-thesis-1.onrender.com/auth/facebook", "_self");
+      if (profile1?.facebook != null) {
+        toast.error("Bạn đã liên kết tài khoản facebook rồi");
+      } else {
+        window.open(
+          "https://server-graduation-thesis-1.onrender.com/auth/facebook",
+          "_self"
+        );
       }
     } catch (error) {
       console.log(error);
     }
   };
+
   const handleOnchange = (e) => {
     setProfile({ ...profile, [e.target.name]: e.target.value });
   };
@@ -154,18 +165,24 @@ const AccountProfile = (props) => {
   };
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    const day = date.getDate().toString().padStart(2, '0'); // Lấy ngày và thêm số 0 phía trước nếu cần
-    const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Lấy tháng và thêm số 0 phía trước nếu cần
+    const day = date.getDate().toString().padStart(2, "0"); // Lấy ngày và thêm số 0 phía trước nếu cần
+    const month = (date.getMonth() + 1).toString().padStart(2, "0"); // Lấy tháng và thêm số 0 phía trước nếu cần
     const year = date.getFullYear().toString(); // Lấy năm
-    
+
     return `${day}/${month}/${year}`;
   };
   const handleShowHistory = () => {
-    navigate(`${path.historyTransaction}`)
-  }
-  const handleShowPostSell = () =>{
-    navigate(`${path.postSellCar}`)
-  }
+    navigate(`${path.historyTransaction}`);
+  };
+  const handleShowPostSell = () => {
+    navigate(`${path.postSellCar}`);
+  };
+  const formatDateOfBirth = (isoString) => {
+    if (isoString && isoString.includes("T")) {
+      return isoString.split("T")[0];
+    }
+    return isoString;
+  };
   return (
     <>
       <Header otherPage={true} />
@@ -176,53 +193,59 @@ const AccountProfile = (props) => {
               <div className="row">
                 <div className="col-12 profile">
                   <div className="blog-comments">
-                    <h2>Thông tin cá nhân</h2>
-                    <div className="comments-body">
+                    <h2 className="text-center fw-bold text-uppercase">
+                      Thông tin cá nhân
+                    </h2>
+                    <div className="comments-body mt-5">
                       <div className="single-comments">
                         <div className="main">
                           <div className="body">
-                            <div className="row ">
-                              <div className="col-lg-3">
+                            <div className="grid-container">
+                              <div className="avatar">
                                 <div className="head">
-                                  <div
-                                    className="user-image"
-                                    style={{
-                                      backgroundImage: `url(${
-                                        profile1 && profile1.avatar
-                                      })`,
-                                    }}
-                                  ></div>
+                                  <div className="info">
+                                    <img
+                                      src={profile1 && profile1.avatar}
+                                      alt=""
+                                    />
+                                  </div>
                                 </div>
                               </div>
-                              <div className="col-lg-3 col-md-4 col-12 ">
+                              <div>
                                 <div className="info">
                                   <h4>Họ tên</h4>
                                   <p>{profile1 && profile1.fullname}</p>
                                 </div>
                               </div>
-                              <div className="col-lg-3 col-md-4 col-12">
+                              <div>
                                 <div className="info">
                                   <h4>Giới tính</h4>
-                                  <p>{profile1 && profile1.gender}</p>
+                                  <p className="text-capitalize">
+                                    {profile1 && profile1.gender}
+                                  </p>
                                 </div>
                               </div>
-                              <div className="col-lg-3 col-md-4 col-12">
+                              <div>
                                 <div className="info">
                                   <h4>Số điện thoại</h4>
                                   <p>{profile1 && profile1.phone}</p>
                                 </div>
                               </div>
-                              <div className="col-lg-3 col-md-4 col-12"></div>
-                              <div className="col-lg-3 col-md-4 col-12">
+
+                              <div>
                                 <div className="info">
                                   <h4>Địa chỉ</h4>
                                   <p>{profile1 && profile1.address}</p>
                                 </div>
                               </div>
-                              <div className="col-lg-3 col-md-4 col-12">
+                              <div>
                                 <div className="info">
                                   <h4>Ngày sinh</h4>
-                                  <p>{profile1 && profile1.date_of_birth !== "" ? formatDate(profile1.date_of_birth) : ""}</p>
+                                  <p>
+                                    {profile1 && profile1.date_of_birth !== ""
+                                      ? formatDate(profile1.date_of_birth)
+                                      : ""}
+                                  </p>
                                 </div>
                               </div>
                             </div>
@@ -232,14 +255,16 @@ const AccountProfile = (props) => {
                     </div>
                   </div>
                 </div>
-                <div className="col-12 profile">
+                <div className="col-12 profile mt-5">
                   <div className="comments-form mt-3">
-                    <h2>Cập nhật thông tin cá nhân</h2>
-                    <div className="form">
+                    <h2 className="text-center fw-bold text-uppercase">
+                      Cập nhật thông tin cá nhân
+                    </h2>
+                    <div className="form mt-5">
                       <div className="row mt-3">
                         <div className="col-lg-4 col-md-4 col-12 ">
                           <div className="update-container">
-                            <i className="fa fa-user"></i>
+                            <i className="fa fa-user mx-2"></i>
                             <input
                               type="text"
                               name="fullname"
@@ -251,7 +276,7 @@ const AccountProfile = (props) => {
                         </div>
                         <div className="col-lg-4 col-md-4 col-12 ">
                           <div className="update-container">
-                            <i class="fa-solid fa-venus-mars"></i>
+                            <i class="fa-solid fa-venus-mars mx-2"></i>
                             <input
                               type="text"
                               name="gender"
@@ -263,7 +288,7 @@ const AccountProfile = (props) => {
                         </div>
                         <div className="col-lg-4 col-md-4 col-12 ">
                           <div className="update-container">
-                            <i className="fa fa-phone"></i>
+                            <i className="fa fa-phone mx-2"></i>
                             <input
                               type="tel"
                               name="phone"
@@ -275,7 +300,7 @@ const AccountProfile = (props) => {
                         </div>
                         <div className="col-lg-4 col-md-4 col-12 mt-3">
                           <div className="update-container">
-                            <i class="fa-solid fa-location-dot"></i>
+                            <i class="fa-solid fa-location-dot mx-2"></i>
                             <input
                               type="text"
                               name="address"
@@ -287,19 +312,19 @@ const AccountProfile = (props) => {
                         </div>
                         <div className="col-lg-4 col-md-4 col-12 mt-3">
                           <div className="update-container">
-                            <i class="fa-solid fa-cake-candles"></i>
+                            <i class="fa-solid fa-cake-candles mx-2"></i>
                             <input
                               type="date"
                               name="date_of_birth"
                               placeholder="Ngày sinh"
-                              value={profile.date_of_birth}
+                              value={formatDateOfBirth(profile.date_of_birth)}
                               onChange={handleOnchange}
                             />
                           </div>
                         </div>
                         <div className="col-lg-4 col-md-4 col-12 mt-3">
                           <div className="update-container">
-                            <i className="fa-regular fa-image"></i>
+                            <i className="fa-regular fa-image mx-2"></i>
                             <input
                               type="file"
                               name="avatar"
@@ -320,62 +345,85 @@ const AccountProfile = (props) => {
                             </button>
                           </div>
                         </div>
-                        <div className="col-12">
-                          {salon && (
-                            <Button
-                              variant="success"
-                              className="mt-3"
-                              onClick={handleShow}
-                              style={{ marginRight: "10px" }}
-                            >
-                              <i className="fa-solid fa-user-plus"></i> Mời bạn
-                              bè
-                            </Button>
-                          )}
-
-                          <Button
-                            className="mt-3 btn-profile"
-                            style={{
-                              backgroundColor: "red",
-                              marginRight: "10px",
-                            }}
-                            type="button"
-                            onClick={handleLinkGoogle}
-                          >
-                            {profile1?.google && ( <span className="tick"><i class="fa-solid fa-circle-check"></i></span>)}
-                            <i className="fab fa-google me-2"></i> Liên kết với
-                            google
-                          </Button>
-                          <Button
-                            className="mt-3 btn-profile"
-                            style={{ backgroundColor: "#dd4b39;" }}
-                            type="button"
-                            onClick={handleLinkFacebook}
-                          >
-                            {profile1?.facebook && ( <span className="tick"><i class="fa-solid fa-circle-check"></i></span>)}
-                            <i className="fab fa-facebook-f me-2"></i>Liên kết
-                            với facebook
-                          </Button>
-                          <Button
-                            className="mt-3 btn-profile"
-                            type="button"
-                            onClick={handleShowHistory}
-                            style={{backgroundColor: "#883342", marginLeft: "10px", border: "none"}}
-                          >
-                            <i class="fa-solid fa-clock-rotate-left" style={{marginRight : "5px"}}></i>
-                            Xem lịch sử giao dịch
-                          </Button>
-                          <Button
-                            className="mt-3 btn-profile"
-                            type="button"
-                            onClick={handleShowPostSell}
-                            style={{backgroundColor: "#fd720d;", marginLeft: "10px", border: "none"}}
-                          >
-                            <i class="fa-solid fa-pen-to-square" style={{marginRight : "5px"}}></i> 
-                            Đăng bài bán xe
-                          </Button>
-                        </div>
                       </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="col-12 profile mt-5">
+                  <div className="comments-form mt-3">
+                    <h2 className="text-center fw-bold text-uppercase">
+                      Tính năng hỗ trợ
+                    </h2>
+                    <div className="text-center">
+                      {salon && (
+                        <Button
+                          variant="success"
+                          className="mt-3"
+                          onClick={handleShow}
+                        >
+                          <i className="fa-solid fa-user-plus"></i> Mời bạn bè
+                        </Button>
+                      )}
+                      <Button
+                        className="mt-3 btn-profile function-additional"
+                        style={{
+                          backgroundColor: "red",
+                        }}
+                        type="button"
+                        onClick={handleLinkGoogle}
+                      >
+                        {profile1?.google && (
+                          <span className="tick">
+                            <i class="fa-solid fa-circle-check"></i>
+                          </span>
+                        )}
+                        <i className="fab fa-google me-2"></i> Liên kết với
+                        google
+                      </Button>
+                      <Button
+                        className="mt-3 btn-profile function-additional"
+                        style={{ backgroundColor: "#dd4b39;" }}
+                        type="button"
+                        onClick={handleLinkFacebook}
+                      >
+                        {profile1?.facebook && (
+                          <span className="tick">
+                            <i class="fa-solid fa-circle-check"></i>
+                          </span>
+                        )}
+                        <i className="fab fa-facebook-f me-2"></i>Liên kết với
+                        facebook
+                      </Button>
+                      <Button
+                        className="mt-3 btn-profile function-additional"
+                        type="button"
+                        onClick={handleShowHistory}
+                        style={{
+                          backgroundColor: "#883342",
+                          border: "none",
+                        }}
+                      >
+                        <i
+                          class="fa-solid fa-clock-rotate-left"
+                          style={{ marginRight: "5px" }}
+                        ></i>
+                        Xem lịch sử giao dịch
+                      </Button>
+                      <Button
+                        className="mt-3 btn-profile function-additional"
+                        type="button"
+                        onClick={handleShowPostSell}
+                        style={{
+                          backgroundColor: "#fd720d",
+                          border: "none",
+                        }}
+                      >
+                        <i
+                          class="fa-solid fa-pen-to-square"
+                          style={{ marginRight: "5px" }}
+                        ></i>
+                        Đăng bài bán xe
+                      </Button>
                     </div>
                   </div>
                 </div>
@@ -384,7 +432,7 @@ const AccountProfile = (props) => {
           </div>
         </div>
 
-        <Modal show={show} onHide={handleClose}>
+        <Modal show={show} onHide={handleClose} backdrop="static">
           <Form onSubmit={handleSubmitInviteUser}>
             <Modal.Header closeButton>
               <Modal.Title>Mời người dùng vào salon</Modal.Title>
@@ -410,8 +458,12 @@ const AccountProfile = (props) => {
             </Modal.Footer>
           </Form>
         </Modal>
-        <Modal show={showCreatePassword} onHide={handleCloseCreatePassword} backdrop="static">
-          <Form onSubmit={handleSetPassword} >
+        <Modal
+          show={showCreatePassword}
+          onHide={handleCloseCreatePassword}
+          backdrop="static"
+        >
+          <Form onSubmit={handleSetPassword}>
             <Modal.Header>
               <Modal.Title>Tạo mật khẩu cho tài khoản của bạn</Modal.Title>
             </Modal.Header>
@@ -442,7 +494,6 @@ const AccountProfile = (props) => {
             </Modal.Footer>
           </Form>
         </Modal>
-
       </section>
     </>
   );

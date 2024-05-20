@@ -140,7 +140,7 @@ export default function HeaderSalon() {
         id: id,
         salonId: idSalon,
       });
-      const newListNotification =  listNotification?.filter(
+      const newListNotification = listNotification?.filter(
         (notification) => notification.id !== id
       );
       setListNotification(newListNotification);
@@ -261,11 +261,13 @@ export default function HeaderSalon() {
           <Link className="item-menu">Giới thiệu</Link>
           <Link className="item-menu">Tin tức</Link>
           <Link className="item-menu">Dịch vụ</Link>
-          <Link className="item-menu" to= {path.listMaintenance}>Bảo dưỡng</Link>
+          <Link className="item-menu" to={path.listMaintenance}>
+            Bảo dưỡng
+          </Link>
           <Link to="/salonOto/contact" className="item-menu">
             Liên hệ
           </Link>
-          {userIdSalon === userInfor.user_id ? (
+          {userIdSalon === userInfor?.user_id ? (
             <div className="messenger mx-3" onClick={HandleMessageNavigate}>
               <i class="fa-brands fa-facebook-messenger"></i>
             </div>

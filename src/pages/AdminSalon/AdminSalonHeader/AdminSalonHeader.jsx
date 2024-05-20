@@ -124,45 +124,38 @@ export default function AdminSalonHeader() {
         </Modal.Footer>
       </Modal>
       <div className="navbar-brand">
-        <Link to="/admin" className="text-decoration-none">
+        <Link to="/admin" className="text-decoration-none text-white">
           <i className="fa-solid fa-car"></i>{" "}
           <span className="mx-2">SALON OTO ADMIN</span>
         </Link>
       </div>
       <div className="nav-right">
-        <div className="btn-group mr-auto">
-          <div className="dropdown">
-            <button
-              className="btn dropdown-toggle"
-              type="button"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
-            >
-              <i className="plus-icon fas fa-plus-circle"></i>
-            </button>
-            <div className="dropdown-menu">
-              <Link className="dropdown-item" to={path.manageSalon}>
-                Quản lí Salon
-              </Link>
-              <Link className="dropdown-item" to={path.manageCar}>
-                Quản lý xe
-              </Link>
-            </div>
-          </div>
-        </div>
+        <div className="btn-group mr-auto"></div>
 
         <div className="btn-group">
           <div className="dropdown">
             <button
               type="button"
-              className="btn dropdown-toggle d-flex justify-content-between align-items-center"
+              className="btn dropdown-toggle text-white d-flex justify-content-between align-items-center"
               data-bs-toggle="dropdown"
             >
-              <i className="fa-solid fa-user mx-2"></i>
-              <span>{userInfo?.fullname}</span>
+              <div
+                style={{
+                  width: "25px",
+                  height: "25px",
+                  marginRight: "6px",
+                }}
+              >
+                <img
+                  src={userInfo?.avatar}
+                  alt=""
+                  className="w-100 h-100 object-cover rounded-circle"
+                />
+              </div>
+              <span className="text-white">{userInfo?.fullname}</span>
             </button>
-            <div className="dropdown-menu dropdown-menu-right">
-              <Link className="dropdown-item" to="/">
+            <div className="dropdown-menu dropdown-menu-right ">
+              <Link className="dropdown-item" to="/profile">
                 Tài khoản
               </Link>
               <Link className="dropdown-item" to="/">

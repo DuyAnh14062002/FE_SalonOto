@@ -339,7 +339,7 @@ export default function ManagePackage() {
             )}
           </div>
         </div>
-        <Modal show={show} onHide={handleClose}>
+        <Modal show={show} onHide={handleClose} backdrop="static">
           <Form onSubmit={handleAddPackage}>
             <Modal.Header closeButton>
               <Modal.Title>Thêm gói dịch vụ</Modal.Title>
@@ -411,7 +411,7 @@ export default function ManagePackage() {
             </Modal.Footer>
           </Form>
         </Modal>
-        <Modal show={showEdit} onHide={handleCloseEdit}>
+        <Modal show={showEdit} onHide={handleCloseEdit} backdrop="static">
           <Form>
             <Modal.Header closeButton>
               <Modal.Title>Cập nhật gói dịch vụ</Modal.Title>
@@ -482,7 +482,7 @@ export default function ManagePackage() {
             </Modal.Footer>
           </Form>
         </Modal>
-        <Modal show={showInfo} onHide={handleCloseInfo}>
+        <Modal show={showInfo} onHide={handleCloseInfo} backdrop="static">
           <Form noValidate>
             <Modal.Header closeButton>
               <Modal.Title>Xem chi tiết gói dịch vụ</Modal.Title>
@@ -552,7 +552,7 @@ export default function ManagePackage() {
             </Modal.Footer>
           </Form>
         </Modal>
-        <Modal show={showDelete} onHide={handleCloseDelete}>
+        <Modal show={showDelete} onHide={handleCloseDelete} backdrop="static">
           <Modal.Header closeButton>
             <Modal.Title>Xóa tính năng</Modal.Title>
           </Modal.Header>

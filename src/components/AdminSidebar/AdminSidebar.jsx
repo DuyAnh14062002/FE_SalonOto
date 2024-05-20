@@ -10,7 +10,7 @@ export default function AdminSidebar() {
           <li className="nav-link">
             <Link to="/admin" className="text-decoration-none">
               <div className="nav-link-icon d-inline-flex mx-2">
-                <i className="far fa-folder"></i>
+                <i className="fa-solid fa-chart-simple"></i>
               </div>
               Thống kê
             </Link>
@@ -18,7 +18,7 @@ export default function AdminSidebar() {
           <li className="nav-link">
             <Link to={path.managePackage} className="text-decoration-none">
               <div className="nav-link-icon d-inline-flex mx-2">
-                <i className="far fa-folder"></i>
+                <i className="fa-solid fa-box"></i>
               </div>
               Quản lý gói
             </Link>
@@ -26,7 +26,7 @@ export default function AdminSidebar() {
           <li className="nav-link">
             <Link to={path.manageFeature} className="text-decoration-none ">
               <div className="nav-link-icon d-inline-flex mx-2">
-                <i className="far fa-folder"></i>
+                <i className="fa-brands fa-ubuntu"></i>
               </div>
               Quản lý tính năng
             </Link>
@@ -34,7 +34,7 @@ export default function AdminSidebar() {
           <li className="nav-link">
             <Link to="/" className="text-decoration-none ">
               <div className="nav-link-icon d-inline-flex mx-2">
-                <i className="far fa-folder"></i>
+                <i className="fa-solid fa-newspaper"></i>
               </div>
               Quản lý tin tức
             </Link>
@@ -42,7 +42,7 @@ export default function AdminSidebar() {
           <li className="nav-link">
             <Link to="/" className="text-decoration-none ">
               <div className="nav-link-icon d-inline-flex mx-2">
-                <i className="far fa-folder"></i>
+                <i className="fa-solid fa-user"></i>
               </div>
               Quản lý users
             </Link>

@@ -416,7 +416,7 @@ export default function ManageStage() {
           </div>
         </div>
       </div>
-      <Modal show={showUpdate} onHide={handleCloseUpdate}>
+      <Modal show={showUpdate} onHide={handleCloseUpdate} backdrop="static">
         <Form onSubmit={handleUpdateStage}>
           <Modal.Header closeButton>
             <Modal.Title>Cập nhật giai đoạn</Modal.Title>
@@ -496,7 +496,7 @@ export default function ManageStage() {
         </Form>
       </Modal>
 
-      <Modal show={showAdd} onHide={handleCloseAdd}>
+      <Modal show={showAdd} onHide={handleCloseAdd} backdrop="static">
         <Form onSubmit={handleAddStage}>
           <Modal.Header closeButton>
             <Modal.Title>Thêm giai đoạn</Modal.Title>
@@ -576,7 +576,7 @@ export default function ManageStage() {
           </Modal.Footer>
         </Form>
       </Modal>
-      <Modal show={showDelete} onHide={handleCloseDelete}>
+      <Modal show={showDelete} onHide={handleCloseDelete} backdrop="static">
         <Modal.Header closeButton>
           <Modal.Title>Xóa giai đoạn</Modal.Title>
         </Modal.Header>
