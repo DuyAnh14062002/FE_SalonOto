@@ -126,3 +126,37 @@ nav {
   padding: 0;
   width: 275px;
 }
+
+.connection-box {
+  margin-top: 5px;
+  .see-process {
+    border: none;
+    outline: none;
+    background-color: green;
+    color: #fff;
+    border-radius: 3px;
+    padding: 2px 8px;
+    margin-right: 5px;
+    font-size: 14px;
+  }
+  .agree-connection {
+    border: none;
+    outline: none;
+    background-color: rgb(16, 16, 240);
+    color: #fff;
+    border-radius: 3px;
+    padding: 2px 8px;
+    margin-right: 5px;
+    font-size: 14px;
+  }
+}
+.see-process {
+  background-color: blue;
+  color: white;
+  float: right;
+  padding: 2px 8px;
+  font-size: 14px;
+  border-radius: 3px;
+  border: none;
+  outline: none;
+}

@@ -1,35 +1,46 @@
 import { useEffect, useState } from "react";
-import "./ProcessForUser.scss";
+import "./ProcessForUserDealer.scss";
 import { Stepper } from "react-form-stepper";
 import processApi from "../../apis/process.api";
+import dealerApi from "../../apis/dealer.api";
 
-const ProcessForUser = ({ invoice }) => {
+const ProcessForUserDealer = ({ selectedTransaction }) => {
   const [detailProcess, setDetailProcess] = useState({});
+  const [detailTransaction, setDetailTransaction] = useState({})
   const [activeStep, setActiveStep] = useState(0);
   const [checkedDetails, setCheckedDetails] = useState([]);
-  const periodCurrent = invoice?.legals_user?.current_period;
+  const periodCurrent = selectedTransaction.stage.stage_id
 
+  const getDetailProcess = async () =>{
+    let res = await dealerApi.getConectionById(selectedTransaction.connection.connection_id)
+    if(res?.data?.connection?.process){
+      setDetailProcess(res.data.connection.process)
+    }
+  }
   useEffect(() => {
     const fetchDetailProcess = async () => {
       try {
-        let res = await processApi.getAllProcess({
-          salonId: invoice.seller.salon_id,
-          processId: invoice?.legals_user?.processId,
-        });
-        setDetailProcess(res.data.data);
+        let res = await dealerApi.getDetailProcess(selectedTransaction.transaction_id)
+        console.log("res detail transaction : ", res)
+        if(res?.data?.transaction){
+          setCheckedDetails(res.data.transaction.checked)
+          setDetailTransaction(res.data.transaction)
+        }
       } catch (error) {
         console.log(error);
       }
     };
     fetchDetailProcess();
-  }, [invoice]);
+    getDetailProcess()
+  }, [selectedTransaction]);
+  console.log("res detail process : ", detailProcess)
+  // useEffect(() => {
+  //   setCheckedDetails(process?.legals_user?.details || []);
+  // }, [process]);
   useEffect(() => {
-    setCheckedDetails(invoice?.legals_user?.details || []);
-  }, [invoice]);
-  useEffect(() => {
-    if (detailProcess?.documents && periodCurrent) {
-      const currentStepIndex = detailProcess.documents.findIndex(
-        (item) => item.period === periodCurrent
+    if (detailProcess?.stages && periodCurrent) {
+      const currentStepIndex = detailProcess.stages.findIndex(
+        (item) => item.stage_id === periodCurrent
       );
       console.log("currentStepIndex", currentStepIndex);
 
@@ -37,15 +48,13 @@ const ProcessForUser = ({ invoice }) => {
         setActiveStep(currentStepIndex);
       }
     }
-  }, [detailProcess, invoice, periodCurrent]);
-
-  const steps = detailProcess?.documents?.map((item) => {
-    return {
-      label: item.name,
-      documents: item?.details?.map((detail) => detail.name),
-    };
-  });
-  
+  }, [detailProcess, periodCurrent]);
+ const steps = detailProcess?.stages?.map((item) => {
+  return {
+    label: item?.name,
+    documents: item?.commissionDetails?.map((detail) => ({name : detail.name, id: detail.id})),
+  };
+});
   const handleNext = async () => {
     setActiveStep((prevStep) => prevStep + 1);
   };
@@ -53,7 +62,8 @@ const ProcessForUser = ({ invoice }) => {
   const handleBack = () => {
     setActiveStep((prevStep) => prevStep - 1);
   };
-
+  console.log("selectedTransaction : ",selectedTransaction)
+  console.log("res step : ", steps)
   return (
     <div className="container">
       <h1 className="text-center mt-4">{detailProcess?.name}</h1>
@@ -80,7 +90,7 @@ const ProcessForUser = ({ invoice }) => {
                 ? "Các giấy tờ cần thiết"
                 : "Thông tin giai đoạn"}
             </h2>
-            {detailProcess?.documents && (
+            {detailProcess?.stages && (
               <ol className="list-group list-group-numbered">
                 {steps[activeStep]?.documents.map((document, index) => (
                   <li
@@ -88,13 +98,13 @@ const ProcessForUser = ({ invoice }) => {
                     className="list-group-item w-100 d-flex align-items-center justify-content-between"
                   >
                     <span style={{ flex: "1 1 80%", paddingLeft: "5px" }}>
-                      {document}
+                      {document.name}
                     </span>
 
                     <input
                       type="checkbox"
                       className="form-check-input mx-2"
-                      checked={checkedDetails?.includes(document)}
+                      checked={checkedDetails?.includes(document.id)}
                     />
                   </li>
                 ))}
@@ -126,4 +136,4 @@ const ProcessForUser = ({ invoice }) => {
   );
 };
 
-export default ProcessForUser;
+export default ProcessForUserDealer;

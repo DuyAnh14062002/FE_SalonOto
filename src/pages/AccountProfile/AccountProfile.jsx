@@ -183,6 +183,9 @@ const AccountProfile = (props) => {
     }
     return isoString;
   };
+  const handleShowTransactionDealer = () => {
+    navigate(`${path.historyTransactionDealer}`);
+  };
   return (
     <>
       <Header otherPage={true} />
@@ -409,12 +412,14 @@ const AccountProfile = (props) => {
                         ></i>
                         Xem lịch sử giao dịch
                       </Button>
+
                       <Button
                         className="mt-3 btn-profile function-additional"
                         type="button"
                         onClick={handleShowPostSell}
                         style={{
                           backgroundColor: "#fd720d",
+                          marginLeft: "10px",
                           border: "none",
                         }}
                       >
@@ -422,7 +427,23 @@ const AccountProfile = (props) => {
                           class="fa-solid fa-pen-to-square"
                           style={{ marginRight: "5px" }}
                         ></i>
-                        Đăng bài bán xe
+                        Giới thiệu bán xe cho Salon
+                      </Button>
+                      <Button
+                        className="mt-3 btn-profile function-additional"
+                        type="button"
+                        onClick={handleShowTransactionDealer}
+                        style={{
+                          backgroundColor: "rgb(30 116 10)",
+                          marginLeft: "10px",
+                          border: "none",
+                        }}
+                      >
+                        <i
+                          class="fa-solid fa-pen-to-square"
+                          style={{ marginRight: "5px" }}
+                        ></i>
+                        Các giao dịch Hoa tiêu
                       </Button>
                     </div>
                   </div>

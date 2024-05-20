@@ -33,6 +33,11 @@ const salonApi = {
   getTop(body) {
     return http.post("/invoice/get-top", body);
   },
+  getAllEmployee(salonId) {
+    return http.post("/salons/employees", {
+      salonId: salonId,
+    });
+  },
 };
 
 export default salonApi;

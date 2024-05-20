@@ -220,6 +220,17 @@ export default function AdminSalonSidebar(props) {
                             Giao dịch bảo dưỡng
                           </Link>
                         </li>
+                        <li>
+                          <Link
+                            to={path.manageDealerProcess}
+                            className="text-decoration-none "
+                          >
+                            <div className="nav-link-icon d-inline-flex mx-2">
+                              <i className="fa-solid fa-circle"></i>
+                            </div>
+                            Quản lí giao dịch hoa tiêu
+                          </Link>
+                        </li>
                       </ul>
                     )}
                   </li>

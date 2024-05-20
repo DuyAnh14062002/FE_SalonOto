@@ -1,0 +1,20 @@
+.box-title-process-dealer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  .box-rating {
+    width: 220px;
+    display: flex;
+    position: absolute;
+    top: 31px;
+    left: 860px;
+    display: flex;
+    align-items: center;
+    label {
+      color: #222;
+      font-size: 15px;
+      font-weight: 500;
+    }
+  }
+}

@@ -49,6 +49,11 @@ import HistoryTransaction from "./components/HistoryTransaction/HistoryTransacti
 import CarPost from "./components/CarPost";
 import PostSellCar from "./components/PostSellCar";
 import CarPostDetail from "./components/CarPostDetail";
+import ProcessFormDealer from "./pages/ProcessFormDealer/ProcessFormDealer";
+import ManageProcessDealer from "./pages/AdminSalon/ManageProcessDealer";
+import DetailProcess from "./components/DetailProcess/DetailProcess";
+import HistoryTransactionDealer from "./components/HistoryTransactionDealer";
+import SalonAppointment from "./components/SalonAppointment/SalonAppointment";
 function ProtectedRoute() {
   const isAuthenticated = useSelector(
     (state) => state.userSlice.isAuthenticated
@@ -217,6 +222,10 @@ const router = createBrowserRouter([
         path: path.processForm,
         element: <ProcessForm />,
       },
+      {
+        path: path.manageDealerProcess,
+        element: <ManageProcessDealer />,
+      }
     ],
   },
   {
@@ -295,6 +304,16 @@ const router = createBrowserRouter([
   {
     path: path.carPostDetail,
     element: <CarPostDetail/>
+  },{
+    path: path.detailProcess,
+    element: <DetailProcess/>
+  },{
+    path: path.historyTransactionDealer,
+    element: <HistoryTransactionDealer/>
+  },
+  {
+    path : path.salonAppointment,
+    element: <SalonAppointment/>
   }
 ]);
 

@@ -28,7 +28,8 @@ export default function ManageBuyCar() {
   const [listProcess, setListProcess] = useState([]);
   const [selectedInvoice, setSelectedInvoice] = useState({});
   const [showModalProcess, setShowModalProcess] = useState(false);
-
+  const [employeeId, setEmployeeId] = useState("");
+  const [employees, setEmployees] = useState([]);
   const handleShowProcess = (invoice) => {
     setSelectedInvoice(invoice);
     setShowModalProcess(true);
@@ -36,6 +37,14 @@ export default function ManageBuyCar() {
   const handleCloseModalProcess = () => {
     setShowModalProcess(false);
   };
+  const getAllEmployeeOfSalons = async (salonId) => {
+    let res = await salonApi.getAllEmployee(salonId);
+    console.log("res employee : ", res);
+    if (res?.data?.data) {
+      setEmployees(res.data.data);
+    }
+  };
+  console.log("invoice : ", invoices);
   const handleFilterChange = (e) => {
     setFilter(e.target.value);
   };
@@ -82,6 +91,7 @@ export default function ManageBuyCar() {
       setCarId(res.data.salon.cars[0].car_id);
     }
     if (res?.data?.salon) {
+      getAllEmployeeOfSalons(res.data.salon.salon_id);
       loadingInvoice(res.data.salon.salon_id);
       setSalon(res.data.salon);
     }
@@ -118,20 +128,22 @@ export default function ManageBuyCar() {
       salon.salon_id,
       carId,
       BuyCarInfor,
-      selectedProcess
+      selectedProcess,
+      employeeId
     );
-    toast.success("Thêm thông tin giao dịch thành công");
-    handleCloseAdd();
-    loadingInvoice(salon.salon_id);
-    setBuyCarInfor({});
-    //  if(res?.data?.status === "success"){
-    //   toast.success("Thêm thông tin giao dịch thành công")
-    //   handleCloseAdd()
-    //   loadingInvoice(salon.salon_id)
-    //   setBuyCarInfor({})
-    // }else{
-    //   toast.error("Thêm thông tin giao dịch thất bại")
-    // }
+    // toast.success("Thêm thông tin giao dịch thành công");
+    // handleCloseAdd();
+    // loadingInvoice(salon.salon_id);
+    // setBuyCarInfor({});
+    console.log("res add  : ", res);
+    if (res?.data?.status === "success") {
+      toast.success("Thêm thông tin giao dịch thành công");
+      handleCloseAdd();
+      loadingInvoice(salon.salon_id);
+      setBuyCarInfor({});
+    } else {
+      toast.error("Thêm thông tin giao dịch thất bại");
+    }
   };
   const handleSetCarId = (e) => {
     setCarId(e.target.value);
@@ -169,6 +181,7 @@ export default function ManageBuyCar() {
   const handleProcessChange = (event) => {
     setSelectedProcess(event.target.value);
   };
+  console.log("employId : ", employeeId);
   return (
     <>
       <div id="content" className="container-fluid">
@@ -220,20 +233,19 @@ export default function ManageBuyCar() {
                   <th scope="col" className="text-center">
                     STT
                   </th>
-                  <th scope="col" style={{ width: "17%" }}>
+                  <th scope="col" style={{ width: "12%" }}>
                     Tên khách hàng
                   </th>
                   <th scope="col">số điện thoại</th>
                   <th scope="col">Email</th>
                   <th scope="col">Tên xe</th>
-                  <th scope="col" className="text-center">
-                    Tổng tiền
-                  </th>
+                  <th scope="col">Tổng tiền</th>
+                  <th scope="col">Nhân viên bán</th>
                   <th scope="col">Trạng thái</th>
                   <th
                     scope="col"
                     className="text-center"
-                    style={{ width: "16%" }}
+                    style={{ width: "18%" }}
                   >
                     Tác vụ
                   </th>
@@ -249,9 +261,8 @@ export default function ManageBuyCar() {
                       <td>{invoice.phone}</td>
                       <td>{invoice.email}</td>
                       <td>{invoice.carName}</td>
-                      <td className="text-center">
-                        {formatCurrency(invoice.expense)}
-                      </td>
+                      <td>{formatCurrency(invoice.expense)}</td>
+                      <td>{invoice?.employee_id?.fullname}</td>
                       <td>
                         {invoice?.done ? (
                           <span class="badge bg-success">Hoàn thành</span>
@@ -388,6 +399,19 @@ export default function ManageBuyCar() {
                 {listProcess?.map((process) => (
                   <option key={process.id} value={process.id}>
                     {process.name}
+                  </option>
+                ))}
+              </Form.Select>
+            </Form.Group>
+            <Form.Group className="mt-4">
+              <Form.Label>Chọn nhân viên bán xe</Form.Label>
+              <Form.Select
+                onChange={(e) => setEmployeeId(e.target.value)}
+                value={employeeId}
+              >
+                {employees?.map((employee, index) => (
+                  <option key={index} value={employee.user_id}>
+                    {employee.fullname}
                   </option>
                 ))}
               </Form.Select>

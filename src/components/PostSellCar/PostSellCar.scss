@@ -208,3 +208,21 @@
     }
   }
 }
+.select-salon-car-sell {
+  padding: 12px;
+  width: 100%;
+}
+.image-preview {
+  height: auto;
+  margin-bottom: 15px;
+  display: flex;
+  flex-wrap: wrap;
+  .item {
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+    width: 75px;
+    height: 75px;
+    margin-left: 8px;
+  }
+}

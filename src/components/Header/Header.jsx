@@ -18,6 +18,7 @@ import messageApi from "../../apis/message.api";
 import userApi from "../../apis/user.api"
 import salonApi from "../../apis/salon.api";
 import appointmentApi from "../../apis/appointment.api";
+import dealerApi from "../../apis/dealer.api";
 const intervalDuration = 3000;
 let timerId;
 let timeOut;
@@ -139,6 +140,7 @@ export default function Header(props) {
   const fetchAllNotificationUser = async () => {
     try {
       const res = await notificationApi.getAllNotificationUser();
+      console.log("listNotification : ", res)
       setListNotification(res.data.notifications);
     } catch (error) {
       console.log(error);
@@ -197,7 +199,7 @@ export default function Header(props) {
       await notificationApi.deleteNotificationUser({
         id: id,
       });
-      const newListNotification = listNotification.filter(
+      const newListNotification = listNotification?.filter(
         (notification) => notification.id !== id
       );
       setListNotification(newListNotification);
@@ -219,6 +221,25 @@ export default function Header(props) {
       console.log(error);
     }
   };
+  const handleNavigateDetail = (id) => {
+     navigate(`/detailProcess/${id}`)
+  }
+  const handleConnection = async(id) => {
+       let res = await dealerApi.updateConnection(id, "accepted")
+       console.log("res connection apcept : ", res)
+       if(res?.data?.status === "success"){
+        toast.success("Kết nối thành công vs Salon")
+       }else{
+        toast.error("Kết nối thất bại")
+       }
+  }
+  console.log("notification : ", listNotification)
+  const handleNavigateHistoryProcess = () => {
+    navigate("/historyTransactionDealer")
+  }
+  const handleNavigateHistoryProcessPaper = () =>{
+    navigate("/historyTransaction")
+  }
   const popover = (
     <Popover id="popover-basic">
       <Popover.Header as="h3" className="fw-bold">
@@ -229,7 +250,7 @@ export default function Header(props) {
           className="d-flex flex-column"
           style={{ width: "100%", overflowY: "scroll", maxHeight: "400px" }}
         >
-          {listNotification.length > 0 ? (
+          {listNotification?.length > 0 ? (
             listNotification.map((notification) => {
               const timeNotify = new Date(notification.create_at);
               const timeNow = new Date();
@@ -238,9 +259,9 @@ export default function Header(props) {
                 formatTimeDifference(timeDifference);
               return (
                 <button key={notification.id} className="notify p-2">
-                  {(notification.types === "appointment" ||
-                    notification.types === "permission") && (
-                    <div className="d-flex align-items-center">
+                  {(notification.types === "appointment" || notification.types === "appointment-process" ||
+                    notification.types === "permission" || notification.types === "connection" || notification.types === "updateStage" || notification.types === "process") && (
+                    <div className="d-flex">
                       <img
                         src={
                           notification.avatar ||
@@ -278,13 +299,20 @@ export default function Header(props) {
                           style={notification.read ? {} : { fontWeight: "500" }}
                         >
                           <span>{formattedTimeDifference}</span>
-
                           <i
                             class="fa-regular fa-trash-can text-danger mx-2"
                             title="Xóa thông báo"
                             onClick={() => handleDeleteNotify(notification.id)}
                           ></i>
                         </div>
+                        {(notification?.types === "connection")? (
+                        <div className="connection-box">
+                           <button className="see-process" onClick={() =>handleNavigateDetail(notification.data)}>Xem qui trình</button>
+                           <button className="agree-connection" onClick={() => handleConnection(notification.data)}>Kết nối</button>
+                        </div>
+                      ): ""}
+                        {notification?.types === "updateStage" ? (<button className="see-process" onClick={handleNavigateHistoryProcess}>Xem ngay</button>) : ""}
+                        {notification?.types === "process" ?  (<button className="see-process" onClick={handleNavigateHistoryProcessPaper}>Xem ngay</button>) : ""}
                       </div>
                     </div>
                   )}
