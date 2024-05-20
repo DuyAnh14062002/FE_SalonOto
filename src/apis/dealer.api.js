@@ -55,18 +55,25 @@ const dealerApi = {
     return http.get("/transactions");
   },
 
-  nextProcess(id) {
-    return http.patch(`/transactions/${id}/next`);
+  nextProcess(id, rating) {
+    return http.patch(`/transactions/${id}/next`, {
+      rating: rating,
+    });
   },
 
-  updateProcessCheck(id, checked) {
+  updateProcessCheck(id, checked, stageId) {
     return http.patch(`/transactions/${id}/details`, {
       checked: checked,
+      stageId: stageId,
     });
   },
 
   getDetailProcess(id) {
     return http.get(`/transactions/${id}`);
+  },
+
+  deleteProcess(id) {
+    return http.delete(`/transactions/${id}`);
   },
 };
 

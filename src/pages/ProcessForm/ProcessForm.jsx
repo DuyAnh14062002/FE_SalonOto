@@ -4,7 +4,8 @@ import { Stepper } from "react-form-stepper";
 import processApi from "../../apis/process.api";
 import { toast } from "react-toastify";
 import invoiceApi from "../../apis/invoice.api";
-
+import { useNavigate } from "react-router-dom";
+import { path } from "../../constants/path";
 const ProcessForm = ({
   invoice,
   salonId,
@@ -17,8 +18,9 @@ const ProcessForm = ({
   const [checkedDetails, setCheckedDetails] = useState([]);
   const [isNextButtonDisabled, setIsNextButtonDisabled] = useState(true);
   const [periodCurrent, setPeriodCurrent] = useState(null);
-  console.log("detailProcess", detailProcess);
 
+  const navigate = useNavigate()
+  console.log("detailProcess", detailProcess);
   const fetchDetailInvoice = async () => {
     try {
       let res = await invoiceApi.getDetailInvoiceBuyCar({
@@ -173,9 +175,15 @@ const ProcessForm = ({
       }
     } catch (error) {}
   };
-
+ const  handleNavigateSalonAppointment = (phone, carId, salonId) =>{
+  navigate(`${path.salonAppointment}`,{
+    state : {phone :invoice?.phone, carId: invoice?.legals_user?.car_id, salonId: invoice?.seller?.salon_id }
+  })
+ }
   return (
-    <div className="container">
+    <>
+      <div className="container">
+      <button className="create-schedule-paper" onClick={() => handleNavigateSalonAppointment()}>Tạo lịch hẹn</button>
       <h1 className="text-center mt-4">{detailProcess?.name}</h1>
       <Stepper
         steps={steps?.map((step) => ({ label: step.label }))}
@@ -226,14 +234,14 @@ const ProcessForm = ({
         </div>
       </div>
       <div style={{ textAlign: "center" }}>
-        {activeStep !== 0 && (
+        {/* {(invoice?.done && activeStep !== 0) (
           <button
             className="buttons__button buttons__button--back"
             onClick={handleBack}
           >
             Back
           </button>
-        )}
+        )} */}
         {!invoice?.done && (
           <button
             className="buttons__button buttons__button--update"
@@ -261,6 +269,7 @@ const ProcessForm = ({
         )}
       </div>
     </div>
+    </>
   );
 };
 

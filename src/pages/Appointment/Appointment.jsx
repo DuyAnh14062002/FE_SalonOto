@@ -80,7 +80,7 @@ export default function Appointment() {
       toast.error("Xóa lịch hẹn thất bại");
     }
   };
-
+ console.log("appointmentList : ", appointmentList)
   return (
     <>
       <Header otherPage={true} />
@@ -104,7 +104,7 @@ export default function Appointment() {
                   <th scope="col">Ngày hẹn</th>
                   <th scope="col">Giờ hẹn</th>
                   <th scope="col">Lý do hẹn</th>
-                  <th scope="col">Phản hồi của salon</th>
+                  <th scope="col">Phản hồi</th>
                   <th scope="col" className="text-center">
                     Tác vụ
                   </th>
@@ -144,7 +144,15 @@ export default function Appointment() {
                         <td>{appointment.description}</td>
                         <td>{status}</td>
                         <td className="text-center">
-                          <button
+                          {appointment.from === "salon" ? (<button
+                            className="btn btn-success btn-sm rounded-0 text-white mx-2"
+                            data-bs-toggle="tooltip"
+                            data-bs-placement="bottom"
+                            title="Xác nhận"
+                            onClick={() => handleShowEdit(appointment, true)}
+                          >
+                            <i class="fa-solid fa-check"></i>
+                          </button>) : ( <button
                             className="btn btn-success btn-sm rounded-0 text-white mx-2"
                             data-toggle="tooltip"
                             data-placement="top"
@@ -152,7 +160,7 @@ export default function Appointment() {
                             onClick={() => handleShowEdit(appointment)}
                           >
                             <i className="fa fa-edit"></i>
-                          </button>
+                          </button>)}
                           <button
                             to="/"
                             className="btn btn-danger btn-sm rounded-0 text-white"

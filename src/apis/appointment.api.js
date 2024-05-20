@@ -29,6 +29,18 @@ const appointmentApi = {
       data: body,
     });
   },
+  createAppointmentWithUser(carId, salonId, phone, date, description) {
+    return http.post("/appointment/create-appointment-process", {
+      carId: carId,
+      salonId: salonId,
+      phone: phone,
+      date: date,
+      description: description,
+    });
+  },
+  getAllAppointmentUser() {
+    return http.post("/appointment/get-appoint-user");
+  },
 };
 
 export default appointmentApi;

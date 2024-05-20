@@ -21,6 +21,8 @@ export const path = {
   postSellCar: "/postSellCar",
   carPostDetail: "/CarPostDetail/:id",
   detailProcess: "/detailProcess/:id",
+  historyTransactionDealer: "/historyTransactionDealer",
+  salonAppointment: "/salonAppointment",
   //================SALON============================
   salonOto: "/salonOto/:id",
   DetailCar: "/detail-car/:id",

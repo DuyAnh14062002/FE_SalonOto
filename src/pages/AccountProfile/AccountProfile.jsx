@@ -166,6 +166,9 @@ const AccountProfile = (props) => {
   const handleShowPostSell = () =>{
     navigate(`${path.postSellCar}`)
   }
+  const handleShowTransactionDealer  = () => {
+    navigate(`${path.historyTransactionDealer}`)
+  }
   return (
     <>
       <Header otherPage={true} />
@@ -369,10 +372,19 @@ const AccountProfile = (props) => {
                             className="mt-3 btn-profile"
                             type="button"
                             onClick={handleShowPostSell}
-                            style={{backgroundColor: "#fd720d;", marginLeft: "10px", border: "none"}}
+                            style={{backgroundColor: "#fd720d", marginLeft: "10px", border: "none"}}
                           >
                             <i class="fa-solid fa-pen-to-square" style={{marginRight : "5px"}}></i> 
                             Giới thiệu bán xe cho Salon
+                          </Button>
+                          <Button
+                            className="mt-3 btn-profile"
+                            type="button"
+                            onClick={handleShowTransactionDealer}
+                            style={{backgroundColor: "rgb(30 116 10)", marginLeft: "10px", border: "none"}}
+                          >
+                            <i class="fa-solid fa-pen-to-square" style={{marginRight : "5px"}}></i> 
+                            Các giao dịch Hoa tiêu
                           </Button>
                         </div>
                       </div>

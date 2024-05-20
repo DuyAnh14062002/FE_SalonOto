@@ -234,6 +234,12 @@ export default function Header(props) {
        }
   }
   console.log("notification : ", listNotification)
+  const handleNavigateHistoryProcess = () => {
+    navigate("/historyTransactionDealer")
+  }
+  const handleNavigateHistoryProcessPaper = () =>{
+    navigate("/historyTransaction")
+  }
   const popover = (
     <Popover id="popover-basic">
       <Popover.Header as="h3" className="fw-bold">
@@ -253,8 +259,8 @@ export default function Header(props) {
                 formatTimeDifference(timeDifference);
               return (
                 <button key={notification.id} className="notify p-2">
-                  {(notification.types === "appointment" ||
-                    notification.types === "permission" || notification.types === "connection") && (
+                  {(notification.types === "appointment" || notification.types === "appointment-process" ||
+                    notification.types === "permission" || notification.types === "connection" || notification.types === "updateStage" || notification.types === "process") && (
                     <div className="d-flex">
                       <img
                         src={
@@ -293,19 +299,20 @@ export default function Header(props) {
                           style={notification.read ? {} : { fontWeight: "500" }}
                         >
                           <span>{formattedTimeDifference}</span>
-
                           <i
                             class="fa-regular fa-trash-can text-danger mx-2"
                             title="Xóa thông báo"
                             onClick={() => handleDeleteNotify(notification.id)}
                           ></i>
                         </div>
-                        {notification?.types === "connection" ? (
+                        {(notification?.types === "connection")? (
                         <div className="connection-box">
                            <button className="see-process" onClick={() =>handleNavigateDetail(notification.data)}>Xem qui trình</button>
                            <button className="agree-connection" onClick={() => handleConnection(notification.data)}>Kết nối</button>
                         </div>
                       ): ""}
+                        {notification?.types === "updateStage" ? (<button className="see-process" onClick={handleNavigateHistoryProcess}>Xem ngay</button>) : ""}
+                        {notification?.types === "process" ?  (<button className="see-process" onClick={handleNavigateHistoryProcessPaper}>Xem ngay</button>) : ""}
                       </div>
                     </div>
                   )}

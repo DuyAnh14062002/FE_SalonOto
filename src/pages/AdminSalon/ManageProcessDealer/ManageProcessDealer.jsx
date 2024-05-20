@@ -6,7 +6,6 @@ import { Form, Spinner } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { toast } from "react-toastify";
-import { formatCurrency } from "../../../utils/common";
 import processApi from "../../../apis/process.api";
 import { set } from "lodash";
 import ProcessForm from "../../ProcessForm/ProcessForm";
@@ -16,21 +15,21 @@ import dealerApi from "../../../apis/dealer.api";
 export default function ManageProcessDealer() {
 
   const [permissions, setPermission] = useState([]);
-  const [showAdd, setShowAdd] = useState(false);
+  //const [showAdd, setShowAdd] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
   const [invoices, setInvoices] = useState([]);
   const [BuyCarInfor, setBuyCarInfor] = useState({});
   const [isLoading, setIsLoading] = useState(false);
-  const [cars, setCars] = useState([]);
   const [salon, setSalon] = useState({});
   const [carId, setCarId] = useState("");
   const [searchInput, setSearchInput] = useState("");
-  const [showWarranty, setShowWarranty] = useState(false);
-  const [warranty, setWarranty] = useState({});
   const [filter, setFilter] = useState("all");
   const [selectedProcess, setSelectedProcess] = useState("");
   const [listProcess, setListProcess] = useState([]);
   const [selectedInvoice, setSelectedInvoice] = useState({});
+  const [transactions , setTransactions] = useState([])
+  const [selectedTransaction, setSelectedTransaction] = useState({});
+  const [showModalProcess, setShowModalProcess] = useState(false);
 
   const handleFilterChange = (e) => {
     setFilter(e.target.value);
@@ -69,10 +68,6 @@ export default function ManageProcessDealer() {
   };
   const fetchDataSalon = async () => {
     const res = await salonApi.getSalonInfor();
-    if (res?.data?.salon?.cars) {
-      setCars(res.data.salon.cars);
-      setCarId(res.data.salon.cars[0].car_id);
-    }
     if (res?.data?.salon) {
       loadingInvoice(res.data.salon.salon_id);
       setSalon(res.data.salon);
@@ -89,17 +84,11 @@ export default function ManageProcessDealer() {
     }
   }, [salon.salon_id]);
 
-  const handleCloseAdd = () => {
-    setShowAdd(false);
-  };
-  const handleShowAdd = () => {
-    setShowAdd(true);
-  };
   const handleCloseDelete = () => {
     setShowDelete(false);
   };
-  const handleShowDelete = (invoice) => {
-    setSelectedInvoice(invoice);
+  const handleShowDelete = (process) => {
+    setSelectedProcess(process);
     setShowDelete(true);
   };
   const onChange = (e) => {
@@ -114,7 +103,6 @@ export default function ManageProcessDealer() {
       selectedProcess
     );
     toast.success("Thêm thông tin giao dịch thành công");
-    handleCloseAdd();
     loadingInvoice(salon.salon_id);
     setBuyCarInfor({});
     //  if(res?.data?.status === "success"){
@@ -126,7 +114,6 @@ export default function ManageProcessDealer() {
     //   toast.error("Thêm thông tin giao dịch thất bại")
     // }
   };
-  console.log("carId", carId);
   const handleSetCarId = (e) => {
     setCarId(e.target.value);
   };
@@ -138,45 +125,22 @@ export default function ManageProcessDealer() {
   };
   const handleDelete = async () => {
     try {
-      const res = await invoiceApi.deleteInvoiceBuyCar({
-        salonId: salon.salon_id,
-        invoiceId: selectedInvoice.invoice_id,
-      });
+      let res = await dealerApi.deleteProcess(selectedProcess.transaction_id)
       if (res?.data?.status === "success") {
-        loadingInvoice(salon.salon_id);
-        toast.success("Xóa giao dịch thành công");
-        setSelectedInvoice({});
+        loadingProcess()
+        toast.success("Xóa tiến trình thành công");
+        setSelectedProcess({});
         handleCloseDelete();
       } else {
-        toast.error("Xóa giao dịch thất bại");
+        toast.error("Xóa tiến trình thất bại");
       }
     } catch (error) {}
-  };
-  const handleShowWarranty = async (invoice) => {
-    setShowWarranty(true);
-    setWarranty(invoice);
-  };
-  const handleCloseWarranty = () => {
-    setShowWarranty(false);
   };
 
   const handleProcessChange = (event) => {
     setSelectedProcess(event.target.value);
   };
 
-
-
-
-
-
-
-
-
-
-
-  const [transactions , setTransactions] = useState([])
-  const [selectedTransaction, setSelectedTransaction] = useState({});
-  const [showModalProcess, setShowModalProcess] = useState(false);
 
   const loadingProcess = async() => {
     let res = await dealerApi.getAllProcess()
@@ -194,7 +158,9 @@ const handleShowProcess = (item) => {
   };
   const handleCloseModalProcess = () => {
     setShowModalProcess(false);
+    loadingProcess()
   };
+  console.log("selected process : ", selectedProcess)
   return (
     <>
       <div id="content" className="container-fluid">
@@ -213,7 +179,7 @@ const handleShowProcess = (item) => {
                   id="search"
                   className="form-control"
                   style={{ width: "65%" }}
-                  placeholder="Nhập số điện thoại"
+                  placeholder="Nhập tên hoa tiêu"
                   onChange={(e) => handleChangeSearch(e)}
                 />
                 <button className="btn btn-primary mx-2" onClick={handeSearch}>
@@ -244,6 +210,7 @@ const handleShowProcess = (item) => {
                     Tên hoa tiêu
                   </th>
                   <th scope="col">Tên qui trình</th>
+                  <th scope="col">Ngày tạo</th>
                   <th scope="col">Trạng thái</th>
                   <th
                     scope="col"
@@ -262,6 +229,7 @@ const handleShowProcess = (item) => {
 
                       <td>{item?.user?.name}</td>
                       <td>{item?.process?.name}</td>
+                      <td>{item?.connection?.created_at}</td>
                       <td>
                         {item?.status === "pending" ? (
                           <span class="badge bg-warning text-dark">
@@ -289,7 +257,7 @@ const handleShowProcess = (item) => {
                             data-toggle="tooltip"
                             data-placement="top"
                             title="Delete"
-                            //onClick={() => handleShowDelete(invoice)}
+                            onClick={() => handleShowDelete(item)}
                           >
                             <i className="fa fa-trash"></i>
                           </button>
@@ -309,96 +277,12 @@ const handleShowProcess = (item) => {
           </div>
         </div>
       </div>
-      <Modal show={showAdd} onHide={handleCloseAdd}>
-        <Form onSubmit={handleAddBuyCar}>
-          <Modal.Header closeButton>
-            <Modal.Title> Thêm mới giao dịch mua xe</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <Form.Group className="mt-4">
-              <Form.Label>Tên khách hàng</Form.Label>
-              <Form.Control
-                required
-                type="text"
-                name="fullname"
-                onChange={onChange}
-              />
-            </Form.Group>
-            <Form.Group className="mt-4">
-              <Form.Label>Số điện thoại</Form.Label>
-              <Form.Control
-                required
-                type="text"
-                name="phone"
-                onChange={onChange}
-              />
-            </Form.Group>
-            <Form.Group className="mt-4">
-              <Form.Label>Email</Form.Label>
-              <Form.Control
-                required
-                type="text"
-                name="email"
-                onChange={onChange}
-              />
-            </Form.Group>
-            <Form.Group className="mt-4">
-              <Form.Label>Chọn xe</Form.Label>
-              <Form.Select
-                aria-label="Default select example"
-                onChange={handleSetCarId}
-                value={carId}
-              >
-                {cars?.length > 0 &&
-                  cars.map((item, index) => {
-                    return (
-                      <option value={item.car_id} key={index}>
-                        {item.name}
-                      </option>
-                    );
-                  })}
-              </Form.Select>
-            </Form.Group>
-            <Form.Group className="mt-4">
-              <Form.Label>Tổng tiền</Form.Label>
-              <Form.Control
-                required
-                type="text"
-                name="expense"
-                onChange={onChange}
-              />
-            </Form.Group>
-            <Form.Group className="mt-4">
-              <Form.Label>Chọn loại quy trình</Form.Label>
-              <Form.Select
-                onChange={handleProcessChange}
-                value={selectedProcess}
-              >
-                {listProcess?.map((process) => (
-                  <option key={process.id} value={process.id}>
-                    {process.name}
-                  </option>
-                ))}
-              </Form.Select>
-            </Form.Group>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" onClick={handleCloseAdd}>
-              Đóng
-            </Button>
-            <Button variant="primary" disabled={isLoading} type="submit">
-              {isLoading && <Spinner animation="border" size="sm" />}
-              <span className="mx-2">Thêm</span>
-            </Button>
-          </Modal.Footer>
-        </Form>
-      </Modal>
       <Modal show={showDelete} onHide={handleCloseDelete}>
         <Modal.Header closeButton>
-          <Modal.Title>Xóa tính năng</Modal.Title>
+          <Modal.Title>Xóa Tiến trình </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <span>Bạn có chắc chắn muốn xóa giao dịch mua xe này không ?</span>
+          <span>Bạn có chắc chắn muốn xóa tiến trình với hoa tiêu này không ?</span>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleCloseDelete}>
@@ -406,48 +290,6 @@ const handleShowProcess = (item) => {
           </Button>
           <Button variant="primary" onClick={handleDelete}>
             Xóa
-          </Button>
-        </Modal.Footer>
-      </Modal>
-      <Modal show={showWarranty} onHide={handleCloseWarranty}>
-        <Modal.Header closeButton>
-          <Modal.Title>Thông tin bảo hành cho xe</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form.Group className="mt-4">
-            <Form.Label>Số kilomet bảo hành</Form.Label>
-            <Form.Control
-              required
-              type="text"
-              name="limit_kilometer"
-              value={warranty?.limit_kilometer}
-              readOnly
-            />
-          </Form.Group>
-          <Form.Group className="mt-4">
-            <Form.Label>Số tháng bảo hành</Form.Label>
-            <Form.Control
-              required
-              type="text"
-              name="limit_kilometer"
-              value={warranty?.months}
-              readOnly
-            />
-          </Form.Group>
-          <Form.Group className="mt-4">
-            <Form.Label>Chính sách bảo hành</Form.Label>
-            <Form.Control
-              as="textarea"
-              //placeholder="Leave a comment here"
-              style={{ minHeight: "150px" }}
-              value={warranty?.policy}
-              readOnly
-            />
-          </Form.Group>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseWarranty}>
-            Đóng
           </Button>
         </Modal.Footer>
       </Modal>
@@ -464,6 +306,7 @@ const handleShowProcess = (item) => {
           <ProcessFormDealer
             selectedTransaction={selectedTransaction}
             handleCloseModalProcess={handleCloseModalProcess}
+            loadingProcess={loadingProcess}
           />
         </Modal.Body>
       </Modal>

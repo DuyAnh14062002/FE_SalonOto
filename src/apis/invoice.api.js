@@ -9,7 +9,7 @@ const invoiceApi = {
   getAllInvoiceMaintain() {
     return http.get("/invoice");
   },
-  createBuyCarInvoice(salon_Id, carId, data, processId) {
+  createBuyCarInvoice(salon_Id, carId, data, processId, employeeId) {
     return http.post("/invoice/create-invoice", {
       salonId: salon_Id,
       carId: carId,
@@ -18,6 +18,7 @@ const invoiceApi = {
       email: data.email,
       expense: data.expense,
       processId,
+      employeeId: employeeId,
     });
   },
 

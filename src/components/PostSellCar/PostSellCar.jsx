@@ -13,6 +13,7 @@ export default function PostSellCar() {
   const [infoCar, setInfoCar] = useState({})
   const [image, setImage] = useState([]);
   const [salonId, setSalonId] = useState([])
+  const [imagePreview, setImagePreview] = useState([])
 
   const handleShowModal = () =>{
     setShow(true)
@@ -107,6 +108,17 @@ export default function PostSellCar() {
     setSalonId(id);
   }
   console.log("infoCar : ", infoCar)
+  const handleOnChangeImage = (e) => {
+    const listImage = [];
+    const listImagePreview = []
+    for (let i = 0; i < e.target.files.length; i++) {
+      listImage.push(e.target.files[i]);
+      listImagePreview.push(URL.createObjectURL(e.target.files[i]))
+    }
+    setImage(listImage);
+    setImagePreview(listImagePreview)
+  };
+
   return (
     <>
       <Header otherPage={true} />
@@ -114,11 +126,18 @@ export default function PostSellCar() {
         <div className="post-sell-container">
           <div className="left-post-sell">
             <div className="title">Hình ảnh sản phẩm</div>
-            <div className="image-post-sell">
-              <input type="file" />
+            <div className="image-preview">
+              {imagePreview?.length > 0 && imagePreview.map((item, index) => {
+                return(
+                  <div className="item" key={index} style={{backgroundImage: `url(${item})`}}></div>
+                )
+              })}
+            </div>
+            <label className="image-post-sell" for="file">
+              <input type="file" id="file" onChange={(e) => handleOnChangeImage(e)}  multiple="true"/>
               <i class="fa-solid fa-camera"></i>
               <label>Đăng từ 1 đến 20 hình</label>
-            </div>
+            </label>
           </div>
           <div className="right-post-sell">
             <div className="title">Thông tin chi tiết</div>
@@ -224,12 +243,12 @@ export default function PostSellCar() {
               className="car-detail-input"
               onChange={(e) => handleChangeInfoCar(e, "price")}
             />
-            <h4 className="title-and-description">Tiêu đề bài đăng và Mô tả chi tiết</h4>
+            <h4 className="title-and-description">Thông tin chủ xe</h4>
             <input
-              placeholder="Tiêu đề gửi"
+              placeholder="Địa chỉ"
               type="text"
               className="car-detail-input"
-              onChange={(e) => handleChangeInfoCar(e, "title")}
+              onChange={(e) => handleChangeInfoCar(e, "address")}
             />
             <button className="btn-post-sell-car" onClick={handleShowModal}>Gửi tin cho salon</button>
           </div>
