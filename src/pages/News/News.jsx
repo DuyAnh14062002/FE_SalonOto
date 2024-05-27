@@ -3,18 +3,24 @@ import Header from "../../components/Header";
 import "./News.scss";
 import newApi from "../../apis/news.api";
 import { useNavigate } from "react-router-dom";
+import { PaginationControl } from "react-bootstrap-pagination-control";
+const LIMIT = 10;
 export default function News() {
   const [news, setNews] = useState([]);
   const navigate = useNavigate();
+  const [totalItem, setTotalItem] = useState(0);
+  const [page, setPage] = useState(1);
+  const loading = async (page) => {
+    let res = await newApi.getArticle(page, LIMIT);
+    console.log(res);
+    if (res?.data?.articles) {
+      setNews(res.data.articles);
+      setTotalItem(res.data.total);
+    }
+  };
   useEffect(() => {
-    const loading = async () => {
-      let res = await newApi.getArticle();
-      if (res?.data?.articles) {
-        setNews(res.data.articles);
-      }
-    };
-    loading();
-  }, []);
+    loading(page);
+  }, [page]);
   const handleNavigateDetailNew = (id) => {
     navigate(`/detailNew/${id}`);
   };
@@ -45,7 +51,19 @@ export default function News() {
                   </div>
                 );
               })}
+            <div className="d-flex justify-content-center">
+              <PaginationControl
+                page={page}
+                total={totalItem || 0}
+                limit={LIMIT}
+                changePage={(page) => {
+                  setPage(page);
+                }}
+                ellipsis={1}
+              />
+            </div>
           </div>
+
           <div className="right-news">
             <div className="extimate-cost-container">
               <div className="cost-title">Ước tính chi phí lăn bánh</div>

@@ -1,0 +1,56 @@
+.maintenance-title {
+  background-color: #999999;
+  width: 280px;
+  font-weight: 600;
+  height: 50px;
+  border-radius: 15px;
+  text-align: center;
+  line-height: 50px;
+  padding: 0 10px;
+  margin: 0 auto;
+  color: #fff;
+  font-size: 20px;
+}
+
+.listMaintenance-container {
+  width: 100%;
+  display: flex;
+  padding: 20px 200px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.listMaintenance-container .item-maintenance {
+  margin-top: 25px;
+  width: 23%;
+  min-height: 200px;
+  border: 1px solid #999999;
+  border-radius: 5px;
+  margin-left: 1%;
+}
+.listMaintenance-container .item-maintenance .top-content {
+  height: 100px;
+  background-color: #999999;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+.listMaintenance-container .item-maintenance .top-content .name-maintenance {
+  text-align: center;
+  font-weight: 600;
+  color: #fff;
+  font-size: 20px;
+}
+.listMaintenance-container .item-maintenance .top-content .price {
+  text-align: center;
+  font-weight: bold;
+  color: #f1e9e9;
+  font-size: 20px;
+}
+.listMaintenance-container .item-maintenance .maintenance-description {
+  padding: 10px;
+  color: #333;
+}/*# sourceMappingURL=ListMaintenance.css.map */

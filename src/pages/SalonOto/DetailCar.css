@@ -1,0 +1,174 @@
+.detail-car-container {
+  padding: 20px 180px;
+  min-height: 1550px;
+}
+.detail-car-container .header-menu span {
+  margin: 0 5px;
+  color: rgb(52, 51, 51);
+}
+.detail-car-container .detail-option {
+  height: 50px;
+  width: 100%;
+  background-color: rgb(214, 205, 205);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 150px;
+  margin: 50px 0;
+}
+.detail-car-container .detail-option .box-sumary {
+  cursor: pointer;
+}
+.detail-car-container .detail-option .box-sumary:hover {
+  color: red;
+  transition: 0.1s;
+}
+.detail-car-container .detail-option .box-sumary i {
+  margin-right: 5px;
+}
+.detail-car-container .detail-car {
+  height: 500px;
+  display: flex;
+}
+.detail-car-container .detail-car .car-image {
+  width: 50%;
+}
+.detail-car-container .detail-car .car-image .main-image {
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  width: 100%;
+  height: 420px;
+  margin: 0 auto;
+}
+.detail-car-container .detail-car .car-image .sub-image {
+  border: 1px solid rgb(54, 54, 50);
+  margin: 10px 0;
+}
+.detail-car-container .detail-car .car-image .sub-image .sub-image-item {
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  width: 98%;
+  height: 81px;
+  cursor: pointer;
+}
+.detail-car-container .detail-car .car-image .sub-image .sub-image-item:hover {
+  border: 1px solid red;
+  transition: 0.1s;
+}
+.detail-car-container .detail-car .specifications-car {
+  width: 50%;
+  margin-left: 20px;
+}
+.detail-car-container .detail-car .specifications-car .name-car {
+  font-size: 25px;
+  font-weight: 700;
+}
+.detail-car-container .detail-car .specifications-car .price-car {
+  color: red;
+}
+.detail-car-container .detail-car .specifications-car p {
+  margin: 2px 0;
+}
+.detail-car-container .detail-car .specifications-car button {
+  background-color: red;
+  width: 60%;
+  height: 50px;
+  border: none;
+  outline: none;
+  color: white;
+}
+.detail-car-container .detail-car .specifications-car button:hover {
+  background-color: #000;
+  transition: 0.2s;
+}
+.detail-car-container .rate-detail {
+  margin: 50px 0;
+}
+.detail-car-container .rate-detail .rate-title {
+  border-bottom: 2px solid rgb(0, 0, 0);
+}
+.detail-car-container .rate-detail .comment-detail {
+  margin: 15px 0;
+}
+.detail-car-container .estimate-cost {
+  margin: 20px 0;
+}
+.detail-car-container .estimate-cost .title-box {
+  width: 100%;
+  text-align: center;
+  margin: 10px 0;
+}
+.detail-car-container .estimate-cost .title-box .title-estimate {
+  border-bottom: 2px solid red;
+  font-weight: 800;
+  font-size: 25px;
+}
+.detail-car-container .estimate-cost .location-register {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 265px;
+}
+.detail-car-container .estimate-cost .location-register select {
+  width: 450px;
+  border: 1px solid gray;
+  outline: none;
+  padding: 15px 15px;
+  background-color: #fff;
+  cursor: pointer;
+}
+.detail-car-container .estimate-cost .caculate-cost {
+  padding: 10px 250px;
+}
+.detail-car-container .estimate-cost .caculate-cost .cost {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 20px;
+}
+.detail-car-container .estimate-cost .caculate-cost .Total {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 20px;
+}
+.detail-car-container .estimate-cost .caculate-cost .Total .price {
+  color: red;
+  font-size: 30px;
+}
+
+.relate-product-container h4 {
+  text-align: center;
+  font-weight: 900;
+  font-size: 20px;
+  font-family: sans-serif;
+  color: black;
+}
+.relate-product-container .item-relate-product {
+  margin-top: 20px;
+  cursor: pointer;
+}
+.relate-product-container .item-relate-product .image-car-relate {
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  width: 220px;
+  height: 150px;
+  margin: 0 auto;
+}
+.relate-product-container .item-relate-product .name-product-relate {
+  text-align: center;
+  margin: 8px 0;
+}
+.relate-product-container .item-relate-product .price-product-relate {
+  color: red;
+  margin: 8px 0;
+  text-align: center;
+}
+
+.react-multi-carousel-track {
+  margin: 0 auto !important;
+  padding-left: 1px !important;
+}/*# sourceMappingURL=DetailCar.css.map */

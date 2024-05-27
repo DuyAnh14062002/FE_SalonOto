@@ -9,6 +9,10 @@ import carApi from "../../../apis/car.api";
 import userApi from "../../../apis/user.api";
 import warrantyApi from "../../../apis/warranty.api";
 import { formatCurrency } from "../../../utils/common";
+import { debounce } from "lodash";
+import { PaginationControl } from "react-bootstrap-pagination-control";
+const LIMIT = 10;
+
 export default function ManageCar() {
   const [cars, setCars] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -24,28 +28,51 @@ export default function ManageCar() {
   const [warranties, setWarranties] = useState([]);
   const [warrantyId, setWarrantyId] = useState("");
   const [carWanrranty, setCarWarranty] = useState({});
+  const [totalPage, setTotalPage] = useState(0);
+  const [page, setPage] = useState(1);
+  const [search, setSearch] = useState("");
+
+  const handleSearch = (e) => {
+    setSearch(e.target.value);
+    const searchValue = e.target.value;
+    console.log("searchValue : ", searchValue);
+    debounce(() => {
+      setPage(1);
+      fetchAllCars(1, searchValue);
+    }, 1000);
+  };
   const loadingUser = async () => {
     let res = await userApi.getProfile();
     if (res?.data?.profile?.permissions) {
       setPermission(res.data.profile.permissions);
     }
   };
+  const fetchAllCars = async (page, search) => {
+    let res = await carApi.getAllCar(page, LIMIT, search);
+    if (res?.data?.cars?.car) {
+      setCars(res?.data?.cars?.car);
+      setTotalPage(res?.data?.total_page);
+    }
+  };
+
   const fetchDataSalon = async () => {
     const res = await salonApi.getSalonInfor();
-    if (res?.data?.salon?.cars) {
-      setCars(res.data.salon.cars);
-    }
     if (res?.data?.salon) {
       setSalon(res.data.salon);
       loadingWarranty(res.data.salon.salon_id);
     }
   };
   const loadingWarranty = async (id) => {
-    let res = await warrantyApi.getAllWarranty(id);
+    let res = await warrantyApi.getAllWarranty({
+      salonId: id,
+    });
     if (res?.data?.warranties) {
       setWarranties(res.data.warranties);
     }
   };
+  useEffect(() => {
+    fetchAllCars(page, search);
+  }, [page, search]);
   useEffect(() => {
     loadingUser();
     fetchDataSalon();
@@ -158,6 +185,7 @@ export default function ManageCar() {
     setIsLoading(true);
     let res = await carApi.updateCar(car.car_id, form);
     fetchDataSalon();
+    fetchAllCars(page, search);
     handleCloseUpdate();
     if (res?.data?.status && res.data.status === "success") {
       toast.success("Cập nhật thông tin xe thành công");
@@ -229,6 +257,7 @@ export default function ManageCar() {
     setIsLoading(true);
     let res = await carApi.addCar(form);
     fetchDataSalon();
+    fetchAllCars(page, search);
     handleCloseAdd();
     if (res?.data?.status && res.data.status === "success") {
       setCar({});
@@ -242,6 +271,7 @@ export default function ManageCar() {
   const handleDelete = async () => {
     let res = await carApi.deleteCar(car.car_id, salon.salon_id);
     fetchDataSalon();
+    fetchAllCars(page, search);
     handleCloseDelete();
     if (res?.data?.status && res.data.status === "success") {
       toast.success("Xóa thông tin xe thành công");
@@ -294,16 +324,18 @@ export default function ManageCar() {
           </div>
           <div className="card-body">
             <div className="my-3 d-flex justify-content-between align-items-center">
-              <div className="d-flex justify-content-between">
+              <div className="d-flex justify-content-between align-items-center">
+                <span style={{ width: "100px" }}>Tìm kiếm:</span>
                 <input
                   type="text"
                   name="search"
                   id="search"
                   className="form-control"
-                  style={{ width: "65%" }}
+                  style={{ width: "100%" }}
                   placeholder="Nhập tên xe"
+                  value={search}
+                  onChange={handleSearch}
                 />
-                <button className="btn btn-primary mx-2">Tìm kiếm</button>
               </div>
               {(permissions?.includes("OWNER") ||
                 permissions.includes("C_CAR")) && (
@@ -337,7 +369,9 @@ export default function ManageCar() {
                 {cars && cars.length > 0 ? (
                   cars.map((car, index) => (
                     <tr key={index} style={{ background: "rgb(247 247 247)" }}>
-                      <td className="text-center">{++index}</td>
+                      <td className="text-center">
+                        {LIMIT * (page - 1) + (index + 1)}
+                      </td>
 
                       <td>{car.name}</td>
                       <td className="text-center">{car.brand}</td>
@@ -404,6 +438,19 @@ export default function ManageCar() {
                 )}
               </tbody>
             </table>
+            {cars && cars.length > 0 && (
+              <div className="d-flex justify-content-center ">
+                <PaginationControl
+                  page={page}
+                  total={totalPage * LIMIT || 0}
+                  limit={LIMIT}
+                  changePage={(page) => {
+                    setPage(page);
+                  }}
+                  ellipsis={1}
+                />
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -686,7 +733,7 @@ export default function ManageCar() {
             </Form.Group>
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="secondary" onClick={handleCloseInfor}>
+            <Button variant="secondary" onClick={handleCloseUpdate}>
               Đóng
             </Button>
             <Button

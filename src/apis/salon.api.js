@@ -16,8 +16,8 @@ const salonApi = {
     });
   },
 
-  getAllSalon() {
-    return http.get("/salons");
+  getAllSalon(page = 1, per_page = 1000, q = "") {
+    return http.get(`/salons?page=${page}&&per_page=${per_page}&&q=${q}`);
   },
 
   getDetailSalon(id) {

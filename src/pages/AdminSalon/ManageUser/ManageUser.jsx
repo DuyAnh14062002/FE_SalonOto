@@ -4,10 +4,11 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import "./ManageUser.scss";
 import permissionApi from "../../../apis/permission.api";
-import { useSelector } from "react-redux";
 import salonApi from "../../../apis/salon.api";
 import { toast } from "react-toastify";
-import { ConsoleLevel } from "@zegocloud/zego-uikit-prebuilt";
+import { debounce, set } from "lodash";
+import { PaginationControl } from "react-bootstrap-pagination-control";
+const LIMIT = 5;
 export default function ManageUser() {
   const [showUpdate, setShowUpdate] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -20,21 +21,39 @@ export default function ManageUser() {
   const [salon, setSalon] = useState({});
   const [permission, setPermission] = useState({});
   //const testArr = ["getCar", "postCar", "deleteCar", "getCalender", "postCalender", "deleteCaleder", "getSalon", "patchSalon"];
+  const [totalPage, setTotalPage] = useState(0);
+  const [page, setPage] = useState(1);
+  const [search, setSearch] = useState("");
 
-  const loading = async () => {
+  const handleSearch = (e) => {
+    setSearch(e.target.value);
+    const searchValue = e.target.value;
+    debounce(() => {
+      setPage(1);
+      loading(1, searchValue);
+    }, 1000);
+  };
+  const loading = async (page, search) => {
     let res = await salonApi.getSalonInfor();
     if (res?.data?.salon) {
       setSalonId(res.data.salon.salon_id);
       setSalon(res.data.salon);
-      let res2 = await permissionApi.getPermission(res.data.salon.salon_id);
+      let res2 = await permissionApi.getPermission({
+        salonId: res.data.salon.salon_id,
+        page,
+        per_page: LIMIT,
+        q: search,
+      });
+      console.log("res2 : ", res2);
       if (res2?.data?.salonDb?.employees) {
         setEmployees(res2.data.salonDb.employees);
+        setTotalPage(res2.data.total_page);
       }
     }
   };
   useEffect(() => {
-    loading();
-  }, []);
+    loading(page, search);
+  }, [page, search]);
   const handleShowUpdate = (employee) => {
     loading();
     let listPermission = employee.permissions;
@@ -105,16 +124,18 @@ export default function ManageUser() {
           </div>
           <div className="card-body">
             <div className="my-3 d-flex justify-content-between align-items-center">
-              <div className="d-flex justify-content-between">
+              <div className="d-flex justify-content-between align-items-center">
+                <span style={{ width: "100px" }}>Tìm kiếm:</span>
                 <input
                   type="text"
                   name="search"
                   id="search"
                   className="form-control"
-                  style={{ width: "65%" }}
-                  placeholder="Nhập tên nhân viên"
+                  style={{ width: "100%" }}
+                  placeholder="Nhập tên khách hàng"
+                  value={search}
+                  onChange={handleSearch}
                 />
-                <button className="btn btn-primary mx-2">Tìm kiếm</button>
               </div>
             </div>
             <table className="table mt-4 table-hover">
@@ -134,13 +155,14 @@ export default function ManageUser() {
                 </tr>
               </thead>
               <tbody>
-                {employees &&
-                  employees.length > 0 &&
+                {employees && employees.length > 0 ? (
                   employees.map((employee, index) => {
                     if (salon.user_id !== employee.user_id) {
                       return (
                         <tr style={{ background: "rgb(247 247 247)" }}>
-                          <td className="text-center">{index + 1}</td>
+                          <td className="text-center">
+                            {LIMIT * (page - 1) + (index + 1)}
+                          </td>
                           <td>{employee.fullname}</td>
                           <td>{employee.phone}</td>
                           <td>{employee.gender}</td>
@@ -172,9 +194,29 @@ export default function ManageUser() {
                     } else {
                       return "";
                     }
-                  })}
+                  })
+                ) : (
+                  <tr>
+                    <td colSpan="7" className="fst-italic">
+                      Không có dữ liệu
+                    </td>
+                  </tr>
+                )}
               </tbody>
             </table>
+            {employees && employees.length > 0 && (
+              <div className="d-flex justify-content-center ">
+                <PaginationControl
+                  page={page}
+                  total={totalPage * LIMIT || 0}
+                  limit={LIMIT}
+                  changePage={(page) => {
+                    setPage(page);
+                  }}
+                  ellipsis={1}
+                />
+              </div>
+            )}
           </div>
         </div>
       </div>

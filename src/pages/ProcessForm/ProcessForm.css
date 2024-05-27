@@ -1,0 +1,63 @@
+.stepper {
+  padding: 3vh 0 !important;
+}
+
+.stepper__step {
+  border: 1px solid #2b7cff !important;
+  cursor: default !important;
+}
+
+.stepper__step + div > span {
+  color: #0f6bff !important;
+}
+
+.documents {
+  width: 80%;
+  margin: 20px auto;
+  border: 1px solid #2b7cff;
+  padding: 10px;
+  border-radius: 3px;
+}
+
+.buttons {
+  display: flex;
+  justify-content: center;
+}
+
+.buttons__button {
+  width: 180px;
+  padding: 10px;
+  border-radius: 3px;
+  border: 1px solid #003487;
+  margin: 5px 12px;
+}
+
+.buttons__button:hover {
+  cursor: pointer;
+  box-shadow: 3px 2px 3px rgba(175, 175, 175, 0.4);
+}
+
+.buttons__button--next {
+  background-color: #003487;
+  color: #fff;
+}
+
+.buttons__button--back {
+  background-color: #fff;
+  color: #003487;
+}
+
+.create-schedule-paper {
+  position: relative;
+  top: 0;
+  right: -965px;
+  border: none;
+  background-color: #003487;
+  outline: none;
+  color: #fff;
+  padding: 3px 10px;
+  border-radius: 3px;
+}
+.create-schedule-paper:hover {
+  background-color: #0f6bff;
+}/*# sourceMappingURL=ProcessForm.css.map */

@@ -124,7 +124,7 @@ export default function AdminSalonHeader() {
         </Modal.Footer>
       </Modal>
       <div className="navbar-brand">
-        <Link to="/admin" className="text-decoration-none text-white">
+        <Link to="/adminSalon" className="text-decoration-none text-white">
           <i className="fa-solid fa-car"></i>{" "}
           <span className="mx-2">SALON OTO ADMIN</span>
         </Link>

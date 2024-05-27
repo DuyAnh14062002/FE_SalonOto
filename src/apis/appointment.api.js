@@ -4,8 +4,8 @@ const appointmentApi = {
   createAppointment(body) {
     return http.post("/appointment/create-appointment", body);
   },
-  getAllAppointmentUser() {
-    return http.post("/appointment/get-appoint-user");
+  getAllAppointmentUser(body) {
+    return http.post("/appointment/get-appoint-user", body);
   },
   updateAppointmentUser(body) {
     return http.patch("/appointment/update-one-user", body);
@@ -37,9 +37,6 @@ const appointmentApi = {
       date: date,
       description: description,
     });
-  },
-  getAllAppointmentUser() {
-    return http.post("/appointment/get-appoint-user");
   },
 };
 

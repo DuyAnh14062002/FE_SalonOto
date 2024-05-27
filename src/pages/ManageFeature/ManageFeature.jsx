@@ -6,6 +6,10 @@ import Modal from "react-bootstrap/Modal";
 import { Link } from "react-router-dom";
 import featureApi from "../../apis/feature.api";
 import { toast } from "react-toastify";
+import { debounce } from "lodash";
+import { PaginationControl } from "react-bootstrap-pagination-control";
+const LIMIT = 5;
+
 export default function ManageFeature() {
   const [show, setShow] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
@@ -18,12 +22,24 @@ export default function ManageFeature() {
   });
 
   const [featureChoose, setFeatureChoose] = useState(null);
+  const [totalPage, setTotalPage] = useState(0);
+  const [page, setPage] = useState(1);
+  const [search, setSearch] = useState("");
 
-  const fetchData = async () => {
-    const res = await featureApi.getAllFeature();
+  const handleSearch = (e) => {
+    setSearch(e.target.value);
+    const searchValue = e.target.value;
+    debounce(() => {
+      setPage(1);
+      fetchData(1, searchValue);
+    }, 1000);
+  };
+  const fetchData = async (page, search) => {
+    const res = await featureApi.getAllFeature(page, LIMIT, search);
     if (res?.data?.features?.features) {
       const features = res.data.features.features.reverse();
       setFeatures(features);
+      setTotalPage(res.data.total_page);
     }
   };
 
@@ -32,8 +48,8 @@ export default function ManageFeature() {
   };
   useEffect(() => {
     // call api to get features
-    fetchData();
-  }, []);
+    fetchData(page, search);
+  }, [page, search]);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -66,7 +82,7 @@ export default function ManageFeature() {
       setFeatures([...features, res.data.feature]);
       setFeature({});
       handleClose();
-      fetchData();
+      fetchData(page, search);
       toast.success("Thêm tính năng thành công");
     } catch (error) {
       toast.error("Thêm tính năng thất bại");
@@ -77,7 +93,7 @@ export default function ManageFeature() {
       e.preventDefault();
       await featureApi.updateFeature(featureChoose.feature_id, feature);
       handleCloseEdit();
-      fetchData();
+      fetchData(page, search);
       setFeature({});
       toast.success("Cập nhật tính năng thành công");
     } catch (error) {
@@ -89,7 +105,7 @@ export default function ManageFeature() {
       await featureApi.deleteFeature(featureChoose.feature_id);
       toast.success("Xóa tính năng thành công");
       handleCloseDelete();
-      fetchData();
+      fetchData(page, search);
     } catch (error) {
       toast.error("Xóa tính năng thất bại");
     }
@@ -106,16 +122,18 @@ export default function ManageFeature() {
           </div>
           <div className="card-body">
             <div className="my-3 d-flex justify-content-between align-items-center">
-              <div className="d-flex justify-content-between">
+              <div className="d-flex justify-content-between align-items-center">
+                <span style={{ width: "100px" }}>Tìm kiếm:</span>
                 <input
                   type="text"
                   name="search"
                   id="search"
                   className="form-control"
-                  style={{ width: "65%" }}
+                  style={{ width: "100%" }}
                   placeholder="Nhập tên tính năng"
+                  value={search}
+                  onChange={handleSearch}
                 />
-                <button className="btn btn-primary mx-2">Tìm kiếm</button>
               </div>
               <button className="btn btn-success" onClick={handleShow}>
                 Thêm tính năng
@@ -142,7 +160,10 @@ export default function ManageFeature() {
                       key={feature.feature_id}
                       style={{ background: "rgb(247 247 247)" }}
                     >
-                      <td className="text-center">{++index}</td>
+                      <td className="text-center">
+                        {" "}
+                        {LIMIT * (page - 1) + (index + 1)}
+                      </td>
 
                       <td>{feature.name}</td>
                       <td>{feature.description}</td>
@@ -179,47 +200,19 @@ export default function ManageFeature() {
                 )}
               </tbody>
             </table>
-            {features && features.length > 0 && (
-              <nav className="d-flex justify-content-center ">
-                <ul id="product-pagination" className="pagination">
-                  <li className="page-item">
-                    <button className="page-link" to="#" aria-label="Previous">
-                      <span aria-hidden="true">&laquo;</span>
-                    </button>
-                  </li>
-                  <li className="page-item">
-                    <Link className="page-link" to="/">
-                      1
-                    </Link>
-                  </li>
-                  <li className="page-item">
-                    <Link className="page-link" to="/">
-                      2
-                    </Link>
-                  </li>
-                  <li className="page-item">
-                    <Link className="page-link" to="/">
-                      3
-                    </Link>
-                  </li>
-                  <li className="page-item">
-                    <Link className="page-link" to="/">
-                      4
-                    </Link>
-                  </li>
-                  <li className="page-item">
-                    <Link className="page-link" to="/">
-                      5
-                    </Link>
-                  </li>
 
-                  <li className="page-item" id="nextPageButton">
-                    <button className="page-link" to="#" aria-label="Next">
-                      <span aria-hidden="true">&raquo;</span>
-                    </button>
-                  </li>
-                </ul>
-              </nav>
+            {features && features.length > 0 && (
+              <div className="d-flex justify-content-center ">
+                <PaginationControl
+                  page={page}
+                  total={totalPage * LIMIT || 0}
+                  limit={LIMIT}
+                  changePage={(page) => {
+                    setPage(page);
+                  }}
+                  ellipsis={1}
+                />
+              </div>
             )}
           </div>
         </div>

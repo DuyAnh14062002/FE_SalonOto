@@ -3,22 +3,38 @@ import "./ListSalonOto.scss";
 import { useNavigate } from "react-router-dom";
 import Header from "../../components/Header";
 import salonApi from "../../apis/salon.api";
+import { debounce } from "lodash";
+import { PaginationControl } from "react-bootstrap-pagination-control";
+const LIMIT = 8;
+
 export default function ListSalonOto() {
   const navigate = useNavigate();
   const [listSalon, setListSalon] = useState([]);
+  const [totalPage, setTotalPage] = useState(0);
+  const [page, setPage] = useState(1);
+  const [search, setSearch] = useState("");
   const NavigateSalon = (id) => {
     navigate(`/salonOto/${id}`);
   };
-
+  const handleSearch = (e) => {
+    setSearch(e.target.value);
+    const searchValue = e.target.value;
+    console.log("searchValue : ", searchValue);
+    debounce(() => {
+      setPage(1);
+      loading(1, searchValue);
+    }, 1000);
+  };
+  const loading = async (page, search) => {
+    let res = await salonApi.getAllSalon(page, LIMIT, search);
+    if (res?.data?.salons?.salons) {
+      setListSalon(res.data.salons.salons);
+      setTotalPage(res.data.total_page);
+    }
+  };
   useEffect(() => {
-    const loading = async () => {
-      let res = await salonApi.getAllSalon();
-      if (res?.data?.salons?.salons) {
-        setListSalon(res.data.salons.salons);
-      }
-    };
-    loading();
-  }, []);
+    loading(page, search);
+  }, [page, search]);
   return (
     <div>
       <Header otherPage={true} />
@@ -31,6 +47,27 @@ export default function ListSalonOto() {
                   <h2 className="text-center fw-bold text-uppercase my-5">
                     Danh sách các Salon
                   </h2>
+                  <div className="d-flex align-items-center justify-content-end mb-4">
+                    <span
+                      style={{
+                        width: "80px",
+                        fontWeight: "bold",
+                        color: "#0015ff",
+                      }}
+                    >
+                      Tìm kiếm:
+                    </span>
+                    <input
+                      type="text"
+                      name="search"
+                      id="search"
+                      className="form-control"
+                      style={{ width: "20%" }}
+                      placeholder="Nhập tên salon"
+                      value={search}
+                      onChange={handleSearch}
+                    />
+                  </div>
                 </div>
               </div>
             </div>
@@ -90,6 +127,19 @@ export default function ListSalonOto() {
                   );
                 })}
             </div>
+            {listSalon && listSalon.length > 0 && (
+              <div className="d-flex justify-content-center mt-4">
+                <PaginationControl
+                  page={page}
+                  total={totalPage * LIMIT || 0}
+                  limit={LIMIT}
+                  changePage={(page) => {
+                    setPage(page);
+                  }}
+                  ellipsis={1}
+                />
+              </div>
+            )}
           </div>
         </section>
       </div>

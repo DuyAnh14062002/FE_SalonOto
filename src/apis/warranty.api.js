@@ -1,10 +1,8 @@
 import http from "../utils/http";
 
 const warrantyApi = {
-  getAllWarranty(salon_id) {
-    return http.post("/warranty", {
-      salonId: salon_id,
-    });
+  getAllWarranty(body) {
+    return http.post("/warranty", body);
   },
   createWarranty(salon_id, data) {
     return http.post("/warranty/create", {

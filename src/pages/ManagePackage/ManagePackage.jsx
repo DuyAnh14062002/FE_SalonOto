@@ -3,11 +3,14 @@ import { useEffect, useState } from "react";
 import { Form, Image, ListGroup, Spinner } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
-import { Link } from "react-router-dom";
 import packageApi from "../../apis/package.api";
 import { toast } from "react-toastify";
 import featureApi from "../../apis/feature.api";
 import { formatCurrency } from "../../utils/common";
+import { debounce } from "lodash";
+import { PaginationControl } from "react-bootstrap-pagination-control";
+const LIMIT = 5;
+
 export default function ManagePackage() {
   const [isLoading, setIsLoading] = useState(false);
   const [show, setShow] = useState(false);
@@ -23,12 +26,24 @@ export default function ManagePackage() {
     price: "",
   });
   const [allFeatures, setAllFeatures] = useState([]);
-  const fetchData = async () => {
-    const res = await packageApi.getAllPackage();
-    console.log(res);
-    if (res.data?.packages?.packages) {
-      const packages = res.data.packages.packages.reverse();
+  const [totalPage, setTotalPage] = useState(0);
+  const [page, setPage] = useState(1);
+  const [search, setSearch] = useState("");
+
+  const handleSearch = (e) => {
+    setSearch(e.target.value);
+    const searchValue = e.target.value;
+    debounce(() => {
+      setPage(1);
+      fetchData(1, searchValue);
+    }, 1000);
+  };
+  const fetchData = async (page, search) => {
+    const res = await packageApi.getAllPackage(page, LIMIT, search);
+    if (res.data?.packages) {
+      const packages = res.data.packages.reverse();
       setPackagesList(packages);
+      setTotalPage(res.data.total_page);
     }
   };
   const fetchAllFeatures = async () => {
@@ -48,8 +63,8 @@ export default function ManagePackage() {
   useEffect(() => {
     // call api to get features
     fetchAllFeatures();
-    fetchData();
-  }, []);
+    fetchData(page, search);
+  }, [page, search]);
   // Handle show modal
   const handleShow = () => {
     setShow(true);
@@ -144,7 +159,7 @@ export default function ManagePackage() {
 
       setPkg({});
       handleClose();
-      fetchData();
+      fetchData(page, search);
       setAllFeaturesChecked();
       toast.success("Thêm gói thành công");
     } catch (error) {
@@ -178,7 +193,7 @@ export default function ManagePackage() {
       setPkg({});
       setFile(null);
       handleCloseEdit();
-      fetchData();
+      fetchData(page, search);
       setAllFeaturesChecked();
       toast.success("Cập nhật gói thành công");
     } catch (error) {
@@ -192,7 +207,7 @@ export default function ManagePackage() {
       await packageApi.deletePackage(packageChoose.package_id);
       toast.success("Xóa gói thành công");
       handleCloseDelete();
-      fetchData();
+      fetchData(page, search);
     } catch (error) {
       toast.error("Xóa gói thất bại");
     }
@@ -207,16 +222,18 @@ export default function ManagePackage() {
           </div>
           <div className="card-body">
             <div className="my-3 d-flex justify-content-between align-items-center">
-              <div className="d-flex justify-content-between">
+              <div className="d-flex justify-content-between align-items-center">
+                <span style={{ width: "100px" }}>Tìm kiếm:</span>
                 <input
                   type="text"
                   name="search"
                   id="search"
                   className="form-control"
-                  style={{ width: "65%" }}
-                  placeholder="Nhập tên gói dịch vụ"
+                  style={{ width: "100%" }}
+                  placeholder="Nhập tên gói"
+                  value={search}
+                  onChange={handleSearch}
                 />
-                <button className="btn btn-primary mx-2 px-2">Tìm kiếm</button>
               </div>
               <button className="btn btn-success" onClick={handleShow}>
                 Thêm gói
@@ -250,7 +267,9 @@ export default function ManagePackage() {
                       style={{ background: "rgb(247 247 247)" }}
                       key={packageItem.package_id}
                     >
-                      <td className="text-center">{++index}</td>
+                      <td className="text-center">
+                        {LIMIT * (page - 1) + (index + 1)}
+                      </td>
                       <td className="text-center">
                         <img
                           width="200"
@@ -306,36 +325,17 @@ export default function ManagePackage() {
               </tbody>
             </table>
             {packagesList && packagesList.length > 0 && (
-              <nav className="d-flex justify-content-center ">
-                <ul id="product-pagination" className="pagination">
-                  <li className="page-item">
-                    <button className="page-link" to="#" aria-label="Previous">
-                      <span aria-hidden="true">&laquo;</span>
-                    </button>
-                  </li>
-                  <li className="page-item">
-                    <Link className="page-link" to="/">
-                      1
-                    </Link>
-                  </li>
-                  <li className="page-item">
-                    <Link className="page-link" to="/">
-                      2
-                    </Link>
-                  </li>
-                  <li className="page-item">
-                    <Link className="page-link" to="/">
-                      3
-                    </Link>
-                  </li>
-
-                  <li className="page-item" id="nextPageButton">
-                    <button className="page-link" to="#" aria-label="Next">
-                      <span aria-hidden="true">&raquo;</span>
-                    </button>
-                  </li>
-                </ul>
-              </nav>
+              <div className="d-flex justify-content-center ">
+                <PaginationControl
+                  page={page}
+                  total={totalPage * LIMIT || 0}
+                  limit={LIMIT}
+                  changePage={(page) => {
+                    setPage(page);
+                  }}
+                  ellipsis={1}
+                />
+              </div>
             )}
           </div>
         </div>

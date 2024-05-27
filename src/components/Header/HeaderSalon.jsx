@@ -132,7 +132,7 @@ export default function HeaderSalon() {
       console.log(error);
     }
   };
-  console.log("listNotification : ", listNotification)
+  console.log("listNotification : ", listNotification);
   const handleDeleteNotify = async (id) => {
     try {
       const confirm = window.confirm("Bạn có chắc chắn muốn xóa thông báo?");
@@ -149,9 +149,9 @@ export default function HeaderSalon() {
       console.log(error);
     }
   };
-  const handleNavigateDetail = (id) =>{
-    navigate(`/CarPostDetail/${id}`)
-  }
+  const handleNavigateDetail = (id) => {
+    navigate(`/CarPostDetail/${id}`);
+  };
   const popover = (
     <Popover id="popover-basic">
       <Popover.Header as="h3" className="fw-bold">
@@ -218,10 +218,19 @@ export default function HeaderSalon() {
                       </div>
                       {notification?.types === "request" ? (
                         <div className="Request-box">
-                           <button className="block-user">Chặn</button>
-                           <button className="see-detail" onClick={() =>handleNavigateDetail(notification.data)}>Xem chi tiết</button>
+                          <button className="block-user">Chặn</button>
+                          <button
+                            className="see-detail"
+                            onClick={() =>
+                              handleNavigateDetail(notification.data)
+                            }
+                          >
+                            Xem chi tiết
+                          </button>
                         </div>
-                      ): ""}
+                      ) : (
+                        ""
+                      )}
                     </div>
                   </div>
                 </button>

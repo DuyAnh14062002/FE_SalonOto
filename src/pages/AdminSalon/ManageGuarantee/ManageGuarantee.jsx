@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from "react";
 import userApi from "../../../apis/user.api";
-import maintenanceApi from "../../../apis/maintenance.api";
 import salonApi from "../../../apis/salon.api";
-import { Form, Image, Spinner } from "react-bootstrap";
+import { Form, Spinner } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { toast } from "react-toastify";
 import warrantyApi from "../../../apis/warranty.api";
+import { debounce } from "lodash";
+import { PaginationControl } from "react-bootstrap-pagination-control";
+const LIMIT = 2;
+
 export default function ManageGuarantee() {
   const [permissions, setPermission] = useState([]);
   const [showAdd, setShowAdd] = useState(false);
@@ -16,29 +19,48 @@ export default function ManageGuarantee() {
   const [isLoading, setIsLoading] = useState(false);
   const [warrantyItem, setWarrantyItem] = useState([]);
   const [salon, setSalon] = useState({});
+  const [totalPage, setTotalPage] = useState(0);
+  const [page, setPage] = useState(1);
+  const [search, setSearch] = useState("");
+
+  const handleSearch = (e) => {
+    setSearch(e.target.value);
+    const searchValue = e.target.value;
+    debounce(() => {
+      setPage(1);
+      loadingWarranty(salon?.salon_id, 1, searchValue);
+    }, 1000);
+  };
   const loadingUser = async () => {
     let res = await userApi.getProfile();
     if (res?.data?.profile?.permissions) {
       setPermission(res.data.profile.permissions);
     }
   };
-  const fetchDataSalon = async () => {
+  const fetchDataSalon = async (page, search) => {
     const res = await salonApi.getSalonInfor();
     if (res?.data?.salon) {
-      loadingWarranty(res.data.salon.salon_id);
+      loadingWarranty(res.data.salon.salon_id, page, search);
       setSalon(res.data.salon);
     }
   };
-  const loadingWarranty = async (id) => {
-    let res = await warrantyApi.getAllWarranty(id);
+  const loadingWarranty = async (salonId, page, search) => {
+    let res = await warrantyApi.getAllWarranty({
+      salonId,
+      page,
+      per_page: LIMIT,
+      q: search,
+    });
+    console.log("res warranty : ", res);
     if (res?.data?.warranties) {
       setWarranties(res.data.warranties);
+      setTotalPage(res.data.total_page);
     }
   };
   useEffect(() => {
     loadingUser();
-    fetchDataSalon();
-  }, []);
+    fetchDataSalon(page, search);
+  }, [page, search]);
   const handleCloseAdd = () => {
     setShowAdd(false);
   };
@@ -70,7 +92,7 @@ export default function ManageGuarantee() {
     if (res?.data?.status === "success") {
       toast.success("Thêm gói bảo hành thành công");
       handleCloseAdd();
-      loadingWarranty(salon.salon_id);
+      loadingWarranty(salon.salon_id, page, search);
       setWarrantyItem({});
     } else {
       toast.error("Thêm gói bảo hành thất bại");
@@ -84,7 +106,7 @@ export default function ManageGuarantee() {
     if (res?.data?.status === "success") {
       toast.success("Cập nhật gói bảo hành thành công");
       handleCloseUpdate();
-      loadingWarranty(salon.salon_id);
+      loadingWarranty(salon.salon_id, page, search);
       setWarrantyItem({});
     } else {
       toast.error("Cập nhật gói bảo hành thất bại");
@@ -100,7 +122,7 @@ export default function ManageGuarantee() {
     if (res?.data?.status === "success") {
       toast.success("Xóa gói bảo hành thành công");
       handleCloseDelete();
-      loadingWarranty(salon.salon_id);
+      loadingWarranty(salon.salon_id, page, search);
       setWarrantyItem({});
     } else {
       toast.error("Xóa gói bảo hành thất bại");
@@ -117,16 +139,18 @@ export default function ManageGuarantee() {
           </div>
           <div className="card-body">
             <div className="my-3 d-flex justify-content-between align-items-center">
-              <div className="d-flex justify-content-between">
+              <div className="d-flex justify-content-between align-items-center">
+                <span style={{ width: "100px" }}>Tìm kiếm:</span>
                 <input
                   type="text"
                   name="search"
                   id="search"
                   className="form-control"
-                  style={{ width: "65%" }}
+                  style={{ width: "100%" }}
                   placeholder="Nhập tên gói bảo hành"
+                  value={search}
+                  onChange={handleSearch}
                 />
-                <button className="btn btn-primary mx-2">Tìm kiếm</button>
               </div>
               {(permissions?.includes("OWNER") ||
                 permissions.includes("C_MT")) && (
@@ -165,7 +189,9 @@ export default function ManageGuarantee() {
                 {warranties && warranties.length > 0 ? (
                   warranties.map((maintenance, index) => (
                     <tr key={index} style={{ background: "rgb(247 247 247)" }}>
-                      <td className="text-center">{++index}</td>
+                      <td className="text-center">
+                        {LIMIT * (page - 1) + (index + 1)}
+                      </td>
 
                       <td>{maintenance.name}</td>
                       <td className="text-center">
@@ -212,6 +238,19 @@ export default function ManageGuarantee() {
                 )}
               </tbody>
             </table>
+            {warranties && warranties.length > 0 && (
+              <div className="d-flex justify-content-center ">
+                <PaginationControl
+                  page={page}
+                  total={totalPage * LIMIT || 0}
+                  limit={LIMIT}
+                  changePage={(page) => {
+                    setPage(page);
+                  }}
+                  ellipsis={1}
+                />
+              </div>
+            )}
           </div>
         </div>
       </div>

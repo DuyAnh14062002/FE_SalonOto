@@ -1,8 +1,8 @@
 import axios from "axios";
 const newApi = {
-  getArticle() {
+  getArticle(page, per_page) {
     return axios.get(
-      "https://crawl-data-pink.vercel.app/articles?page=1&perPage=10"
+      `https://crawl-data-pink.vercel.app/articles?page=${page}&perPage=${per_page}`
     );
   },
   getDetailArticle(id) {

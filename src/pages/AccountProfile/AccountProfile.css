@@ -1,0 +1,70 @@
+.row .profile {
+  box-shadow: 0 3px 6px rgb(229, 225, 225);
+  border-radius: 10px;
+  margin-top: 20px;
+  min-height: 200px;
+  padding: 20px 20px;
+}
+
+.update-container {
+  display: flex;
+  align-items: center;
+  border: 1px solid gray;
+  padding: 7px 5px;
+  border-radius: 5px;
+}
+.update-container:hover {
+  border: 1px solid rgb(30, 141, 233);
+}
+.update-container i {
+  margin-right: 3px;
+  color: rgb(30, 141, 233);
+}
+.update-container input {
+  border: none;
+  outline: none;
+}
+
+.btn-profile {
+  position: relative;
+}
+.btn-profile .tick {
+  position: absolute;
+  top: -17px;
+  right: -7px;
+}
+.btn-profile .tick i {
+  color: green;
+  font-size: 25px;
+  border-radius: 50%;
+}
+
+.function-additional {
+  margin-left: 25px;
+}
+
+.function-additional:first-child {
+  margin-left: 0px;
+}
+
+.avatar {
+  grid-area: myArea;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-areas: "myArea . . ." "myArea . . .";
+  grid-gap: 10px;
+}
+
+.head {
+  display: flex;
+  justify-content: center;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  justify-content: end;
+  height: 100%;
+}/*# sourceMappingURL=AccountProfile.css.map */

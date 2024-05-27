@@ -1,0 +1,86 @@
+.post-body {
+  width: 100%;
+  min-height: 100vh;
+  background-color: rgb(246, 243, 243);
+}
+.post-body .postContainer {
+  max-width: 1000px;
+  background-color: white;
+  margin: 0 auto;
+  min-height: 100vh;
+}
+.post-body .postContainer .headerPost {
+  height: 60px;
+  background-color: white;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 20px;
+  align-items: center;
+  border-bottom: 2px solid #333;
+}
+.post-body .postContainer .headerPost .title {
+  font-size: 15px;
+  font-weight: 800;
+  font-family: sans-serif;
+}
+.post-body .postContainer .headerPost .filter {
+  cursor: pointer;
+}
+.post-body .postContainer .postBody .post-item {
+  width: 100%;
+  cursor: pointer;
+  height: auto;
+  border-bottom: 1px solid gray;
+  padding: 5px 20px 5px 20px;
+  display: flex;
+}
+.post-body .postContainer .postBody .post-item:hover {
+  box-shadow: 0 1px 8px 0 rgba(0, 0, 0, 0.3);
+}
+.post-body .postContainer .postBody .post-item .post-image {
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  width: 128px;
+  height: 128px;
+}
+.post-body .postContainer .postBody .post-item .post-content {
+  margin-left: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex: 1;
+}
+.post-body .postContainer .postBody .post-item .post-content .post-content-top .name-car {
+  font-size: 14px;
+}
+.post-body .postContainer .postBody .post-item .post-content .post-content-top .short-description-car {
+  font-size: 14px;
+  color: #9b9b9b;
+}
+.post-body .postContainer .postBody .post-item .post-content .post-content-top .price {
+  font-size: 14px;
+  color: rgb(201, 9, 39);
+}
+.post-body .postContainer .postBody .post-item .post-content .post-content-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.post-body .postContainer .postBody .post-item .post-content .post-content-bottom .user-infor {
+  display: flex;
+}
+.post-body .postContainer .postBody .post-item .post-content .post-content-bottom .user-infor .username {
+  font-size: 12px;
+  color: rgb(155, 155, 155);
+  margin-right: 10px;
+}
+.post-body .postContainer .postBody .post-item .post-content .post-content-bottom .user-infor .time {
+  font-size: 12px;
+  color: rgb(155, 155, 155);
+  margin-right: 10px;
+}
+.post-body .postContainer .postBody .post-item .post-content .post-content-bottom .user-infor .address {
+  font-size: 12px;
+  color: rgb(155, 155, 155);
+}/*# sourceMappingURL=CarPost.css.map */

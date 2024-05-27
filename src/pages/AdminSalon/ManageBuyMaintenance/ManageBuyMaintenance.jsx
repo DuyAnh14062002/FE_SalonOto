@@ -8,6 +8,9 @@ import Modal from "react-bootstrap/Modal";
 import { toast } from "react-toastify";
 import maintenanceApi from "../../../apis/maintenance.api";
 import { formatCurrency } from "../../../utils/common";
+import { debounce } from "lodash";
+import { PaginationControl } from "react-bootstrap-pagination-control";
+const LIMIT = 4;
 
 export default function ManageBuyMaintenance() {
   const [permissions, setPermission] = useState([]);
@@ -24,6 +27,18 @@ export default function ManageBuyMaintenance() {
   const [showDelete, setShowDelete] = useState(false);
   const [showUpdate, setShowUpdate] = useState(false);
   const [accessory, setAccessory] = useState([]);
+  const [totalPage, setTotalPage] = useState(0);
+  const [page, setPage] = useState(1);
+  const [search, setSearch] = useState("");
+
+  const handleSearch = (e) => {
+    setSearch(e.target.value);
+    const searchValue = e.target.value;
+    debounce(() => {
+      setPage(1);
+      loadingInvoice(1, searchValue);
+    }, 1000);
+  };
   const loadingUser = async () => {
     let res = await userApi.getProfile();
     if (res?.data?.profile?.permissions) {
@@ -59,17 +74,20 @@ export default function ManageBuyMaintenance() {
       setSalon(res.data.salon);
     }
   };
-  const loadingInvoice = async () => {
-    let res = await invoiceApi.getAllInvoiceMaintain();
+  const loadingInvoice = async (page, search) => {
+    let res = await invoiceApi.getAllInvoiceMaintain(page, LIMIT, search);
     if (res?.data?.invoices) {
       setInvoices(res.data.invoices);
+      setTotalPage(res.data.total_page);
     }
   };
   useEffect(() => {
     loadingUser();
     fetchDataSalon();
-    loadingInvoice();
   }, []);
+  useEffect(() => {
+    loadingInvoice(page, search);
+  }, [search, page]);
   const handleCloseAdd = () => {
     setShowAdd(false);
   };
@@ -153,8 +171,8 @@ export default function ManageBuyMaintenance() {
     if (res?.data?.status === "success") {
       toast.success("Thêm giao dịch bảo dưỡng thành công");
       handleCloseAdd();
+      loadingInvoice(page, search);
       setMaintenanceItem({});
-      loadingInvoice();
     } else {
       toast.error("Thêm giao dịch bảo dưỡng thất bại");
     }
@@ -172,13 +190,7 @@ export default function ManageBuyMaintenance() {
   const handleChangeSearch = (e) => {
     setSearchInput(e.target.value);
   };
-  const handleSearch = async () => {
-    let res = await invoiceApi.getInvoiceByLicensePlate(searchInput);
 
-    if (res?.data?.invoices) {
-      setInvoices(res.data.invoices);
-    }
-  };
   const handleDelete = async () => {
     let res = await invoiceApi.deleteInvoiceMaintenance(
       invoiceChoose.invoice_id
@@ -187,7 +199,7 @@ export default function ManageBuyMaintenance() {
       toast.success("Xóa giao dịch thành công");
       setInvoiceChoose({});
       handleCloseDelete();
-      loadingInvoice();
+      loadingInvoice(page, search);
     } else {
       toast.error("Xóa giao dịch thất bại");
     }
@@ -214,15 +226,13 @@ export default function ManageBuyMaintenance() {
       toast.success("Cập nhật giao dịch bảo dưỡng thành công");
       handleCloseUpdate();
       setMaintenanceItem({});
-      loadingInvoice();
+      loadingInvoice(page, search);
     } else {
       toast.error("Cập nhật giao dịch bảo dưỡng thất bại");
     }
   };
   const handleChangeAccessory = (data) => {
-    console.log("data : ", data);
     const newAllAccessory = accessory.map((item) => {
-      console.log("item : ", item);
       if (item.accessory_id === data.accessory_id) {
         return { ...item, checked: !item.checked };
       }
@@ -230,7 +240,7 @@ export default function ManageBuyMaintenance() {
     });
     setAccessory(newAllAccessory);
   };
-  console.log("acccessory : ", accessory);
+
   return (
     <>
       <div id="content" className="container-fluid">
@@ -242,23 +252,19 @@ export default function ManageBuyMaintenance() {
           </div>
           <div className="card-body">
             <div className="my-3 d-flex justify-content-between align-items-center">
-              <div className="d-flex justify-content-between">
+              <div className="d-flex justify-content-between align-items-center">
+                <span style={{ width: "100px" }}>Tìm kiếm:</span>
                 <input
                   type="text"
                   name="search"
                   id="search"
                   className="form-control"
-                  style={{ width: "65%" }}
-                  placeholder="Nhập số biển số xe"
-                  onChange={(e) => handleChangeSearch(e)}
+                  style={{ width: "100%" }}
+                  placeholder="Nhập tên khách hàng"
+                  value={search}
+                  onChange={handleSearch}
                 />
-                <button className="btn btn-primary mx-2" onClick={handleSearch}>
-                  Tìm kiếm
-                </button>
               </div>
-              <button className="btn btn-primary mx-2" onClick={loadingInvoice}>
-                Hiện tất cả giao dịch
-              </button>
               {(permissions?.includes("OWNER") ||
                 permissions.includes("C_BC")) && (
                 <button className="btn btn-success" onClick={handleShowAdd}>
@@ -293,7 +299,9 @@ export default function ManageBuyMaintenance() {
                 {invoices && invoices.length > 0 ? (
                   invoices.map((invoice, index) => (
                     <tr key={index} style={{ background: "rgb(247 247 247)" }}>
-                      <td className="text-center">{++index}</td>
+                      <td className="text-center">
+                        {LIMIT * (page - 1) + (index + 1)}
+                      </td>
                       <td>{invoice.licensePlate || searchInput}</td>
                       <td>{invoice.carName}</td>
                       <td>{invoice.fullname}</td>
@@ -347,6 +355,19 @@ export default function ManageBuyMaintenance() {
                 )}
               </tbody>
             </table>
+            {invoices && invoices.length > 0 && (
+              <div className="d-flex justify-content-center ">
+                <PaginationControl
+                  page={page}
+                  total={totalPage * LIMIT || 0}
+                  limit={LIMIT}
+                  changePage={(page) => {
+                    setPage(page);
+                  }}
+                  ellipsis={1}
+                />
+              </div>
+            )}
           </div>
         </div>
       </div>

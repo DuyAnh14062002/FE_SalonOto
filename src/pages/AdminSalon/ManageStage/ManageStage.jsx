@@ -53,6 +53,7 @@ export default function ManageStage() {
       salonId: salon.salon_id,
       processId,
     });
+    console.log("res", res);
     if (res?.data?.data) {
       setProcess(res.data.data);
     }

@@ -1,0 +1,20 @@
+.box-title-process-dealer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.box-title-process-dealer .box-rating {
+  width: 220px;
+  display: flex;
+  position: absolute;
+  top: 31px;
+  left: 860px;
+  display: flex;
+  align-items: center;
+}
+.box-title-process-dealer .box-rating label {
+  color: #222;
+  font-size: 15px;
+  font-weight: 500;
+}/*# sourceMappingURL=ProcessFormDealer.css.map */

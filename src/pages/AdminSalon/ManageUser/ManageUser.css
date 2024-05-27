@@ -1,0 +1,116 @@
+.list-role-container {
+  min-height: 300px;
+  width: 100%;
+  border: 1px solid green;
+  padding: 0;
+  border: 1px solid rgb(218, 215, 215);
+  border-radius: 10px;
+  margin-top: 20px;
+}
+.list-role-container .permisstion-text {
+  border-bottom: 1px solid rgb(218, 215, 215);
+  padding: 10px 0;
+  margin: 0 12px;
+}
+.list-role-container .list-role-box {
+  width: 100%;
+  padding: 0 20px;
+}
+.list-role-container .list-role-box .list-role {
+  border: 1px solid gray;
+  border-radius: 10px;
+  margin-top: 25px;
+}
+.list-role-container .list-role-box .list-role .role-item {
+  display: flex;
+  cursor: pointer;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 25px;
+  border-bottom: 1px solid gray;
+  border-top: 1px solid gray;
+}
+.list-role-container .list-role-box .list-role .role-item:last-child {
+  border-bottom: none;
+}
+.list-role-container .list-role-box .list-role .role-item:first-child {
+  border-top: none;
+}
+.list-role-container .list-role-box .list-role .role-item .left-role-item {
+  display: flex;
+  align-items: center;
+}
+.list-role-container .list-role-box .list-role .role-item .left-role-item i {
+  margin-right: 5px;
+}
+.list-role-container .list-role-box .list-role .role-item-detail-container {
+  padding: 20px;
+  display: flex;
+  flex-wrap: wrap;
+}
+.list-role-container .list-role-box .list-role .role-item-detail-container .role-item-detail {
+  width: 47%;
+  margin-left: 2%;
+  margin-bottom: 2%;
+  display: flex;
+  align-items: center;
+  padding: 5px 10px;
+  border: 1px solid rgb(223, 223, 223);
+  border-radius: 10px;
+}
+.list-role-container .list-role-box .list-role .role-item-detail-container .role-item-detail input {
+  margin-right: 5px;
+}
+.list-role-container .list-role-box .list-role .role-item-detail-container .role-item-detail .role-detail .role-text-top {
+  margin: 0;
+}
+.list-role-container .list-role-box .list-role .role-item-detail-container .role-item-detail .role-detail .get-method {
+  margin: 0;
+  color: blue;
+  font-weight: bold;
+}
+.list-role-container .list-role-box .list-role .role-item-detail-container .role-item-detail .role-detail .post-method {
+  margin: 0;
+  color: green;
+  font-weight: bold;
+}
+.list-role-container .list-role-box .list-role .role-item-detail-container .role-item-detail .role-detail .delete-method {
+  margin: 0;
+  color: red;
+  font-weight: bold;
+}
+.list-role-container .list-role-box .list-role .role-item-detail-container .role-item-detail .role-detail .patch-method {
+  margin: 0;
+  color: black;
+  font-weight: bold;
+}
+
+.switch-toggle {
+  width: 50px;
+  height: 25px;
+  background-color: gray;
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  border-radius: 25px;
+  position: relative;
+  cursor: pointer;
+}
+.switch-toggle::before {
+  content: "";
+  width: 19px;
+  height: 19px;
+  border-radius: 50%;
+  background-color: #fff;
+  position: absolute;
+  top: 3px;
+  left: 3px;
+}
+.switch-toggle:checked {
+  background-color: blue;
+}
+.switch-toggle:checked::before {
+  left: 28px;
+  background-color: white;
+  transition: 0.1s;
+}/*# sourceMappingURL=ManageUser.css.map */

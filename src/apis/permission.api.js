@@ -1,10 +1,8 @@
 import http from "../utils/http";
 
 const permissionApi = {
-  getPermission(salonId) {
-    return http.post(`/salons/user`, {
-      salonId: salonId,
-    });
+  getPermission(body) {
+    return http.post(`/salons/user`, body);
   },
   postPermission(salonId, permission, userId) {
     return http.post(`/salons/permission`, {

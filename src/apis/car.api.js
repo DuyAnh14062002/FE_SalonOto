@@ -18,8 +18,8 @@ const carApi = {
       },
     });
   },
-  getAllCar() {
-    return http.get("/cars");
+  getAllCar(page = 1, per_page = 4, q = "") {
+    return http.get(`/cars?page=${page}&&per_page=${per_page}&&q=${q}`);
   },
   getDetailCar(id) {
     return http.get(`cars/${id}`);
