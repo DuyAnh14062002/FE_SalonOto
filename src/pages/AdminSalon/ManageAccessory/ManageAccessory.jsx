@@ -1,17 +1,19 @@
 import React from "react";
-import { Form, Image, Spinner } from "react-bootstrap";
+import { Form, Spinner } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import salonApi from "../../../apis/salon.api";
-import carApi from "../../../apis/car.api";
 import userApi from "../../../apis/user.api";
 import AccessoryApi from "../../../apis/accessory.api";
 import { formatCurrency } from "../../../utils/common";
+import { debounce } from "lodash";
+import { PaginationControl } from "react-bootstrap-pagination-control";
+const LIMIT = 4;
+
 export default function ManageAccessory() {
   const [isLoading, setIsLoading] = useState(false);
-  const [car, setCar] = useState("");
   const [showUpdate, setShowUpdate] = useState(false);
   const [showAdd, setShowAdd] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
@@ -21,29 +23,43 @@ export default function ManageAccessory() {
   const [accessories, setAccessories] = useState([]);
   const [accessory, setAccessory] = useState({});
   const [accessoryId, setAccessoryId] = useState("");
+  const [totalPage, setTotalPage] = useState(0);
+  const [page, setPage] = useState(1);
+  const [search, setSearch] = useState("");
+
+  const handleSearch = (e) => {
+    setSearch(e.target.value);
+    const searchValue = e.target.value;
+    console.log("searchValue : ", searchValue);
+    debounce(() => {
+      setPage(1);
+      loadingAccessory(salon.salon_id, 1, searchValue);
+    }, 1000);
+  };
   const loadingUser = async () => {
     let res = await userApi.getProfile();
     if (res?.data?.profile?.permissions) {
       setPermission(res.data.profile.permissions);
     }
   };
-  const fetchDataSalon = async () => {
+  const fetchDataSalon = async (page, search) => {
     const res = await salonApi.getSalonInfor();
     if (res?.data?.salon) {
       setSalon(res.data.salon);
-      loadingAccessory(res.data.salon.salon_id);
+      loadingAccessory(res.data.salon.salon_id, page, search);
     }
   };
-  const loadingAccessory = async (salon_id) => {
-    let res = await AccessoryApi.getAccessory(salon_id);
+  const loadingAccessory = async (salon_id, page, search) => {
+    let res = await AccessoryApi.getAccessory(salon_id, page, LIMIT, search);
     if (res?.data?.accessory) {
       setAccessories(res.data.accessory);
+      setTotalPage(res.data.total_page);
     }
   };
   useEffect(() => {
     loadingUser();
-    fetchDataSalon();
-  }, []);
+    fetchDataSalon(page, search);
+  }, [page, search]);
   const handleCloseUpdate = () => {
     setShowUpdate(false);
   };
@@ -76,7 +92,7 @@ export default function ManageAccessory() {
     if (res?.data?.status === "success") {
       toast.success("Thêm phụ tùng thành công");
       handleCloseAdd();
-      loadingAccessory(salon.salon_id);
+      loadingAccessory(salon.salon_id, 1, search);
       setIsLoading(false);
       setAccessory({});
     } else {
@@ -91,7 +107,7 @@ export default function ManageAccessory() {
     if (res?.data?.status === "success") {
       toast.success("Cập nhật phụ tùng thành công");
       handleCloseUpdate();
-      loadingAccessory(salon.salon_id);
+      loadingAccessory(salon.salon_id, 1, search);
       setIsLoading(false);
       setAccessory({});
     } else {
@@ -103,7 +119,7 @@ export default function ManageAccessory() {
     if (res?.data?.status === "success") {
       toast.success("Xóa thông tin xe thành công");
       handleCloseDelete();
-      loadingAccessory(salon.salon_id);
+      loadingAccessory(salon.salon_id, 1, search);
       setAccessory({});
     } else {
       toast.error("Xóa thông tin xe thất bại");
@@ -121,16 +137,18 @@ export default function ManageAccessory() {
           </div>
           <div className="card-body">
             <div className="my-3 d-flex justify-content-between align-items-center">
-              <div className="d-flex justify-content-between">
+              <div className="d-flex justify-content-between align-items-center">
+                <span style={{ width: "100px" }}>Tìm kiếm:</span>
                 <input
                   type="text"
                   name="search"
                   id="search"
                   className="form-control"
-                  style={{ width: "65%" }}
+                  style={{ width: "100%" }}
                   placeholder="Nhập tên phụ tùng"
+                  value={search}
+                  onChange={handleSearch}
                 />
-                <button className="btn btn-primary mx-2">Tìm kiếm</button>
               </div>
               {(permissions?.includes("OWNER") ||
                 permissions.includes("C_AC")) && (
@@ -159,7 +177,9 @@ export default function ManageAccessory() {
                 {accessories && accessories.length > 0 ? (
                   accessories.map((item, index) => (
                     <tr key={index} style={{ background: "rgb(247 247 247)" }}>
-                      <td className="text-center">{++index}</td>
+                      <td className="text-center">
+                        {LIMIT * (page - 1) + (index + 1)}
+                      </td>
 
                       <td>{item.name}</td>
                       <td>{item.manufacturer}</td>
@@ -204,6 +224,19 @@ export default function ManageAccessory() {
                 )}
               </tbody>
             </table>
+            {accessories && accessories.length > 0 && (
+              <div className="d-flex justify-content-center ">
+                <PaginationControl
+                  page={page}
+                  total={totalPage * LIMIT || 0}
+                  limit={LIMIT}
+                  changePage={(page) => {
+                    setPage(page);
+                  }}
+                  ellipsis={1}
+                />
+              </div>
+            )}
           </div>
         </div>
       </div>

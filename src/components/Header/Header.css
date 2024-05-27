@@ -1,0 +1,171 @@
+nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+nav .container-box {
+  display: flex;
+  align-items: center;
+}
+nav .container-box .account-profile {
+  margin-left: 20px;
+}
+nav .container-box .messenger {
+  width: 50px;
+  height: 50px;
+  background-color: rgb(240, 243, 240);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+nav .container-box .messenger:hover {
+  color: blue;
+  transition: 0.1s;
+}
+nav .container-box .messenger i {
+  font-size: 30px;
+  cursor: pointer;
+}
+
+.nav__logo img {
+  max-width: 70px;
+}
+
+.nav__links {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  margin-bottom: 0;
+}
+
+.link a {
+  text-decoration: none;
+  font-weight: 600;
+  color: var(--white);
+}
+
+.arrow {
+  width: 15px;
+  height: 15px;
+  background: #d9e9ff;
+  top: 64px;
+  left: 50%;
+  transform: translateX(-50%) rotate(45deg);
+  z-index: 99;
+}
+
+.virtual_class {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 200%;
+  background: transparent;
+  z-index: 99;
+}
+
+.sub-profile {
+  width: 95%;
+  top: 70px;
+  left: 7px;
+  background: #d9e9ff;
+  padding: 10px 14px;
+  display: flex;
+  border-radius: 5px;
+  flex-direction: column;
+  z-index: 100;
+}
+.sub-profile a {
+  z-index: 100;
+  text-decoration: none;
+  color: #333;
+  margin-top: 7px;
+}
+.sub-profile a:hover {
+  color: rgb(71, 71, 245);
+}
+
+.search {
+  width: 100%;
+  max-width: 300px;
+  padding: 0.5rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background-color: var(--white);
+  border-radius: 2rem;
+  transition: 0.3s;
+}
+.search input {
+  width: 100%;
+  font-size: 1rem;
+  color: var(--primary-color);
+  outline: none;
+  border: none;
+}
+.search input::-moz-placeholder {
+  color: var(--secondary-color);
+}
+.search input::placeholder {
+  color: var(--secondary-color);
+}
+.search span {
+  font-size: 1.5rem;
+  color: var(--primary-color);
+}
+
+.notify {
+  text-align: left;
+  background: #fff;
+  outline: none;
+  border: none;
+  color: #000;
+}
+.notify:hover {
+  background: #d5d2d2;
+  text-decoration: none;
+  color: #000;
+}
+
+.popover-body {
+  padding: 0;
+  width: 275px;
+}
+
+.connection-box {
+  margin-top: 5px;
+}
+.connection-box .see-process {
+  border: none;
+  outline: none;
+  background-color: green;
+  color: #fff;
+  border-radius: 3px;
+  padding: 2px 8px;
+  margin-right: 5px;
+  font-size: 14px;
+}
+.connection-box .agree-connection {
+  border: none;
+  outline: none;
+  background-color: rgb(16, 16, 240);
+  color: #fff;
+  border-radius: 3px;
+  padding: 2px 8px;
+  margin-right: 5px;
+  font-size: 14px;
+}
+
+.see-process {
+  background-color: blue;
+  color: white;
+  float: right;
+  padding: 2px 8px;
+  font-size: 14px;
+  border-radius: 3px;
+  border: none;
+  outline: none;
+}/*# sourceMappingURL=Header.css.map */

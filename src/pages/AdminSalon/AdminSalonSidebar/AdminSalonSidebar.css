@@ -1,0 +1,16 @@
+.sub-menu-transaction li {
+  list-style: none;
+  margin-left: 10px;
+  margin-top: 10px;
+}
+
+.nav-link-icon {
+  width: 18px;
+}
+
+.nav-link .transaction {
+  position: absolute;
+  right: 10px;
+  cursor: pointer;
+  top: 13px;
+}/*# sourceMappingURL=AdminSalonSidebar.css.map */

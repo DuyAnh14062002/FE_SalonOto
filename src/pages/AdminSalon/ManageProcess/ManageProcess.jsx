@@ -7,6 +7,9 @@ import { toast } from "react-toastify";
 import salonApi from "../../../apis/salon.api";
 import processApi from "../../../apis/process.api";
 import userApi from "../../../apis/user.api";
+import { debounce } from "lodash";
+import { PaginationControl } from "react-bootstrap-pagination-control";
+const LIMIT = 10;
 
 export default function ManageProcess() {
   const [listProcess, setListProcess] = useState([]);
@@ -18,10 +21,24 @@ export default function ManageProcess() {
   const [salon, setSalon] = useState({});
   const [permissions, setPermission] = useState([]);
   const [selectedProcess, setSelectedProcess] = useState({});
+  const [totalPage, setTotalPage] = useState(0);
+  const [page, setPage] = useState(1);
+  const [search, setSearch] = useState("");
+
   const processType = {
     0: "Quy trình mua xe",
     1: "Quy trình hoa tiêu",
   };
+  const handleSearch = (e) => {
+    setSearch(e.target.value);
+    const searchValue = e.target.value;
+    console.log("searchValue : ", searchValue);
+    debounce(() => {
+      setPage(1);
+      fetchData(1, searchValue);
+    }, 1000);
+  };
+
   const loadingUser = async () => {
     let res = await userApi.getProfile();
     if (res?.data?.profile?.permissions) {
@@ -34,13 +51,17 @@ export default function ManageProcess() {
       setSalon(res.data.salon);
     }
   };
-  const fetchAllProcess = async () => {
+  const fetchAllProcess = async (page, search) => {
     const res = await processApi.getAllProcess({
       salonId: salon.salon_id,
+      page: page,
+      per_page: LIMIT,
+      q: search,
     });
     console.log("res:", res);
     if (res?.data?.data) {
       setListProcess(res.data.data);
+      setTotalPage(res.data.total_page);
     }
   };
   useEffect(() => {
@@ -49,9 +70,9 @@ export default function ManageProcess() {
   }, []);
   useEffect(() => {
     if (salon?.salon_id) {
-      fetchAllProcess();
+      fetchAllProcess(page, search);
     }
-  }, [salon.salon_id]);
+  }, [salon.salon_id, page, search]);
 
   const handleCloseUpdate = () => {
     setShowUpdate(false);
@@ -87,7 +108,7 @@ export default function ManageProcess() {
       description: process.description,
       type: Number(process.type),
     });
-    fetchAllProcess();
+    fetchAllProcess(page, search);
     handleCloseUpdate();
     if (res?.data?.status && res.data.status === "success") {
       toast.success("Cập nhật thông tin quy trình thành công");
@@ -110,7 +131,7 @@ export default function ManageProcess() {
       description: process.description,
       type: Number(process.type),
     });
-    fetchAllProcess();
+    fetchAllProcess(page, search);
     handleCloseAdd();
     if (res?.data?.status && res.data.status === "success") {
       toast.success("Thêm thông tin quy trình thành công");
@@ -126,7 +147,7 @@ export default function ManageProcess() {
       salonId: salon.salon_id,
       processId: selectedProcess.id,
     });
-    fetchAllProcess();
+    fetchAllProcess(page, search);
     handleCloseDelete();
     if (res?.data?.status && res.data.status === "success") {
       toast.success("Xóa thông tin quy trình thành công");
@@ -147,6 +168,19 @@ export default function ManageProcess() {
           </div>
           <div className="card-body">
             <div className="my-3 d-flex justify-content-between align-items-center">
+              <div className="d-flex justify-content-between align-items-center">
+                <span style={{ width: "100px" }}>Tìm kiếm:</span>
+                <input
+                  type="text"
+                  name="search"
+                  id="search"
+                  className="form-control"
+                  style={{ width: "100%" }}
+                  placeholder="Nhập tên quy trình"
+                  value={search}
+                  onChange={handleSearch}
+                />
+              </div>
               <div className="d-flex justify-content-between"></div>
               {(permissions?.includes("OWNER") ||
                 permissions.includes("postCar")) && (
@@ -173,7 +207,9 @@ export default function ManageProcess() {
                 {listProcess && listProcess.length > 0 ? (
                   listProcess.map((process, index) => (
                     <tr key={index} style={{ background: "rgb(247 247 247)" }}>
-                      <td className="text-center">{++index}</td>
+                      <td className="text-center">
+                        {LIMIT * (page - 1) + (index + 1)}
+                      </td>
 
                       <td>{process.name}</td>
                       <td>{process.description}</td>
@@ -216,6 +252,19 @@ export default function ManageProcess() {
                 )}
               </tbody>
             </table>
+            {listProcess && listProcess.length > 0 && (
+              <div className="d-flex justify-content-center ">
+                <PaginationControl
+                  page={page}
+                  total={totalPage * LIMIT || 0}
+                  limit={LIMIT}
+                  changePage={(page) => {
+                    setPage(page);
+                  }}
+                  ellipsis={1}
+                />
+              </div>
+            )}
           </div>
         </div>
       </div>

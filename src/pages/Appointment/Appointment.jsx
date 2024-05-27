@@ -8,31 +8,40 @@ import appointmentApi from "../../apis/appointment.api";
 import { formatDate, formatTime } from "../../utils/common";
 import { Form } from "react-bootstrap";
 import Header from "../../components/Header";
+import { debounce } from "lodash";
+import { PaginationControl } from "react-bootstrap-pagination-control";
+const LIMIT = 4;
 
 export default function Appointment() {
   const [showEdit, setShowEdit] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
   const [appointmentList, setAppointmentList] = useState([]);
   const [appointmentChoose, setAppointmentChoose] = useState(null);
-
   const [note, setNote] = useState("");
+  const [totalPage, setTotalPage] = useState(0);
+  const [page, setPage] = useState(1);
+
   const showAccepted = {
     0: "Chưa phản hồi",
     1: "Đã xác nhận",
     2: "Từ chối",
   };
-  const fetchData = async () => {
-    const res = await appointmentApi.getAllAppointmentUser();
+
+  const fetchData = async (page) => {
+    const res = await appointmentApi.getAllAppointmentUser({
+      page: page,
+      per_page: LIMIT,
+    });
+    console.log("res : ", res);
     if (res?.data?.appointments) {
       const appointmentList = res.data.appointments;
-      console.log(appointmentList);
       setAppointmentList(appointmentList);
+      setTotalPage(res.data.total_page);
     }
   };
   useEffect(() => {
-    // call api to get features
-    fetchData();
-  }, []);
+    fetchData(page);
+  }, [page]);
 
   const handleShowEdit = (appointment) => {
     setAppointmentChoose(appointment);
@@ -63,7 +72,7 @@ export default function Appointment() {
         toast.success("Cập nhật lịch hẹn thành công");
       }
       handleCloseEdit();
-      fetchData();
+      fetchData(page);
     } catch (error) {
       toast.error("Cập nhật lịch hẹn thất bại");
     }
@@ -75,12 +84,12 @@ export default function Appointment() {
       });
       toast.success("Xóa lịch hẹn thành công");
       handleCloseDelete();
-      fetchData();
+      fetchData(page);
     } catch (error) {
       toast.error("Xóa lịch hẹn thất bại");
     }
   };
- console.log("appointmentList : ", appointmentList)
+  console.log("appointmentList : ", appointmentList);
   return (
     <>
       <Header otherPage={true} />
@@ -120,7 +129,9 @@ export default function Appointment() {
                         key={appointment.id}
                         style={{ background: "rgb(247 247 247)" }}
                       >
-                        <td className="text-center">{++index}</td>
+                        <td className="text-center">
+                          {LIMIT * (page - 1) + (index + 1)}
+                        </td>
                         <td>{appointment.salon}</td>
                         <td>
                           <Link to={`/detail-car/${appointment.car_id}`}>
@@ -144,23 +155,27 @@ export default function Appointment() {
                         <td>{appointment.description}</td>
                         <td>{status}</td>
                         <td className="text-center">
-                          {appointment.from === "salon" ? (<button
-                            className="btn btn-success btn-sm rounded-0 text-white mx-2"
-                            data-bs-toggle="tooltip"
-                            data-bs-placement="bottom"
-                            title="Xác nhận"
-                            onClick={() => handleShowEdit(appointment, true)}
-                          >
-                            <i class="fa-solid fa-check"></i>
-                          </button>) : ( <button
-                            className="btn btn-success btn-sm rounded-0 text-white mx-2"
-                            data-toggle="tooltip"
-                            data-placement="top"
-                            title="Edit"
-                            onClick={() => handleShowEdit(appointment)}
-                          >
-                            <i className="fa fa-edit"></i>
-                          </button>)}
+                          {appointment.from === "salon" ? (
+                            <button
+                              className="btn btn-success btn-sm rounded-0 text-white mx-2"
+                              data-bs-toggle="tooltip"
+                              data-bs-placement="bottom"
+                              title="Xác nhận"
+                              onClick={() => handleShowEdit(appointment, true)}
+                            >
+                              <i class="fa-solid fa-check"></i>
+                            </button>
+                          ) : (
+                            <button
+                              className="btn btn-success btn-sm rounded-0 text-white mx-2"
+                              data-toggle="tooltip"
+                              data-placement="top"
+                              title="Edit"
+                              onClick={() => handleShowEdit(appointment)}
+                            >
+                              <i className="fa fa-edit"></i>
+                            </button>
+                          )}
                           <button
                             to="/"
                             className="btn btn-danger btn-sm rounded-0 text-white"
@@ -185,46 +200,17 @@ export default function Appointment() {
               </tbody>
             </table>
             {appointmentList && appointmentList.length > 0 && (
-              <nav className="d-flex justify-content-center ">
-                <ul id="product-pagination" className="pagination">
-                  <li className="page-item">
-                    <button className="page-link" to="#" aria-label="Previous">
-                      <span aria-hidden="true">&laquo;</span>
-                    </button>
-                  </li>
-                  <li className="page-item">
-                    <Link className="page-link" to="/">
-                      1
-                    </Link>
-                  </li>
-                  <li className="page-item">
-                    <Link className="page-link" to="/">
-                      2
-                    </Link>
-                  </li>
-                  <li className="page-item">
-                    <Link className="page-link" to="/">
-                      3
-                    </Link>
-                  </li>
-                  <li className="page-item">
-                    <Link className="page-link" to="/">
-                      4
-                    </Link>
-                  </li>
-                  <li className="page-item">
-                    <Link className="page-link" to="/">
-                      5
-                    </Link>
-                  </li>
-
-                  <li className="page-item" id="nextPageButton">
-                    <button className="page-link" to="#" aria-label="Next">
-                      <span aria-hidden="true">&raquo;</span>
-                    </button>
-                  </li>
-                </ul>
-              </nav>
+              <div className="d-flex justify-content-center ">
+                <PaginationControl
+                  page={page}
+                  total={totalPage * LIMIT || 0}
+                  limit={LIMIT}
+                  changePage={(page) => {
+                    setPage(page);
+                  }}
+                  ellipsis={1}
+                />
+              </div>
             )}
           </div>
         </div>

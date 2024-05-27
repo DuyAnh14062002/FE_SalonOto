@@ -9,6 +9,9 @@ import { toast } from "react-toastify";
 import { formatCurrency } from "../../../utils/common";
 import processApi from "../../../apis/process.api";
 import ProcessForm from "../../ProcessForm/ProcessForm";
+import { PaginationControl } from "react-bootstrap-pagination-control";
+import { debounce } from "lodash";
+const LIMIT = 5;
 
 export default function ManageBuyCar() {
   const [permissions, setPermission] = useState([]);
@@ -30,6 +33,18 @@ export default function ManageBuyCar() {
   const [showModalProcess, setShowModalProcess] = useState(false);
   const [employeeId, setEmployeeId] = useState("");
   const [employees, setEmployees] = useState([]);
+  const [totalPage, setTotalPage] = useState(0);
+  const [page, setPage] = useState(1);
+  const [search, setSearch] = useState("");
+
+  const handleSearch = (e) => {
+    setSearch(e.target.value);
+    const searchValue = e.target.value;
+    debounce(() => {
+      setPage(1);
+      loadingInvoice(salon?.salon_id, 1, searchValue);
+    }, 1000);
+  };
   const handleShowProcess = (invoice) => {
     setSelectedInvoice(invoice);
     setShowModalProcess(true);
@@ -39,12 +54,11 @@ export default function ManageBuyCar() {
   };
   const getAllEmployeeOfSalons = async (salonId) => {
     let res = await salonApi.getAllEmployee(salonId);
-    console.log("res employee : ", res);
     if (res?.data?.data) {
       setEmployees(res.data.data);
+      setEmployeeId(res.data.data[0].user_id);
     }
   };
-  console.log("invoice : ", invoices);
   const handleFilterChange = (e) => {
     setFilter(e.target.value);
   };
@@ -54,7 +68,7 @@ export default function ManageBuyCar() {
     } else if (filter === "processing") {
       return !invoice.done;
     }
-    return true; // Return all invoices if 'all' is selected
+    return true;
   });
   const loadingUser = async () => {
     let res = await userApi.getProfile();
@@ -75,16 +89,20 @@ export default function ManageBuyCar() {
     });
     console.log("res2", res2);
   };
-  const loadingInvoice = async (salon_id) => {
-    let res = await invoiceApi.getAllInvoiceBuyCar(salon_id);
+  const loadingInvoice = async (salon_id, page, search) => {
+    let res = await invoiceApi.getAllInvoiceBuyCar(salon_id, {
+      page: page,
+      per_page: LIMIT,
+      q: search,
+    });
+    console.log("res invoice : ", res);
     if (res?.data?.invoices) {
-      const invoiceBuyCar = res.data.invoices.filter(
-        (invoice) => invoice.type === "buy car"
-      );
-      setInvoices(invoiceBuyCar);
+      setInvoices(res?.data?.invoices);
+      setTotalPage(res.data.total_page);
     }
   };
-  const fetchDataSalon = async () => {
+
+  const fetchDataSalon = async (page, search) => {
     const res = await salonApi.getSalonInfor();
     if (res?.data?.salon?.cars) {
       setCars(res.data.salon.cars);
@@ -92,14 +110,14 @@ export default function ManageBuyCar() {
     }
     if (res?.data?.salon) {
       getAllEmployeeOfSalons(res.data.salon.salon_id);
-      loadingInvoice(res.data.salon.salon_id);
+      loadingInvoice(res.data.salon.salon_id, page, search);
       setSalon(res.data.salon);
     }
   };
   useEffect(() => {
     loadingUser();
-    fetchDataSalon();
-  }, []);
+    fetchDataSalon(page, search);
+  }, [page, search]);
   useEffect(() => {
     if (salon?.salon_id) {
       fetchAllProcess();
@@ -139,7 +157,7 @@ export default function ManageBuyCar() {
     if (res?.data?.status === "success") {
       toast.success("Thêm thông tin giao dịch thành công");
       handleCloseAdd();
-      loadingInvoice(salon.salon_id);
+      loadingInvoice(salon.salon_id, 1, search);
       setBuyCarInfor({});
     } else {
       toast.error("Thêm thông tin giao dịch thất bại");
@@ -148,12 +166,7 @@ export default function ManageBuyCar() {
   const handleSetCarId = (e) => {
     setCarId(e.target.value);
   };
-  const handleChangeSearch = (e) => {
-    setSearchInput(e.target.value);
-  };
-  const handeSearch = async () => {
-    let res = await invoiceApi.getInvoiceBuyCarByPhone(searchInput);
-  };
+
   const handleDelete = async () => {
     try {
       const res = await invoiceApi.deleteInvoiceBuyCar({
@@ -161,7 +174,7 @@ export default function ManageBuyCar() {
         invoiceId: selectedInvoice.invoice_id,
       });
       if (res?.data?.status === "success") {
-        loadingInvoice(salon.salon_id);
+        loadingInvoice(salon.salon_id, 1, search);
         toast.success("Xóa giao dịch thành công");
         setSelectedInvoice({});
         handleCloseDelete();
@@ -193,19 +206,18 @@ export default function ManageBuyCar() {
           </div>
           <div className="card-body">
             <div className="my-3 d-flex justify-content-between align-items-center">
-              <div className="d-flex justify-content-between">
+              <div className="d-flex justify-content-between align-items-center">
+                <span style={{ width: "100px" }}>Tìm kiếm:</span>
                 <input
                   type="text"
                   name="search"
                   id="search"
                   className="form-control"
-                  style={{ width: "65%" }}
-                  placeholder="Nhập số điện thoại"
-                  onChange={(e) => handleChangeSearch(e)}
+                  style={{ width: "100%" }}
+                  placeholder="Nhập tên khách hàng"
+                  value={search}
+                  onChange={handleSearch}
                 />
-                <button className="btn btn-primary mx-2" onClick={handeSearch}>
-                  Tìm kiếm
-                </button>
               </div>
               <div className="d-flex align-items-center">
                 <span>Lọc: </span>
@@ -255,7 +267,9 @@ export default function ManageBuyCar() {
                 {filteredInvoices && filteredInvoices.length > 0 ? (
                   filteredInvoices.map((invoice, index) => (
                     <tr key={index} style={{ background: "rgb(247 247 247)" }}>
-                      <td className="text-center">{++index}</td>
+                      <td className="text-center">
+                        {LIMIT * (page - 1) + (index + 1)}
+                      </td>
 
                       <td>{invoice.fullname}</td>
                       <td>{invoice.phone}</td>
@@ -328,6 +342,19 @@ export default function ManageBuyCar() {
                 )}
               </tbody>
             </table>
+            {filteredInvoices && filteredInvoices.length > 0 && (
+              <div className="d-flex justify-content-center ">
+                <PaginationControl
+                  page={page}
+                  total={totalPage * LIMIT || 0}
+                  limit={LIMIT}
+                  changePage={(page) => {
+                    setPage(page);
+                  }}
+                  ellipsis={1}
+                />
+              </div>
+            )}
           </div>
         </div>
       </div>

@@ -19,7 +19,7 @@ const ProcessForm = ({
   const [isNextButtonDisabled, setIsNextButtonDisabled] = useState(true);
   const [periodCurrent, setPeriodCurrent] = useState(null);
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   console.log("detailProcess", detailProcess);
   const fetchDetailInvoice = async () => {
     try {
@@ -85,8 +85,8 @@ const ProcessForm = ({
       documents: item?.details?.map((detail) => detail.name),
     };
   });
-  console.log("detailProcess : ", detailProcess)
-  console.log("invoice : ", invoice)
+  console.log("detailProcess : ", detailProcess);
+  console.log("invoice : ", invoice);
   const handleDocumentToggle = (documentName) => {
     setCheckedDetails((prevDetails) => {
       if (!prevDetails) {
@@ -152,7 +152,7 @@ const ProcessForm = ({
       fetchDetailInvoice();
       toast.success("Tiến trình hoàn tất");
       handleCloseModalProcess();
-      loadingInvoice(salonId);
+      loadingInvoice(salonId, 1, "");
     }
   };
   const handleUpdate = async () => {
@@ -175,66 +175,75 @@ const ProcessForm = ({
       }
     } catch (error) {}
   };
- const  handleNavigateSalonAppointment = (phone, carId, salonId) =>{
-  navigate(`${path.salonAppointment}`,{
-    state : {phone :invoice?.phone, carId: invoice?.legals_user?.car_id, salonId: invoice?.seller?.salon_id }
-  })
- }
+  const handleNavigateSalonAppointment = () => {
+    navigate(`${path.salonAppointment}`, {
+      state: {
+        phone: invoice?.phone,
+        carId: invoice?.legals_user?.car_id,
+        salonId: invoice?.seller?.salon_id,
+      },
+    });
+  };
   return (
     <>
       <div className="container">
-      <button className="create-schedule-paper" onClick={() => handleNavigateSalonAppointment()}>Tạo lịch hẹn</button>
-      <h1 className="text-center mt-4">{detailProcess?.name}</h1>
-      <Stepper
-        steps={steps?.map((step) => ({ label: step.label }))}
-        activeStep={activeStep}
-        styleConfig={{
-          activeBgColor: "#2b7cff",
-          activeTextColor: "#fff",
-          inactiveBgColor: "#fff",
-          inactiveTextColor: "#2b7cff",
-          completedBgColor: "#fff",
-          completedTextColor: "#2b7cff",
-          size: "3em",
-        }}
-        className={"stepper"}
-        stepClassName={"stepper__step"}
-      />
-      <div className="step-content">
-        <div key={activeStep}>
-          <div className="documents">
-            <h2 className="text-center fw-bold my-4">
-              {detailProcess.type === 0
-                ? "Các giấy tờ cần thiết"
-                : "Thông tin giai đoạn"}
-            </h2>
-            {detailProcess?.documents && (
-              <ol className="list-group list-group-numbered">
-                {steps[activeStep]?.documents.map((document, index) => (
-                  <li
-                    key={index}
-                    className="list-group-item w-100 d-flex align-items-center justify-content-between"
-                  >
-                    <span style={{ flex: "1 1 80%", paddingLeft: "5px" }}>
-                      {document}
-                    </span>
-                    {!invoice?.done && (
-                      <input
-                        type="checkbox"
-                        className="form-check-input mx-2"
-                        checked={checkedDetails?.includes(document)}
-                        onChange={() => handleDocumentToggle(document)}
-                      />
-                    )}
-                  </li>
-                ))}
-              </ol>
-            )}
+        <button
+          className="create-schedule-paper"
+          onClick={() => handleNavigateSalonAppointment()}
+        >
+          Tạo lịch hẹn
+        </button>
+        <h1 className="text-center mt-4">{detailProcess?.name}</h1>
+        <Stepper
+          steps={steps?.map((step) => ({ label: step.label }))}
+          activeStep={activeStep}
+          styleConfig={{
+            activeBgColor: "#2b7cff",
+            activeTextColor: "#fff",
+            inactiveBgColor: "#fff",
+            inactiveTextColor: "#2b7cff",
+            completedBgColor: "#fff",
+            completedTextColor: "#2b7cff",
+            size: "3em",
+          }}
+          className={"stepper"}
+          stepClassName={"stepper__step"}
+        />
+        <div className="step-content">
+          <div key={activeStep}>
+            <div className="documents">
+              <h2 className="text-center fw-bold my-4">
+                {detailProcess.type === 0
+                  ? "Các giấy tờ cần thiết"
+                  : "Thông tin giai đoạn"}
+              </h2>
+              {detailProcess?.documents && (
+                <ol className="list-group list-group-numbered">
+                  {steps[activeStep]?.documents.map((document, index) => (
+                    <li
+                      key={index}
+                      className="list-group-item w-100 d-flex align-items-center justify-content-between"
+                    >
+                      <span style={{ flex: "1 1 80%", paddingLeft: "5px" }}>
+                        {document}
+                      </span>
+                      {!invoice?.done && (
+                        <input
+                          type="checkbox"
+                          className="form-check-input mx-2"
+                          checked={checkedDetails?.includes(document)}
+                          onChange={() => handleDocumentToggle(document)}
+                        />
+                      )}
+                    </li>
+                  ))}
+                </ol>
+              )}
+            </div>
           </div>
         </div>
-      </div>
-      <div style={{ textAlign: "center" }}>
-        {/* {(invoice?.done && activeStep !== 0) (
+        <div style={{ textAlign: "center" }}>
+          {/* {(invoice?.done && activeStep !== 0) (
           <button
             className="buttons__button buttons__button--back"
             onClick={handleBack}
@@ -242,33 +251,33 @@ const ProcessForm = ({
             Back
           </button>
         )} */}
-        {!invoice?.done && (
-          <button
-            className="buttons__button buttons__button--update"
-            onClick={handleUpdate}
-          >
-            Update
-          </button>
-        )}
+          {!invoice?.done && (
+            <button
+              className="buttons__button buttons__button--update"
+              onClick={handleUpdate}
+            >
+              Update
+            </button>
+          )}
 
-        {activeStep !== steps?.length - 1 && (
-          <button
-            className="buttons__button buttons__button--next"
-            onClick={handleNext}
-          >
-            Next
-          </button>
-        )}
-        {activeStep === steps?.length - 1 && !invoice?.done && (
-          <button
-            className="buttons__button buttons__button--finish"
-            onClick={handleFinish}
-          >
-            Finish
-          </button>
-        )}
+          {activeStep !== steps?.length - 1 && (
+            <button
+              className="buttons__button buttons__button--next"
+              onClick={handleNext}
+            >
+              Next
+            </button>
+          )}
+          {activeStep === steps?.length - 1 && !invoice?.done && (
+            <button
+              className="buttons__button buttons__button--finish"
+              onClick={handleFinish}
+            >
+              Finish
+            </button>
+          )}
+        </div>
       </div>
-    </div>
     </>
   );
 };

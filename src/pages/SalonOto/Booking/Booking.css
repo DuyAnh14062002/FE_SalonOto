@@ -1,0 +1,34 @@
+.select-time .time {
+  padding: 8px 10px;
+  background: #f3f2f5;
+  border-radius: 10px;
+  cursor: pointer;
+}
+.select-time .time.active {
+  background: #e50058;
+  color: white;
+}
+
+.calendar abbr {
+  text-decoration: none;
+}
+.calendar .react-calendar__month-view__days__day--weekend {
+  color: #000;
+}
+.calendar .react-calendar__tile--now {
+  background: #fff;
+}
+.calendar .react-calendar__tile--now:enabled:hover,
+.calendar .react-calendar__tile--now:enabled:focus {
+  background: #e50058;
+  color: #fff;
+}
+.calendar .react-calendar__tile--active {
+  background: #e50058;
+  color: #fff;
+}
+.calendar .react-calendar__tile--active:enabled:hover,
+.calendar .react-calendar__tile--active:enabled:focus {
+  background: #e50058;
+  color: #fff;
+}/*# sourceMappingURL=Booking.css.map */

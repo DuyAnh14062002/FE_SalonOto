@@ -20,8 +20,8 @@ export default function ListPackage() {
   useEffect(() => {
     const loadingPackage = async () => {
       let res = await packageApi.getAllPackage();
-      if (res?.data?.packages?.packages) {
-        setPackages(res.data.packages.packages);
+      if (res?.data?.packages) {
+        setPackages(res.data.packages);
       }
     };
     loadingPackage();

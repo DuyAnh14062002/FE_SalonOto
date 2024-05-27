@@ -1,0 +1,224 @@
+.body-post-sell {
+  width: 100%;
+  min-height: 100vh;
+  background-color: rgb(246, 243, 243);
+  padding-top: 40px;
+}
+.body-post-sell .post-sell-container {
+  max-width: 1000px;
+  background-color: white;
+  margin: 0 auto;
+  min-height: 100vh;
+  display: flex;
+  padding: 20px 5px 5px 5px;
+}
+.body-post-sell .post-sell-container .left-post-sell {
+  width: 72%;
+}
+.body-post-sell .post-sell-container .left-post-sell .title {
+  font-weight: 700;
+  color: #222;
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+.body-post-sell .post-sell-container .left-post-sell .image-post-sell {
+  background-color: #f4f4f4;
+  border-radius: 4px;
+  height: 288px;
+  border: 2px dotted #fe9900;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  cursor: pointer;
+}
+.body-post-sell .post-sell-container .left-post-sell .image-post-sell input {
+  background-color: red;
+  width: 100%;
+  display: none;
+  height: 100%;
+}
+.body-post-sell .post-sell-container .left-post-sell .image-post-sell i {
+  font-size: 58px;
+  color: #f80;
+}
+.body-post-sell .post-sell-container .left-post-sell .image-post-sell label {
+  font-size: 14px;
+  color: #8c8c8c;
+}
+.body-post-sell .post-sell-container .right-post-sell {
+  margin-left: 20px;
+}
+.body-post-sell .post-sell-container .gear-infor .gear-title {
+  margin-bottom: 8px;
+  margin-top: 12px;
+  font-size: 14px;
+  color: #8c8c8c;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+.body-post-sell .post-sell-container .gear-infor .gear-name {
+  border-radius: 15px;
+  padding: 4px 12px;
+  outline: none;
+  border: none;
+  margin-right: 8px;
+  margin-bottom: 8px;
+}
+.body-post-sell .post-sell-container .gear-infor .gear-name:hover {
+  background-color: #ffe9c2;
+  color: #f80;
+}
+.body-post-sell .post-sell-container .gear-infor .gear-name.active {
+  background-color: #ffe9c2;
+  color: #f80;
+}
+.body-post-sell .post-sell-container .fuel-infor .fuel-title {
+  margin-bottom: 8px;
+  font-size: 14px;
+  color: #8c8c8c;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+.body-post-sell .post-sell-container .fuel-infor .fuel-name {
+  border-radius: 15px;
+  padding: 4px 12px;
+  outline: none;
+  border: none;
+  margin-right: 8px;
+  margin-bottom: 8px;
+}
+.body-post-sell .post-sell-container .fuel-infor .fuel-name:hover {
+  background-color: #ffe9c2;
+  color: #f80;
+}
+.body-post-sell .post-sell-container .fuel-infor .fuel-name.active {
+  background-color: #ffe9c2;
+  color: #f80;
+}
+.body-post-sell .post-sell-container .right-post-sell .title {
+  font-weight: 700;
+  color: #222;
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+.body-post-sell .post-sell-container .right-post-sell .car-detail-input {
+  padding: 12px 14px;
+  border: 1px solid gray;
+  background-color: white;
+  border-radius: 4px;
+  width: 96%;
+  margin: 10px 0;
+}
+.body-post-sell .post-sell-container .right-post-sell .infor-post-sell-2 {
+  margin-top: 12px;
+  display: flex;
+}
+.body-post-sell .post-sell-container .right-post-sell .infor-post-sell-2 input {
+  width: 92% !important;
+}
+.body-post-sell .post-sell-container .is-accessory {
+  margin: 10px 0;
+}
+.body-post-sell .post-sell-container .is-accessory span {
+  font-size: 14px;
+  color: #8c8c8c;
+  font-weight: 700;
+  margin-bottom: 10px;
+  display: inline-block;
+}
+.body-post-sell .post-sell-container .is-accessory button {
+  border-radius: 15px;
+  padding: 4px 12px;
+  outline: none;
+  border: none;
+  margin-right: 8px;
+  margin-bottom: 8px;
+}
+.body-post-sell .post-sell-container .is-accessory button:hover {
+  background-color: #ffe9c2;
+  color: #f80;
+}
+.body-post-sell .post-sell-container .is-accessory button.active {
+  background-color: #ffe9c2;
+  color: #f80;
+}
+.body-post-sell .post-sell-container .is-regis {
+  margin: 10px 0;
+}
+.body-post-sell .post-sell-container .is-regis span {
+  font-size: 14px;
+  color: #8c8c8c;
+  font-weight: 700;
+  margin-bottom: 10px;
+  display: inline-block;
+}
+.body-post-sell .post-sell-container .is-regis button {
+  border-radius: 15px;
+  padding: 4px 12px;
+  outline: none;
+  border: none;
+  margin-right: 8px;
+  margin-bottom: 8px;
+}
+.body-post-sell .post-sell-container .is-regis button:hover {
+  background-color: #ffe9c2;
+  color: #f80;
+}
+.body-post-sell .post-sell-container .is-regis button.active {
+  background-color: #ffe9c2;
+  color: #f80;
+}
+.body-post-sell .post-sell-container .title-and-description {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #222;
+}
+.body-post-sell .post-sell-container textarea {
+  margin-top: 12px;
+  padding: 12px;
+}
+.body-post-sell .post-sell-container .user-infor {
+  margin-top: 10px;
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #222;
+}
+.body-post-sell .post-sell-container .btn-post-sell-car {
+  color: #fff;
+  background-color: #f80;
+  border-color: #f80;
+  width: 100%;
+  font-size: 1rem;
+  line-height: 1.25;
+  padding: 9px 19px;
+  border-radius: 4px;
+  font-weight: 400;
+  border: none;
+  text-transform: uppercase;
+  margin: 15px 0;
+}
+.body-post-sell .post-sell-container .btn-post-sell-car:hover {
+  background-color: rgb(255, 176, 87);
+  transition: 0.1s;
+}
+
+.select-salon-car-sell {
+  padding: 12px;
+  width: 100%;
+}
+
+.image-preview {
+  height: auto;
+  margin-bottom: 15px;
+  display: flex;
+  flex-wrap: wrap;
+}
+.image-preview .item {
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+  width: 75px;
+  height: 75px;
+  margin-left: 8px;
+}/*# sourceMappingURL=PostSellCar.css.map */

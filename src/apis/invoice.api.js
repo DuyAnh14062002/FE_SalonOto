@@ -1,13 +1,16 @@
 import http from "../utils/http";
 
 const invoiceApi = {
-  getAllInvoiceBuyCar(salon_id) {
+  getAllInvoiceBuyCar(salon_id, dataPaginate) {
     return http.post("/invoice/get-invoice-buy-car-salon", {
       salonId: salon_id,
+      page: dataPaginate.page,
+      per_page: dataPaginate.per_page,
+      q: dataPaginate.q,
     });
   },
-  getAllInvoiceMaintain() {
-    return http.get("/invoice");
+  getAllInvoiceMaintain(page = 1, per_page = 1000, q = "") {
+    return http.get(`/invoice?page=${page}&per_page=${per_page}&q=${q}`);
   },
   createBuyCarInvoice(salon_Id, carId, data, processId, employeeId) {
     return http.post("/invoice/create-invoice", {

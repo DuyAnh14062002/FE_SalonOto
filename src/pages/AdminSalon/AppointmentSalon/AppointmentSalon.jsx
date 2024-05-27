@@ -8,6 +8,9 @@ import { Form } from "react-bootstrap";
 import appointmentApi from "../../../apis/appointment.api";
 import { formatDate, formatTime } from "../../../utils/common";
 import salonApi from "../../../apis/salon.api";
+import { PaginationControl } from "react-bootstrap-pagination-control";
+import { debounce } from "lodash";
+const LIMIT = 2;
 
 export default function AppointmentSalon() {
   const [showEdit, setShowEdit] = useState(false);
@@ -16,11 +19,25 @@ export default function AppointmentSalon() {
   const [appointmentChoose, setAppointmentChoose] = useState(null);
   const [accepted, setAccepted] = useState(null);
   const [salon, setSalon] = useState({});
+  const [totalPage, setTotalPage] = useState(0);
+  const [page, setPage] = useState(1);
+  const [search, setSearch] = useState("");
   const showAccepted = {
     0: "Chưa phản hồi",
     1: "Đã xác nhận",
     2: "Từ chối",
   };
+
+  const handleSearch = (e) => {
+    setSearch(e.target.value);
+    const searchValue = e.target.value;
+    console.log("searchValue : ", searchValue);
+    debounce(() => {
+      setPage(1);
+      fetchData(1, searchValue);
+    }, 1000);
+  };
+
   const fetchDataSalon = async () => {
     const res = await salonApi.getSalonInfor();
     if (res?.data?.salon) {
@@ -31,20 +48,24 @@ export default function AppointmentSalon() {
     // call api to get features
     fetchDataSalon();
   }, []);
-  const fetchData = async () => {
+  const fetchData = async (page, search) => {
     const res = await appointmentApi.getAllAppointmentSalon({
       salonId: salon.salon_id,
+      page: page,
+      per_page: LIMIT,
+      q: search,
     });
     if (res?.data?.appointments) {
       const appointmentList = res.data.appointments;
       setAppointmentList(appointmentList);
+      setTotalPage(res.data.total_page);
     }
   };
   useEffect(() => {
     if (salon.salon_id) {
-      fetchData();
+      fetchData(page, search);
     }
-  }, [salon]);
+  }, [salon, page, search]);
 
   const handleShowEdit = (appointment, accepted) => {
     setAppointmentChoose(appointment);
@@ -77,7 +98,7 @@ export default function AppointmentSalon() {
         toast.success("Cập nhật lịch hẹn thành công");
       }
       handleCloseEdit();
-      fetchData();
+      fetchData(page, search);
     } catch (error) {
       toast.error("Cập nhật lịch hẹn thất bại");
     }
@@ -90,7 +111,7 @@ export default function AppointmentSalon() {
       });
       toast.success("Xóa lịch hẹn thành công");
       handleCloseDelete();
-      fetchData();
+      fetchData(page, search);
     } catch (error) {
       toast.error("Xóa lịch hẹn thất bại");
     }
@@ -106,6 +127,21 @@ export default function AppointmentSalon() {
             </h4>
           </div>
           <div className="card-body">
+            <div className="my-3 d-flex justify-content-between align-items-center">
+              <div className="d-flex justify-content-between align-items-center">
+                <span style={{ width: "100px" }}>Tìm kiếm:</span>
+                <input
+                  type="text"
+                  name="search"
+                  id="search"
+                  className="form-control"
+                  style={{ width: "100%" }}
+                  placeholder="Nhập tên khách hàng"
+                  value={search}
+                  onChange={handleSearch}
+                />
+              </div>
+            </div>
             <table className="table mt-4 table-hover">
               <thead>
                 <tr>
@@ -136,11 +172,13 @@ export default function AppointmentSalon() {
                         key={appointment.id}
                         style={{ background: "rgb(247 247 247)" }}
                       >
-                        <td className="text-center">{++index}</td>
+                        <td className="text-center">
+                          {LIMIT * (page - 1) + (index + 1)}
+                        </td>
                         <td>
                           <Link to={`/detail-car/${appointment.car_id}`}>
                             <img
-                              src={appointment?.car?.image[0]}
+                              src={appointment?.car?.image?.[0]}
                               alt="image_car"
                               style={{ width: "100px" }}
                             />
@@ -205,46 +243,17 @@ export default function AppointmentSalon() {
               </tbody>
             </table>
             {appointmentList && appointmentList.length > 0 && (
-              <nav className="d-flex justify-content-center ">
-                <ul id="product-pagination" className="pagination">
-                  <li className="page-item">
-                    <button className="page-link" to="#" aria-label="Previous">
-                      <span aria-hidden="true">&laquo;</span>
-                    </button>
-                  </li>
-                  <li className="page-item">
-                    <Link className="page-link" to="/">
-                      1
-                    </Link>
-                  </li>
-                  <li className="page-item">
-                    <Link className="page-link" to="/">
-                      2
-                    </Link>
-                  </li>
-                  <li className="page-item">
-                    <Link className="page-link" to="/">
-                      3
-                    </Link>
-                  </li>
-                  <li className="page-item">
-                    <Link className="page-link" to="/">
-                      4
-                    </Link>
-                  </li>
-                  <li className="page-item">
-                    <Link className="page-link" to="/">
-                      5
-                    </Link>
-                  </li>
-
-                  <li className="page-item" id="nextPageButton">
-                    <button className="page-link" to="#" aria-label="Next">
-                      <span aria-hidden="true">&raquo;</span>
-                    </button>
-                  </li>
-                </ul>
-              </nav>
+              <div className="d-flex justify-content-center ">
+                <PaginationControl
+                  page={page}
+                  total={totalPage * LIMIT || 0}
+                  limit={LIMIT}
+                  changePage={(page) => {
+                    setPage(page);
+                  }}
+                  ellipsis={1}
+                />
+              </div>
             )}
           </div>
         </div>

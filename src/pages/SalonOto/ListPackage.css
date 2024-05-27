@@ -1,0 +1,61 @@
+.package-container .bg-top {
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  width: 100%;
+  height: 32px;
+  padding-top: 5px;
+}
+.package-container .package-content {
+  padding: 10px 20px;
+  background-color: rgba(74, 186, 185, 0.07);
+}
+.package-container .package-content .package-top {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.package-container .package-content .package-top .icon {
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  width: 40px;
+  height: 40px;
+  margin-right: 10px;
+}
+.package-container .package-content .package-top .name-price-box {
+  display: flex;
+  flex-direction: column;
+}
+.package-container .package-content .package-top .name-price-box h4 {
+  color: #1d2b4f;
+  font-size: 24px;
+  font-weight: 700;
+}
+.package-container .package-content .package-top .name-price-box .price {
+  color: #1d2b4f;
+  font-size: 24px;
+  font-weight: bold;
+}
+.package-container .package-content ul {
+  list-style: none;
+  padding: 0;
+}
+.package-container .package-content ul li {
+  margin: 10px 0;
+}
+.package-container .package-content ul li i {
+  color: #4abab9 !important;
+  margin-right: 5px;
+}
+.package-container .package-content button {
+  width: 100%;
+  background-color: #4abab9;
+  color: #eae4e4;
+}
+.package-container .package-content button:hover {
+  background-color: #f5f1f1;
+  color: #4abab9;
+  transition: 0.1s;
+  border: 1px solid #4abab9;
+}/*# sourceMappingURL=ListPackage.css.map */

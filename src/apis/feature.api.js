@@ -1,8 +1,8 @@
 import http from "../utils/http";
 
 const featureApi = {
-  getAllFeature() {
-    return http.get(`/features`);
+  getAllFeature(page = 1, per_page = 1000, q = "") {
+    return http.get(`/features?page=${page}&&per_page=${per_page}&&q=${q}`);
   },
   getFeatureById(id) {
     return http.get(`/features/${id}`);

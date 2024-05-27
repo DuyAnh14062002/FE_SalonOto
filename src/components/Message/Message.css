@@ -1,0 +1,236 @@
+.message-container {
+  display: flex;
+}
+.message-container .message-sidebar {
+  width: 300px;
+  height: 100vh;
+  border-right: 1px solid rgb(217, 215, 216);
+  padding: 10px;
+}
+.message-container .message-sidebar .message-sidebar-top {
+  display: flex;
+  justify-content: space-between;
+}
+.message-container .message-sidebar .message-sidebar-top span {
+  font-size: 25px;
+  font-weight: bold;
+}
+.message-container .message-sidebar .message-sidebar-top i {
+  font-size: 25px;
+}
+.message-container .message-sidebar .message-sidebar-search {
+  background-color: blue;
+  display: flex;
+  align-items: center;
+  background-color: rgb(246, 244, 244);
+  padding: 7px 0;
+  margin-top: 15px;
+}
+.message-container .message-sidebar .message-sidebar-search input {
+  width: 90%;
+  padding: 3px 7px;
+  background-color: rgb(246, 244, 244);
+  border: none;
+  outline: none;
+}
+.message-container .message-sidebar .message-sidebar-search i {
+  cursor: pointer;
+  font-size: 20px;
+  color: gray;
+}
+.message-container .message-sidebar .message-sidebar-bottom {
+  margin-top: 15px;
+}
+.message-container .message-sidebar .message-sidebar-bottom .message-person {
+  display: flex;
+  padding: 10px 0;
+  cursor: pointer;
+}
+.message-container .message-sidebar .message-sidebar-bottom .message-person.active {
+  background-color: rgb(246, 244, 244);
+}
+.message-container .message-sidebar .message-sidebar-bottom .message-person .person-image {
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  position: relative;
+  flex: none;
+}
+.message-container .message-sidebar .message-sidebar-bottom .message-person .text-box {
+  width: 100%;
+}
+.message-container .message-sidebar .message-sidebar-bottom .message-person .text-box .message-name {
+  font-weight: bold;
+}
+.message-container .message-sidebar .message-sidebar-bottom .message-person .text-box .message-text-sidebar {
+  width: 100%;
+  display: flex;
+  height: 22px;
+}
+.message-container .message-sidebar .message-sidebar-bottom .message-person .text-box .message-text-sidebar .text-sender {
+  margin-right: 5px;
+  flex: none;
+}
+.message-container .message-sidebar .message-sidebar-bottom .message-person .text-box .message-text-sidebar .text-sender.text-sender-not-seen {
+  font-weight: bold;
+}
+.message-container .message-sidebar .message-sidebar-bottom .message-person .text-box .message-text-sidebar .text-message {
+  margin-right: 5px;
+  max-width: 50%;
+}
+.message-container .message-sidebar .message-sidebar-bottom .message-person .text-box .message-text-sidebar .text-message.text-message-not-seen {
+  font-weight: bold;
+}
+.message-container .message-sidebar .message-sidebar-bottom .message-person .text-box .message-text-sidebar .text-time {
+  width: 15%;
+  flex: none;
+}
+.message-container .message-main {
+  width: calc(100% - 300px);
+  height: 100vh;
+}
+.message-container .message-main .message-main-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgb(217, 215, 216);
+  padding-bottom: 20px;
+  position: fixed;
+  width: calc(100% - 300px);
+  padding: 10px;
+  background-color: white;
+}
+.message-container .message-main .message-main-top .message-main-top-infor {
+  display: flex;
+}
+.message-container .message-main .message-main-top .message-main-top-infor .message-main-top-image {
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 3px;
+  position: relative;
+}
+.message-container .message-main .message-main-top .message-main-top-infor .message-main-top-box .message-main-top-name {
+  font-weight: bold;
+}
+.message-container .message-main .message-main-top .message-main-top-option i {
+  margin-right: 15px;
+  color: blue;
+  cursor: pointer;
+}
+.message-container .message-main .message-main-content {
+  margin-top: 70.8px;
+  width: 100%;
+  height: calc(100vh - 135.6px);
+  z-index: -1;
+  padding: 20px;
+  display: flex;
+  flex-direction: column-reverse;
+  overflow: scroll;
+}
+.message-container .message-main .message-main-content .message-text {
+  height: 55px;
+  padding: 10px 5px;
+  margin: 10px 0;
+}
+.message-container .message-main .message-main-content .message-text.message-send {
+  text-align: end;
+}
+.message-container .message-main .message-main-content .message-text.message-send span {
+  background-color: blue;
+  color: #fff;
+}
+.message-container .message-main .message-main-content .message-text span {
+  padding: 10px;
+  border-radius: 20px;
+  background-color: rgb(246, 244, 244);
+  width: auto;
+}
+.message-container .message-main .message-main-bottom {
+  position: fixed;
+  bottom: 0;
+  width: calc(100% - 300px);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  border-top: 1px solid rgb(217, 215, 216);
+}
+.message-container .message-main .message-main-bottom .acttachment {
+  width: 30px;
+}
+.message-container .message-main .message-main-bottom .acttachment i {
+  color: blue;
+  font-size: 20px;
+  cursor: pointer;
+}
+.message-container .message-main .message-main-bottom .input-box {
+  width: calc(100% - 60px);
+  display: flex;
+  align-items: center;
+  border-radius: 109px;
+  background-color: rgb(246, 244, 244);
+  padding-left: 26px;
+}
+.message-container .message-main .message-main-bottom .input-box input {
+  width: calc(100% - 30px);
+  outline: none;
+  padding: 10px 5px;
+  background-color: rgb(246, 244, 244);
+  border: none;
+}
+.message-container .message-main .message-main-bottom .input-box i {
+  width: 30px;
+  margin-left: 5px;
+}
+.message-container .message-main .message-main-bottom .send {
+  width: 30px;
+  text-align: end;
+}
+.message-container .message-main .message-main-bottom .send i {
+  color: blue;
+  font-size: 25px;
+  cursor: pointer;
+}
+
+.person-active {
+  width: 11px;
+  height: 11px;
+  background-color: green;
+  border-radius: 50%;
+  padding: 5px;
+  position: absolute;
+  bottom: 42px;
+  right: 3px;
+}
+
+.shake {
+  animation: shake 0.82s cubic-bezier(0.36, 0.07, 0.19, 0.97) 0.2s both;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+@keyframes shake {
+  10%, 90% {
+    transform: translate3d(-1px, 0, 0);
+  }
+  20%, 80% {
+    transform: translate3d(2px, 0, 0);
+  }
+  30%, 50%, 70% {
+    transform: translate3d(-4px, 0, 0);
+  }
+  40%, 60% {
+    transform: translate3d(4px, 0, 0);
+  }
+}
+.actice-chatting {
+  background-color: rgb(241, 240, 240);
+}/*# sourceMappingURL=Message.css.map */

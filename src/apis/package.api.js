@@ -1,8 +1,8 @@
 import http from "../utils/http";
 
 const packageApi = {
-  getAllPackage() {
-    return http.get(`/packages`);
+  getAllPackage(page = 1, per_page = 1000, q = "") {
+    return http.get(`/packages?page=${page}&&per_page=${per_page}&&q=${q}`);
   },
   getPackageById(id) {
     return http.get(`/packages/${id}`);

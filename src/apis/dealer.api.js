@@ -51,8 +51,8 @@ const dealerApi = {
     });
   },
 
-  getAllProcess() {
-    return http.get("/transactions");
+  getAllProcess(page = 1, per_page = 1000, q = "") {
+    return http.get(`/transactions?page=${page}&&per_page=${per_page}&&q=${q}`);
   },
 
   nextProcess(id, rating) {

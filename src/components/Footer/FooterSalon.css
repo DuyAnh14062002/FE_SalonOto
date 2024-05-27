@@ -1,0 +1,142 @@
+.footer-container {
+  background-color: #000111;
+  width: 100%;
+  color: rgba(208, 206, 206, 0.8784313725);
+  min-height: 450px;
+  padding: 0px 180px;
+}
+.footer-container .header-footer {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid rgb(131, 128, 128);
+  padding: 25px 0;
+}
+.footer-container .header-footer .hotline-container {
+  display: flex;
+  align-items: center;
+}
+.footer-container .header-footer .hotline-container .hotline-icon {
+  margin-right: 10px;
+  font-size: 20px;
+}
+.footer-container .header-footer .hotline-container .hotline-content .hotline-title {
+  font-size: 14px;
+}
+.footer-container .header-footer .hotline-container .hotline-content .hotline-contact {
+  font-size: 14px;
+}
+.footer-container .body-footer {
+  margin: 15px 0;
+  display: flex;
+}
+.footer-container .body-footer .contact-salon {
+  width: 25%;
+  display: flex;
+  flex-direction: column;
+}
+.footer-container .body-footer .contact-salon h4 {
+  font-size: 20px;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+.footer-container .body-footer .contact-salon span {
+  font-size: 14px;
+  margin: 7px 0;
+}
+.footer-container .body-footer .user-manual {
+  width: 25%;
+}
+.footer-container .body-footer .user-manual h4 {
+  font-weight: 700;
+  font-size: 20px;
+}
+.footer-container .body-footer .user-manual ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+}
+.footer-container .body-footer .user-manual ul .link {
+  text-decoration: none;
+  color: rgb(131, 128, 128);
+  margin: 7px 0;
+  font-size: 14px;
+}
+.footer-container .body-footer .user-manual ul .link:hover {
+  color: red;
+  transition: 0.1s;
+}
+.footer-container .body-footer .menu {
+  width: 25%;
+}
+.footer-container .body-footer .menu h4 {
+  font-weight: 700;
+  font-size: 20px;
+}
+.footer-container .body-footer .menu ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+}
+.footer-container .body-footer .menu ul .link {
+  text-decoration: none;
+  color: rgb(131, 128, 128);
+  margin: 7px 0;
+  font-size: 14px;
+}
+.footer-container .body-footer .menu ul .link:hover {
+  color: red;
+  transition: 0.1s;
+}
+.footer-container .body-footer .register-receive-news {
+  width: 25%;
+}
+.footer-container .body-footer .register-receive-news .title {
+  font-weight: 700;
+  font-size: 20px;
+  text-transform: uppercase;
+}
+.footer-container .body-footer .register-receive-news .input-email {
+  background-color: #fff;
+  width: 100%;
+}
+.footer-container .body-footer .register-receive-news .input-email input {
+  border: none;
+  outline: none;
+  padding: 8px 4px;
+  background-color: none;
+}
+.footer-container .body-footer .register-receive-news .input-email button {
+  background-color: black;
+  border: none;
+  outline: none;
+  color: #fff;
+  padding: 5px 10px;
+}
+.footer-container .body-footer .register-receive-news .icons-payment {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  margin: 5px 0;
+}
+.footer-container .body-footer .register-receive-news .icons-payment .icon {
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+  width: 45px;
+  height: 45px;
+}
+.footer-container .body-footer .register-receive-news .icon-social {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 25px;
+}
+.footer-container .body-footer .register-receive-news .icon-social .icon {
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+  width: 40px;
+  height: 40px;
+  margin: 0 5px;
+}/*# sourceMappingURL=FooterSalon.css.map */

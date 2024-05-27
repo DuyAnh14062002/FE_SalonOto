@@ -1,0 +1,48 @@
+.result-container {
+  min-width: 300px;
+  height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  position: fixed;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.result-container .result-icon-success i {
+  font-size: 200px;
+  color: green;
+}
+.result-container .result-icon-faild i {
+  font-size: 200px;
+  color: red;
+}
+.result-container .result-title-success {
+  color: rgb(53, 169, 53);
+  font-size: 35px;
+}
+.result-container .result-title-faild {
+  color: red;
+  font-size: 35px;
+}
+.result-container .result-text-infor {
+  text-transform: uppercase;
+  font-size: 25px;
+}
+.result-container .back-homepage {
+  padding: 8px 15px;
+  background-color: blue;
+  border-radius: 5px;
+  margin-top: 20px;
+  color: white;
+  cursor: pointer;
+}
+.result-container .back-homepage:hover {
+  background-color: orange;
+  color: blue;
+  transition: 0.1s;
+}
+.result-container .back-homepage i {
+  margin-right: 5px;
+}/*# sourceMappingURL=ResultPayment.css.map */

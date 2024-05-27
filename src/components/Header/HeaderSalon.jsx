@@ -132,7 +132,7 @@ export default function HeaderSalon() {
       console.log(error);
     }
   };
-  console.log("listNotification : ", listNotification)
+  console.log("listNotification : ", listNotification);
   const handleDeleteNotify = async (id) => {
     try {
       const confirm = window.confirm("Bạn có chắc chắn muốn xóa thông báo?");
@@ -245,7 +245,9 @@ export default function HeaderSalon() {
                            <button className="block-user" onClick = {() => handleBlockUser(notification?.data, notification?.id)}>Chặn</button>
                            <button className="see-detail" onClick={() =>handleNavigateDetail(notification.data)}>Xem chi tiết</button>
                         </div>
-                      ): ""}
+                      ) : (
+                        ""
+                      )}
                     </div>
                   </div>
                 </button>

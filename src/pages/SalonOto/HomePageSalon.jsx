@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import HeaderSalon from "../../components/Header/HeaderSalon";
 import "./HomePageSalon.scss";
 import FooterSalon from "../../components/Footer/FooterSalon";
@@ -30,31 +30,16 @@ export default function HomePageSalon() {
     };
     loading();
   }, [params]);
+  console.log(salon);
   return (
     <div>
       <HeaderSalon />
       <div
         className="banner-salon position-relative"
         style={{
-          backgroundImage: `url(https://bizweb.dktcdn.net/100/437/558/themes/836129/assets/slider_1.jpg?1699270212851)`,
+          backgroundImage: `url(${salon?.banner?.[0]})`,
         }}
-      >
-        <div className="booking position-absolute bottom-0 left-0 w-100">
-          <div className="container">
-            <div className="box-booking d-flex align-items-center flex-column py-5">
-              <h1 className="salon-name text-uppercase fw-bold">
-                {salon.name}
-              </h1>
-              <p className="text-white text-uppercase">
-                Trao niềm tin - Trao giá trị
-              </p>
-              <Link to="/booking" className="btn-booking">
-                Đặt lịch ngay
-              </Link>
-            </div>
-          </div>
-        </div>
-      </div>
+      ></div>
       <div className="search-oto-container">
         <div className="search-box">
           <div className="Head-title">
