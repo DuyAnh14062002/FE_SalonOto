@@ -2,31 +2,22 @@ import React, { useEffect, useState } from "react";
 import userApi from "../../../apis/user.api";
 import invoiceApi from "../../../apis/invoice.api";
 import salonApi from "../../../apis/salon.api";
-import { Form, Spinner } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { toast } from "react-toastify";
 import processApi from "../../../apis/process.api";
-import { set } from "lodash";
-import ProcessForm from "../../ProcessForm/ProcessForm";
 import ProcessFormDealer from "../../ProcessFormDealer";
 import dealerApi from "../../../apis/dealer.api";
 
 export default function ManageProcessDealer() {
 
   const [permissions, setPermission] = useState([]);
-  //const [showAdd, setShowAdd] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
-  const [invoices, setInvoices] = useState([]);
-  const [BuyCarInfor, setBuyCarInfor] = useState({});
-  const [isLoading, setIsLoading] = useState(false);
   const [salon, setSalon] = useState({});
-  const [carId, setCarId] = useState("");
   const [searchInput, setSearchInput] = useState("");
   const [filter, setFilter] = useState("all");
   const [selectedProcess, setSelectedProcess] = useState("");
   const [listProcess, setListProcess] = useState([]);
-  const [selectedInvoice, setSelectedInvoice] = useState({});
   const [transactions , setTransactions] = useState([])
   const [selectedTransaction, setSelectedTransaction] = useState({});
   const [showModalProcess, setShowModalProcess] = useState(false);
@@ -34,14 +25,6 @@ export default function ManageProcessDealer() {
   const handleFilterChange = (e) => {
     setFilter(e.target.value);
   };
-  const filteredInvoices = invoices.filter((invoice) => {
-    if (filter === "done") {
-      return invoice.done;
-    } else if (filter === "processing") {
-      return !invoice.done;
-    }
-    return true; // Return all invoices if 'all' is selected
-  });
   const loadingUser = async () => {
     let res = await userApi.getProfile();
     if (res?.data?.profile?.permissions) {
@@ -57,19 +40,9 @@ export default function ManageProcessDealer() {
       setSelectedProcess(res.data.data[0].id);
     }
   };
-  const loadingInvoice = async (salon_id) => {
-    let res = await invoiceApi.getAllInvoiceBuyCar(salon_id);
-    if (res?.data?.invoices) {
-      const invoiceBuyCar = res.data.invoices.filter(
-        (invoice) => invoice.type === "buy car"
-      );
-      setInvoices(invoiceBuyCar);
-    }
-  };
   const fetchDataSalon = async () => {
     const res = await salonApi.getSalonInfor();
     if (res?.data?.salon) {
-      loadingInvoice(res.data.salon.salon_id);
       setSalon(res.data.salon);
     }
   };
@@ -91,32 +64,6 @@ export default function ManageProcessDealer() {
     setSelectedProcess(process);
     setShowDelete(true);
   };
-  const onChange = (e) => {
-    setBuyCarInfor({ ...BuyCarInfor, [e.target.name]: e.target.value });
-  };
-  const handleAddBuyCar = async (e) => {
-    e.preventDefault();
-    let res = await invoiceApi.createBuyCarInvoice(
-      salon.salon_id,
-      carId,
-      BuyCarInfor,
-      selectedProcess
-    );
-    toast.success("Thêm thông tin giao dịch thành công");
-    loadingInvoice(salon.salon_id);
-    setBuyCarInfor({});
-    //  if(res?.data?.status === "success"){
-    //   toast.success("Thêm thông tin giao dịch thành công")
-    //   handleCloseAdd()
-    //   loadingInvoice(salon.salon_id)
-    //   setBuyCarInfor({})
-    // }else{
-    //   toast.error("Thêm thông tin giao dịch thất bại")
-    // }
-  };
-  const handleSetCarId = (e) => {
-    setCarId(e.target.value);
-  };
   const handleChangeSearch = (e) => {
     setSearchInput(e.target.value);
   };
@@ -137,10 +84,6 @@ export default function ManageProcessDealer() {
     } catch (error) {}
   };
 
-  const handleProcessChange = (event) => {
-    setSelectedProcess(event.target.value);
-  };
-
 
   const loadingProcess = async() => {
     let res = await dealerApi.getAllProcess()
@@ -151,7 +94,6 @@ export default function ManageProcessDealer() {
   useEffect(() => {
     loadingProcess()
   }, []);
-  console.log("transactions : ", transactions)
 const handleShowProcess = (item) => {
     setSelectedTransaction(item);
     setShowModalProcess(true);
@@ -160,7 +102,6 @@ const handleShowProcess = (item) => {
     setShowModalProcess(false);
     loadingProcess()
   };
-  console.log("selected process : ", selectedProcess)
   return (
     <>
       <div id="content" className="container-fluid">
@@ -279,7 +220,7 @@ const handleShowProcess = (item) => {
       </div>
       <Modal show={showDelete} onHide={handleCloseDelete}>
         <Modal.Header closeButton>
-          <Modal.Title>Xóa Tiến trình </Modal.Title>
+          <Modal.Title>Xóa Tiến trình</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <span>Bạn có chắc chắn muốn xóa tiến trình với hoa tiêu này không ?</span>

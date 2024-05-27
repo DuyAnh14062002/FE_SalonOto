@@ -172,6 +172,7 @@ export default function ManageCar() {
     e.preventDefault();
     setIsLoading(true);
     const form = new FormData();
+    //console.log("salonId : ", salon.salon_id)
     form.append("salonId", salon.salon_id);
     if (car.name) {
       form.append("name", car.name);
@@ -228,6 +229,7 @@ export default function ManageCar() {
     }
     setIsLoading(true);
     let res = await carApi.addCar(form);
+    console.log("res add car: ", res)
     fetchDataSalon();
     handleCloseAdd();
     if (res?.data?.status && res.data.status === "success") {

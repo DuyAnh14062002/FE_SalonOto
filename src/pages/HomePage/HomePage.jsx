@@ -25,8 +25,8 @@ export default function HomePage() {
   useEffect(() => {
     const loadingPackage = async () => {
       let res = await packageApi.getAllPackage();
-      if (res?.data?.packages?.packages) {
-        getPackageForHomePage(res.data.packages.packages);
+      if (res?.data?.packages) {
+        getPackageForHomePage(res.data.packages);
         // setPackages(res.data.packages.packages)
       }
     };

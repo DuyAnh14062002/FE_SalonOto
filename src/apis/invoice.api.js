@@ -2,7 +2,7 @@ import http from "../utils/http";
 
 const invoiceApi = {
   getAllInvoiceBuyCar(salon_id) {
-    return http.post("/invoice/all", {
+    return http.post("/invoice/get-invoice-buy-car-salon", {
       salonId: salon_id,
     });
   },

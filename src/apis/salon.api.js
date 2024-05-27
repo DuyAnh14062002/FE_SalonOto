@@ -38,6 +38,23 @@ const salonApi = {
       salonId: salonId,
     });
   },
+
+  blockUser(postId) {
+    return http.post("/block-user", {
+      postId: postId,
+    });
+  },
+  getAllUserBlock() {
+    return http.get("/salons/users/blocked");
+  },
+  unblockUser(userId) {
+    return http.post("/block-user/un", {
+      userId: userId,
+    });
+  },
+  getAllSalonNoBlock() {
+    return http.get("/salons/no-block");
+  },
 };
 
 export default salonApi;

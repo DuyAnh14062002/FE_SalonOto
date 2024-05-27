@@ -93,7 +93,6 @@ export default function ManageUser() {
 
     return `${day}/${month}/${year}`;
   };
-  console.log("permission : ", permission);
   return (
     <>
       <div id="content" className="container-fluid">

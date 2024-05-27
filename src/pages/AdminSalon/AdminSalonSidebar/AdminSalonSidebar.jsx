@@ -228,7 +228,7 @@ export default function AdminSalonSidebar(props) {
                             <div className="nav-link-icon d-inline-flex mx-2">
                               <i className="fa-solid fa-circle"></i>
                             </div>
-                            Quản lí giao dịch hoa tiêu
+                            Giao dịch hoa tiêu
                           </Link>
                         </li>
                       </ul>
