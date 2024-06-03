@@ -7,11 +7,15 @@ export default function MessageItem({message, receiverId, shakeClass, user, isMe
     <>
     {isMessage === true ? (<div className={`message-text ${chatClass} ${shakeClass}`}>
         <span>{message.includes("http") ? <a href={message}>{message}</a> : message}</span>
-      </div>) : ( <div  className={`message-image ${shakeClass}`}>
-        <div className={`image-message ${chatClass} `} style={{backgroundImage : `url(${img})`}}>
+      </div>) : (img?.length > 0 ? img.map((url) => {
+        return(
+          <div  className={`message-image ${shakeClass}`}>
+        <div className={`image-message ${chatClass} `} style={{backgroundImage : `url(${url})`}}>
       
         </div>
-      </div>)}
+      </div>
+        )
+      }): "")}
     </>
   )
 }

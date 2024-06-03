@@ -54,6 +54,10 @@ import ManageProcessDealer from "./pages/AdminSalon/ManageProcessDealer";
 import DetailProcess from "./components/DetailProcess/DetailProcess";
 import HistoryTransactionDealer from "./components/HistoryTransactionDealer";
 import SalonAppointment from "./components/SalonAppointment/SalonAppointment";
+import ManagaAccessoryTransaction from "./pages/AdminSalon/ManagaAccessoryTransaction/ManagaAccessoryTransaction";
+import ManagePromotion from "./pages/ManagePromotion";
+import PromotionDetail from "./components/PromotionDetail";
+import ListAllPromotion from "./components/ListAllPromotion";
 function ProtectedRoute() {
   const isAuthenticated = useSelector(
     (state) => state.userSlice.isAuthenticated
@@ -225,6 +229,14 @@ const router = createBrowserRouter([
       {
         path: path.manageDealerProcess,
         element: <ManageProcessDealer />,
+      },
+      {
+        path : path.manageAccessoryTransaction,
+        element: <ManagaAccessoryTransaction/>
+      },
+      {
+        path : path.managePromotion,
+        element: <ManagePromotion/>
       }
     ],
   },
@@ -314,6 +326,12 @@ const router = createBrowserRouter([
   {
     path : path.salonAppointment,
     element: <SalonAppointment/>
+  },{
+    path : path.promotionDetail,
+    element: <PromotionDetail/>
+  },{
+    path : path.listPromotion,
+    element: <ListAllPromotion/>
   }
 ]);
 

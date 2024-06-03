@@ -57,22 +57,21 @@ const ProcessFormDealer = ({
     setIsNextButtonDisabled(!areAllDetailsChecked());
   }, [activeStep, checkedDetails, detailProcess]);
   let steps = []
-  steps = detailProcess?.stages?.map((item) => {
+  steps = detailProcess?.stages?.map((item,index) => {
+    let rating=0;
+    selectedTransaction?.ratingList?.map((item, index2) => {
+      if(index===index2){
+        rating=item
+      }
+    })
     return {
       label: item.name,
       documents : item?.commissionDetails?.map((detail) => ({ name: detail.name, id: detail.id })),
-      commissionRate : item.commissionRate
+      commissionRate : item.commissionRate,
+      rating
     };
   });
-  if(steps?.length > 0){
-    console.log("oke")
-    steps = selectedTransaction?.ratingList?.map((rating, index) => {
-      return{
-           ...steps[index],
-           rating:rating
-      }
-    })
-  }
+ 
   const handleDocumentToggle = (documentName , documentId) => {
     setCheckedDetails((prevDetails) => {
       if (!prevDetails) {
@@ -160,7 +159,7 @@ const ProcessFormDealer = ({
       <h1 className="text-center mt-4">{detailProcess?.name}</h1>
        <div className="box-rating">
        <label style={{width: "70%"}}>Đánh giá giai đoạn </label>
-       <select className="rating form-select" style={{width:"45%"}} onChange={(e) => setRating(e.target.value)} value={steps?.[activeStep]?.rating}>
+       <select className="rating form-select" style={{width:"45%"}} onChange={(e) => setRating(e.target.value)} value={steps?.[activeStep]?.rating || rating}>
          <option value="10">10%</option>
          <option value="20">20%</option>
          <option value="30">30%</option>

@@ -3,7 +3,7 @@ import "./CarPostDetail";
 import Header from "../Header";
 import { Carousel } from "react-bootstrap";
 import "./CarPostDetail.scss";
-import { Form, Image, Spinner } from "react-bootstrap";
+import { Form } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import processApi from "../../apis/process.api";
@@ -79,9 +79,7 @@ export default function CarPostDetail() {
   const handleConection = async (e) => {
     e.preventDefault();
     let res = await dealerApi.CreateConnecttion(post.post_id, processId);
-    console.log("res conection : ", res);
   };
-  console.log("processId : ", processId);
   return (
     <>
       <Header otherPage={true} />
@@ -255,6 +253,10 @@ export default function CarPostDetail() {
               <div className="chat-demo">
                 <button>Xe còn không ?</button>
                 <button>Xe chính chủ không ?</button>
+              </div>
+              <div className="infor-user">
+                <div className="rating">Độ tin cậy: <span>{post?.postedBy?.avgRating}%</span></div>
+                <div className="completing">Giao dịch hoàn thành : <span>{post?.postedBy?.completedTransactions}</span></div>
               </div>
             </div>
           </div>

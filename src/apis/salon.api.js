@@ -55,6 +55,15 @@ const salonApi = {
   getAllSalonNoBlock() {
     return http.get("/salons/no-block");
   },
+  createGroupSalon(name, salons) {
+    return http.post("/group/salon", {
+      name: name,
+      salons: salons,
+    });
+  },
+  getAllGroupSalon() {
+    return http.get("/group/salon");
+  },
 };
 
 export default salonApi;

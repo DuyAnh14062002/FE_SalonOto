@@ -7,6 +7,7 @@ import Modal from "react-bootstrap/Modal";
 import "./PostSellCar.scss"
 import salonApi from "../../apis/salon.api";
 import dealerApi from "../../apis/dealer.api";
+import { toast } from "react-toastify";
 export default function PostSellCar() {
   const [show, setShow] = useState(false)
   const [listSalon, setListSalon] = useState([])
@@ -15,11 +16,21 @@ export default function PostSellCar() {
   const [salonId, setSalonId] = useState([])
   const [imagePreview, setImagePreview] = useState([])
   const [checkAllSalon, setCheckAllSalon] = useState(false)
+  const [showGroupSalon, setShowGroupSalon] = useState(false)
+  const [nameGroupSalon, setNameGroupSalon] = useState("")
+  const [groupSalon, setGroupSalon] = useState([])
+  const [listNameSalon, setListNameSalon] = useState([])
   const handleShowModal = () =>{
     setShow(true)
   }
   const handleCloseModal = () => {
     setShow(false)
+  }
+  const handleShowGroupSalon = () =>{
+    setShowGroupSalon(true)
+  }
+  const handleCloseGroupSalon = () => {
+    setShowGroupSalon(false)
   }
   const loadingSalon = async () => {
     let res = await salonApi.getAllSalonNoBlock();
@@ -30,8 +41,20 @@ export default function PostSellCar() {
   const handleChangeInfoCar = (e, name) => {
      setInfoCar({...infoCar, [name] : e.target.value})
   }
+  const fetchAllGroupSalon = async () => {
+    try{
+        let res = await salonApi.getAllGroupSalon()
+        console.log("res :", res)
+        if(res?.data?.groupSalons){
+          setGroupSalon(res.data.groupSalons)
+        }
+    }catch(e){
+      console.log(e)
+    }
+  }
   useEffect(() =>{
      loadingSalon()
+     fetchAllGroupSalon()
   }, [])
   const handleSentPost = async (e) => {
     e.preventDefault();
@@ -131,6 +154,40 @@ export default function PostSellCar() {
       setCheckAllSalon(false)
     }
   }
+  const handleCreateGroupSalon = async (e) => {
+    e.preventDefault();
+    try{
+       let res = await salonApi.createGroupSalon(nameGroupSalon, salonId)
+       if(res?.data?.status === "success"){
+        toast.success("Tạo nhóm salon thành công")
+        handleCloseGroupSalon()
+        setSalonId([])
+        setCheckAllSalon(false)
+        fetchAllGroupSalon()
+       }else{
+        toast.error("Tạo nhóm salon thất bại")
+       }
+    }catch(e){
+      console.log(e)
+    }
+  }
+  const onChangeGroupNameSalon = (e) =>{
+     setNameGroupSalon(e.target.value)
+  }
+  const handleOnchangeGroupSalon =(item) => {
+    console.log("onchange group salon : ",item)
+    if(item?.salons?.length > 0){
+      let listNameSalon = []
+      let lisIdsalon = []
+      item.salons.forEach((i) => {
+         lisIdsalon.push(i.id)
+         listNameSalon.push(i.name)
+      })
+      setListNameSalon(listNameSalon)
+      setSalonId(lisIdsalon)
+    }
+  }
+  console.log("group salon : ", groupSalon)
   return (
     <>
       <Header otherPage={true} />
@@ -152,7 +209,10 @@ export default function PostSellCar() {
             </label>
           </div>
           <div className="right-post-sell">
-            <div className="title">Thông tin chi tiết</div>
+            <div className="header-post-sell">
+               <div className="title">Thông tin chi tiết</div>
+               <button className="create-group-salon" onClick={handleShowGroupSalon}>Tạo nhóm salon</button>
+            </div>
             <input
               placeholder="Hãng xe"
               type="text"
@@ -273,6 +333,74 @@ export default function PostSellCar() {
           </Modal.Header>
           <Modal.Body>
           <Form.Group className="mt-4">
+              {groupSalon?.length > 0 ? (
+                <>
+                   <Form.Label>Chọn nhóm salon muốn gửi</Form.Label>
+                   <Form.Select >
+                { groupSalon?.map((item)=>{
+                  return (
+                    <option onClick={() => handleOnchangeGroupSalon(item)}>{item.name}</option>
+                  )
+                })}
+              </Form.Select>
+                </>) : ( <>
+                <Form.Label style={{fontSize : "18px"}}>Bạn chưa tạo nhóm salon. Vui lòng tạo nhóm salon trước</Form.Label>
+                {/* <Button variant="primary">Tạo nhóm salon</Button> */}
+              </>) }
+          </Form.Group>
+          {/* <Form.Group className="mt-4">
+              <Form.Check // prettier-ignore
+                type="checkbox"
+                id="custom-switch"
+                label="Chọn tất cả Salon"
+                onClick={(e) => handleChooseAllSalon(e)}
+              />
+          </Form.Group> */}
+          {listNameSalon && listNameSalon.length > 0 && listNameSalon.map((item) => {
+                return(
+                  <Form.Group className="mt-4">
+                  <Form.Check
+                    type="checkbox"
+                    id="custom-switch"
+                    label= {item}
+                    checked= "true"
+                  />
+              </Form.Group>
+                )
+              })}
+          </Modal.Body>
+          <Modal.Footer>
+           <Button variant="primary" onClick={handleCloseModal} type="submit" >
+              Gửi
+            </Button>
+            <Button variant="secondary" onClick={handleCloseModal}>
+              Đóng
+            </Button>
+          </Modal.Footer>
+        </Form>
+      </Modal>
+      <Modal show={showGroupSalon} onHide={handleCloseGroupSalon} backdrop="static">
+        <Form noValidate onSubmit={handleCreateGroupSalon}>
+          <Modal.Header closeButton>
+            <Modal.Title>Tạo nhóm salon</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+          <Form.Group className="mt-4">
+             <Form.Label>
+                 Đặt tên nhóm salon
+             </Form.Label>
+             <Form.Control
+                required
+                type="text"
+                name="fullname"
+                onChange={(e) => onChangeGroupNameSalon(e)}
+                //value= {data.fullname}
+              />
+          </Form.Group>
+          <Form.Group className="mt-4">
+             <Form.Label>
+                 Chọn các salon muốn tạo nhóm
+             </Form.Label>
               <Form.Check // prettier-ignore
                 type="checkbox"
                 id="custom-switch"
@@ -298,7 +426,7 @@ export default function PostSellCar() {
           </Modal.Body>
           <Modal.Footer>
            <Button variant="primary" onClick={handleCloseModal} type="submit" >
-              Gửi
+              Tạo
             </Button>
             <Button variant="secondary" onClick={handleCloseModal}>
               Đóng

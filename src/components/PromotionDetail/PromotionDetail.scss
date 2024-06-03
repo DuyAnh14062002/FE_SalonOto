@@ -1,0 +1,46 @@
+.promotion-detail-container {
+  width: 1000px;
+  margin: 0 auto;
+  margin-top: 50px;
+  border-left: 6px solid brown;
+  min-height: 1500px;
+  .promotion-text {
+    color: red;
+    margin: 10px 0;
+    font-size: 30px;
+    text-align: center;
+  }
+  .promotion-detail-title {
+    color: #555;
+    font-size: 1.7rem;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+  .promotion-detail-date {
+    text-align: center;
+    span {
+      color: #dd3333;
+    }
+  }
+  .promotion-detail-thumnail {
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+    width: 98%;
+    margin: 15px auto;
+    height: 500px;
+  }
+}
+.btn-navigate-salon {
+  margin-left: 53px;
+  border: none;
+  outline: none;
+  background-color: orange;
+  border-radius: 3px;
+  padding: 10px;
+  color: #fff;
+  &:hover {
+    transition: 0.2s;
+    background-color: orangered;
+  }
+}

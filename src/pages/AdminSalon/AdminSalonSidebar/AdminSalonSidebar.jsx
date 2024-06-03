@@ -231,6 +231,17 @@ export default function AdminSalonSidebar(props) {
                             Giao dịch hoa tiêu
                           </Link>
                         </li>
+                        <li>
+                          <Link
+                            to={path.manageAccessoryTransaction}
+                            className="text-decoration-none "
+                          >
+                            <div className="nav-link-icon d-inline-flex mx-2">
+                              <i className="fa-solid fa-circle"></i>
+                            </div>
+                            Giao dịch phụ tùng
+                          </Link>
+                        </li>
                       </ul>
                     )}
                   </li>
@@ -270,6 +281,14 @@ export default function AdminSalonSidebar(props) {
                 <i className="fa-solid fa-bars-staggered"></i>
               </div>
               Quản lý giai đoạn
+            </Link>
+          </li>
+          <li className="nav-link">
+            <Link to={path.managePromotion} className="text-decoration-none ">
+              <div className="nav-link-icon d-inline-flex mx-2">
+                <i class="fa-solid fa-percent"></i>
+              </div>
+              Quản lý Khuyến mãi
             </Link>
           </li>
           <li className="nav-link">

@@ -22,7 +22,9 @@ export const path = {
   carPostDetail: "/CarPostDetail/:id",
   detailProcess: "/detailProcess/:id",
   historyTransactionDealer: "/historyTransactionDealer",
+  promotionDetail: "/promotionDetail/:id",
   salonAppointment: "/salonAppointment",
+  listPromotion: "/listPromotion",
   //================SALON============================
   salonOto: "/salonOto/:id",
   DetailCar: "/detail-car/:id",
@@ -52,6 +54,8 @@ export const path = {
   manageStage: "/adminSalon/manageStage",
   processForm: "/adminSalon/processForm",
   manageDealerProcess: "/adminSalon/manageDealerProcess",
+  manageAccessoryTransaction: "/adminSalon/manageAccessoryTransaction",
+  managePromotion: "/adminSalon/managePromotion",
   //============PAYMENT =========================
   getResultPayment: "/payment/vnpay",
 

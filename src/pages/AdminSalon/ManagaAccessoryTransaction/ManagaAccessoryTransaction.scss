@@ -1,0 +1,13 @@
+.accessory-box {
+  border-bottom: 1px solid black;
+  padding: 20px;
+  display: flex;
+  .quantity-accessory {
+    margin-left: 20px;
+    margin-bottom: 4px;
+    input {
+      width: 48px;
+      margin-left: 5px;
+    }
+  }
+}

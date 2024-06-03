@@ -23,6 +23,32 @@ const AccessoryApi = {
   deleteAccessory(id) {
     return http.delete(`/accessory/${id}`);
   },
+  getInvoiceBuyAccessory() {
+    return http.get("/buy-accessory");
+  },
+  getAccessoryDetail(id) {
+    return http.get(`/buy-accessory:/${id}`);
+  },
+  createInvoiceBuyAccessory(data, accessories) {
+    return http.post("/buy-accessory", {
+      accessories: accessories,
+      fullname: data.fullname,
+      email: data.email,
+      phone: data.phone,
+    });
+  },
+  updateInvoiceBuyAccessory(data, accessories, id) {
+    return http.patch(`/buy-accessory/${id}`, {
+      accessories: accessories,
+      note: data.note,
+      fullname: data.fullname,
+      email: data.email,
+      phone: data.phone,
+    });
+  },
+  deleteInvoiceBuyAccessory(id) {
+    return http.delete(`/buy-accessory/${id}`);
+  },
 };
 
 export default AccessoryApi;

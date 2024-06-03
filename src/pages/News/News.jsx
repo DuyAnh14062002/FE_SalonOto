@@ -4,12 +4,15 @@ import "./News.scss";
 import newApi from "../../apis/news.api";
 import { useNavigate } from "react-router-dom";
 import { PaginationControl } from "react-bootstrap-pagination-control";
+import promotionApi from "../../apis/promotion.api";
+import { path } from "../../constants/path";
 const LIMIT = 10;
 export default function News() {
   const [news, setNews] = useState([]);
   const navigate = useNavigate();
   const [totalItem, setTotalItem] = useState(0);
   const [page, setPage] = useState(1);
+  const [promotions, setPromotion] = useState([])
   const loading = async (page) => {
     let res = await newApi.getArticle(page, LIMIT);
     console.log(res);
@@ -18,12 +21,29 @@ export default function News() {
       setTotalItem(res.data.total);
     }
   };
+  const loadingAllPromotion = async() => {
+     try{
+         let res = await promotionApi.getAllPromotion()
+         if(res?.data?.promotions?.promotions){
+          setPromotion(res?.data?.promotions.promotions)
+         }
+     }catch(e){
+      console.log(e)
+     }
+  }
   useEffect(() => {
+    loadingAllPromotion()
     loading(page);
   }, [page]);
   const handleNavigateDetailNew = (id) => {
     navigate(`/detailNew/${id}`);
   };
+  const handleNavigateDetailPromotion = (id) => {
+    navigate(`/promotionDetail/${id}`)
+  }
+  const handleNavigateListSalon = () => {
+    navigate("/listPromotion")
+  }
   return (
     <>
       <Header otherPage={true} />
@@ -63,7 +83,7 @@ export default function News() {
               />
             </div>
           </div>
-
+    
           <div className="right-news">
             <div className="extimate-cost-container">
               <div className="cost-title">Ước tính chi phí lăn bánh</div>
@@ -94,6 +114,19 @@ export default function News() {
               </div>
               <div className="caculate rounded">Tính toán</div>
             </div>
+            <div className="promotion-container">
+                {promotions?.length > 0 && promotions.map((promo, index) => {
+                  return(
+                  <div className="promotion-box" key={index} onClick={() => handleNavigateDetailPromotion(promo.id)}>
+                    <div className="thumnail-promotion" style={{backgroundImage : `url(${promo.thumbnail})`}}></div>
+                    <div className="title-promotion">{promo.title}</div>
+                    <div className="description-promotion">{promo.description}</div>
+                    <div className="time-promotion">{promo.startDate} - {promo.endDate}</div>
+                  </div>
+                  )
+                })}
+            </div>
+            <button className="list-all-promotion" onClick={handleNavigateListSalon}>Xem tất cả khuyến mãi 🎁</button>
           </div>
         </div>
       </div>

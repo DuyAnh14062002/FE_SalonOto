@@ -435,7 +435,7 @@ export default function Message() {
               return (
                 <MessageItem
                   message={message.message}
-                  img={message?.image?.[0]}
+                  img={message?.image}
                   user={user}
                   receiverId={message.receiverId}
                   key={index}
