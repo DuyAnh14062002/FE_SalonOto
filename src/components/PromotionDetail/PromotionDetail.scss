@@ -31,16 +31,22 @@
     height: 500px;
   }
 }
-.btn-navigate-salon {
+.promotion-detail-btn-box {
   margin-left: 53px;
-  border: none;
-  outline: none;
-  background-color: orange;
-  border-radius: 3px;
-  padding: 10px;
-  color: #fff;
-  &:hover {
-    transition: 0.2s;
-    background-color: orangered;
+  .btn-navigate-salon {
+    border: none;
+    outline: none;
+    background-color: orange;
+    border-radius: 3px;
+    padding: 10px;
+    color: #fff;
+    margin-right: 20px;
+    &:hover {
+      transition: 0.2s;
+      background-color: orangered;
+    }
+  }
+  .facebook-share {
+    border: 1px solid blue;
   }
 }

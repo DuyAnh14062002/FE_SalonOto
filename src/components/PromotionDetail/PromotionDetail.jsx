@@ -3,6 +3,7 @@ import Header from '../Header'
 import "./PromotionDetail.scss"
 import promotionApi from '../../apis/promotion.api'
 import { useParams, useNavigate } from "react-router-dom";
+import { FacebookIcon, FacebookShareButton } from 'react-share';
 
 export default function PromotionDetail() {
   const [promotion, setPromotion] = useState({})
@@ -35,7 +36,16 @@ export default function PromotionDetail() {
           <div className='promotion-detail-date'>Từ ngày: <span>{promotion.startDate}</span> - <span>{promotion.endDate}</span></div>
           <div className='promotion-detail-thumnail' style={{backgroundImage : `url(${promotion?.banner?.[0]})`}}></div>
           <div dangerouslySetInnerHTML={{__html: promotion.contentHtml}} style={{marginLeft: "53px"}}></div>
-          <button className='btn-navigate-salon' onClick={handleNavigateSalon}> Khám phá ngay 🔎 </button>
+          <div className='promotion-detail-btn-box'>
+             <button className='btn-navigate-salon' onClick={handleNavigateSalon}> Khám phá ngay 🔎 </button>
+             <FacebookShareButton
+                url={`https://fe-salon-oto.vercel.app/promotionDetail/${promotion.promotion_id}`}
+                className="mt-3 facebook-share"
+
+              >
+                <FacebookIcon size={32} round /> Chia sẻ lên Facebook
+              </FacebookShareButton>
+          </div>
        </div>
     </>
   )
