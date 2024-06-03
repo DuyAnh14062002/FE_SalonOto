@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { PaginationControl } from "react-bootstrap-pagination-control";
 import promotionApi from "../../apis/promotion.api";
 import { path } from "../../constants/path";
+import { FacebookIcon, FacebookShareButton } from "react-share";
 const LIMIT = 10;
 export default function News() {
   const [news, setNews] = useState([]);
@@ -113,6 +114,12 @@ export default function News() {
                 </div>
               </div>
               <div className="caculate rounded">Tính toán</div>
+              <FacebookShareButton
+                url={"https://fe-salon-oto.vercel.app/login"}
+                className="mt-3"
+              >
+                <FacebookIcon size={32} round /> Share with Facebook
+              </FacebookShareButton>
             </div>
             <div className="promotion-container">
                 {promotions?.length > 0 && promotions.map((promo, index) => {

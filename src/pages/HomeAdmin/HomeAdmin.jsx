@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Bar } from "react-chartjs-2";
+import { Bar, Pie } from "react-chartjs-2";
 import { CategoryScale } from "chart.js";
 import Chart from "chart.js/auto";
-
 import adminApi from "../../apis/admin.api";
 import { formatCurrency, formatDate } from "../../utils/common";
-import { Link } from "react-router-dom";
 
 Chart.register(CategoryScale);
 export default function HomeAdmin() {
@@ -91,6 +89,28 @@ export default function HomeAdmin() {
       },
     ],
   };
+
+  const topSellingPackageData = {
+    labels: statistic?.topPackages?.slice(0, 5)?.map((item) => item.name),
+    datasets: [
+      {
+        label: "Số lượng xe bán",
+        data: statistic?.topPackages?.slice(0, 5)?.map((item) => item.count),
+        backgroundColor: [
+          "#FFCE56",
+          "#4BC0C0",
+          "#9966FF",
+          "#FF9966",
+          "#66CCCC",
+          "#FF99CC",
+          "#FF6633",
+          "#99CC00",
+        ],
+        borderColor: "rgba(255, 255, 255, 0.3)",
+        borderWidth: 1,
+      },
+    ],
+  };
   console.log(statistic);
   return (
     <div id="content" className="container-fluid">
@@ -138,7 +158,7 @@ export default function HomeAdmin() {
                 <div
                   className="card shadow rounded"
                   style={{
-                    borderLeft: "0.4rem solid #4e73df",
+                    borderLeft: "0.4rem solid #1cc88a",
                     padding: "7px 25px",
                   }}
                 >
@@ -146,8 +166,8 @@ export default function HomeAdmin() {
                     <div className="row no-gutters align-items-center">
                       <div className="col mr-2">
                         <div
-                          className="fw-bold text-primary text-uppercase mb-1"
-                          style={{ fontSize: ".9rem" }}
+                          className="fw-bold text-uppercase mb-1"
+                          style={{ fontSize: ".9rem", color: "#1cc88a" }}
                         >
                           Doanh thu trung bình mỗi tháng
                         </div>
@@ -170,8 +190,8 @@ export default function HomeAdmin() {
               </div>
             </div>
             <div className="row">
-              <div className="col-6">
-                <h2 className="h5 mb-0 text-secondary mt-4">
+              <div className="col-8">
+                <h2 className="fs-4 mb-0 text-secondary mt-4">
                   Biểu đồ doanh thu theo năm
                 </h2>
                 <div
@@ -205,14 +225,21 @@ export default function HomeAdmin() {
                   options={{}}
                 />
               </div>
-              <div className="col-6">
-                <h2 className="h5 mb-4 text-secondary mt-4">
-                  Danh sách các đơn hàng
+              <div className="col-4 text-center">
+                <h2 className="fs-4 text-secondary text-center mt-4">
+                  Biểu đồ top các gói salon bán chạy nhất
                 </h2>
-                <div
-                  className=""
-                  style={{ height: "380px", overflowY: "scroll" }}
-                >
+                <div className="row mt-5">
+                  <div className="col-12">
+                    <Pie data={topSellingPackageData} />
+                  </div>
+                </div>
+              </div>
+              <div className="col-12 mt-4">
+                <h2 className="fs-4 mb-4 text-center text-secondary mt-4">
+                  Danh sách các đơn hàng gần đây
+                </h2>
+                <div className="">
                   <table class="table table-hover border">
                     <thead>
                       <tr>
@@ -221,6 +248,9 @@ export default function HomeAdmin() {
                         </th>
                         <th scope="col" className="text-center">
                           Khách hàng
+                        </th>
+                        <th scope="col" className="text-center">
+                          Số điện thoại
                         </th>
                         <th scope="col">Tên gói</th>
                         <th scope="col">Giá gói</th>
@@ -237,7 +267,8 @@ export default function HomeAdmin() {
                               </th>
                               <td className="text-center">
                                 {purchase?.user?.fullname || "Default name"}{" "}
-                                <br />
+                              </td>
+                              <td className="text-center">
                                 {purchase?.user?.phone}
                               </td>
                               <td>{purchase?.package.name}</td>

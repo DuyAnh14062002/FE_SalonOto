@@ -38,7 +38,7 @@ import ManageGuarantee from "./pages/AdminSalon/ManageGuarantee";
 import ProcessForm from "./pages/ProcessForm";
 import ManageProcess from "./pages/AdminSalon/ManageProcess";
 import ManageStage from "./pages/AdminSalon/ManageStage";
-import News from "./pages/News"
+import News from "./pages/News";
 import DetailNews from "./pages/DetailNews";
 import ManageTransaction from "./pages/AdminSalon/ManageTransaction";
 import ListMaintenance from "./pages/SalonOto/ListMaintenance";
@@ -49,7 +49,6 @@ import HistoryTransaction from "./components/HistoryTransaction/HistoryTransacti
 import CarPost from "./components/CarPost";
 import PostSellCar from "./components/PostSellCar";
 import CarPostDetail from "./components/CarPostDetail";
-import ProcessFormDealer from "./pages/ProcessFormDealer/ProcessFormDealer";
 import ManageProcessDealer from "./pages/AdminSalon/ManageProcessDealer";
 import DetailProcess from "./components/DetailProcess/DetailProcess";
 import HistoryTransactionDealer from "./components/HistoryTransactionDealer";
@@ -58,6 +57,9 @@ import ManagaAccessoryTransaction from "./pages/AdminSalon/ManagaAccessoryTransa
 import ManagePromotion from "./pages/ManagePromotion";
 import PromotionDetail from "./components/PromotionDetail";
 import ListAllPromotion from "./components/ListAllPromotion";
+import ManageSalonAdmin from "./pages/ManageSalonAdmin/ManageSalonAdmin";
+import ManageUserAdmin from "./pages/ManageUserAdmin";
+
 function ProtectedRoute() {
   const isAuthenticated = useSelector(
     (state) => state.userSlice.isAuthenticated
@@ -159,6 +161,14 @@ const router = createBrowserRouter([
         path: path.manageFeature,
         element: <ManageFeature />,
       },
+      {
+        path: path.manageSalonAdmin,
+        element: <ManageSalonAdmin />,
+      },
+      {
+        path: path.manageUserAdmin,
+        element: <ManageUserAdmin />,
+      },
     ],
   },
   //===========Route admin salon=================
@@ -196,23 +206,23 @@ const router = createBrowserRouter([
       },
       {
         path: path.manageGuarantee,
-        element: <ManageGuarantee/>
+        element: <ManageGuarantee />,
       },
       {
         path: path.manageTransaction,
-        element: <ManageTransaction/>
+        element: <ManageTransaction />,
       },
       {
         path: path.manageBuyCar,
-        element: <ManageBuyCar/>
+        element: <ManageBuyCar />,
       },
       {
         path: path.manageBuyMaintenance,
-        element: <ManageBuyMaintenance/>
+        element: <ManageBuyMaintenance />,
       },
       {
         path: path.manageAccessory,
-        element: <ManageAccessory/>
+        element: <ManageAccessory />,
       },
       {
         path: path.manageProcess,
@@ -287,41 +297,43 @@ const router = createBrowserRouter([
   },
   {
     path: path.message,
-    element:<Message/>
-  },{
-      path: path.news,
-      element: <News />
+    element: <Message />,
+  },
+  {
+    path: path.news,
+    element: <News />,
   },
   {
     path: path.detailNew,
-    element: <DetailNews/>
+    element: <DetailNews />,
   },
   {
     path: path.listMaintenance,
-    element: <ListMaintenance/>
+    element: <ListMaintenance />,
   },
   {
     path: path.historyTransaction,
-    element: <HistoryTransaction/>
+    element: <HistoryTransaction />,
   },
   {
     path: path.postCar,
-    element: <CarPost/>
+    element: <CarPost />,
   },
   {
     path: path.postSellCar,
-    element: <PostSellCar/>
-  }
-  ,
+    element: <PostSellCar />,
+  },
   {
     path: path.carPostDetail,
-    element: <CarPostDetail/>
-  },{
+    element: <CarPostDetail />,
+  },
+  {
     path: path.detailProcess,
-    element: <DetailProcess/>
-  },{
+    element: <DetailProcess />,
+  },
+  {
     path: path.historyTransactionDealer,
-    element: <HistoryTransactionDealer/>
+    element: <HistoryTransactionDealer />,
   },
   {
     path : path.salonAppointment,
