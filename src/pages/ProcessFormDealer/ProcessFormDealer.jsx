@@ -1,11 +1,8 @@
 import React, { useEffect, useState } from "react";
 import "./ProcessFormDealer.scss";
 import { Stepper } from "react-form-stepper";
-import processApi from "../../apis/process.api";
 import { toast } from "react-toastify";
-import invoiceApi from "../../apis/invoice.api";
 import dealerApi from "../../apis/dealer.api";
-import { rest } from "lodash";
 
 const ProcessFormDealer = ({
   invoice,
@@ -16,20 +13,16 @@ const ProcessFormDealer = ({
   selectedTransaction,
   loadingProcess
 }) => {
-  console.log("selectedTransaction: ", selectedTransaction)
   const [detailProcess, setDetailProcess] = useState({});
   const [activeStep, setActiveStep] = useState(0);
   const [checkedDetails, setCheckedDetails] = useState([]);
   const [checkedDetailsId, setCheckedDetailsId] = useState([]);
   const [isNextButtonDisabled, setIsNextButtonDisabled] = useState(true);
   const [periodCurrent, setPeriodCurrent] = useState(null);
-  const [transaction, setTransaction] = useState({})
   const [rating, setRating] = useState("")
- // const [process, setProcess] = useState([])
 
   const fetchDetailProcess = async () => {
     setCheckedDetailsId(selectedTransaction.checked)
-   // setPeriodCurrent()
     let res = await dealerApi.getConectionById(selectedTransaction.connection.connection_id)
     if(res?.data?.connection?.process){
       setDetailProcess(res.data.connection.process)
@@ -63,14 +56,23 @@ const ProcessFormDealer = ({
   useEffect(() => {
     setIsNextButtonDisabled(!areAllDetailsChecked());
   }, [activeStep, checkedDetails, detailProcess]);
-  const steps = detailProcess?.stages?.map((item) => {
+  let steps = []
+  steps = detailProcess?.stages?.map((item) => {
     return {
       label: item.name,
       documents : item?.commissionDetails?.map((detail) => ({ name: detail.name, id: detail.id })),
       commissionRate : item.commissionRate
     };
   });
-  console.log("detailProcess : ", detailProcess)
+  if(steps?.length > 0){
+    console.log("oke")
+    steps = selectedTransaction?.ratingList?.map((rating, index) => {
+      return{
+           ...steps[index],
+           rating:rating
+      }
+    })
+  }
   const handleDocumentToggle = (documentName , documentId) => {
     setCheckedDetails((prevDetails) => {
       if (!prevDetails) {
@@ -96,6 +98,9 @@ const ProcessFormDealer = ({
       }
     })
   };
+  const handleBack = () => {
+    setActiveStep((prevStep) => prevStep - 1);
+  }
   const handleNext = async () => {
     if (selectedTransaction?.status !== "pending") {
       setActiveStep((prevStep) => prevStep + 1);
@@ -111,7 +116,7 @@ const ProcessFormDealer = ({
          }
         }
         let res = await dealerApi.nextProcess(selectedTransaction.transaction_id, rating)
-        console.log("res next : ", res)
+        console.log("res next process : ", res)
         if(res?.data?.status === "completed"){
           handleCloseModalProcess()
           fetchDetailProcess()
@@ -127,7 +132,6 @@ const ProcessFormDealer = ({
       const currentStepIndex = detailProcess.stages.findIndex(
         (item) => item.stage_id === periodCurrent
       );
-      console.log("currentStepIndex", currentStepIndex);
 
       if (currentStepIndex !== -1) {
         setActiveStep(currentStepIndex);
@@ -135,20 +139,11 @@ const ProcessFormDealer = ({
     }
   }, [detailProcess, invoice, periodCurrent]);
 
-  const handleBack = () => {
-    setActiveStep((prevStep) => prevStep - 1);
-  };
-
-  const handleFinish = async () => {
-    
-  };
   const handleUpdate = async () => {
 
     let res = await dealerApi.updateProcessCheck(selectedTransaction.transaction_id, checkedDetailsId, detailProcess.stages[activeStep].stage_id)
-    console.log("res update : ", res)
     if(res?.data?.status === "success"){
        if(res?.data?.transaction?.checked){
-        console.log("oke : ", res.data.transaction.checked)
         setCheckedDetailsId(res.data.transaction.checked)
        }
       toast.success("Cập nhật thành công")
@@ -156,26 +151,26 @@ const ProcessFormDealer = ({
       toast.error("Cập nhật thất bại")
     }
   };
- console.log("All checked : ", checkedDetailsId)
- console.log("activeStep : ",activeStep)
- console.log("rating : ", rating)
+  console.log("detail process : ", detailProcess)
+  console.log("selected transaction : ", selectedTransaction)
+  console.log("steps : ", steps)
   return (
     <div className="container">
       <div className="box-title-process-dealer">
       <h1 className="text-center mt-4">{detailProcess?.name}</h1>
        <div className="box-rating">
        <label style={{width: "70%"}}>Đánh giá giai đoạn </label>
-       <select className="rating form-select" style={{width:"45%"}} onChange={(e) => setRating(e.target.value)}>
-         <option>10%</option>
-         <option>20%</option>
-         <option>30%</option>
-         <option>40%</option>
-         <option>50%</option>
-         <option>60%</option>
-         <option>70%</option>
-         <option>80%</option>
-         <option>90%</option>
-         <option>100%</option>
+       <select className="rating form-select" style={{width:"45%"}} onChange={(e) => setRating(e.target.value)} value={steps?.[activeStep]?.rating}>
+         <option value="10">10%</option>
+         <option value="20">20%</option>
+         <option value="30">30%</option>
+         <option value="40">40%</option>
+         <option value="50">50%</option>
+         <option value="60">60%</option>
+         <option value="70">70%</option>
+         <option value="80">80%</option>
+         <option value="90">90%</option>
+         <option value="100">100%</option>
        </select>
        </div>
       </div>
@@ -228,14 +223,14 @@ const ProcessFormDealer = ({
         </div>
       </div>
       <div style={{ textAlign: "center" }}>
-        {/* {(activeStep !== 0 && selectedTransaction?.status !== "pending") (
+        {(activeStep !== 0 && selectedTransaction?.status !== "pending") && (
           <button
             className="buttons__button buttons__button--back"
             onClick={handleBack}
           >
             Back
-          </button>
-        )} */}
+          </button>)
+        }
         {selectedTransaction?.status === "pending" && (
           <button
             className="buttons__button buttons__button--update"

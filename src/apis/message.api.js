@@ -5,9 +5,9 @@ const messageApi = {
     return http.get(`/messages/${id}`);
   },
 
-  postMessage(id, message) {
-    return http.post(`/messages/send/${id}`, {
-      message: message,
+  postMessage(id, data) {
+    return http.post(`/messages/send/${id}`, data, {
+      headers: { "content-type": "multipart/form-data" },
     });
   },
   getChatingUser() {

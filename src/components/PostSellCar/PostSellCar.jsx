@@ -14,7 +14,7 @@ export default function PostSellCar() {
   const [image, setImage] = useState([]);
   const [salonId, setSalonId] = useState([])
   const [imagePreview, setImagePreview] = useState([])
-
+  const [checkAllSalon, setCheckAllSalon] = useState(false)
   const handleShowModal = () =>{
     setShow(true)
   }
@@ -22,10 +22,9 @@ export default function PostSellCar() {
     setShow(false)
   }
   const loadingSalon = async () => {
-    let res = await salonApi.getAllSalon();
-    if (res?.data?.salons?.salons) {
-      setListSalon(res.data.salons.salons);
-      setSalonId([res.data.salons.salons[0].salon_id])
+    let res = await salonApi.getAllSalonNoBlock();
+    if (res?.data?.salons) {
+      setListSalon(res.data.salons);
     }
   };
   const handleChangeInfoCar = (e, name) => {
@@ -94,20 +93,21 @@ export default function PostSellCar() {
       });
     }
     if(salonId){
-      // salonId.forEach((item) => {
-      //   form.append("salons", item);
-      // });
-      form.append("salons", salonId )
+      salonId.forEach((item) => {
+        form.append("salons", item);
+      });
     }
-    console.log("form : ", form)
     let res = await dealerApi.sentPost(form)
-    console.log("res : ", res)
   }
   const handleChooseSalon = (e) => {
     let id = e.target.value
-    setSalonId(id);
+    if(e.target.checked === true){
+      setSalonId([...salonId, id]);
+    }else{
+      let newListSalonId = salonId.filter((id) => id !== e.target.value)
+      setSalonId(newListSalonId)
+    }
   }
-  console.log("infoCar : ", infoCar)
   const handleOnChangeImage = (e) => {
     const listImage = [];
     const listImagePreview = []
@@ -118,7 +118,19 @@ export default function PostSellCar() {
     setImage(listImage);
     setImagePreview(listImagePreview)
   };
-
+  const handleChooseAllSalon = (e) => {
+    if(e.target.checked === true && listSalon?.length > 0){
+      let allSalonId = [];
+      listSalon.forEach((salon) => {
+        allSalonId.push(salon.salon_id)
+      })
+      setSalonId(allSalonId)
+      setCheckAllSalon(true)
+    }else{
+      setSalonId([])
+      setCheckAllSalon(false)
+    }
+  }
   return (
     <>
       <Header otherPage={true} />
@@ -260,13 +272,29 @@ export default function PostSellCar() {
             <Modal.Title>Chọn Salon ô tô muốn gửi</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-             <select className="select-salon-car-sell" onChange={(e)=>handleChooseSalon(e)}>
-              {listSalon && listSalon.length > 0 && listSalon.map((item) => {
+          <Form.Group className="mt-4">
+              <Form.Check // prettier-ignore
+                type="checkbox"
+                id="custom-switch"
+                label="Chọn tất cả Salon"
+                onClick={(e) => handleChooseAllSalon(e)}
+              />
+          </Form.Group>
+          {listSalon && listSalon.length > 0 && listSalon.map((item) => {
                 return(
-                  <option value={item.salon_id}>{item.name}</option>
+                  <Form.Group className="mt-4">
+                  <Form.Check
+                    type="checkbox"
+                    id="custom-switch"
+                    label= {item.name}
+                    value={item.salon_id}
+                    onClick={(e) => handleChooseSalon(e)}
+                    checked={salonId.includes(item.salon_id) || false }
+                    disabled= {checkAllSalon}
+                  />
+              </Form.Group>
                 )
               })}
-             </select>
           </Modal.Body>
           <Modal.Footer>
            <Button variant="primary" onClick={handleCloseModal} type="submit" >

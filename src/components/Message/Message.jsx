@@ -31,6 +31,8 @@ export default function Message() {
   const [showCall, setShowCall] = useState(false);
   const idSalon = localStorage.getItem("idSalon");
   const [messages, setMessages] = useState([]);
+  const [images, setImages] = useState([]);
+  const [imagePreview, setImagePreview] = useState([])
   const { onlineUsers } = useSocketContext();
   const { socket } = useSocketContext();
   const soundPhoneRing = new Audio(telephoneRing);
@@ -159,14 +161,36 @@ export default function Message() {
   const handleSendMessage = async () => {
     let res = "";
     if (user?.salon_id) {
+      const form = new FormData();
+      if (images) {
+        images.forEach((item) => {
+          form.append("imgList", item);
+        });
+      }
+      if(text){
+        form.append("message", text);
+      }
       res = await messageApi.postMessage(user.salon_id, text);
+      setImages([])
       setText("");
+      setImagePreview([])
     }
     if (user?.id) {
-      console.log("user id : ", user.id)
-      res = await messageApi.postMessage(user.id, text);
-      setText("");
+      const form = new FormData();
+        if (images) {
+          images.forEach((item) => {
+            form.append("imgList", item);
+          });
+        }
+        if(text){
+          form.append("message", text);
+        }
+        res = await messageApi.postMessage(user.id, form)
+        setImages([])
+        setText("");
+        setImagePreview([])
     }
+    console.log("res send : ", res)
     if (res?.data?.message) {
       setMessages([res.data.message, ...messages]);
     }
@@ -293,6 +317,19 @@ export default function Message() {
     });
     handleEndCallForReceiver();
   };
+  const handleChange = (e) => {
+    const listImage = [];
+    const listImagePreview = [];
+    for (let i = 0; i < e.target.files.length; i++) {
+      listImage.push(e.target.files[i]);
+    }
+    for(let i = 0; i < e.target.files.length; i++){
+      listImagePreview.push(URL.createObjectURL(e.target.files[i]));
+    }
+    setImages(listImage);
+    setImagePreview(listImagePreview);
+  }
+  console.log("imgPreview : ", imagePreview)
   return (
     <div className="message-container">
       <Modal show={showCallForReceiver} backdrop="static">
@@ -386,26 +423,49 @@ export default function Message() {
             messages.length > 0 &&
             messages.map((message, index) => {
               const shakeClass = message.shouldShake === true ? "shake" : "";
+              let isMessage = true;
               if (shakeClass === "shake") {
                 message.shouldShake = false;
+              }
+              if(message.message === ""){
+                  isMessage = false
+              }else{
+                isMessage = true
               }
               return (
                 <MessageItem
                   message={message.message}
+                  img={message?.image?.[0]}
                   user={user}
                   receiverId={message.receiverId}
                   key={index}
                   shakeClass={shakeClass}
+                  isMessage={isMessage}
                 />
               );
             })}
         </div>
-        <div className="message-main-bottom">
-          <div className="acttachment">
+        <div className= {imagePreview?.length > 0 ? "message-main-bottom active-imgPreview" : "message-main-bottom"}>
+          <input type="file" id="file" style={{display : "none"}} multiple= "true" onChange={(e) => handleChange(e)} />
+          <label className="acttachment" for="file">
             <i class="fa-solid fa-image"></i>
+          </label>
+          {
+            imagePreview?.length > 0 ? (
+              <div className="imgPreview-box">
+            <div className="imgPreview-box-flex">
+              {imagePreview?.length > 0 && imagePreview.map((img) => {
+                return(
+                  <div className="imgPreview" style={{backgroundImage : `url(${img})`}}></div>
+                )
+              })}
+            </div>
           </div>
-          <div className="input-box">
+            ): ""
+          }
+          <div className={imagePreview?.length > 0 ? "input-box active-imgPreview" : "input-box"} >
             <input
+              className="input-message"
               type="text"
               placeholder="Nhập văn bản..."
               onChange={(e) => handleChangeTextMessage(e)}

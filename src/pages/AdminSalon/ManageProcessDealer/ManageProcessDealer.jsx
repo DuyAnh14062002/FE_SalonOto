@@ -28,7 +28,6 @@ export default function ManageProcessDealer() {
       loadingProcess(1, searchValue);
     }, 1000);
   };
-
   const loadingUser = async () => {
     let res = await userApi.getProfile();
     if (res?.data?.profile?.permissions) {
@@ -42,7 +41,6 @@ export default function ManageProcessDealer() {
     setSelectedProcess(process);
     setShowDelete(true);
   };
-
   const handleDelete = async () => {
     try {
       let res = await dealerApi.deleteProcess(selectedProcess.transaction_id);
@@ -197,7 +195,7 @@ export default function ManageProcessDealer() {
       </div>
       <Modal show={showDelete} onHide={handleCloseDelete}>
         <Modal.Header closeButton>
-          <Modal.Title>Xóa Tiến trình </Modal.Title>
+          <Modal.Title>Xóa Tiến trình</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <span>
