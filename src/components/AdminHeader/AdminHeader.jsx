@@ -28,10 +28,10 @@ export default function AdminHeader() {
               <Link className="dropdown-item" to={path.manageFeature}>
                 Quản lý tính năng
               </Link>
-              <Link className="dropdown-item" to="/">
-                Quản lí tin tức
+              <Link className="dropdown-item" to={path.manageSalonAdmin}>
+                Quản lí salon
               </Link>
-              <Link className="dropdown-item" to="/">
+              <Link className="dropdown-item" to={path.manageUserAdmin}>
                 Quản lí users
               </Link>
             </div>

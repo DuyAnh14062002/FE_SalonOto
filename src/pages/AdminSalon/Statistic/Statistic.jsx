@@ -12,7 +12,7 @@ export default function Statistic() {
   const [salon, setSalon] = useState({});
   const [statistic, setStatistic] = useState({});
   const [topBestSelling, setTopBestSelling] = useState({});
-  console.log("topBestSelling", topBestSelling);
+
   const fetchDataSalon = async () => {
     const res = await salonApi.getSalonInfor();
     if (res?.data?.salon) {
