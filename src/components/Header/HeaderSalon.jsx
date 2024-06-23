@@ -191,6 +191,9 @@ export default function HeaderSalon() {
               const timeNotify = new Date(notification.create_at);
               const timeNow = new Date();
               const timeDifference = timeNow.getTime() - timeNotify.getTime();
+              console.log("timenow : ", timeNow.getTime())
+              console.log("timeNotify : ", timeNotify.getTime())
+              console.log("timeDifference : ",timeDifference)
               const formattedTimeDifference =
                 formatTimeDifference(timeDifference);
               return (

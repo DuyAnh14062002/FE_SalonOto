@@ -6,18 +6,20 @@ const AccessoryApi = {
       `/accessory/salon/${salon_id}?page=${page}&&per_page=${per_page}&&q=${q}`
     );
   },
-  createAccessory(data) {
+  createAccessory(data, icon) {
     return http.post("/accessory", {
       name: data.name,
       manufacturer: data.manufacturer,
       price: data.price,
+      icon: icon,
     });
   },
-  updateAccessory(id, data) {
+  updateAccessory(id, data, icon) {
     return http.patch(`/accessory/${id}`, {
       name: data.name,
       manufacturer: data.manufacturer,
       price: data.price,
+      icon: icon,
     });
   },
   deleteAccessory(id) {

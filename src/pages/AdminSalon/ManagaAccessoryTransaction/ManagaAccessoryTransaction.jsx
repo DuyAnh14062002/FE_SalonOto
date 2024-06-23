@@ -384,10 +384,11 @@ export default function ManagaAccessoryTransaction() {
               <table class="table table-striped table-bordered">
                 <thead>
                   <tr>
-                    <th scope="col">Tên dịch vụ bảo hành</th>
+                    <th scope="col">Tên phụ tùng</th>
+                    <th scope="col">Ảnh phụ tùng</th>
                     <th scope="col">Số lượng</th>
                     <th scope="col">Giá (VND)</th>
-                    <th scope="col">Ngày bảo hành</th>
+                    <th scope="col">Ngày mua</th>
                   </tr>
                 </thead>
                 <tbody>

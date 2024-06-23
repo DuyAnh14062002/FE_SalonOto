@@ -10,8 +10,8 @@ import AccessoryApi from "../../../apis/accessory.api";
 import { formatCurrency } from "../../../utils/common";
 import { debounce } from "lodash";
 import { PaginationControl } from "react-bootstrap-pagination-control";
+import "./ManageAccessory.scss";
 const LIMIT = 4;
-
 export default function ManageAccessory() {
   const [isLoading, setIsLoading] = useState(false);
   const [showUpdate, setShowUpdate] = useState(false);
@@ -26,7 +26,22 @@ export default function ManageAccessory() {
   const [totalPage, setTotalPage] = useState(0);
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
-
+  const [iconChoose, setIconChoose] = useState("https://img.icons8.com/?size=100&id=gZjuzZtAaWv6&format=png&color=000000")
+  const listIcon = [
+   "https://img.icons8.com/?size=100&id=104952&format=png&color=000000",
+    "https://img.icons8.com/?size=100&id=gigZutNWdkCO&format=png&color=000000",
+    "https://img.icons8.com/?size=100&id=15173&format=png&color=000000",
+    "https://img.icons8.com/?size=100&id=TljNsOROmvcU&format=png&color=000000",
+    "https://img.icons8.com/?size=100&id=wztUFX8xvAO4&format=png&color=000000",
+    "https://img.icons8.com/?size=100&id=0nhiedlNuiwp&format=png&color=000000",
+    "https://img.icons8.com/?size=100&id=PoXXDSy7CGXw&format=png&color=000000",
+    "https://img.icons8.com/?size=100&id=15178&format=png&color=000000",
+    "https://img.icons8.com/?size=100&id=tHUvArti9lKw&format=png&color=000000",
+    "https://img.icons8.com/?size=100&id=UfHQPahgAIgZ&format=png&color=000000",
+    "https://img.icons8.com/?size=100&id=g2hX22OV5EMe&format=png&color=000000",
+    "https://img.icons8.com/?size=100&id=c87lNsDHuuaN&format=png&color=000000",
+    "https://img.icons8.com/?size=100&id=-4L2laQhFd50&format=png&color=000000"
+  ]
   const handleSearch = (e) => {
     setSearch(e.target.value);
     const searchValue = e.target.value;
@@ -67,6 +82,7 @@ export default function ManageAccessory() {
     setShowUpdate(true);
     setAccessoryId(accessory.accessory_id);
     setAccessory(accessory);
+    setIconChoose(accessory.icon)
   };
   const handleCloseAdd = () => {
     setShowAdd(false);
@@ -88,7 +104,7 @@ export default function ManageAccessory() {
   const handleAddAccessory = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    let res = await AccessoryApi.createAccessory(accessory);
+    let res = await AccessoryApi.createAccessory(accessory, iconChoose);
     if (res?.data?.status === "success") {
       toast.success("Thêm phụ tùng thành công");
       handleCloseAdd();
@@ -103,7 +119,7 @@ export default function ManageAccessory() {
   const handleUpdateAccessory = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    let res = await AccessoryApi.updateAccessory(accessoryId, accessory);
+    let res = await AccessoryApi.updateAccessory(accessoryId, accessory, iconChoose);
     if (res?.data?.status === "success") {
       toast.success("Cập nhật phụ tùng thành công");
       handleCloseUpdate();
@@ -125,7 +141,10 @@ export default function ManageAccessory() {
       toast.error("Xóa thông tin xe thất bại");
     }
   };
-
+  const handleChooseIcon = (icon) =>{
+    console.log("icon : ", icon)
+    setIconChoose(icon)
+  }
   return (
     <>
       <div id="content" className="container-fluid">
@@ -152,10 +171,10 @@ export default function ManageAccessory() {
               </div>
               {(permissions?.includes("OWNER") ||
                 permissions.includes("C_AC")) && (
-                <button className="btn btn-success" onClick={handleShowAdd}>
-                  Thêm mới phụ tùng
-                </button>
-              )}
+                  <button className="btn btn-success" onClick={handleShowAdd}>
+                    Thêm mới phụ tùng
+                  </button>
+                )}
             </div>
             <table className="table mt-4 table-hover">
               <thead>
@@ -164,6 +183,7 @@ export default function ManageAccessory() {
                     STT
                   </th>
                   <th scope="col">Tên phụ tùng</th>
+                  <th scope="col">Ảnh phụ tùng</th>
                   <th scope="col">Nhà sản xuất</th>
                   <th scope="col" className="text-center">
                     Giá
@@ -182,6 +202,7 @@ export default function ManageAccessory() {
                       </td>
 
                       <td>{item.name}</td>
+                      <td><div className="img-accessory" style={{backgroundImage : `url(${item.icon})`}}></div></td>
                       <td>{item.manufacturer}</td>
                       <td className="text-center">
                         {formatCurrency(item.price)}
@@ -189,29 +210,29 @@ export default function ManageAccessory() {
                       <td className="text-center">
                         {(permissions?.includes("OWNER") ||
                           permissions.includes("U_AC")) && (
-                          <button
-                            className="btn btn-success btn-sm rounded-0 text-white mx-2"
-                            data-toggle="tooltip"
-                            data-placement="top"
-                            title="Edit"
-                            onClick={() => handleShowUpdate(item)}
-                          >
-                            <i className="fa fa-edit"></i>
-                          </button>
-                        )}
+                            <button
+                              className="btn btn-success btn-sm rounded-0 text-white mx-2"
+                              data-toggle="tooltip"
+                              data-placement="top"
+                              title="Edit"
+                              onClick={() => handleShowUpdate(item)}
+                            >
+                              <i className="fa fa-edit"></i>
+                            </button>
+                          )}
                         {(permissions?.includes("OWNER") ||
                           permissions.includes("D_AC")) && (
-                          <button
-                            to="/"
-                            className="btn btn-danger btn-sm rounded-0 text-white"
-                            data-toggle="tooltip"
-                            data-placement="top"
-                            title="Delete"
-                            onClick={() => handleShowDelete(item)}
-                          >
-                            <i className="fa fa-trash"></i>
-                          </button>
-                        )}
+                            <button
+                              to="/"
+                              className="btn btn-danger btn-sm rounded-0 text-white"
+                              data-toggle="tooltip"
+                              data-placement="top"
+                              title="Delete"
+                              onClick={() => handleShowDelete(item)}
+                            >
+                              <i className="fa fa-trash"></i>
+                            </button>
+                          )}
                       </td>
                     </tr>
                   ))
@@ -276,6 +297,19 @@ export default function ManageAccessory() {
                 value={accessory.price}
               />
             </Form.Group>
+            <Form.Group className="mt-4">
+              <div className="choose-icon-box">
+                <Button>Chọn Icon</Button>
+                <div className="preview-icon" style={{backgroundImage : `url(${iconChoose})`}}></div>
+              </div>
+              <div className="list-icon">
+                {listIcon.map((item) => {
+                  return (
+                    <div className="item-icon" style={{backgroundImage : `url(${item})`}} onClick={() => handleChooseIcon(item)}></div>
+                  )
+                })}
+              </div>
+            </Form.Group>
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={handleCloseUpdate}>
@@ -320,6 +354,19 @@ export default function ManageAccessory() {
                 name="price"
                 onChange={onChange}
               />
+            </Form.Group>
+            <Form.Group className="mt-4">
+              <div className="choose-icon-box">
+                <Button>Chọn Icon</Button>
+                <div className="preview-icon" style={{backgroundImage : `url(${iconChoose})`}}></div>
+              </div>
+              <div className="list-icon">
+                {listIcon.map((item) => {
+                  return (
+                    <div className="item-icon" style={{backgroundImage : `url(${item})`}} onClick={() => handleChooseIcon(item)}></div>
+                  )
+                })}
+              </div>
             </Form.Group>
           </Modal.Body>
           <Modal.Footer>

@@ -10,6 +10,7 @@ import processApi from "../../apis/process.api";
 import salonApi from "../../apis/salon.api";
 import { useParams } from "react-router-dom";
 import dealerApi from "../../apis/dealer.api";
+import { toast } from "react-toastify";
 export default function CarPostDetail() {
   const responsive = {
     superLargeDesktop: {
@@ -78,7 +79,14 @@ export default function CarPostDetail() {
   }, []);
   const handleConection = async (e) => {
     e.preventDefault();
-    let res = await dealerApi.CreateConnecttion(post.post_id, processId);
+    try{
+      let res = await dealerApi.CreateConnecttion(post.post_id, processId);
+    }catch(e){
+        console.log(e)
+        if(e?.response?.data?.status === "failed"){
+          toast.error("Bạn đã gửi yêu cầu kết nối rồi")
+        }
+    }
   };
   return (
     <>

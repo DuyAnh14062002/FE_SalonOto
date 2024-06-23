@@ -255,12 +255,16 @@ export default function Message() {
     let receiverId = "";
     if (user?.salon_id) {
       receiverId = user.salon_id;
-      res = await messageApi.postMessage(user.salon_id, "Cuộc gọi video");
+      const form = new FormData()
+      form.append("message", "Cuộc gọi video")
+      res = await messageApi.postMessage(user.salon_id,form);
       setText("");
     }
     if (user?.id) {
       receiverId = user.id;
-      res = await messageApi.postMessage(user.id, "Cuộc gọi video");
+      const form = new FormData()
+      form.append("message", "Cuộc gọi video")
+      res = await messageApi.postMessage(user.id, form);
       setText("");
     }
     if (res?.data?.message) {
@@ -329,7 +333,6 @@ export default function Message() {
     setImages(listImage);
     setImagePreview(listImagePreview);
   }
-  console.log("imgPreview : ", imagePreview)
   return (
     <div className="message-container">
       <Modal show={showCallForReceiver} backdrop="static">

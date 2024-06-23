@@ -1,0 +1,39 @@
+.list-icon {
+  margin-top: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  .item-icon {
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 30px;
+    height: 30px;
+    margin: 10px 10px;
+    cursor: pointer;
+    // padding: 15px;
+    // border: 1px solid black;
+    // border-radius: 50%;
+    &:hover {
+      transform: scale(1.1);
+      transition: 0.2s;
+    }
+  }
+}
+.choose-icon-box {
+  display: flex;
+  .preview-icon {
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 40px;
+    height: 40px;
+    margin-left: 15px;
+  }
+}
+.img-accessory {
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  width: 40px;
+  height: 40px;
+}
