@@ -20,17 +20,13 @@ export default function HomePageSalon() {
     }
     const loading = async () => {
       let res = await salonApi.getDetailSalon(params.id);
-      if (res?.data?.salon?.cars) {
-        setSalon(res.data.salon);
-        setListCar(res.data.salon.cars);
-      }
+      setSalon(res.data.salon);
       if (res?.data?.salon?.user_id) {
         localStorage.setItem("userIdSalon", res.data.salon.user_id);
       }
     };
     loading();
   }, [params]);
-  console.log(salon);
   return (
     <div>
       <HeaderSalon />

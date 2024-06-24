@@ -149,16 +149,18 @@ export default function HeaderSalon() {
       console.log(error);
     }
   };
-  const handleNavigateDetail = (id) =>{
-    navigate(`/CarPostDetail/${id}`)
-  }
+  const handleNavigateDetail = (id) => {
+    navigate(`/CarPostDetail/${id}`);
+  };
   const handleBlockUser = async (postId, id) => {
-    try{
-      const confirm = window.confirm("Bạn có chắc chắn muốn chặn người dùng này?");
+    try {
+      const confirm = window.confirm(
+        "Bạn có chắc chắn muốn chặn người dùng này?"
+      );
       if (!confirm) return;
-      let res = await salonApi.blockUser(postId)
-      console.log("res : ", res)
-      if(res?.data?.status === "success"){
+      let res = await salonApi.blockUser(postId);
+      console.log("res : ", res);
+      if (res?.data?.status === "success") {
         //loading new notification after block
         await notificationApi.deleteNotificationSalon({
           id: id,
@@ -168,14 +170,14 @@ export default function HeaderSalon() {
           (notification) => notification.id !== id
         );
         setListNotification(newListNotification);
-        toast.success("Chặn người dùng thành công")
-      }else{
-        toast.error("Chặn người dùng thất bại")
+        toast.success("Chặn người dùng thành công");
+      } else {
+        toast.error("Chặn người dùng thất bại");
       }
-    }catch(e){
-      console.log(e)
+    } catch (e) {
+      console.log(e);
     }
-  }
+  };
   const popover = (
     <Popover id="popover-basic">
       <Popover.Header as="h3" className="fw-bold">
@@ -188,14 +190,9 @@ export default function HeaderSalon() {
         >
           {listNotification?.length > 0 ? (
             listNotification.map((notification) => {
-              const timeNotify = new Date(notification.create_at);
-              const timeNow = new Date();
-              const timeDifference = timeNow.getTime() - timeNotify.getTime();
-              console.log("timenow : ", timeNow.getTime())
-              console.log("timeNotify : ", timeNotify.getTime())
-              console.log("timeDifference : ",timeDifference)
-              const formattedTimeDifference =
-                formatTimeDifference(timeDifference);
+              const formattedTimeDifference = formatTimeDifference(
+                notification.create_at
+              );
               return (
                 <button key={notification.id} className="notify p-2">
                   <div className="d-flex align-items-center">
@@ -245,8 +242,25 @@ export default function HeaderSalon() {
                       </div>
                       {notification?.types === "request" ? (
                         <div className="Request-box">
-                           <button className="block-user" onClick = {() => handleBlockUser(notification?.data, notification?.id)}>Chặn</button>
-                           <button className="see-detail" onClick={() =>handleNavigateDetail(notification.data)}>Xem chi tiết</button>
+                          <button
+                            className="block-user"
+                            onClick={() =>
+                              handleBlockUser(
+                                notification?.data,
+                                notification?.id
+                              )
+                            }
+                          >
+                            Chặn
+                          </button>
+                          <button
+                            className="see-detail"
+                            onClick={() =>
+                              handleNavigateDetail(notification.data)
+                            }
+                          >
+                            Xem chi tiết
+                          </button>
                         </div>
                       ) : (
                         ""

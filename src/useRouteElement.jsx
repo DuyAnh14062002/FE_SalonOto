@@ -241,13 +241,13 @@ const router = createBrowserRouter([
         element: <ManageProcessDealer />,
       },
       {
-        path : path.manageAccessoryTransaction,
-        element: <ManagaAccessoryTransaction/>
+        path: path.manageAccessoryTransaction,
+        element: <ManagaAccessoryTransaction />,
       },
       {
-        path : path.managePromotion,
-        element: <ManagePromotion/>
-      }
+        path: path.managePromotion,
+        element: <ManagePromotion />,
+      },
     ],
   },
   {
@@ -336,15 +336,17 @@ const router = createBrowserRouter([
     element: <HistoryTransactionDealer />,
   },
   {
-    path : path.salonAppointment,
-    element: <SalonAppointment/>
-  },{
-    path : path.promotionDetail,
-    element: <PromotionDetail/>
-  },{
-    path : path.listPromotion,
-    element: <ListAllPromotion/>
-  }
+    path: path.salonAppointment,
+    element: <SalonAppointment />,
+  },
+  {
+    path: path.promotionDetail,
+    element: <PromotionDetail />,
+  },
+  {
+    path: path.listPromotion,
+    element: <ListAllPromotion />,
+  },
 ]);
 
 export default router;

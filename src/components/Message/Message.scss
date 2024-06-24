@@ -63,23 +63,27 @@
           .message-text-sidebar {
             width: 100%;
             display: flex;
+            align-items: center;
             height: 22px;
             .text-sender {
-              margin-right: 5px;
               flex: none;
               &.text-sender-not-seen {
                 font-weight: bold;
               }
             }
             .text-message {
-              margin-right: 5px;
-              max-width: 50%;
+              margin-left: 5px;
+              font-size: 15px;
+              color: #65676b;
+              max-width: 120px;
               &.text-message-not-seen {
                 font-weight: bold;
               }
             }
             .text-time {
-              width: 15%;
+              width: 30%;
+              color: #65676b;
+              font-size: 14px;
               flex: none;
             }
           }

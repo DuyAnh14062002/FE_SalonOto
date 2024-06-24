@@ -10,7 +10,9 @@ const invoiceApi = {
     });
   },
   getAllInvoiceMaintain(page = 1, per_page = 1000, q = "") {
-    return http.get(`/invoice?page=${page}&per_page=${per_page}&q=${q}`);
+    return http.get(
+      `/invoice/get-invoice-maintenance?page=${page}&per_page=${per_page}&q=${q}`
+    );
   },
   createBuyCarInvoice(salon_Id, carId, data, processId, employeeId) {
     return http.post("/invoice/create-invoice", {

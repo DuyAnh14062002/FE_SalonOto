@@ -1,13 +1,22 @@
-.accessory-box {
-  border-bottom: 1px solid black;
-  padding: 20px;
-  display: flex;
-  .quantity-accessory {
-    margin-left: 20px;
-    margin-bottom: 4px;
-    input {
-      width: 48px;
-      margin-left: 5px;
+.wrap-accessory {
+  height: 300px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  width: 100%;
+  .accessory-box {
+    border-bottom: 1px solid black;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+
+    .quantity-accessory {
+      margin-left: 20px;
+      margin-bottom: 4px;
+      input {
+        width: 60px;
+        margin-left: 5px;
+        padding: 0 5px;
+      }
     }
   }
 }

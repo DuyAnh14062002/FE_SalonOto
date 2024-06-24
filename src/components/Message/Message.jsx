@@ -8,10 +8,10 @@ import notificationSound from "../../assets/sounds/notification.mp3";
 import phoneCallSound from "../../assets/sounds/phone_call.mp3";
 import endCallSound from "../../assets/sounds/end_call.mp3";
 import MessageItem from "./MessageItem";
-import { randomID } from "../../utils/common";
+import { randomID, timeDifferenceFromNow } from "../../utils/common";
 import { Button, Modal } from "react-bootstrap";
-import { useSelector} from "react-redux";
-import {setRefuseCall} from "../../redux/slices/MessageSlice"
+import { useSelector } from "react-redux";
+import { setRefuseCall } from "../../redux/slices/MessageSlice";
 import { toast } from "react-toastify";
 import telephoneRing from "../../assets/sounds/telephone_ring.mp3";
 import noUserImage from "../../assets/images/no-user-image.webp";
@@ -27,12 +27,12 @@ export default function Message() {
   const [text, setText] = useState("");
   const [users, setUsers] = useState([]);
   const [user, setUser] = useState({});
-  const [isCall, setIsCall] = useState(false)
+  const [isCall, setIsCall] = useState(false);
   const [showCall, setShowCall] = useState(false);
   const idSalon = localStorage.getItem("idSalon");
   const [messages, setMessages] = useState([]);
   const [images, setImages] = useState([]);
-  const [imagePreview, setImagePreview] = useState([])
+  const [imagePreview, setImagePreview] = useState([]);
   const { onlineUsers } = useSocketContext();
   const { socket } = useSocketContext();
   const soundPhoneRing = new Audio(telephoneRing);
@@ -53,11 +53,11 @@ export default function Message() {
       }
       const sound = new Audio(notificationSound);
       sound.play();
-      loadingAllUser()
-      if(isCall === false){
-        toast("Bạn có một tin nhắn mới")
-      }else{
-        setIsCall(true)
+      loadingAllUser();
+      if (isCall === false) {
+        toast("Bạn có một tin nhắn mới");
+      } else {
+        setIsCall(true);
       }
     },
     [messages, setMessages]
@@ -143,7 +143,7 @@ export default function Message() {
   const handleCloseCallForReceiver = () => setShowCallForReceiver(false);
   const handleShowCallForReceiver = () => setShowCallForReceiver(true);
   const getDetailSalon = async () => {
-    if(idSalon){
+    if (idSalon) {
       let res = await salonApi.getDetailSalon(idSalon);
       if (res?.data?.salon) {
         setUser(res.data.salon);
@@ -167,34 +167,34 @@ export default function Message() {
           form.append("imgList", item);
         });
       }
-      if(text){
+      if (text) {
         form.append("message", text);
       }
       res = await messageApi.postMessage(user.salon_id, text);
-      setImages([])
+      setImages([]);
       setText("");
-      setImagePreview([])
+      setImagePreview([]);
     }
     if (user?.id) {
       const form = new FormData();
-        if (images) {
-          images.forEach((item) => {
-            form.append("imgList", item);
-          });
-        }
-        if(text){
-          form.append("message", text);
-        }
-        res = await messageApi.postMessage(user.id, form)
-        setImages([])
-        setText("");
-        setImagePreview([])
+      if (images) {
+        images.forEach((item) => {
+          form.append("imgList", item);
+        });
+      }
+      if (text) {
+        form.append("message", text);
+      }
+      res = await messageApi.postMessage(user.id, form);
+      setImages([]);
+      setText("");
+      setImagePreview([]);
     }
-    console.log("res send : ", res)
+    console.log("res send : ", res);
     if (res?.data?.message) {
       setMessages([res.data.message, ...messages]);
     }
-    loadingAllUser()
+    loadingAllUser();
   };
   const loadingMessage = async () => {
     let res = {};
@@ -217,16 +217,16 @@ export default function Message() {
     //let res = await userApi.getAllUsers()
     if (res?.data?.chattingUsers && res.data.chattingUsers.length > 0) {
       setUsers(res.data.chattingUsers);
-      console.log("chatting users : ", res.data.chattingUsers)
-      if(!user.id && !user.salon_id && !idSalon){
-        setUser(res.data.chattingUsers[0])
+      console.log("chatting users : ", res.data.chattingUsers);
+      if (!user.id && !user.salon_id && !idSalon) {
+        setUser(res.data.chattingUsers[0]);
       }
     }
   };
   const handleOnMessage = async (userCurrent) => {
-    const salonId = localStorage.getItem("idSalon")
-    if(salonId){
-     localStorage.removeItem("idSalon")
+    const salonId = localStorage.getItem("idSalon");
+    if (salonId) {
+      localStorage.removeItem("idSalon");
     }
     let res = {};
     if (userCurrent?.salon_id) {
@@ -243,27 +243,27 @@ export default function Message() {
       setMessages([]);
     }
     setUser(userCurrent);
-    loadingAllUser()
+    loadingAllUser();
   };
   const handleCloseCall = () => {
     setShowCall(false);
   };
   const handleShowCall = () => setShowCall(true);
   const handleCallVideo = async () => {
-    setIsCall(true)
+    setIsCall(true);
     let res = "";
     let receiverId = "";
     if (user?.salon_id) {
       receiverId = user.salon_id;
-      const form = new FormData()
-      form.append("message", "Cuộc gọi video")
-      res = await messageApi.postMessage(user.salon_id,form);
+      const form = new FormData();
+      form.append("message", "Cuộc gọi video");
+      res = await messageApi.postMessage(user.salon_id, form);
       setText("");
     }
     if (user?.id) {
       receiverId = user.id;
-      const form = new FormData()
-      form.append("message", "Cuộc gọi video")
+      const form = new FormData();
+      form.append("message", "Cuộc gọi video");
       res = await messageApi.postMessage(user.id, form);
       setText("");
     }
@@ -327,12 +327,13 @@ export default function Message() {
     for (let i = 0; i < e.target.files.length; i++) {
       listImage.push(e.target.files[i]);
     }
-    for(let i = 0; i < e.target.files.length; i++){
+    for (let i = 0; i < e.target.files.length; i++) {
       listImagePreview.push(URL.createObjectURL(e.target.files[i]));
     }
     setImages(listImage);
     setImagePreview(listImagePreview);
-  }
+  };
+
   return (
     <div className="message-container">
       <Modal show={showCallForReceiver} backdrop="static">
@@ -374,14 +375,22 @@ export default function Message() {
             users.length > 0 &&
             users.map((u) => {
               const isOnline = onlineUsers.includes(u.id);
+              console.log("u.message.time : ", u.message.time);
               return (
                 <div
-                  className={(user.id === u.id || user.salon_id === u.id) ? "message-person actice-chatting" : "message-person"}
+                  className={
+                    user.id === u.id || user.salon_id === u.id
+                      ? "message-person actice-chatting"
+                      : "message-person"
+                  }
                   onClick={() => handleOnMessage(u)}
                 >
                   <div
                     className="person-image"
-                    style={{ backgroundImage: `url(${u.image})` , marginRight: "2px"}}
+                    style={{
+                      backgroundImage: `url(${u.image})`,
+                      marginRight: "2px",
+                    }}
                   >
                     {isOnline === true ? (
                       <div className="person-active"></div>
@@ -389,12 +398,34 @@ export default function Message() {
                       ""
                     )}
                   </div>
-                  <div className="text-box">
+                  <div className="text-box mx-1">
                     <div className="message-name">{u.name}</div>
                     <div className="message-text-sidebar">
-                      <span className={u.message && u.message.conversation_status === false ? "text-sender text-sender-not-seen " : "text-sender"}>{u.message && u.message.sender !== "" ? u.message.sender + ": ": ""}</span> 
-                      <span className={u.message && u.message.conversation_status === false ? "text-message text-message-not-seen text-truncate" : "text-message text-truncate"}>{u.message && u.message.message} </span>
-                      <span className="text-time">{u.message && u.message.time}</span>
+                      <div className="d-flex align-items-center">
+                        <span
+                          className={
+                            u.message && u.message.conversation_status === false
+                              ? "text-sender text-sender-not-seen "
+                              : "text-sender"
+                          }
+                        >
+                          {u.message && u.message.sender !== ""
+                            ? u.message.sender + ": "
+                            : ""}
+                        </span>
+                        <div
+                          className={
+                            u.message && u.message.conversation_status === false
+                              ? "text-message text-message-not-seen text-truncate"
+                              : "text-message text-truncate"
+                          }
+                        >
+                          {u.message && u.message.message}
+                        </div>
+                      </div>
+                      <span className="text-time">
+                        ·{timeDifferenceFromNow(u.message && u.message.time)}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -430,10 +461,10 @@ export default function Message() {
               if (shakeClass === "shake") {
                 message.shouldShake = false;
               }
-              if(message.message === ""){
-                  isMessage = false
-              }else{
-                isMessage = true
+              if (message.message === "") {
+                isMessage = false;
+              } else {
+                isMessage = true;
               }
               return (
                 <MessageItem
@@ -448,25 +479,47 @@ export default function Message() {
               );
             })}
         </div>
-        <div className= {imagePreview?.length > 0 ? "message-main-bottom active-imgPreview" : "message-main-bottom"}>
-          <input type="file" id="file" style={{display : "none"}} multiple= "true" onChange={(e) => handleChange(e)} />
+        <div
+          className={
+            imagePreview?.length > 0
+              ? "message-main-bottom active-imgPreview"
+              : "message-main-bottom"
+          }
+        >
+          <input
+            type="file"
+            id="file"
+            style={{ display: "none" }}
+            multiple="true"
+            onChange={(e) => handleChange(e)}
+          />
           <label className="acttachment" for="file">
             <i class="fa-solid fa-image"></i>
           </label>
-          {
-            imagePreview?.length > 0 ? (
-              <div className="imgPreview-box">
-            <div className="imgPreview-box-flex">
-              {imagePreview?.length > 0 && imagePreview.map((img) => {
-                return(
-                  <div className="imgPreview" style={{backgroundImage : `url(${img})`}}></div>
-                )
-              })}
+          {imagePreview?.length > 0 ? (
+            <div className="imgPreview-box">
+              <div className="imgPreview-box-flex">
+                {imagePreview?.length > 0 &&
+                  imagePreview.map((img) => {
+                    return (
+                      <div
+                        className="imgPreview"
+                        style={{ backgroundImage: `url(${img})` }}
+                      ></div>
+                    );
+                  })}
+              </div>
             </div>
-          </div>
-            ): ""
-          }
-          <div className={imagePreview?.length > 0 ? "input-box active-imgPreview" : "input-box"} >
+          ) : (
+            ""
+          )}
+          <div
+            className={
+              imagePreview?.length > 0
+                ? "input-box active-imgPreview"
+                : "input-box"
+            }
+          >
             <input
               className="input-message"
               type="text"

@@ -9,31 +9,31 @@ import { toast } from "react-toastify";
 import { PaginationControl } from "react-bootstrap-pagination-control";
 import AccessoryApi from "../../../apis/accessory.api";
 import { formatCurrency } from "../../../utils/common";
-import "./ManagaAccessoryTransaction.scss"
+import "./ManagaAccessoryTransaction.scss";
 const LIMIT = 4;
 
 export default function ManagaAccessoryTransaction() {
-  const [invoiceAccessory, setInvoiceAccessory] = useState([])
+  const [invoiceAccessory, setInvoiceAccessory] = useState([]);
   const [permissions, setPermission] = useState([]);
-  const [showAdd, setShowAdd] = useState(false)
-  const [showInfor, setShowInfor] = useState(false)
+  const [showAdd, setShowAdd] = useState(false);
+  const [showInfor, setShowInfor] = useState(false);
   const [accessory, setAccessory] = useState([]);
-  const [accessoryItem, setAccessoryItem] = useState([])
-  const [data, setData] = useState({})
+  const [accessoryItem, setAccessoryItem] = useState([]);
+  const [data, setData] = useState({});
   const [isLoading, setIsLoading] = useState(false);
-  const [invoiceChoose, setInvoiceChoose] = useState({})
-  const [showDelete, setShowDelete] = useState(false)
-  const [showUpdate, setShowUpdate] = useState(false)
-  let loadingInvoiceBuyAccessory = async() => {
-    try{
-      let res = await AccessoryApi.getInvoiceBuyAccessory()
-      if(res?.data?.invoices){
-        setInvoiceAccessory(res.data.invoices)
+  const [invoiceChoose, setInvoiceChoose] = useState({});
+  const [showDelete, setShowDelete] = useState(false);
+  const [showUpdate, setShowUpdate] = useState(false);
+  let loadingInvoiceBuyAccessory = async () => {
+    try {
+      let res = await AccessoryApi.getInvoiceBuyAccessory();
+      if (res?.data?.invoices) {
+        setInvoiceAccessory(res.data.invoices);
       }
-    }catch(e){
-      console.log(e)
+    } catch (e) {
+      console.log(e);
     }
-  }
+  };
   const loadingPermistion = async () => {
     let res = await userApi.getProfile();
     if (res?.data?.profile?.permissions) {
@@ -41,56 +41,59 @@ export default function ManagaAccessoryTransaction() {
     }
   };
   useEffect(() => {
-    loadingInvoiceBuyAccessory()
-    loadingPermistion()
-    fetchDataSalon()
-  }, [])
-  const handleAddInvoiceBuyAccessory = async(e) =>{
-      e.preventDefault();
-      const listAccessoryChecked = accessory.filter((item) => item.checked);
-      const listAccessoryId = listAccessoryChecked.map((item) => ({
-        accessory_id: item.accessory_id.toString(),
-        quantity: item.quantity,
-      }));
-      try{
-          let res = await AccessoryApi.createInvoiceBuyAccessory(data,listAccessoryId )
-          if(res?.data?.status === "success"){
-            toast.success("Thêm giao dịch phụ tùng thành công ! ")
-            handleCloseAdd()
-            loadingInvoiceBuyAccessory()
-            setData({})
-          }else{
-            toast.error("Thêm giao dịch phụ tùng thất bại ! ")
-          }
-      }catch(e){
-         console.log(e)
+    loadingInvoiceBuyAccessory();
+    loadingPermistion();
+    fetchDataSalon();
+  }, []);
+  const handleAddInvoiceBuyAccessory = async (e) => {
+    e.preventDefault();
+    const listAccessoryChecked = accessory.filter((item) => item.checked);
+    const listAccessoryId = listAccessoryChecked.map((item) => ({
+      accessory_id: item.accessory_id.toString(),
+      quantity: item.quantity,
+    }));
+    try {
+      let res = await AccessoryApi.createInvoiceBuyAccessory(
+        data,
+        listAccessoryId
+      );
+      if (res?.data?.status === "success") {
+        toast.success("Thêm giao dịch phụ tùng thành công ! ");
+        handleCloseAdd();
+        loadingInvoiceBuyAccessory();
+        setData({});
+      } else {
+        toast.error("Thêm giao dịch phụ tùng thất bại ! ");
       }
-  }
+    } catch (e) {
+      console.log(e);
+    }
+  };
   const onChange = (e) => {
     setData({ ...data, [e.target.name]: e.target.value });
-  }
-  const handleShowAdd = () =>{
-    setShowAdd(true)
-  }
-  const handleCloseAdd = () =>{
-    setShowAdd(false)
-  }
+  };
+  const handleShowAdd = () => {
+    setShowAdd(true);
+  };
+  const handleCloseAdd = () => {
+    setShowAdd(false);
+  };
   const handleShowInfor = (invoice) => {
-    setShowInfor(true)
-    setInvoiceChoose(invoice)
-  }
+    setShowInfor(true);
+    setInvoiceChoose(invoice);
+  };
   const handleCloseInfor = () => {
-    setShowInfor(false)
-  }
-  const handleShowDelete = (invoice) =>{
-    setShowDelete(true)
-    setInvoiceChoose(invoice)
-  }
-  const handleCloseDelete = () =>{
-    setShowDelete(false)
-  }
-  const handleShowUpdate = (invoice) =>{
-    setShowUpdate(true)
+    setShowInfor(false);
+  };
+  const handleShowDelete = (invoice) => {
+    setShowDelete(true);
+    setInvoiceChoose(invoice);
+  };
+  const handleCloseDelete = () => {
+    setShowDelete(false);
+  };
+  const handleShowUpdate = (invoice) => {
+    setShowUpdate(true);
     setAccessory((prev) =>
       prev.map((item) => {
         if (invoice.accessories.find((f) => f?.name === item?.name)) {
@@ -99,14 +102,14 @@ export default function ManagaAccessoryTransaction() {
         return { ...item, checked: false, quantity: item.quantity };
       })
     );
-    setData(invoice)
-  }
+    setData(invoice);
+  };
   const handleCloseUpdate = () => {
-    setShowUpdate(false)
-  }
+    setShowUpdate(false);
+  };
   const loadingAccessory = async (salon_id) => {
     let res = await invoiceApi.getAccessory(salon_id);
-    console.log("res : ", res)
+    console.log("res : ", res);
     if (res?.data?.accessory) {
       const allAccessory = res.data.accessory;
       const newAllAccessory = allAccessory.map((item) => {
@@ -131,52 +134,58 @@ export default function ManagaAccessoryTransaction() {
     });
     setAccessory(newAllAccessory);
   };
-  const onChangeQuantity = (data, e) =>{
+  const onChangeQuantity = (data, e) => {
     const newAllAccessory = accessory.map((item) => {
       if (item.accessory_id === data.accessory_id) {
-        return { ...item, quantity : e.target.value };
+        return { ...item, quantity: e.target.value };
       }
       return item;
     });
-    setAccessory(newAllAccessory)
-  }
-  const handleDelete = async () =>{
-    try{
-       let res = await AccessoryApi.deleteInvoiceBuyAccessory(invoiceChoose.invoice_id)
-       if(res?.data?.status === "success"){
-        toast.success("Xóa giao dịch thành công")
-        handleCloseDelete()
-        loadingInvoiceBuyAccessory()
-        setInvoiceChoose({})
-       }else{
-        toast.error("Xóa giao dịch thất bại")
-       }
-    }catch(e){
-      console.log(e)
+    setAccessory(newAllAccessory);
+  };
+  const handleDelete = async () => {
+    try {
+      let res = await AccessoryApi.deleteInvoiceBuyAccessory(
+        invoiceChoose.invoice_id
+      );
+      if (res?.data?.status === "success") {
+        toast.success("Xóa giao dịch thành công");
+        handleCloseDelete();
+        loadingInvoiceBuyAccessory();
+        setInvoiceChoose({});
+      } else {
+        toast.error("Xóa giao dịch thất bại");
+      }
+    } catch (e) {
+      console.log(e);
     }
-  }
-  const handleUpdateInvoiceBuyAccessory = async (e) =>{
+  };
+  const handleUpdateInvoiceBuyAccessory = async (e) => {
     e.preventDefault();
-      const listAccessoryChecked = accessory.filter((item) => item.checked);
-      const listAccessoryId = listAccessoryChecked.map((item) => ({
-        accessory_id: item.accessory_id.toString(),
-        quantity: item.quantity,
-      }));
-    try{
-       let res = await AccessoryApi.updateInvoiceBuyAccessory(data,listAccessoryId, invoiceChoose.invoice_id)
-        if(res?.data?.status === "success"){
-          toast.success("Cập nhật giao dịch thành công !")
-          handleCloseDelete()
-          loadingInvoiceBuyAccessory()
-          setData({})
-        }else{
-          toast.error("Cập nhật giao dịch thất bại !")
-        }
-    }catch(e){
-       console.log(e)
+    const listAccessoryChecked = accessory.filter((item) => item.checked);
+    const listAccessoryId = listAccessoryChecked.map((item) => ({
+      accessory_id: item.accessory_id.toString(),
+      quantity: item.quantity,
+    }));
+    try {
+      let res = await AccessoryApi.updateInvoiceBuyAccessory(
+        data,
+        listAccessoryId,
+        invoiceChoose.invoice_id
+      );
+      if (res?.data?.status === "success") {
+        toast.success("Cập nhật giao dịch thành công !");
+        handleCloseDelete();
+        loadingInvoiceBuyAccessory();
+        setData({});
+      } else {
+        toast.error("Cập nhật giao dịch thất bại !");
+      }
+    } catch (e) {
+      console.log(e);
     }
-  }
-  console.log("accessory : ", accessory)
+  };
+  console.log("accessory : ", accessory);
   return (
     <>
       <div id="content" className="container-fluid">
@@ -200,8 +209,8 @@ export default function ManagaAccessoryTransaction() {
                 />
               </div>
               <button className="btn btn-success" onClick={handleShowAdd}>
-                  Thêm giao dịch phụ tùng
-                </button>
+                Thêm giao dịch phụ tùng
+              </button>
             </div>
             <table className="table mt-4 table-hover" style={{ width: "100%" }}>
               <thead>
@@ -265,7 +274,7 @@ export default function ManagaAccessoryTransaction() {
                             data-toggle="tooltip"
                             data-placement="top"
                             title="Delete"
-                           onClick={() => handleShowDelete(invoice)}
+                            onClick={() => handleShowDelete(invoice)}
                           >
                             <i className="fa fa-trash"></i>
                           </button>
@@ -304,7 +313,7 @@ export default function ManagaAccessoryTransaction() {
             <Modal.Title> Thêm mới giao dịch phụ tùng </Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <Form.Group className="mt-4">
+            <Form.Group className="mt-3">
               <Form.Label>Tên khách hàng</Form.Label>
               <Form.Control
                 required
@@ -313,7 +322,7 @@ export default function ManagaAccessoryTransaction() {
                 onChange={onChange}
               />
             </Form.Group>
-            <Form.Group className="mt-4">
+            <Form.Group className="mt-3">
               <Form.Label>Email</Form.Label>
               <Form.Control
                 required
@@ -322,7 +331,7 @@ export default function ManagaAccessoryTransaction() {
                 onChange={onChange}
               />
             </Form.Group>
-            <Form.Group className="mt-4">
+            <Form.Group className="mt-3">
               <Form.Label>Số điện thoại</Form.Label>
               <Form.Control
                 required
@@ -331,30 +340,36 @@ export default function ManagaAccessoryTransaction() {
                 onChange={onChange}
               />
             </Form.Group>
-            <Form.Group className="mt-3 feature">
+            <Form.Group className="mt-3 wrap-accessory">
               <Form.Label>Chọn các phụ tùng sửa chữa</Form.Label>
-              {accessory &&
-                accessory.map((item, index) => (
-                  <div className="accessory-box">
-                    <Form.Check
-                      key={index}
-                      type="checkbox"
-                      checked={item.checked}
-                      onChange={() => handleChangeAccessory(item)}
-                      value={item.accessory_id}
-                      label={item?.name}
-                    />
-                    <div className="quantity-accessory">
-                      <label>Số lượng : </label>
-                      <input
-                      type="number"
-                      name={item.name}
-                      onChange={(e) =>onChangeQuantity(item, e)}
-                    />
+              <div className="row">
+                {accessory &&
+                  accessory.map((item, index) => (
+                    <div className="accessory-box">
+                      <div className="col-md-4">
+                        <Form.Check
+                          key={index}
+                          type="checkbox"
+                          checked={item.checked}
+                          onChange={() => handleChangeAccessory(item)}
+                          value={item.accessory_id}
+                          label={item?.name}
+                        />
+                      </div>
+                      <div className="col-md-8">
+                        <div className="quantity-accessory">
+                          <label>Số lượng : </label>
+                          <input
+                            type="number"
+                            min="0"
+                            name={item.name}
+                            onChange={(e) => onChangeQuantity(item, e)}
+                          />
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                 
-                ))}
+                  ))}
+              </div>
             </Form.Group>
           </Modal.Body>
           <Modal.Footer>
@@ -379,7 +394,7 @@ export default function ManagaAccessoryTransaction() {
             <Modal.Title> Thông tin chi tiết giao dịch phụ tùng </Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <div class="container">            
+            <div class="container">
               <h2 class="text-center">Bảng phụ tùng sửa chữa</h2>
               <table class="table table-striped table-bordered">
                 <thead>
@@ -436,17 +451,17 @@ export default function ManagaAccessoryTransaction() {
             <Modal.Title> Cập nhật giao dịch bảo dưỡng </Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <Form.Group className="mt-4">
+            <Form.Group className="mt-3">
               <Form.Label>Tên khách hàng</Form.Label>
               <Form.Control
                 required
                 type="text"
                 name="fullname"
                 onChange={onChange}
-                value= {data.fullname}
+                value={data.fullname}
               />
             </Form.Group>
-            <Form.Group className="mt-4">
+            <Form.Group className="mt-3">
               <Form.Label>Email</Form.Label>
               <Form.Control
                 required
@@ -456,7 +471,7 @@ export default function ManagaAccessoryTransaction() {
                 value={data.email}
               />
             </Form.Group>
-            <Form.Group className="mt-4">
+            <Form.Group className="mt-3">
               <Form.Label>Số điện thoại</Form.Label>
               <Form.Control
                 required
@@ -466,31 +481,36 @@ export default function ManagaAccessoryTransaction() {
                 value={data.phone}
               />
             </Form.Group>
-            <Form.Group className="mt-3 feature">
+            <Form.Group className="mt-3 wrap-accessory">
               <Form.Label>Chọn các phụ tùng sửa chữa</Form.Label>
-              {accessory &&
-                accessory.map((item, index) => (
-                  <div className="accessory-box">
-                    <Form.Check
-                      key={index}
-                      type="checkbox"
-                      checked={item.checked}
-                      onChange={() => handleChangeAccessory(item)}
-                      value={item.accessory_id}
-                      label={item?.name}
-                    />
-                    <div className="quantity-accessory">
-                      <label>Số lượng : </label>
-                      <input
-                      type="number"
-                      name={item.name}
-                      onChange={(e) =>onChangeQuantity(item, e)}
-                      value={item.quantity}
-                    />
+              <div className="row">
+                {accessory &&
+                  accessory.map((item, index) => (
+                    <div className="accessory-box">
+                      <div className="col-md-4">
+                        <Form.Check
+                          key={index}
+                          type="checkbox"
+                          checked={item.checked}
+                          onChange={() => handleChangeAccessory(item)}
+                          value={item.accessory_id}
+                          label={item?.name}
+                        />
+                      </div>
+                      <div className="col-md-8">
+                        <div className="quantity-accessory">
+                          <label>Số lượng : </label>
+                          <input
+                            type="number"
+                            name={item.name}
+                            onChange={(e) => onChangeQuantity(item, e)}
+                            value={item.quantity}
+                          />
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                 
-                ))}
+                  ))}
+              </div>
             </Form.Group>
           </Modal.Body>
           <Modal.Footer>

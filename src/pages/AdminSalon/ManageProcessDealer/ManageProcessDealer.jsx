@@ -57,8 +57,9 @@ export default function ManageProcessDealer() {
 
   const loadingProcess = async (page, search) => {
     let res = await dealerApi.getAllProcess(page, LIMIT, search);
+    console.log("res : ", res);
     if (res?.data?.transaction) {
-      setTransactions(res.data.transaction);
+      setTransactions(res.data.transaction.transaction);
       setTotalPage(res.data.total_page);
     }
   };

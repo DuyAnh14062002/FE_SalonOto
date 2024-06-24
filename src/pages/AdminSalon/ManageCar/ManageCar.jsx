@@ -1,4 +1,4 @@
-import React from "react";
+import "./ManageCar.scss";
 import { Form, Image, Spinner } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
@@ -126,7 +126,8 @@ export default function ManageCar() {
     setImage(listImage);
   };
 
-  const handleUpdateCar = async () => {
+  const handleUpdateCar = async (e) => {
+    e.preventDefault();
     const form = new FormData();
     form.append("salonId", salon.salon_id);
     if (car.name) {
@@ -257,7 +258,7 @@ export default function ManageCar() {
     }
     setIsLoading(true);
     let res = await carApi.addCar(form);
-    console.log("res add car: ", res)
+    console.log("res add car: ", res);
     fetchDataSalon();
     fetchAllCars(page, search);
     handleCloseAdd();
@@ -456,119 +457,193 @@ export default function ManageCar() {
           </div>
         </div>
       </div>
-      <Modal show={showInfor} onHide={handleCloseInfor} backdrop="static">
+      <Modal
+        show={showInfor}
+        onHide={handleCloseInfor}
+        backdrop="static"
+        size="lg"
+      >
         <Form noValidate>
           <Modal.Header closeButton>
-            <Modal.Title> Thông tin xe chi tiết</Modal.Title>
+            <Modal.Title>Thông tin xe chi tiết</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <Form.Group className="mt-4">
-              <Form.Label>Tên xe</Form.Label>
-              <Form.Control required type="text" value={car.name} name="name" />
-            </Form.Group>
-            <Form.Group className="mt-4">
-              <Form.Label>Mô tả</Form.Label>
-              <Form.Control
-                required
-                type="text"
-                value={car.description}
-                name="description"
-              />
-            </Form.Group>
-            <Form.Group className="mt-3">
-              <Form.Label>Nhãn hiệu</Form.Label>
-              <Form.Control
-                type="text"
-                rows={4}
-                value={car.brand}
-                name="brand"
-              />
-            </Form.Group>
-            <Form.Group className="mt-3">
-              <Form.Label>Dòng xe</Form.Label>
-              <Form.Control type="text" rows={4} value={car.type} name="type" />
-            </Form.Group>
-            <Form.Group className="mt-3">
-              <Form.Label>Năm sản xuất</Form.Label>
-              <Form.Control
-                type="text"
-                rows={4}
-                value={car.origin}
-                name="origin"
-              />
-            </Form.Group>
-            <Form.Group className="mt-3">
-              <Form.Label>Số cửa</Form.Label>
-              <Form.Control type="text" rows={4} value={car.door} name="door" />
-            </Form.Group>
-            <Form.Group className="mt-3">
-              <Form.Label>Số ghế ngồi</Form.Label>
-              <Form.Control type="text" rows={4} value={car.seat} name="seat" />
-            </Form.Group>
-            <Form.Group className="mt-3">
-              <Form.Label>Hộp số</Form.Label>
-              <Form.Control type="text" rows={4} value={car.gear} name="gear" />
-            </Form.Group>
-            <Form.Group className="mt-3">
-              <Form.Label>Dung tích xe</Form.Label>
-              <Form.Control
-                type="text"
-                rows={4}
-                value={car.capacity}
-                name="capacity"
-              />
-            </Form.Group>
-            <Form.Group className="mt-3">
-              <Form.Label>Số Kilomet đã đi</Form.Label>
-              <Form.Control
-                type="text"
-                rows={4}
-                value={car.kilometer}
-                name="kilometer"
-              />
-            </Form.Group>
-            <Form.Group className="mt-3">
-              <Form.Label>Model</Form.Label>
-              <Form.Control
-                required
-                type="text"
-                value={car.model}
-                name="model"
-              />
-            </Form.Group>
-            <Form.Group className="mt-3">
-              <Form.Label>Giá</Form.Label>
-              <Form.Control
-                required
-                type="text"
-                value={car.price}
-                name="price"
-              />
-            </Form.Group>
-            <Form.Group className="mt-3">
-              <Form.Label>Màu nội thất</Form.Label>
-              <Form.Control
-                required
-                type="text"
-                value={car.inColor}
-                name="inColor"
-              />
-            </Form.Group>
-            <Form.Group className="mt-3">
-              <Form.Label>Màu ngoại thất</Form.Label>
-              <Form.Control
-                required
-                type="text"
-                value={car.outColor}
-                name="outColor"
-              />
-            </Form.Group>
-            <Form.Group
-              controlId="formFile"
-              className="mt-3 d-flex justify-content-center"
-            >
-              <Image src={car.image} rounded width="200" height="auto" />
-            </Form.Group>
+            <div className="container">
+              <div className="row">
+                <div className="col-md-12 d-flex justify-content-center mt-3">
+                  <Image src={car.image} rounded width="300" height="auto" />
+                </div>
+                <div className="col-md-6">
+                  <Form.Group className="mt-3">
+                    <Form.Label>Tên xe</Form.Label>
+                    <Form.Control
+                      required
+                      type="text"
+                      value={car.name}
+                      name="name"
+                      readOnly
+                    />
+                  </Form.Group>
+                </div>
+                <div className="col-md-6">
+                  <Form.Group className="mt-3">
+                    <Form.Label>Nhãn hiệu</Form.Label>
+                    <Form.Control
+                      required
+                      type="text"
+                      value={car.brand}
+                      name="brand"
+                      readOnly
+                    />
+                  </Form.Group>
+                </div>
+                <div className="col-md-6">
+                  <Form.Group className="mt-3">
+                    <Form.Label>Dòng xe</Form.Label>
+                    <Form.Control
+                      required
+                      type="text"
+                      value={car.type}
+                      name="type"
+                      readOnly
+                    />
+                  </Form.Group>
+                </div>
+                <div className="col-md-6">
+                  <Form.Group className="mt-3">
+                    <Form.Label>Giá</Form.Label>
+                    <Form.Control
+                      required
+                      type="text"
+                      value={car.price}
+                      name="price"
+                      readOnly
+                    />
+                  </Form.Group>
+                </div>
+                <div className="col-md-12">
+                  <Form.Group className="mt-3">
+                    <Form.Label>Mô tả</Form.Label>
+                    <Form.Control
+                      required
+                      as="textarea"
+                      rows={3}
+                      value={car.description}
+                      name="description"
+                      readOnly
+                    />
+                  </Form.Group>
+                </div>
+                <div className="col-md-4">
+                  <Form.Group className="mt-3">
+                    <Form.Label>Năm sản xuất</Form.Label>
+                    <Form.Control
+                      required
+                      type="number"
+                      value={car.origin}
+                      name="origin"
+                      readOnly
+                    />
+                  </Form.Group>
+                </div>
+                <div className="col-md-4">
+                  <Form.Group className="mt-3">
+                    <Form.Label>Số cửa</Form.Label>
+                    <Form.Control
+                      required
+                      type="number"
+                      value={car.door}
+                      name="door"
+                      readOnly
+                    />
+                  </Form.Group>
+                </div>
+                <div className="col-md-4">
+                  <Form.Group className="mt-3">
+                    <Form.Label>Số ghế ngồi</Form.Label>
+                    <Form.Control
+                      required
+                      type="number"
+                      value={car.seat}
+                      name="seat"
+                      readOnly
+                    />
+                  </Form.Group>
+                </div>
+                <div className="col-md-4">
+                  <Form.Group className="mt-3">
+                    <Form.Label>Hộp số</Form.Label>
+                    <Form.Control
+                      required
+                      type="text"
+                      value={car.gear}
+                      name="gear"
+                      readOnly
+                    />
+                  </Form.Group>
+                </div>
+                <div className="col-md-4">
+                  <Form.Group className="mt-3">
+                    <Form.Label>Dung tích xe</Form.Label>
+                    <Form.Control
+                      required
+                      type="text"
+                      value={car.capacity}
+                      name="capacity"
+                      readOnly
+                    />
+                  </Form.Group>
+                </div>
+                <div className="col-md-4">
+                  <Form.Group className="mt-3">
+                    <Form.Label>Số Kilomet đã đi</Form.Label>
+                    <Form.Control
+                      required
+                      type="number"
+                      value={car.kilometer}
+                      name="kilometer"
+                      readOnly
+                    />
+                  </Form.Group>
+                </div>
+                <div className="col-md-4">
+                  <Form.Group className="mt-3">
+                    <Form.Label>Model</Form.Label>
+                    <Form.Control
+                      required
+                      type="text"
+                      value={car.model}
+                      name="model"
+                      readOnly
+                    />
+                  </Form.Group>
+                </div>
+                <div className="col-md-4">
+                  <Form.Group className="mt-3">
+                    <Form.Label>Màu nội thất</Form.Label>
+                    <Form.Control
+                      required
+                      type="text"
+                      value={car.inColor}
+                      name="inColor"
+                      readOnly
+                    />
+                  </Form.Group>
+                </div>
+                <div className="col-md-4">
+                  <Form.Group className="mt-3">
+                    <Form.Label>Màu ngoại thất</Form.Label>
+                    <Form.Control
+                      required
+                      type="text"
+                      value={car.outColor}
+                      name="outColor"
+                      readOnly
+                    />
+                  </Form.Group>
+                </div>
+              </div>
+            </div>
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={handleCloseInfor}>
@@ -577,328 +652,389 @@ export default function ManageCar() {
           </Modal.Footer>
         </Form>
       </Modal>
-      <Modal show={showUpdate} onHide={handleCloseUpdate} backdrop="static">
-        <Form noValidate>
+
+      <Modal
+        show={showUpdate}
+        onHide={handleCloseUpdate}
+        backdrop="static"
+        size="lg"
+      >
+        <Form onSubmit={handleUpdateCar} noValidate>
           <Modal.Header closeButton>
-            <Modal.Title> Cập nhật thông tin xe</Modal.Title>
+            <Modal.Title>Cập nhật thông tin xe</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <Form.Group className="mt-4">
-              <Form.Label>Tên xe</Form.Label>
-              <Form.Control
-                required
-                type="text"
-                value={car.name}
-                name="name"
-                onChange={onChange}
-              />
-            </Form.Group>
-            <Form.Group className="mt-4">
-              <Form.Label>Mô tả</Form.Label>
-              <Form.Control
-                required
-                type="text"
-                value={car.description}
-                name="description"
-                onChange={onChange}
-              />
-            </Form.Group>
-            <Form.Group className="mt-3">
-              <Form.Label>Nhãn hiệu</Form.Label>
-              <Form.Control
-                type="text"
-                rows={4}
-                value={car.brand}
-                name="brand"
-                onChange={onChange}
-              />
-            </Form.Group>
-
-            <Form.Group className="mt-3">
-              <Form.Label>Dòng xe</Form.Label>
-              <Form.Control
-                type="text"
-                rows={4}
-                value={car.type}
-                name="type"
-                onChange={onChange}
-              />
-            </Form.Group>
-            <Form.Group className="mt-3">
-              <Form.Label>Năm sản xuất</Form.Label>
-              <Form.Control
-                type="text"
-                rows={4}
-                value={car.origin}
-                name="origin"
-                onChange={onChange}
-              />
-            </Form.Group>
-            <Form.Group className="mt-3">
-              <Form.Label>Số cửa</Form.Label>
-              <Form.Control
-                type="text"
-                rows={4}
-                value={car.door}
-                name="door"
-                onChange={onChange}
-              />
-            </Form.Group>
-            <Form.Group className="mt-3">
-              <Form.Label>Số ghế ngồi</Form.Label>
-              <Form.Control
-                type="text"
-                rows={4}
-                value={car.seat}
-                name="seat"
-                onChange={onChange}
-              />
-            </Form.Group>
-            <Form.Group className="mt-3">
-              <Form.Label>Hộp số</Form.Label>
-              <Form.Control
-                type="text"
-                rows={4}
-                value={car.gear}
-                name="gear"
-                onChange={onChange}
-              />
-            </Form.Group>
-            <Form.Group className="mt-3">
-              <Form.Label>Dung tích xe</Form.Label>
-              <Form.Control
-                type="text"
-                rows={4}
-                value={car.capacity}
-                name="capacity"
-                onChange={onChange}
-              />
-            </Form.Group>
-            <Form.Group className="mt-3">
-              <Form.Label>Số Kilomet đã đi</Form.Label>
-              <Form.Control
-                type="text"
-                rows={4}
-                value={car.kilometer}
-                name="kilometer"
-                onChange={onChange}
-              />
-            </Form.Group>
-            <Form.Group className="mt-3">
-              <Form.Label>Model</Form.Label>
-              <Form.Control
-                required
-                type="text"
-                value={car.model}
-                name="model"
-                onChange={onChange}
-              />
-            </Form.Group>
-            <Form.Group className="mt-3">
-              <Form.Label>Giá</Form.Label>
-              <Form.Control
-                required
-                type="text"
-                value={car.price}
-                name="price"
-                onChange={onChange}
-              />
-            </Form.Group>
-            <Form.Group className="mt-3">
-              <Form.Label>Màu nội thất</Form.Label>
-              <Form.Control
-                required
-                type="text"
-                value={car.inColor}
-                name="inColor"
-                onChange={onChange}
-              />
-            </Form.Group>
-            <Form.Group className="mt-3">
-              <Form.Label>Màu ngoại thất</Form.Label>
-              <Form.Control
-                required
-                type="text"
-                value={car.outColor}
-                name="outColor"
-                onChange={onChange}
-              />
-            </Form.Group>
-            <Form.Group className="mt-3">
-              <Form.Label style={{ marginRight: "3px" }}>Hình ảnh</Form.Label>
-              <br />
-              <input
-                type="file"
-                multiple="true"
-                onChange={(e) => handleOnChangeImage(e)}
-              />
-            </Form.Group>
+            <div className="container">
+              <div className="row">
+                <div className="col-md-6">
+                  <Form.Group className="mt-3">
+                    <Form.Label>Tên xe</Form.Label>
+                    <Form.Control
+                      required
+                      type="text"
+                      value={car.name}
+                      name="name"
+                      onChange={onChange}
+                    />
+                  </Form.Group>
+                </div>
+                <div className="col-md-6">
+                  <Form.Group className="mt-3">
+                    <Form.Label>Nhãn hiệu</Form.Label>
+                    <Form.Control
+                      type="text"
+                      value={car.brand}
+                      name="brand"
+                      onChange={onChange}
+                    />
+                  </Form.Group>
+                </div>
+                <div className="col-md-6">
+                  <Form.Group className="mt-3">
+                    <Form.Label>Dòng xe</Form.Label>
+                    <Form.Control
+                      type="text"
+                      value={car.type}
+                      name="type"
+                      onChange={onChange}
+                    />
+                  </Form.Group>
+                </div>
+                <div className="col-md-6">
+                  <Form.Group className="mt-3">
+                    <Form.Label>Giá</Form.Label>
+                    <Form.Control
+                      required
+                      type="text"
+                      value={car.price}
+                      name="price"
+                      onChange={onChange}
+                    />
+                  </Form.Group>
+                </div>
+                <div className="col-md-12">
+                  <Form.Group className="mt-3">
+                    <Form.Label>Mô tả</Form.Label>
+                    <Form.Control
+                      required
+                      as="textarea"
+                      rows={3}
+                      value={car.description}
+                      name="description"
+                      onChange={onChange}
+                    />
+                  </Form.Group>
+                </div>
+                <div className="col-md-4">
+                  <Form.Group className="mt-3">
+                    <Form.Label>Năm sản xuất</Form.Label>
+                    <Form.Control
+                      type="number"
+                      value={car.origin}
+                      name="origin"
+                      onChange={onChange}
+                    />
+                  </Form.Group>
+                </div>
+                <div className="col-md-4">
+                  <Form.Group className="mt-3">
+                    <Form.Label>Số cửa</Form.Label>
+                    <Form.Control
+                      type="number"
+                      value={car.door}
+                      name="door"
+                      onChange={onChange}
+                    />
+                  </Form.Group>
+                </div>
+                <div className="col-md-4">
+                  <Form.Group className="mt-3">
+                    <Form.Label>Số ghế ngồi</Form.Label>
+                    <Form.Control
+                      type="number"
+                      value={car.seat}
+                      name="seat"
+                      onChange={onChange}
+                    />
+                  </Form.Group>
+                </div>
+                <div className="col-md-4">
+                  <Form.Group className="mt-3">
+                    <Form.Label>Hộp số</Form.Label>
+                    <Form.Control
+                      type="text"
+                      value={car.gear}
+                      name="gear"
+                      onChange={onChange}
+                    />
+                  </Form.Group>
+                </div>
+                <div className="col-md-4">
+                  <Form.Group className="mt-3">
+                    <Form.Label>Dung tích xe</Form.Label>
+                    <Form.Control
+                      type="text"
+                      value={car.capacity}
+                      name="capacity"
+                      onChange={onChange}
+                    />
+                  </Form.Group>
+                </div>
+                <div className="col-md-4">
+                  <Form.Group className="mt-3">
+                    <Form.Label>Số Kilomet đã đi</Form.Label>
+                    <Form.Control
+                      type="number"
+                      value={car.kilometer}
+                      name="kilometer"
+                      onChange={onChange}
+                    />
+                  </Form.Group>
+                </div>
+                <div className="col-md-4">
+                  <Form.Group className="mt-3">
+                    <Form.Label>Model</Form.Label>
+                    <Form.Control
+                      required
+                      type="text"
+                      value={car.model}
+                      name="model"
+                      onChange={onChange}
+                    />
+                  </Form.Group>
+                </div>
+                <div className="col-md-4">
+                  <Form.Group className="mt-3">
+                    <Form.Label>Màu nội thất</Form.Label>
+                    <Form.Control
+                      required
+                      type="text"
+                      value={car.inColor}
+                      name="inColor"
+                      onChange={onChange}
+                    />
+                  </Form.Group>
+                </div>
+                <div className="col-md-4">
+                  <Form.Group className="mt-3">
+                    <Form.Label>Màu ngoại thất</Form.Label>
+                    <Form.Control
+                      required
+                      type="text"
+                      value={car.outColor}
+                      name="outColor"
+                      onChange={onChange}
+                    />
+                  </Form.Group>
+                </div>
+                <div className="col-md-12">
+                  <Form.Group className="mt-3">
+                    <Form.Label style={{ marginRight: "3px" }}>
+                      Hình ảnh
+                    </Form.Label>
+                    <br />
+                    <input
+                      type="file"
+                      multiple
+                      onChange={(e) => handleOnChangeImage(e)}
+                    />
+                  </Form.Group>
+                </div>
+              </div>
+            </div>
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={handleCloseUpdate}>
               Đóng
             </Button>
-            <Button
-              variant="primary"
-              onClick={handleUpdateCar}
-              disabled={isLoading}
-            >
+            <Button variant="primary" disabled={isLoading} type="submit">
               {isLoading && <Spinner animation="border" size="sm" />}
               <span className="mx-2">Cập nhật</span>
             </Button>
           </Modal.Footer>
         </Form>
       </Modal>
-      <Modal show={showAdd} onHide={handleCloseAdd} backdrop="static">
+
+      <Modal show={showAdd} onHide={handleCloseAdd} backdrop="static" size="lg">
         <Form onSubmit={handleAddCar}>
           <Modal.Header closeButton>
             <Modal.Title> Thêm xe mới </Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <Form.Group className="mt-4">
-              <Form.Label>Tên xe</Form.Label>
-              <Form.Control
-                required
-                type="text"
-                name="name"
-                onChange={onChange}
-              />
-            </Form.Group>
-            <Form.Group className="mt-4">
-              <Form.Label>Mô tả</Form.Label>
-              <Form.Control
-                required
-                type="text"
-                name="description"
-                onChange={onChange}
-              />
-            </Form.Group>
-            <Form.Group className="mt-3">
-              <Form.Label>Nhãn hiệu</Form.Label>
-              <Form.Control
-                required
-                type="text"
-                rows={4}
-                name="brand"
-                onChange={onChange}
-              />
-            </Form.Group>
+            <div className="container">
+              <div className="row">
+                <div className="col-md-6">
+                  <Form.Group className="mt-3">
+                    <Form.Label>Tên xe</Form.Label>
+                    <Form.Control
+                      required
+                      type="text"
+                      name="name"
+                      onChange={onChange}
+                    />
+                  </Form.Group>
+                </div>
+                <div className="col-md-6">
+                  <Form.Group className="mt-3">
+                    <Form.Label>Nhãn hiệu</Form.Label>
+                    <Form.Control
+                      required
+                      type="text"
+                      name="brand"
+                      onChange={onChange}
+                    />
+                  </Form.Group>
+                </div>
+                <div className="col-md-6">
+                  <Form.Group className="mt-3">
+                    <Form.Label>Dòng xe</Form.Label>
+                    <Form.Control
+                      required
+                      type="text"
+                      name="type"
+                      onChange={onChange}
+                    />
+                  </Form.Group>
+                </div>
+                <div className="col-md-6">
+                  <Form.Group className="mt-3">
+                    <Form.Label>Giá</Form.Label>
+                    <Form.Control
+                      required
+                      type="text"
+                      name="price"
+                      onChange={onChange}
+                    />
+                  </Form.Group>
+                </div>
+                <div className="col-md-12">
+                  <Form.Group className="mt-3">
+                    <Form.Label>Mô tả</Form.Label>
+                    <Form.Control
+                      required
+                      as="textarea"
+                      rows={3}
+                      name="description"
+                      onChange={onChange}
+                    />
+                  </Form.Group>
+                </div>
 
-            <Form.Group className="mt-3">
-              <Form.Label>Dòng xe</Form.Label>
-              <Form.Control
-                required
-                type="text"
-                rows={4}
-                name="type"
-                onChange={onChange}
-              />
-            </Form.Group>
-            <Form.Group className="mt-3">
-              <Form.Label>Năm sản xuất</Form.Label>
-              <Form.Control
-                required
-                type="text"
-                rows={4}
-                name="origin"
-                onChange={onChange}
-              />
-            </Form.Group>
-            <Form.Group className="mt-3">
-              <Form.Label>Số cửa</Form.Label>
-              <Form.Control
-                required
-                type="text"
-                rows={4}
-                name="door"
-                onChange={onChange}
-              />
-            </Form.Group>
-            <Form.Group className="mt-3">
-              <Form.Label>Số ghế ngồi</Form.Label>
-              <Form.Control
-                required
-                type="text"
-                rows={4}
-                name="seat"
-                onChange={onChange}
-              />
-            </Form.Group>
-            <Form.Group className="mt-3">
-              <Form.Label>Hộp số</Form.Label>
-              <Form.Control
-                required
-                type="text"
-                rows={4}
-                name="gear"
-                onChange={onChange}
-              />
-            </Form.Group>
-            <Form.Group className="mt-3">
-              <Form.Label>Dung tích xe</Form.Label>
-              <Form.Control
-                required
-                type="text"
-                rows={4}
-                name="capacity"
-                onChange={onChange}
-              />
-            </Form.Group>
-            <Form.Group className="mt-3">
-              <Form.Label>Số Kilomet đã đi</Form.Label>
-              <Form.Control
-                required
-                type="text"
-                rows={4}
-                name="kilometer"
-                onChange={onChange}
-              />
-            </Form.Group>
-            <Form.Group className="mt-3">
-              <Form.Label>Model</Form.Label>
-              <Form.Control
-                required
-                type="text"
-                name="model"
-                onChange={onChange}
-              />
-            </Form.Group>
-            <Form.Group className="mt-3">
-              <Form.Label>Giá</Form.Label>
-              <Form.Control
-                required
-                type="text"
-                name="price"
-                onChange={onChange}
-              />
-            </Form.Group>
-            <Form.Group className="mt-3">
-              <Form.Label>Màu nội thất</Form.Label>
-              <Form.Control
-                required
-                type="text"
-                name="inColor"
-                onChange={onChange}
-              />
-            </Form.Group>
-            <Form.Group className="mt-3">
-              <Form.Label>Màu ngoại thất</Form.Label>
-              <Form.Control
-                required
-                type="text"
-                name="outColor"
-                onChange={onChange}
-              />
-            </Form.Group>
-            <Form.Group className="mt-3">
-              <Form.Label style={{ marginRight: "3px" }}>Hình ảnh</Form.Label>
-              <br />
-              <input
-                type="file"
-                onChange={(e) => handleOnChangeImage(e)}
-                multiple="true"
-              />
-            </Form.Group>
+                <div className="col-md-4">
+                  <Form.Group className="mt-3">
+                    <Form.Label>Năm sản xuất</Form.Label>
+                    <Form.Control
+                      required
+                      type="number"
+                      name="origin"
+                      onChange={onChange}
+                    />
+                  </Form.Group>
+                </div>
+                <div className="col-md-4">
+                  <Form.Group className="mt-3">
+                    <Form.Label>Số cửa</Form.Label>
+                    <Form.Control
+                      required
+                      type="number"
+                      name="door"
+                      onChange={onChange}
+                    />
+                  </Form.Group>
+                </div>
+                <div className="col-md-4">
+                  <Form.Group className="mt-3">
+                    <Form.Label>Số ghế ngồi</Form.Label>
+                    <Form.Control
+                      required
+                      type="number"
+                      name="seat"
+                      onChange={onChange}
+                    />
+                  </Form.Group>
+                </div>
+                <div className="col-md-4">
+                  <Form.Group className="mt-3">
+                    <Form.Label>Hộp số</Form.Label>
+                    <Form.Control
+                      required
+                      type="text"
+                      name="gear"
+                      onChange={onChange}
+                    />
+                  </Form.Group>
+                </div>
+                <div className="col-md-4">
+                  <Form.Group className="mt-3">
+                    <Form.Label>Dung tích xe</Form.Label>
+                    <Form.Control
+                      required
+                      type="text"
+                      name="capacity"
+                      onChange={onChange}
+                    />
+                  </Form.Group>
+                </div>
+                <div className="col-md-4">
+                  <Form.Group className="mt-3">
+                    <Form.Label>Số Kilomet đã đi</Form.Label>
+                    <Form.Control
+                      required
+                      type="number"
+                      name="kilometer"
+                      onChange={onChange}
+                    />
+                  </Form.Group>
+                </div>
+                <div className="col-md-4">
+                  <Form.Group className="mt-3">
+                    <Form.Label>Model</Form.Label>
+                    <Form.Control
+                      required
+                      type="text"
+                      name="model"
+                      onChange={onChange}
+                    />
+                  </Form.Group>
+                </div>
+
+                <div className="col-md-4">
+                  <Form.Group className="mt-3">
+                    <Form.Label>Màu nội thất</Form.Label>
+                    <Form.Control
+                      required
+                      type="text"
+                      name="inColor"
+                      onChange={onChange}
+                    />
+                  </Form.Group>
+                </div>
+                <div className="col-md-4">
+                  <Form.Group className="mt-3">
+                    <Form.Label>Màu ngoại thất</Form.Label>
+                    <Form.Control
+                      required
+                      type="text"
+                      name="outColor"
+                      onChange={onChange}
+                    />
+                  </Form.Group>
+                </div>
+                <div className="col-md-12">
+                  <Form.Group className="mt-3">
+                    <Form.Label style={{ marginRight: "3px" }}>
+                      Hình ảnh xe
+                    </Form.Label>
+                    <br />
+                    <input
+                      type="file"
+                      onChange={(e) => handleOnChangeImage(e)}
+                      multiple="true"
+                    />
+                  </Form.Group>
+                </div>
+              </div>
+            </div>
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={handleCloseAdd}>

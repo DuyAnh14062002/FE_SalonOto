@@ -15,7 +15,7 @@ import notificationSound from "../../assets/sounds/notification.mp3";
 import { useSocketContext } from "../../context/SocketContext";
 import telephoneRing from "../../assets/sounds/telephone_ring.mp3";
 import messageApi from "../../apis/message.api";
-import userApi from "../../apis/user.api"
+import userApi from "../../apis/user.api";
 import salonApi from "../../apis/salon.api";
 import appointmentApi from "../../apis/appointment.api";
 import dealerApi from "../../apis/dealer.api";
@@ -27,10 +27,11 @@ export default function Header(props) {
   const soundPhoneRing = new Audio(telephoneRing);
   const { socket } = useSocketContext();
   const [purchasedPackages, setPurchasedPackages] = useState([]);
-  const [statusSalon, setStatusSalon] = useState(false)
+  const [statusSalon, setStatusSalon] = useState(false);
   const userInfo = useSelector((state) => state.userSlice.userInfo);
-  const [numberOfNotificationMessage, setNumberOfNotificationMessage] = useState("")
-  const [numberOfCalender, setNumberOfCalender] = useState([])
+  const [numberOfNotificationMessage, setNumberOfNotificationMessage] =
+    useState("");
+  const [numberOfCalender, setNumberOfCalender] = useState([]);
   const [dataResponseFromVideoCall, setDataResponseFromVideoCall] = useState(
     {}
   );
@@ -46,8 +47,10 @@ export default function Header(props) {
     const res = await appointmentApi.getAllAppointmentUser();
     if (res?.data?.appointments) {
       const appointmentList = res.data.appointments;
-      let number = res.data.appointments.filter((item) => item.status === 0).length
-      setNumberOfCalender(number)
+      let number = res.data.appointments.filter(
+        (item) => item.status === 0
+      ).length;
+      setNumberOfCalender(number);
     }
   };
   useEffect(() => {
@@ -57,27 +60,29 @@ export default function Header(props) {
   const loadingAllUser = async () => {
     let res = await messageApi.getChatingUser();
     if (res?.data?.chattingUsers && res.data.chattingUsers.length > 0) {
-      const numberOfNotificationMessage = res.data.chattingUsers.filter((user) => user.message &&  user.message.conversation_status === false).length
+      const numberOfNotificationMessage = res.data.chattingUsers.filter(
+        (user) => user.message && user.message.conversation_status === false
+      ).length;
       setNumberOfNotificationMessage(numberOfNotificationMessage);
-      }
     }
-   
-    const loading = async() => {
-      let res = await salonApi.getSalonInfor()
-      if(res?.data?.status){
-        setStatusSalon(res.data.status)
-      }
-  }
-    useEffect(() => {
-       loading()
-    },[])
+  };
+
+  const loading = async () => {
+    let res = await salonApi.getSalonInfor();
+    if (res?.data?.status) {
+      setStatusSalon(res.data.status);
+    }
+  };
   useEffect(() => {
-     const salonId = localStorage.getItem("idSalon")
-     if(salonId){
-      localStorage.removeItem("idSalon")
-     }
-  },[])
-  
+    loading();
+  }, []);
+  useEffect(() => {
+    const salonId = localStorage.getItem("idSalon");
+    if (salonId) {
+      localStorage.removeItem("idSalon");
+    }
+  }, []);
+
   useEffect(() => {
     const loading = async () => {
       let res = await purchaseApi.getPurchase();
@@ -86,7 +91,7 @@ export default function Header(props) {
       }
     };
     loading();
-    loadingAllUser()
+    loadingAllUser();
   }, []);
 
   //socket
@@ -128,9 +133,9 @@ export default function Header(props) {
     });
 
     socket?.on("newMessage", () => {
-      toast.success("bạn có một tin nhắn mới")
-      loadingAllUser()
-    })
+      toast.success("bạn có một tin nhắn mới");
+      loadingAllUser();
+    });
     return () => {
       socket?.off("receiveEndCallVideo");
       socket?.off("newMessage");
@@ -140,7 +145,7 @@ export default function Header(props) {
   const fetchAllNotificationUser = async () => {
     try {
       const res = await notificationApi.getAllNotificationUser();
-      console.log("listNotification : ", res)
+      console.log("listNotification : ", res);
       setListNotification(res.data.notifications);
     } catch (error) {
       console.log(error);
@@ -222,24 +227,24 @@ export default function Header(props) {
     }
   };
   const handleNavigateDetail = (id) => {
-     navigate(`/detailProcess/${id}`)
-  }
-  const handleConnection = async(id) => {
-       let res = await dealerApi.updateConnection(id, "accepted")
-       console.log("res connection apcept : ", res)
-       if(res?.data?.status === "success"){
-        toast.success("Kết nối thành công vs Salon")
-       }else{
-        toast.error("Kết nối thất bại")
-       }
-  }
-  console.log("notification : ", listNotification)
+    navigate(`/detailProcess/${id}`);
+  };
+  const handleConnection = async (id) => {
+    let res = await dealerApi.updateConnection(id, "accepted");
+    console.log("res connection apcept : ", res);
+    if (res?.data?.status === "success") {
+      toast.success("Kết nối thành công vs Salon");
+    } else {
+      toast.error("Kết nối thất bại");
+    }
+  };
+  console.log("notification : ", listNotification);
   const handleNavigateHistoryProcess = () => {
-    navigate("/historyTransactionDealer")
-  }
-  const handleNavigateHistoryProcessPaper = () =>{
-    navigate("/historyTransaction")
-  }
+    navigate("/historyTransactionDealer");
+  };
+  const handleNavigateHistoryProcessPaper = () => {
+    navigate("/historyTransaction");
+  };
   const popover = (
     <Popover id="popover-basic">
       <Popover.Header as="h3" className="fw-bold">
@@ -252,15 +257,17 @@ export default function Header(props) {
         >
           {listNotification?.length > 0 ? (
             listNotification.map((notification) => {
-              const timeNotify = new Date(notification.create_at);
-              const timeNow = new Date();
-              const timeDifference = timeNow.getTime() - timeNotify.getTime();
-              const formattedTimeDifference =
-                formatTimeDifference(timeDifference);
+              const formattedTimeDifference = formatTimeDifference(
+                notification.create_at
+              );
               return (
                 <button key={notification.id} className="notify p-2">
-                  {(notification.types === "appointment" || notification.types === "appointment-process" ||
-                    notification.types === "permission" || notification.types === "connection" || notification.types === "updateStage" || notification.types === "process") && (
+                  {(notification.types === "appointment" ||
+                    notification.types === "appointment-process" ||
+                    notification.types === "permission" ||
+                    notification.types === "connection" ||
+                    notification.types === "updateStage" ||
+                    notification.types === "process") && (
                     <div className="d-flex">
                       <img
                         src={
@@ -305,14 +312,48 @@ export default function Header(props) {
                             onClick={() => handleDeleteNotify(notification.id)}
                           ></i>
                         </div>
-                        {(notification?.types === "connection")? (
-                        <div className="connection-box">
-                           <button className="see-process" onClick={() =>handleNavigateDetail(notification.data)}>Xem qui trình</button>
-                           <button className="agree-connection" onClick={() => handleConnection(notification.data)}>Kết nối</button>
-                        </div>
-                      ): ""}
-                        {notification?.types === "updateStage" ? (<button className="see-process" onClick={handleNavigateHistoryProcess}>Xem ngay</button>) : ""}
-                        {notification?.types === "process" ?  (<button className="see-process" onClick={handleNavigateHistoryProcessPaper}>Xem ngay</button>) : ""}
+                        {notification?.types === "connection" ? (
+                          <div className="connection-box">
+                            <button
+                              className="see-process"
+                              onClick={() =>
+                                handleNavigateDetail(notification.data)
+                              }
+                            >
+                              Xem qui trình
+                            </button>
+                            <button
+                              className="agree-connection"
+                              onClick={() =>
+                                handleConnection(notification.data)
+                              }
+                            >
+                              Kết nối
+                            </button>
+                          </div>
+                        ) : (
+                          ""
+                        )}
+                        {notification?.types === "updateStage" ? (
+                          <button
+                            className="see-process"
+                            onClick={handleNavigateHistoryProcess}
+                          >
+                            Xem ngay
+                          </button>
+                        ) : (
+                          ""
+                        )}
+                        {notification?.types === "process" ? (
+                          <button
+                            className="see-process"
+                            onClick={handleNavigateHistoryProcessPaper}
+                          >
+                            Xem ngay
+                          </button>
+                        ) : (
+                          ""
+                        )}
                       </div>
                     </div>
                   )}
@@ -448,27 +489,30 @@ export default function Header(props) {
         <li className="link">
           <Link to={path.news}>Tin tức</Link>
         </li>
-        {((purchasedPackages && purchasedPackages.length > 0) || statusSalon === "success") && (
+        {((purchasedPackages && purchasedPackages.length > 0) ||
+          statusSalon === "success") && (
           <li className="link">
             <Link to={path.adminSalon}>Quản lý</Link>
           </li>
         )}
-
       </ul>
       {/* <div className="search">
         <input type="text" placeholder="Tìm kiếm" />
       </div> */}
       <div className="container-box">
-      <Link className="link position-relative" to="/appointment" >
-          <i class="fa-solid fa-calendar-days" style={{color: "white", fontSize: "25px", marginRight: "25px"}}></i>
+        <Link className="link position-relative" to="/appointment">
+          <i
+            class="fa-solid fa-calendar-days"
+            style={{ color: "white", fontSize: "25px", marginRight: "25px" }}
+          ></i>
           <span
-          class="badge rounded-pill badge-notification bg-danger position-absolute"
-          style={{ top: "-9px", left: "18px" }}
-        >
-          {numberOfCalender > 0 && numberOfCalender}
-        </span>
-       </Link>
-      <OverlayTrigger
+            class="badge rounded-pill badge-notification bg-danger position-absolute"
+            style={{ top: "-9px", left: "18px" }}
+          >
+            {numberOfCalender > 0 && numberOfCalender}
+          </span>
+        </Link>
+        <OverlayTrigger
           trigger="click"
           placement="bottom"
           overlay={popover}
@@ -487,14 +531,18 @@ export default function Header(props) {
             </span>
           </div>
         </OverlayTrigger>
-        <div className="messenger position-relative" onClick={HandleMessage} style={{marginLeft : "15px"}}>
-          <i class="fa-brands fa-facebook-messenger"></i>
-        <span
-          class="badge rounded-pill badge-notification bg-danger position-absolute"
-          style={{ top: "-6px", left: "34px" }}
+        <div
+          className="messenger position-relative"
+          onClick={HandleMessage}
+          style={{ marginLeft: "15px" }}
         >
-          {numberOfNotificationMessage > 0 && numberOfNotificationMessage}
-        </span>
+          <i class="fa-brands fa-facebook-messenger"></i>
+          <span
+            class="badge rounded-pill badge-notification bg-danger position-absolute"
+            style={{ top: "-6px", left: "34px" }}
+          >
+            {numberOfNotificationMessage > 0 && numberOfNotificationMessage}
+          </span>
         </div>
         <Link
           to={path.profile}
@@ -568,7 +616,8 @@ export default function Header(props) {
         <li className="link">
           <Link to={path.news}>Tin tức</Link>
         </li>
-        {((purchasedPackages && purchasedPackages.length > 0) || statusSalon === "success") && (
+        {((purchasedPackages && purchasedPackages.length > 0) ||
+          statusSalon === "success") && (
           <li className="link">
             <Link to={path.adminSalon}>Quản lý</Link>
           </li>
@@ -581,16 +630,19 @@ export default function Header(props) {
         </span>
       </div> */}
       <div className="container-box">
-      <Link className="link position-relative" to="/appointment">
-          <i class="fa-solid fa-calendar-days"  style={{color: "white", fontSize: "25px", marginRight: "25px"}}></i>
+        <Link className="link position-relative" to="/appointment">
+          <i
+            class="fa-solid fa-calendar-days"
+            style={{ color: "white", fontSize: "25px", marginRight: "25px" }}
+          ></i>
           <span
-          class="badge rounded-pill badge-notification bg-danger position-absolute"
-          style={{ top: "-9px", left: "18px" }}
-        >
-          {numberOfCalender > 0 && numberOfCalender}
-        </span>
-       </Link>
-      <OverlayTrigger
+            class="badge rounded-pill badge-notification bg-danger position-absolute"
+            style={{ top: "-9px", left: "18px" }}
+          >
+            {numberOfCalender > 0 && numberOfCalender}
+          </span>
+        </Link>
+        <OverlayTrigger
           trigger="click"
           placement="bottom"
           overlay={popover}
@@ -609,14 +661,18 @@ export default function Header(props) {
             </span>
           </div>
         </OverlayTrigger>
-        <div className="messenger position-relative" onClick={HandleMessage} style={{marginLeft : "15px"}}>
+        <div
+          className="messenger position-relative"
+          onClick={HandleMessage}
+          style={{ marginLeft: "15px" }}
+        >
           <i class="fa-brands fa-facebook-messenger"></i>
           <span
-          class="badge rounded-pill badge-notification bg-danger position-absolute"
-          style={{ top: "-6px", left: "34px" }}
-        >
-           {numberOfNotificationMessage > 0 && numberOfNotificationMessage}
-        </span>
+            class="badge rounded-pill badge-notification bg-danger position-absolute"
+            style={{ top: "-6px", left: "34px" }}
+          >
+            {numberOfNotificationMessage > 0 && numberOfNotificationMessage}
+          </span>
         </div>
         <Link
           to={path.profile}

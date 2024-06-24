@@ -91,7 +91,7 @@ export default function ManageBuyMaintenance() {
   const handleCloseAdd = () => {
     setShowAdd(false);
   };
-  const handleShowAdd = (car) => {
+  const handleShowAdd = () => {
     const allAccessory = accessory;
     const newAllAccessory = allAccessory.map((item) => {
       return { ...item, checked: false };
