@@ -5,6 +5,7 @@ import "./HomePageSalon.scss";
 import FooterSalon from "../../components/Footer/FooterSalon";
 import { useParams } from "react-router-dom";
 import salonApi from "../../apis/salon.api";
+import carApi from "../../apis/car.api";
 export default function HomePageSalon() {
   const navigate = useNavigate();
   const params = useParams();
@@ -14,6 +15,16 @@ export default function HomePageSalon() {
     navigate(`/detail-car/${id}`);
   };
   const [salon, setSalon] = useState({});
+  const loadAllCarOfSalon = async () => {
+     try{
+         let res = await carApi.getAllCarOfSalon(params.id,1,10)
+         if(res?.data?.cars){
+           setListCar(res.data.cars)
+         }
+     }catch(e){
+      console.log(e)
+     }
+  }
   useEffect(() => {
     if (params.id) {
       localStorage.setItem("idSalon", params.id);
@@ -25,6 +36,7 @@ export default function HomePageSalon() {
         localStorage.setItem("userIdSalon", res.data.salon.user_id);
       }
     };
+    loadAllCarOfSalon()
     loading();
   }, [params]);
   return (

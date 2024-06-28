@@ -135,11 +135,11 @@ export default function CarPostDetail() {
               </div>
               <div className="price">{post.price} đ </div>
               <div className="address">
-                <i class="fa-solid fa-location-dot">{post.address}</i>
+                <i class="fa-solid fa-location-dot"></i> {post.address}
               </div>
               <div className="time-post">
                 {" "}
-                <i class="fa-regular fa-clock"></i> Đăng 5 giây trước
+                <i class="fa-solid fa-clock"></i> Đăng 5 giây trước
               </div>
             </div>
             <div className="car-info-detail">

@@ -21,6 +21,11 @@ const carApi = {
   getAllCar(page = 1, per_page = 4, q = "") {
     return http.get(`/cars?page=${page}&&per_page=${per_page}&&q=${q}`);
   },
+  getAllCarOfSalon(salonId, page = 1, per_page = 4, q = "", sort) {
+    return http.get(
+      `/cars/salon/${salonId}?page=${page}&&per_page=${per_page}&&q=${q}&&sort=${sort}`
+    );
+  },
   getDetailCar(id) {
     return http.get(`cars/${id}`);
   },

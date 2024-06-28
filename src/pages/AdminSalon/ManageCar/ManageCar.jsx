@@ -47,10 +47,11 @@ export default function ManageCar() {
       setPermission(res.data.profile.permissions);
     }
   };
-  const fetchAllCars = async (page, search) => {
-    let res = await carApi.getAllCar(page, LIMIT, search);
-    if (res?.data?.cars?.car) {
-      setCars(res?.data?.cars?.car);
+  const fetchAllCars = async (salonId,page, search) => {
+    let res = await carApi.getAllCarOfSalon(salonId,page, LIMIT, search);
+    console.log("res : ", res)
+    if (res?.data?.cars) {
+      setCars(res?.data?.cars);
       setTotalPage(res?.data?.total_page);
     }
   };
@@ -71,8 +72,10 @@ export default function ManageCar() {
     }
   };
   useEffect(() => {
-    fetchAllCars(page, search);
-  }, [page, search]);
+    if(salon?.salon_id){
+      fetchAllCars(salon.salon_id, page, search);
+    }
+  }, [page, search, salon]);
   useEffect(() => {
     loadingUser();
     fetchDataSalon();
@@ -186,7 +189,7 @@ export default function ManageCar() {
     setIsLoading(true);
     let res = await carApi.updateCar(car.car_id, form);
     fetchDataSalon();
-    fetchAllCars(page, search);
+    fetchAllCars(salon.salon_id, page, search);
     handleCloseUpdate();
     if (res?.data?.status && res.data.status === "success") {
       toast.success("Cập nhật thông tin xe thành công");
@@ -260,7 +263,7 @@ export default function ManageCar() {
     let res = await carApi.addCar(form);
     console.log("res add car: ", res);
     fetchDataSalon();
-    fetchAllCars(page, search);
+    fetchAllCars(salon.salon_id, page, search);
     handleCloseAdd();
     if (res?.data?.status && res.data.status === "success") {
       setCar({});
@@ -274,7 +277,7 @@ export default function ManageCar() {
   const handleDelete = async () => {
     let res = await carApi.deleteCar(car.car_id, salon.salon_id);
     fetchDataSalon();
-    fetchAllCars(page, search);
+    fetchAllCars(salon.salon_id, page, search);
     handleCloseDelete();
     if (res?.data?.status && res.data.status === "success") {
       toast.success("Xóa thông tin xe thành công");
