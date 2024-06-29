@@ -178,6 +178,17 @@ export default function HeaderSalon() {
       console.log(e);
     }
   };
+  const updateReadNotification = async (id) => {
+    try {
+      await notificationApi.updateNotificationSalon({
+        id: id,
+        salonId: salon.salon_id,
+      });
+      fetchAllNotificationSalon();
+    } catch (error) {
+      console.log(error);
+    }
+  };
   const popover = (
     <Popover id="popover-basic">
       <Popover.Header as="h3" className="fw-bold">
@@ -195,78 +206,177 @@ export default function HeaderSalon() {
               );
               return (
                 <button key={notification.id} className="notify p-2">
-                  <div className="d-flex align-items-center">
-                    <img
-                      src={
-                        notification.avatar ||
-                        "https://scontent.fsgn2-5.fna.fbcdn.net/v/t1.30497-1/143086968_2856368904622192_1959732218791162458_n.png?_nc_cat=1&ccb=1-7&_nc_sid=5f2048&_nc_ohc=BCnRaxZCfRkAX8a1rU3&_nc_ht=scontent.fsgn2-5.fna&oh=00_AfD29zpAHOxBSwhZkEnW47vMd-hoaCLBDDjywB4cGeF7YA&oe=662C6938"
-                      }
-                      alt=""
-                      className="rounded-circle"
-                      style={{ width: "56px", height: "56px" }}
-                      onClick={() =>
-                        handleDetailNotification(
-                          notification.id,
-                          notification.data
-                        )
-                      }
-                    />
-                    <div style={{ marginLeft: "10px" }}>
-                      <div
-                        className="notify-title "
-                        style={notification.read ? {} : { fontWeight: "500" }}
+                  {(notification.types === "appointment" ||
+                    notification.types === "appointment-process") && (
+                    <div className="d-flex align-items-center">
+                      <img
+                        src={
+                          notification.avatar ||
+                          "https://scontent.fsgn2-5.fna.fbcdn.net/v/t1.30497-1/143086968_2856368904622192_1959732218791162458_n.png?_nc_cat=1&ccb=1-7&_nc_sid=5f2048&_nc_ohc=BCnRaxZCfRkAX8a1rU3&_nc_ht=scontent.fsgn2-5.fna&oh=00_AfD29zpAHOxBSwhZkEnW47vMd-hoaCLBDDjywB4cGeF7YA&oe=662C6938"
+                        }
+                        alt=""
+                        className="rounded-circle"
+                        style={{ width: "56px", height: "56px" }}
                         onClick={() =>
                           handleDetailNotification(
                             notification.id,
                             notification.data
                           )
                         }
-                      >
-                        {notification.description}
-                      </div>
-                      <div
-                        className={
-                          notification.read
-                            ? "text-muted d-flex justify-content-between align-items-center"
-                            : "text-primary d-flex justify-content-between align-items-center"
-                        }
-                        style={notification.read ? {} : { fontWeight: "500" }}
-                      >
-                        <span>{formattedTimeDifference}</span>
-
-                        <i
-                          class="fa-regular fa-trash-can text-danger mx-2"
-                          title="Xóa thông báo"
-                          onClick={() => handleDeleteNotify(notification.id)}
-                        ></i>
-                      </div>
-                      {notification?.types === "request" ? (
-                        <div className="Request-box">
-                          <button
-                            className="block-user"
-                            onClick={() =>
-                              handleBlockUser(
-                                notification?.data,
-                                notification?.id
-                              )
-                            }
-                          >
-                            Chặn
-                          </button>
-                          <button
-                            className="see-detail"
-                            onClick={() =>
-                              handleNavigateDetail(notification.data)
-                            }
-                          >
-                            Xem chi tiết
-                          </button>
+                      />
+                      <div style={{ marginLeft: "10px" }}>
+                        <div
+                          className="notify-title "
+                          style={notification.read ? {} : { fontWeight: "500" }}
+                          onClick={() =>
+                            handleDetailNotification(
+                              notification.id,
+                              notification.data
+                            )
+                          }
+                        >
+                          {notification.description}
                         </div>
-                      ) : (
-                        ""
-                      )}
+                        <div
+                          className={
+                            notification.read
+                              ? "text-muted d-flex justify-content-between align-items-center"
+                              : "text-primary d-flex justify-content-between align-items-center"
+                          }
+                          style={notification.read ? {} : { fontWeight: "500" }}
+                        >
+                          <span>{formattedTimeDifference}</span>
+
+                          <i
+                            class="fa-regular fa-trash-can text-danger mx-2"
+                            title="Xóa thông báo"
+                            onClick={() => handleDeleteNotify(notification.id)}
+                          ></i>
+                        </div>
+                      </div>
                     </div>
-                  </div>
+                  )}
+                  {notification.types === "request" && (
+                    <div className="d-flex align-items-center">
+                      <img
+                        src={
+                          notification.avatar ||
+                          "https://scontent.fsgn2-5.fna.fbcdn.net/v/t1.30497-1/143086968_2856368904622192_1959732218791162458_n.png?_nc_cat=1&ccb=1-7&_nc_sid=5f2048&_nc_ohc=BCnRaxZCfRkAX8a1rU3&_nc_ht=scontent.fsgn2-5.fna&oh=00_AfD29zpAHOxBSwhZkEnW47vMd-hoaCLBDDjywB4cGeF7YA&oe=662C6938"
+                        }
+                        alt=""
+                        className="rounded-circle"
+                        style={{ width: "56px", height: "56px" }}
+                        onClick={() =>
+                          handleDetailNotification(
+                            notification.id,
+                            notification.data
+                          )
+                        }
+                      />
+                      <div style={{ marginLeft: "10px" }}>
+                        <div
+                          className="notify-title "
+                          style={notification.read ? {} : { fontWeight: "500" }}
+                          onClick={() =>
+                            handleDetailNotification(
+                              notification.id,
+                              notification.data
+                            )
+                          }
+                        >
+                          {notification.description}
+                        </div>
+                        <div
+                          className={
+                            notification.read
+                              ? "text-muted d-flex justify-content-between align-items-center"
+                              : "text-primary d-flex justify-content-between align-items-center"
+                          }
+                          style={notification.read ? {} : { fontWeight: "500" }}
+                        >
+                          <span>{formattedTimeDifference}</span>
+
+                          <i
+                            class="fa-regular fa-trash-can text-danger mx-2"
+                            title="Xóa thông báo"
+                            onClick={() => handleDeleteNotify(notification.id)}
+                          ></i>
+                        </div>
+                        {notification?.types === "request" ? (
+                          <div className="Request-box">
+                            <button
+                              className="block-user"
+                              onClick={() => {
+                                handleBlockUser(
+                                  notification?.data,
+                                  notification?.id
+                                );
+                                updateReadNotification(notification.id);
+                              }}
+                            >
+                              Chặn
+                            </button>
+                            <button
+                              className="see-detail"
+                              onClick={() => {
+                                handleNavigateDetail(notification.data);
+                                updateReadNotification(notification.id);
+                              }}
+                            >
+                              Xem chi tiết
+                            </button>
+                          </div>
+                        ) : (
+                          ""
+                        )}
+                      </div>
+                    </div>
+                  )}
+                  {notification.types === "salon-payment" && (
+                    <div className="d-flex align-items-center">
+                      <img
+                        src={
+                          notification.avatar ||
+                          "https://scontent.fsgn2-5.fna.fbcdn.net/v/t1.30497-1/143086968_2856368904622192_1959732218791162458_n.png?_nc_cat=1&ccb=1-7&_nc_sid=5f2048&_nc_ohc=BCnRaxZCfRkAX8a1rU3&_nc_ht=scontent.fsgn2-5.fna&oh=00_AfD29zpAHOxBSwhZkEnW47vMd-hoaCLBDDjywB4cGeF7YA&oe=662C6938"
+                        }
+                        alt=""
+                        className="rounded-circle"
+                        style={{ width: "56px", height: "56px" }}
+                        onClick={() => {
+                          updateReadNotification(notification.id);
+                          navigate("/adminSalon/managePayment");
+                        }}
+                      />
+                      <div style={{ marginLeft: "10px" }}>
+                        <div
+                          className="notify-title "
+                          style={notification.read ? {} : { fontWeight: "500" }}
+                          onClick={() => {
+                            updateReadNotification(notification.id);
+                            navigate("/adminSalon/managePayment");
+                          }}
+                        >
+                          {notification.description}
+                        </div>
+                        <div
+                          className={
+                            notification.read
+                              ? "text-muted d-flex justify-content-between align-items-center"
+                              : "text-primary d-flex justify-content-between align-items-center"
+                          }
+                          style={notification.read ? {} : { fontWeight: "500" }}
+                        >
+                          <span>{formattedTimeDifference}</span>
+
+                          <i
+                            class="fa-regular fa-trash-can text-danger mx-2"
+                            title="Xóa thông báo"
+                            onClick={() => handleDeleteNotify(notification.id)}
+                          ></i>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </button>
               );
             })
@@ -294,17 +404,18 @@ export default function HeaderSalon() {
 
     handleCloseCall();
   };
+  console.log("listNotification : ", listNotification);
   return (
     <div className="container-header">
       <div className="back-home">
         <i className="fa-solid fa-arrow-left" onClick={backListSalon}></i>
       </div>
-      <div
+      {/* <div
         className="logo"
         style={{
           backgroundImage: `url(https://bizweb.dktcdn.net/100/437/558/themes/836129/assets/logo.png?1699270212851.jpg)`,
         }}
-      ></div>
+      ></div> */}
       <div className="main-menu">
         <ul className="d-flex align-items-center">
           <Link to={`/salonOto/${idSalon}`} className="item-menu">
@@ -312,11 +423,13 @@ export default function HeaderSalon() {
           </Link>
           <Link className="item-menu">Giới thiệu</Link>
           <Link className="item-menu">Tin tức</Link>
-          <Link className="item-menu">Dịch vụ</Link>
+          <Link className="item-menu" to={path.accessory}>
+            Phụ tùng
+          </Link>
           <Link className="item-menu" to={path.listMaintenance}>
             Bảo dưỡng
           </Link>
-          <Link to="/salonOto/contact" className="item-menu">
+          <Link to={path.contact} className="item-menu">
             Liên hệ
           </Link>
           {userIdSalon === userInfor?.user_id ? (

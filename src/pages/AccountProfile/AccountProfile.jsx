@@ -174,6 +174,9 @@ const AccountProfile = (props) => {
   const handleShowHistory = () => {
     navigate(`${path.historyTransaction}`);
   };
+  const handleShowHistoryPayment = () => {
+    navigate(`${path.historyPayment}`);
+  };
   const handleShowPostSell = () => {
     navigate(`${path.postSellCar}`);
   };
@@ -412,7 +415,21 @@ const AccountProfile = (props) => {
                         ></i>
                         Xem lịch sử giao dịch
                       </Button>
-
+                      <Button
+                        className="mt-3 btn-profile function-additional"
+                        type="button"
+                        onClick={handleShowHistoryPayment}
+                        style={{
+                          backgroundColor: "#b90d86",
+                          border: "none",
+                        }}
+                      >
+                        <i
+                          class="fa-solid fa-clock-rotate-left"
+                          style={{ marginRight: "5px" }}
+                        ></i>
+                        Xem lịch sử thanh toán
+                      </Button>
                       <Button
                         className="mt-3 btn-profile function-additional"
                         type="button"

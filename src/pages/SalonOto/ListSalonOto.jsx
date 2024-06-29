@@ -16,7 +16,7 @@ export default function ListSalonOto() {
   const NavigateSalon = (id) => {
     navigate(`/salonOto/${id}`);
   };
-  const profile = JSON.parse(localStorage.getItem("profile"))
+  const profile = JSON.parse(localStorage.getItem("profile"));
   const handleSearch = (e) => {
     setSearch(e.target.value);
     const searchValue = e.target.value;
@@ -36,7 +36,7 @@ export default function ListSalonOto() {
   useEffect(() => {
     loading(page, search);
   }, [page, search]);
-  console.log("profile : ", profile)
+  console.log("profile : ", profile);
   return (
     <div>
       <Header otherPage={true} />
@@ -54,7 +54,7 @@ export default function ListSalonOto() {
                       style={{
                         width: "80px",
                         fontWeight: "bold",
-                        color: "#0015ff",
+                        color: "#6a6a6c",
                       }}
                     >
                       Tìm kiếm:
@@ -80,7 +80,7 @@ export default function ListSalonOto() {
               {listSalon &&
                 listSalon.length > 0 &&
                 listSalon.map((salon) => {
-                  console.log("salon : ", salon)
+                  console.log("salon : ", salon);
                   return (
                     <div
                       key={salon.salon_id}
@@ -98,7 +98,11 @@ export default function ListSalonOto() {
                           className="image-container"
                           style={{ flexShrink: 0 }}
                         >
-                          {profile.user_id === salon.user_id ? (<span class="highlight-label">Sở hữu</span>) : ""}
+                          {profile.user_id === salon.user_id ? (
+                            <span class="highlight-label">Sở hữu</span>
+                          ) : (
+                            ""
+                          )}
                           <div
                             className="image-salon"
                             style={{

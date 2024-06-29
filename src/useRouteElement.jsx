@@ -46,19 +46,21 @@ import ManageBuyCar from "./pages/AdminSalon/ManageBuyCar";
 import ManageBuyMaintenance from "./pages/AdminSalon/ManageBuyMaintenance";
 import ManageAccessory from "./pages/AdminSalon/ManageAccessory";
 import HistoryTransaction from "./components/HistoryTransaction/HistoryTransaction";
-import CarPost from "./components/CarPost";
 import PostSellCar from "./components/PostSellCar";
 import CarPostDetail from "./components/CarPostDetail";
 import ManageProcessDealer from "./pages/AdminSalon/ManageProcessDealer";
 import DetailProcess from "./components/DetailProcess/DetailProcess";
 import HistoryTransactionDealer from "./components/HistoryTransactionDealer";
 import SalonAppointment from "./components/SalonAppointment/SalonAppointment";
-import ManagaAccessoryTransaction from "./pages/AdminSalon/ManagaAccessoryTransaction/ManagaAccessoryTransaction";
+import ManageAccessoryTransaction from "./pages/AdminSalon/ManagaAccessoryTransaction/ManagaAccessoryTransaction";
 import ManagePromotion from "./pages/ManagePromotion";
 import PromotionDetail from "./components/PromotionDetail";
 import ListAllPromotion from "./components/ListAllPromotion";
 import ManageSalonAdmin from "./pages/ManageSalonAdmin/ManageSalonAdmin";
 import ManageUserAdmin from "./pages/ManageUserAdmin";
+import Accessory from "./pages/SalonOto/Accessory";
+import ManagePayment from "./pages/AdminSalon/ManagePayment";
+import HistoryPayment from "./components/HistoryPayment";
 
 function ProtectedRoute() {
   const isAuthenticated = useSelector(
@@ -242,21 +244,33 @@ const router = createBrowserRouter([
       },
       {
         path: path.manageAccessoryTransaction,
-        element: <ManagaAccessoryTransaction />,
+        element: <ManageAccessoryTransaction />,
       },
       {
         path: path.managePromotion,
         element: <ManagePromotion />,
       },
+      {
+        path: path.managePayment,
+        element: <ManagePayment />,
+      },
     ],
+  },
+  {
+    path: path.historyPayment,
+    element: <HistoryPayment />,
   },
   {
     path: path.booking,
     element: <Booking />,
   },
   {
-    path: "salonOto/contact",
+    path: path.contact,
     element: <Contact />,
+  },
+  {
+    path: path.accessory,
+    element: <Accessory />,
   },
   {
     path: path.loginAdmin,
@@ -271,10 +285,7 @@ const router = createBrowserRouter([
     path: path.callBackFacebook,
     element: <LoginSocialFaceBook />,
   },
-  {
-    path: "*",
-    element: <NotFound />,
-  },
+
   {
     path: path.listSalon,
     element: <ListSalonOto />,
@@ -316,10 +327,6 @@ const router = createBrowserRouter([
     element: <HistoryTransaction />,
   },
   {
-    path: path.postCar,
-    element: <CarPost />,
-  },
-  {
     path: path.postSellCar,
     element: <PostSellCar />,
   },
@@ -346,6 +353,10 @@ const router = createBrowserRouter([
   {
     path: path.listPromotion,
     element: <ListAllPromotion />,
+  },
+  {
+    path: "*",
+    element: <NotFound />,
   },
 ]);
 

@@ -5,7 +5,6 @@ import Button from "react-bootstrap/Button";
 import "./ModalBuyPackage.scss";
 import { useState } from "react";
 import paymentApi from "../../apis/payment.api";
-import { Navigate } from "react-router";
 import { toast } from "react-toastify";
 export default function ModalBuyPackage(props) {
   const [activeZaloPayment, setActiveZaloPayment] = useState(false);

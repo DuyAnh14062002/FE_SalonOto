@@ -240,7 +240,7 @@ export default function ManageFeature() {
                   onChange={onChange}
                 />
               </Form.Group>
-              <Form.Group md="4">
+              <Form.Group md="4" className="mt-3">
                 <Form.Label>KeyMap</Form.Label>
                 <Form.Control
                   required
@@ -287,7 +287,7 @@ export default function ManageFeature() {
                   onChange={onChange}
                 />
               </Form.Group>
-              <Form.Group md="4">
+              <Form.Group md="4" className="mt-3">
                 <Form.Label>KeyMap</Form.Label>
                 <Form.Control
                   required

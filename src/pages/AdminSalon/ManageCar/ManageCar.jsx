@@ -31,6 +31,7 @@ export default function ManageCar() {
   const [totalPage, setTotalPage] = useState(0);
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
+  const [sort, setSort] = useState("");
 
   const handleSearch = (e) => {
     setSearch(e.target.value);
@@ -47,9 +48,9 @@ export default function ManageCar() {
       setPermission(res.data.profile.permissions);
     }
   };
-  const fetchAllCars = async (salonId,page, search) => {
-    let res = await carApi.getAllCarOfSalon(salonId,page, LIMIT, search);
-    console.log("res : ", res)
+  const fetchAllCars = async (salonId, page, search, sort) => {
+    let res = await carApi.getAllCarOfSalon(salonId, page, LIMIT, search, sort);
+    console.log("res : ", res);
     if (res?.data?.cars) {
       setCars(res?.data?.cars);
       setTotalPage(res?.data?.total_page);
@@ -72,14 +73,25 @@ export default function ManageCar() {
     }
   };
   useEffect(() => {
-    if(salon?.salon_id){
-      fetchAllCars(salon.salon_id, page, search);
+    if (salon?.salon_id) {
+      fetchAllCars(salon.salon_id, page, search, sort);
     }
-  }, [page, search, salon]);
+  }, [page, search, salon, sort]);
   useEffect(() => {
     loadingUser();
     fetchDataSalon();
   }, []);
+  const handleSortChange = (e) => {
+    const selectedSort = e.target.value;
+    if (selectedSort === "asc") {
+      setSort("price");
+    } else if (selectedSort === "desc") {
+      setSort("-price");
+    } else {
+      setSort("");
+    }
+  };
+
   const handleCloseInfor = () => {
     setShowInfor(false);
   };
@@ -342,6 +354,19 @@ export default function ManageCar() {
                   value={search}
                   onChange={handleSearch}
                 />
+              </div>
+              <div className="d-flex align-items-center">
+                <span style={{ width: "135px" }}>Sắp xếp theo: </span>
+                <select
+                  className="form-select mx-2"
+                  style={{ width: "80%" }}
+                  aria-label=""
+                  onChange={handleSortChange}
+                >
+                  <option value="">Giá</option>
+                  <option value="asc">Giá: Thấp đến Cao</option>
+                  <option value="desc">Giá: Cao đến Thấp</option>
+                </select>
               </div>
               {(permissions?.includes("OWNER") ||
                 permissions.includes("C_CAR")) && (

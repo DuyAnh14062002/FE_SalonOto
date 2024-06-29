@@ -292,6 +292,14 @@ export default function AdminSalonSidebar(props) {
             </Link>
           </li>
           <li className="nav-link">
+            <Link to={path.managePayment} className="text-decoration-none ">
+              <div className="nav-link-icon d-inline-flex mx-2">
+                <i className="fa-solid fa-money-bill-wave"></i>
+              </div>
+              Quản lý thanh toán
+            </Link>
+          </li>
+          <li className="nav-link">
             <Link to="/" className="text-decoration-none ">
               <div className="nav-link-icon d-inline-flex mx-2">
                 <i className="fa-solid fa-arrow-rotate-left"></i>

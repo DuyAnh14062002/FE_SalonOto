@@ -6,39 +6,47 @@ import FooterSalon from "../../components/Footer/FooterSalon";
 import { useParams } from "react-router-dom";
 import salonApi from "../../apis/salon.api";
 import carApi from "../../apis/car.api";
+import { PaginationControl } from "react-bootstrap-pagination-control";
+import { formatCurrency } from "../../utils/common";
+
+const LIMIT = 6;
 export default function HomePageSalon() {
   const navigate = useNavigate();
   const params = useParams();
-
+  const [totalPage, setTotalPage] = useState(0);
+  const [page, setPage] = useState(1);
   const [listCar, setListCar] = useState([]);
   const NavigateDetailCar = (id) => {
     navigate(`/detail-car/${id}`);
   };
   const [salon, setSalon] = useState({});
-  const loadAllCarOfSalon = async () => {
-     try{
-         let res = await carApi.getAllCarOfSalon(params.id,1,10)
-         if(res?.data?.cars){
-           setListCar(res.data.cars)
-         }
-     }catch(e){
-      console.log(e)
-     }
-  }
+  const loadAllCarOfSalon = async (salonId, page) => {
+    try {
+      let res = await carApi.getAllCarOfSalon(salonId, page, LIMIT);
+      if (res?.data?.cars) {
+        setListCar(res.data.cars);
+        setTotalPage(res?.data?.total_page);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   useEffect(() => {
     if (params.id) {
       localStorage.setItem("idSalon", params.id);
+
+      const loading = async () => {
+        let res = await salonApi.getDetailSalon(params.id);
+        setSalon(res.data.salon);
+        if (res?.data?.salon?.user_id) {
+          localStorage.setItem("userIdSalon", res.data.salon.user_id);
+        }
+      };
+      loadAllCarOfSalon(params.id, page);
+      loading();
     }
-    const loading = async () => {
-      let res = await salonApi.getDetailSalon(params.id);
-      setSalon(res.data.salon);
-      if (res?.data?.salon?.user_id) {
-        localStorage.setItem("userIdSalon", res.data.salon.user_id);
-      }
-    };
-    loadAllCarOfSalon()
-    loading();
-  }, [params]);
+  }, [params, page]);
   return (
     <div>
       <HeaderSalon />
@@ -100,7 +108,7 @@ export default function HomePageSalon() {
                   <div className="car-body">
                     <div className="salon-content">
                       <h4 className="name-car">{car.name}</h4>
-                      <h4 className="price-car">{car.price} đ</h4>
+                      <h4 className="price-car">{formatCurrency(car.price)}</h4>
                       <div className="short-introduce">
                         <div className="country-box">
                           <i className="fa-solid fa-calendar-days"></i>
@@ -131,6 +139,19 @@ export default function HomePageSalon() {
               );
             })}
         </div>
+        {listCar && listCar.length > 0 && (
+          <div className="d-flex justify-content-center mt-4">
+            <PaginationControl
+              page={page}
+              total={totalPage * LIMIT || 0}
+              limit={LIMIT}
+              changePage={(page) => {
+                setPage(page);
+              }}
+              ellipsis={1}
+            />
+          </div>
+        )}
       </div>
       <FooterSalon />
     </div>

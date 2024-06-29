@@ -9,6 +9,7 @@ import carApi from "../../apis/car.api";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { Form } from "react-bootstrap";
+import { formatCurrency } from "../../utils/common";
 export default function DetailCar() {
   const [car, setCar] = useState({});
   const [images, setImages] = useState([]);
@@ -131,7 +132,7 @@ export default function DetailCar() {
           </div>
           <div className="specifications-car">
             <h4 className="name-car">{car.name}</h4>
-            <h4 className="price-car">{car.price} đ</h4>
+            <h4 className="price-car">{formatCurrency(car.price)} </h4>
             <p>Hẵng sản xuất : {car.brand}</p>
             <p>Model xe : {car.model}</p>
             <p>Dòng xe : {car.type}</p>
