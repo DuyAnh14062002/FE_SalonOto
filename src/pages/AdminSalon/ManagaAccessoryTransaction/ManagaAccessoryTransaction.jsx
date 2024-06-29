@@ -186,6 +186,7 @@ export default function ManagaAccessoryTransaction() {
     }
   };
   console.log("accessory : ", accessory);
+ 
   return (
     <>
       <div id="content" className="container-fluid">
@@ -346,7 +347,7 @@ export default function ManagaAccessoryTransaction() {
                 {accessory &&
                   accessory.map((item, index) => (
                     <div className="accessory-box">
-                      <div className="col-md-4">
+                      <div className="col-md-4" style={{ display : "flex", alignItems :"center"}}>
                         <Form.Check
                           key={index}
                           type="checkbox"
@@ -355,6 +356,7 @@ export default function ManagaAccessoryTransaction() {
                           value={item.accessory_id}
                           label={item?.name}
                         />
+                        <div className="image-accessory-transaction" style={{backgroundImage: `url(${item.icon})`, marginLeft: "10px"}}></div>
                       </div>
                       <div className="col-md-8">
                         <div className="quantity-accessory">
@@ -400,7 +402,6 @@ export default function ManagaAccessoryTransaction() {
                 <thead>
                   <tr>
                     <th scope="col">Tên phụ tùng</th>
-                    <th scope="col">Ảnh phụ tùng</th>
                     <th scope="col">Số lượng</th>
                     <th scope="col">Giá (VND)</th>
                     <th scope="col">Ngày mua</th>
@@ -496,6 +497,7 @@ export default function ManagaAccessoryTransaction() {
                           value={item.accessory_id}
                           label={item?.name}
                         />
+                        <div className="icon-accesory" style={{backgroundImage : `url(${item.icon})`}}></div>
                       </div>
                       <div className="col-md-8">
                         <div className="quantity-accessory">

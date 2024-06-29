@@ -27,7 +27,7 @@ export default function DetailNews() {
         <div className="detail-new-author">
           <span className="author">{news?.meta?.author}</span>{" "}
           <span className="detail-new-time">
-            {news?.meta?.publish}
+            {news?.publish}
           </span>
         </div>
         <div className="detail-new-summary">

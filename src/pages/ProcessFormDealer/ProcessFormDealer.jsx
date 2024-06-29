@@ -218,6 +218,10 @@ const ProcessFormDealer = ({
                 ))}
               </ol>
             )}
+            <div className="award-money-box">
+               <span>Tiền Hoa hồng </span>
+               <input />
+            </div>
           </div>
         </div>
       </div>
