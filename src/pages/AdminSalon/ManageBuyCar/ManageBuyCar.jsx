@@ -36,7 +36,7 @@ export default function ManageBuyCar() {
   const [totalPage, setTotalPage] = useState(0);
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
-
+  console.log("invoices:", invoices);
   const handleSearch = (e) => {
     setSearch(e.target.value);
     const searchValue = e.target.value;
@@ -249,11 +249,12 @@ export default function ManageBuyCar() {
                     Tên khách hàng
                   </th>
                   <th scope="col">số điện thoại</th>
-                  <th scope="col">Email</th>
+                  {/* <th scope="col">Email</th> */}
                   <th scope="col">Tên xe</th>
                   <th scope="col">Tổng tiền</th>
                   <th scope="col">Nhân viên bán</th>
                   <th scope="col">Trạng thái</th>
+
                   <th
                     scope="col"
                     className="text-center"
@@ -273,7 +274,7 @@ export default function ManageBuyCar() {
 
                       <td>{invoice.fullname}</td>
                       <td>{invoice.phone}</td>
-                      <td>{invoice.email}</td>
+                      {/* <td>{invoice.email}</td> */}
                       <td>{invoice.carName}</td>
                       <td>{formatCurrency(invoice.expense)}</td>
                       <td>{invoice?.employee_id?.fullname}</td>
@@ -286,6 +287,7 @@ export default function ManageBuyCar() {
                           </span>
                         )}
                       </td>
+
                       <td className="text-center">
                         <button
                           className="btn btn-info btn-sm rounded-0 text-white"

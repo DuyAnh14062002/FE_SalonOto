@@ -17,7 +17,7 @@ export default function ManageGuarantee() {
   const [showUpdate, setShowUpdate] = useState(false);
   const [warranties, setWarranties] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [warrantyItem, setWarrantyItem] = useState([]);
+  const [warrantyItem, setWarrantyItem] = useState({});
   const [salon, setSalon] = useState({});
   const [totalPage, setTotalPage] = useState(0);
   const [page, setPage] = useState(1);

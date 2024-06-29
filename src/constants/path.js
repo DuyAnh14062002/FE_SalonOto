@@ -19,7 +19,7 @@ export const path = {
   news: "/news",
   detailNew: "/detailNew/:id",
   historyTransaction: "/historyTransaction",
-  postCar: "/postCar",
+  historyPayment: "/historyPayment",
   postSellCar: "/postSellCar",
   carPostDetail: "/CarPostDetail/:id",
   detailProcess: "/detailProcess/:id",
@@ -39,6 +39,8 @@ export const path = {
   notificationDetailUser: "/notification-user/:id",
   room: "/room/:roomId",
   listMaintenance: "/listMaintenance",
+  contact: "/salonOto/contact",
+  accessory: "/salonOto/accessory",
 
   //========ADMIN SALON PATH=====================
   adminSalon: "/adminSalon",
@@ -58,6 +60,7 @@ export const path = {
   manageDealerProcess: "/adminSalon/manageDealerProcess",
   manageAccessoryTransaction: "/adminSalon/manageAccessoryTransaction",
   managePromotion: "/adminSalon/managePromotion",
+  managePayment: "/adminSalon/managePayment",
   //============PAYMENT =========================
   getResultPayment: "/payment/vnpay",
 

@@ -19,6 +19,7 @@ import userApi from "../../apis/user.api";
 import salonApi from "../../apis/salon.api";
 import appointmentApi from "../../apis/appointment.api";
 import dealerApi from "../../apis/dealer.api";
+import { update } from "lodash";
 const intervalDuration = 3000;
 let timerId;
 let timeOut;
@@ -86,6 +87,7 @@ export default function Header(props) {
   useEffect(() => {
     const loading = async () => {
       let res = await purchaseApi.getPurchase();
+      console.log("res purchase", res);
       if (res?.data?.purchasedPackages) {
         setPurchasedPackages(res.data.purchasedPackages);
       }
@@ -186,6 +188,16 @@ export default function Header(props) {
   const numberOfNotification = listNotification?.filter(
     (notification) => !notification.read
   ).length;
+  const updateReadNotification = async (id) => {
+    try {
+      await notificationApi.updateNotificationUser({
+        id: id,
+      });
+      fetchAllNotificationUser();
+    } catch (error) {
+      console.log(error);
+    }
+  };
   const handleDetailNotification = async (id, idAppoint) => {
     try {
       await notificationApi.updateNotificationUser({
@@ -245,6 +257,7 @@ export default function Header(props) {
   const handleNavigateHistoryProcessPaper = () => {
     navigate("/historyTransaction");
   };
+  console.log("listNotification : ", listNotification);
   const popover = (
     <Popover id="popover-basic">
       <Popover.Header as="h3" className="fw-bold">
@@ -263,11 +276,7 @@ export default function Header(props) {
               return (
                 <button key={notification.id} className="notify p-2">
                   {(notification.types === "appointment" ||
-                    notification.types === "appointment-process" ||
-                    notification.types === "permission" ||
-                    notification.types === "connection" ||
-                    notification.types === "updateStage" ||
-                    notification.types === "process") && (
+                    notification.types === "appointment-process") && (
                     <div className="d-flex">
                       <img
                         src={
@@ -357,8 +366,11 @@ export default function Header(props) {
                       </div>
                     </div>
                   )}
-                  {notification.types === "invite" && (
-                    <div className="d-flex align-items-center">
+                  {(notification.types === "permission" ||
+                    notification.types === "connection" ||
+                    notification.types === "updateStage" ||
+                    notification.types === "process") && (
+                    <div className="d-flex">
                       <img
                         src={
                           notification.avatar ||
@@ -372,6 +384,96 @@ export default function Header(props) {
                         <div
                           className="notify-title"
                           style={notification.read ? {} : { fontWeight: "500" }}
+                        >
+                          {notification.description}
+                        </div>
+                        <div
+                          className={
+                            notification.read
+                              ? "text-muted d-flex justify-content-between align-items-center"
+                              : "text-primary d-flex justify-content-between align-items-center"
+                          }
+                          style={notification.read ? {} : { fontWeight: "500" }}
+                        >
+                          <span>{formattedTimeDifference}</span>
+                          <i
+                            class="fa-regular fa-trash-can text-danger mx-2"
+                            title="Xóa thông báo"
+                            onClick={() => handleDeleteNotify(notification.id)}
+                          ></i>
+                        </div>
+                        {notification?.types === "connection" ? (
+                          <div className="connection-box">
+                            <button
+                              className="see-process"
+                              onClick={() => {
+                                handleNavigateDetail(notification.data);
+                                updateReadNotification(notification.id);
+                              }}
+                            >
+                              Xem qui trình
+                            </button>
+                            <button
+                              className="agree-connection"
+                              onClick={() => {
+                                handleConnection(notification.data);
+                                updateReadNotification(notification.id);
+                              }}
+                            >
+                              Kết nối
+                            </button>
+                          </div>
+                        ) : (
+                          ""
+                        )}
+                        {notification?.types === "updateStage" ? (
+                          <button
+                            className="see-process"
+                            onClick={() => {
+                              handleNavigateHistoryProcess();
+                              updateReadNotification(notification.id);
+                            }}
+                          >
+                            Xem ngay
+                          </button>
+                        ) : (
+                          ""
+                        )}
+                        {notification?.types === "process" ? (
+                          <button
+                            className="see-process"
+                            onClick={() => {
+                              handleNavigateHistoryProcessPaper();
+                              updateReadNotification(notification.id);
+                            }}
+                          >
+                            Xem ngay
+                          </button>
+                        ) : (
+                          ""
+                        )}
+                      </div>
+                    </div>
+                  )}
+                  {notification.types === "invite" && (
+                    <div className="d-flex align-items-center">
+                      <img
+                        src={
+                          notification.avatar ||
+                          "https://scontent.fsgn2-5.fna.fbcdn.net/v/t1.30497-1/143086968_2856368904622192_1959732218791162458_n.png?_nc_cat=1&ccb=1-7&_nc_sid=5f2048&_nc_ohc=BCnRaxZCfRkAX8a1rU3&_nc_ht=scontent.fsgn2-5.fna&oh=00_AfD29zpAHOxBSwhZkEnW47vMd-hoaCLBDDjywB4cGeF7YA&oe=662C6938"
+                        }
+                        alt=""
+                        className="rounded-circle"
+                        style={{ width: "56px", height: "56px" }}
+                        onClick={() => updateReadNotification(notification.id)}
+                      />
+                      <div style={{ marginLeft: "10px" }}>
+                        <div
+                          className="notify-title"
+                          style={notification.read ? {} : { fontWeight: "500" }}
+                          onClick={() =>
+                            updateReadNotification(notification.id)
+                          }
                         >
                           {notification.description}
                         </div>
@@ -406,6 +508,51 @@ export default function Header(props) {
                               }
                             ></i>
                           </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  {notification.types === "salon-payment" && (
+                    <div className="d-flex align-items-center">
+                      <img
+                        src={
+                          notification.avatar ||
+                          "https://scontent.fsgn2-5.fna.fbcdn.net/v/t1.30497-1/143086968_2856368904622192_1959732218791162458_n.png?_nc_cat=1&ccb=1-7&_nc_sid=5f2048&_nc_ohc=BCnRaxZCfRkAX8a1rU3&_nc_ht=scontent.fsgn2-5.fna&oh=00_AfD29zpAHOxBSwhZkEnW47vMd-hoaCLBDDjywB4cGeF7YA&oe=662C6938"
+                        }
+                        alt=""
+                        className="rounded-circle"
+                        style={{ width: "56px", height: "56px" }}
+                        onClick={() => {
+                          navigate(`/historyPayment`);
+                          updateReadNotification(notification.id);
+                        }}
+                      />
+                      <div style={{ marginLeft: "10px" }}>
+                        <div
+                          className="notify-title"
+                          style={notification.read ? {} : { fontWeight: "500" }}
+                          onClick={() => {
+                            navigate(`/historyPayment`);
+                            updateReadNotification(notification.id);
+                          }}
+                        >
+                          {notification.description}
+                        </div>
+                        <div
+                          className={
+                            notification.read
+                              ? "text-muted mt-1 d-flex justify-content-between align-items-center"
+                              : "text-primary mt-1 d-flex justify-content-between align-items-center"
+                          }
+                          style={notification.read ? {} : { fontWeight: "500" }}
+                        >
+                          <span>{formattedTimeDifference}</span>
+
+                          <i
+                            className="fa-regular fa-trash-can text-danger mx-2"
+                            title="Xóa thông báo"
+                            onClick={() => handleDeleteNotify(notification.id)}
+                          ></i>
                         </div>
                       </div>
                     </div>
@@ -482,9 +629,6 @@ export default function Header(props) {
         </li>
         <li className="link">
           <Link to="/listSalon">Salon Oto</Link>
-        </li>
-        <li className="link">
-          <Link to={path.postCar}>Bài đăng</Link>
         </li>
         <li className="link">
           <Link to={path.news}>Tin tức</Link>
@@ -610,9 +754,7 @@ export default function Header(props) {
         <li className="link">
           <Link to="/listSalon">Salon Oto</Link>
         </li>
-        <li className="link">
-          <Link to={path.postCar}>Bài đăng</Link>
-        </li>
+
         <li className="link">
           <Link to={path.news}>Tin tức</Link>
         </li>

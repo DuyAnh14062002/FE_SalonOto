@@ -5,15 +5,21 @@ import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { path } from "./../../constants/path";
 import packageApi from "../../apis/package.api";
+
 export default function HomePage() {
   const [show, setShow] = useState(false);
   const [listPackage, setListPackage] = useState([]);
   let navigate = useNavigate();
+  const [price, setPrice] = useState();
+  const [packageId, setPackageId] = useState("");
+
   // const ShowDetailPackage = () =>{
   //       navigate("/detail-package/:123")
   // }
-  const handleShowModal = () => {
+  const handleShowModal = (price, packageId) => {
     setShow(true);
+    setPrice(price);
+    setPackageId(packageId);
   };
   const handleHideModal = () => {
     setShow(false);
@@ -110,7 +116,12 @@ export default function HomePage() {
                             );
                           })}
                       </ul>
-                      <button className="btn" onClick={handleShowModal}>
+                      <button
+                        className="btn"
+                        onClick={() =>
+                          handleShowModal(item.price, item.package_id)
+                        }
+                      >
                         Mua ngay
                       </button>
                     </div>
@@ -120,7 +131,12 @@ export default function HomePage() {
           </div>
         </div>
       </div>
-      <ModalBuyPackage show={show} handleHideModal={handleHideModal} />
+      <ModalBuyPackage
+        show={show}
+        handleHideModal={handleHideModal}
+        price={price}
+        packageId={packageId}
+      />
     </>
   );
 }
