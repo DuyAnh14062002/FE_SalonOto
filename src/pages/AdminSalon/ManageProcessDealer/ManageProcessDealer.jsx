@@ -136,11 +136,11 @@ export default function ManageProcessDealer() {
                       <td>{item?.connection?.created_at}</td>
                       <td>
                         {item?.status === "pending" ? (
-                          <span class="badge bg-warning text-dark">
+                          <span className="badge bg-warning text-dark">
                             Đang xử lý
                           </span>
                         ) : (
-                          <span class="badge bg-success">Hoàn thành</span>
+                          <span className="badge bg-success">Hoàn thành</span>
                         )}
                       </td>
                       <td className="text-center">

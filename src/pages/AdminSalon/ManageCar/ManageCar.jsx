@@ -454,7 +454,7 @@ export default function ManageCar() {
                             title="Edit"
                             onClick={() => handleShowWarranty(car)}
                           >
-                            <i class="fa-solid fa-shield"></i>
+                            <i className="fa-solid fa-shield"></i>
                           </button>
                         )}
                       </td>

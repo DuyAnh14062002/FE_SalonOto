@@ -248,7 +248,7 @@ export default function HeaderSalon() {
                           <span>{formattedTimeDifference}</span>
 
                           <i
-                            class="fa-regular fa-trash-can text-danger mx-2"
+                            className="fa-regular fa-trash-can text-danger mx-2"
                             title="Xóa thông báo"
                             onClick={() => handleDeleteNotify(notification.id)}
                           ></i>
@@ -297,7 +297,7 @@ export default function HeaderSalon() {
                           <span>{formattedTimeDifference}</span>
 
                           <i
-                            class="fa-regular fa-trash-can text-danger mx-2"
+                            className="fa-regular fa-trash-can text-danger mx-2"
                             title="Xóa thông báo"
                             onClick={() => handleDeleteNotify(notification.id)}
                           ></i>
@@ -369,7 +369,7 @@ export default function HeaderSalon() {
                           <span>{formattedTimeDifference}</span>
 
                           <i
-                            class="fa-regular fa-trash-can text-danger mx-2"
+                            className="fa-regular fa-trash-can text-danger mx-2"
                             title="Xóa thông báo"
                             onClick={() => handleDeleteNotify(notification.id)}
                           ></i>
@@ -434,7 +434,7 @@ export default function HeaderSalon() {
           </Link>
           {userIdSalon === userInfor?.user_id ? (
             <div className="messenger mx-3" onClick={HandleMessageNavigate}>
-              <i class="fa-brands fa-facebook-messenger"></i>
+              <i className="fa-brands fa-facebook-messenger"></i>
             </div>
           ) : (
             <button onClick={handleMessage}>Nhắn tin với salon</button>
@@ -447,12 +447,12 @@ export default function HeaderSalon() {
               rootClose={true}
             >
               <div
-                class="text-dark position-relative"
+                className="text-dark position-relative"
                 style={{ cursor: "pointer" }}
               >
-                <i class="fa-regular fa-bell fs-4"></i>
+                <i className="fa-regular fa-bell fs-4"></i>
                 <span
-                  class="badge rounded-pill badge-notification bg-danger position-absolute"
+                  className="badge rounded-pill badge-notification bg-danger position-absolute"
                   style={{ top: "-10px", left: "17px" }}
                 >
                   {numberOfNotification > 0 && numberOfNotification}

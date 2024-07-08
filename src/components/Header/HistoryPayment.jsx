@@ -10,22 +10,18 @@ export default function HistoryPayment() {
   const [listPaymentRequest, setListPaymentRequest] = useState([]);
   const [totalPage, setTotalPage] = useState(0);
   const [page, setPage] = useState(1);
-  const [filter, setFilter] = useState("all");
 
-  const handleFilterChange = (e) => {
-    setFilter(e.target.value);
-  };
-  const loadingPaymentRequest = async (page, filter) => {
-    let res = await paymentRequestApi.getAllPaymentRequest(page, LIMIT, filter);
+  const loadingPaymentRequest = async (page) => {
+    let res = await paymentRequestApi.getAllPaymentRequest(page, LIMIT);
     if (res?.data?.data?.data) {
       setListPaymentRequest(res?.data?.data?.data);
       setTotalPage(res.data.data.total_page);
     }
   };
-  console.log("listPaymentRequest", listPaymentRequest);
+
   useEffect(() => {
-    loadingPaymentRequest(page, filter);
-  }, [page, filter]);
+    loadingPaymentRequest(page);
+  }, [page]);
   const handleConfirmPayment = async (id) => {
     try {
       let res = await paymentRequestApi.confirmUserPaymentRequest({ id });
@@ -37,26 +33,11 @@ export default function HistoryPayment() {
       toast.error("Xác nhận thanh toán thất bại");
     }
   };
-  console.log("listPaymentRequest", listPaymentRequest);
+console.log(listPaymentRequest) 
   return (
     <>
       <Header otherPage={true} />
       <h2 className="text-center mt-3">Lịch sử yêu cầu thanh toán</h2>
-      <div className="my-3 mx-3 d-flex align-items-center">
-        <div className="d-flex align-items-center">
-          <span>Lọc: </span>
-          <select
-            className="form-select mx-2"
-            aria-label=""
-            value={filter}
-            onChange={handleFilterChange}
-          >
-            <option value="all">Tất cả</option>
-            <option value="true">Đã thanh toán</option>
-            <option value="false">Chưa thanh toán</option>
-          </select>
-        </div>
-      </div>
       <table className="table mt-4 table-hover" style={{ width: "100%" }}>
         <thead>
           <tr>
@@ -66,9 +47,6 @@ export default function HistoryPayment() {
             <th scope="col">Tên salon</th>
             <th scope="col">Nội dung thanh toán</th>
             <th scope="col" className="text-center">
-              Thông tin thanh toán
-            </th>
-            <th scope="col" className="text-center">
               Giá tiền
             </th>
             <th scope="col" className="text-center">
@@ -76,13 +54,13 @@ export default function HistoryPayment() {
             </th>
             <th scope="col">Ngày tạo</th>
             <th scope="col" className="text-center" style={{ width: "20%" }}>
-              Tác vụ
+              Xác nhận thanh toán
             </th>
           </tr>
         </thead>
         <tbody>
           {listPaymentRequest && listPaymentRequest.length > 0 ? (
-            listPaymentRequest.map((item, index) => (
+            listPaymentRequestclassName=(item, index) => (
               <tr key={item.id} style={{ background: "rgb(247 247 247)" }}>
                 <td className="text-center">
                   {LIMIT * (page - 1) + (index + 1)}
@@ -90,7 +68,6 @@ export default function HistoryPayment() {
 
                 <td>{item.salon.name}</td>
                 <td>{item.reason}</td>
-                <td className="text-center">{item.payment_method}</td>
                 <td className="text-center">{formatCurrency(item.amount)}</td>
                 <td className="text-center">
                   {item?.status ? (
@@ -104,26 +81,15 @@ export default function HistoryPayment() {
                 <td>{formatDateDetail(item.create_date)}</td>
                 <td className="text-center">
                   <button
-                    className="btn btn-warning btn-sm rounded-0 text-white mx-2"
+                    to="/"
+                    className="btn btn-success btn-sm rounded-0 text-white mx-2"
                     data-toggle="tooltip"
                     data-placement="top"
-                    title="info"
-                    // onClick={() => handleShowInfor(invoice)}
+                    title="Xác nhận thanh toán"
+                    onClick={() => handleConfirmPayment(item.id)}
                   >
-                    <i className="fa-solid fa-circle-question"></i>
+                    <i className="fa-solid fa-square-check"></i>
                   </button>
-                  {!item.status && (
-                    <button
-                      to="/"
-                      className="btn btn-success btn-sm rounded-0 text-white mx-2"
-                      data-toggle="tooltip"
-                      data-placement="top"
-                      title="Xác nhận thanh toán"
-                      onClick={() => handleConfirmPayment(item.id)}
-                    >
-                      <i className="fa-solid fa-square-check"></i>
-                    </button>
-                  )}
                 </td>
               </tr>
             ))

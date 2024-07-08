@@ -4,7 +4,11 @@ import { PaginationControl } from "react-bootstrap-pagination-control";
 import paymentRequestApi from "../../../apis/paymentRequest.api";
 import userApi from "../../../apis/user.api";
 import { debounce } from "lodash";
-import { formatCurrency, formatDateDetail } from "../../../utils/common";
+import {
+  formatCurrency,
+  formatDateDetail,
+  formatDateDetailShortened,
+} from "../../../utils/common";
 import { toast } from "react-toastify";
 import salonApi from "../../../apis/salon.api";
 
@@ -20,7 +24,7 @@ export default function ManagePayment() {
   const [listPaymentRequest, setListPaymentRequest] = useState([]);
   const [paymentRequestItem, setPaymentRequestItem] = useState({});
   const [salon, setSalon] = useState({});
-
+  console.log("listPaymentRequest", listPaymentRequest);
   const handleSearch = (e) => {
     setSearch(e.target.value);
     const searchValue = e.target.value;
@@ -77,7 +81,6 @@ export default function ManagePayment() {
   };
   const handleAddPaymentRequest = async (e) => {
     try {
-      console.log("paymentRequestItem", paymentRequestItem);
       e.preventDefault();
       setIsLoading(true);
       let res = await paymentRequestApi.createPaymentRequest({
@@ -180,7 +183,9 @@ export default function ManagePayment() {
                     Tình trạng
                   </th>
                   <th scope="col">Người tạo</th>
-                  <th scope="col">Ngày tạo</th>
+                  <th scope="col" className="text-center">
+                    Ngày tạo
+                  </th>
                   <th
                     scope="col"
                     className="text-center"
@@ -206,15 +211,19 @@ export default function ManagePayment() {
                       </td>
                       <td className="text-center">
                         {item?.status ? (
-                          <span class="badge bg-success">Đã thanh toán</span>
+                          <span className="badge bg-success">
+                            Đã thanh toán
+                          </span>
                         ) : (
-                          <span class="badge bg-warning text-dark">
+                          <span className="badge bg-warning text-dark">
                             Chưa thanh toán
                           </span>
                         )}
                       </td>
                       <td>{item.creator}</td>
-                      <td>{formatDateDetail(item.create_date)}</td>
+                      <td className="text-center">
+                        {formatDateDetailShortened(item.create_date)}
+                      </td>
                       <td className="text-center">
                         {permissions?.includes("OWNER") && (
                           <>
@@ -226,7 +235,7 @@ export default function ManagePayment() {
                               title="Xác nhận thanh toán"
                               onClick={() => handleConfirmPayment(item.id)}
                             >
-                              <i class="fa-solid fa-square-check"></i>
+                              <i className="fa-solid fa-square-check"></i>
                             </button>
                             <button
                               to="/"

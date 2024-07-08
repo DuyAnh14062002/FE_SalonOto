@@ -10,6 +10,9 @@ import { PaginationControl } from "react-bootstrap-pagination-control";
 import AccessoryApi from "../../../apis/accessory.api";
 import { formatCurrency } from "../../../utils/common";
 import "./ManagaAccessoryTransaction.scss";
+import paymentMethodApi from "../../../apis/paymentMethod.api";
+import paymentRequestApi from "../../../apis/paymentRequest.api";
+import { debounce, set } from "lodash";
 const LIMIT = 4;
 
 export default function ManagaAccessoryTransaction() {
@@ -24,11 +27,39 @@ export default function ManagaAccessoryTransaction() {
   const [invoiceChoose, setInvoiceChoose] = useState({});
   const [showDelete, setShowDelete] = useState(false);
   const [showUpdate, setShowUpdate] = useState(false);
-  let loadingInvoiceBuyAccessory = async () => {
+  const [listPaymentMethod, setListPaymentMethod] = useState([]);
+  const [methodPaymentId, setMethodPaymentId] = useState("");
+  const [salon, setSalon] = useState({});
+  const [totalPage, setTotalPage] = useState(0);
+  const [page, setPage] = useState(1);
+  const [search, setSearch] = useState("");
+
+  const handleSearch = (e) => {
+    setSearch(e.target.value);
+    const searchValue = e.target.value;
+    debounce(() => {
+      setPage(1);
+      loadingInvoiceBuyAccessory(1, searchValue);
+    }, 1000);
+  };
+  const fetchListPaymentMethod = async () => {
+    const res = await paymentMethodApi.getAllPaymentMethod();
+    if (res?.data?.data) {
+      setListPaymentMethod(res.data.data);
+      setMethodPaymentId(res.data.data[0].id);
+    }
+  };
+
+  useEffect(() => {
+    fetchListPaymentMethod();
+  }, []);
+  let loadingInvoiceBuyAccessory = async (page, search) => {
     try {
-      let res = await AccessoryApi.getInvoiceBuyAccessory();
+      let res = await AccessoryApi.getInvoiceBuyAccessory(page, LIMIT, search);
+      console.log("res : ", res);
       if (res?.data?.invoices) {
         setInvoiceAccessory(res.data.invoices);
+        setTotalPage(res.data.total_page);
       }
     } catch (e) {
       console.log(e);
@@ -41,10 +72,10 @@ export default function ManagaAccessoryTransaction() {
     }
   };
   useEffect(() => {
-    loadingInvoiceBuyAccessory();
+    loadingInvoiceBuyAccessory(page, search);
     loadingPermistion();
     fetchDataSalon();
-  }, []);
+  }, [page, search]);
   const handleAddInvoiceBuyAccessory = async (e) => {
     e.preventDefault();
     const listAccessoryChecked = accessory.filter((item) => item.checked);
@@ -57,11 +88,20 @@ export default function ManagaAccessoryTransaction() {
         data,
         listAccessoryId
       );
+      console.log("res : ", res);
       if (res?.data?.status === "success") {
         toast.success("Thêm giao dịch phụ tùng thành công ! ");
         handleCloseAdd();
         loadingInvoiceBuyAccessory();
         setData({});
+        await paymentRequestApi.createPaymentRequest({
+          cusPhone: data.phone,
+          cusFullname: data.fullname,
+          amount: res.data.accessoryInvoice.expense,
+          salonId: salon.salon_id,
+          methodPaymentId,
+          invoiceId: res.data.accessoryInvoice.invoice_id,
+        });
       } else {
         toast.error("Thêm giao dịch phụ tùng thất bại ! ");
       }
@@ -109,7 +149,7 @@ export default function ManagaAccessoryTransaction() {
   };
   const loadingAccessory = async (salon_id) => {
     let res = await invoiceApi.getAccessory(salon_id);
-    console.log("res : ", res);
+
     if (res?.data?.accessory) {
       const allAccessory = res.data.accessory;
       const newAllAccessory = allAccessory.map((item) => {
@@ -123,6 +163,7 @@ export default function ManagaAccessoryTransaction() {
     const res = await salonApi.getSalonInfor();
     if (res?.data?.salon) {
       loadingAccessory(res.data.salon.salon_id);
+      setSalon(res.data.salon);
     }
   };
   const handleChangeAccessory = (data) => {
@@ -206,6 +247,8 @@ export default function ManagaAccessoryTransaction() {
                   className="form-control"
                   style={{ width: "100%" }}
                   placeholder="Nhập tên khách hàng"
+                  value={search}
+                  onChange={handleSearch}
                 />
               </div>
               <button className="btn btn-success" onClick={handleShowAdd}>
@@ -238,7 +281,7 @@ export default function ManagaAccessoryTransaction() {
                 {invoiceAccessory && invoiceAccessory.length > 0 ? (
                   invoiceAccessory.map((invoice, index) => (
                     <tr key={index} style={{ background: "rgb(247 247 247)" }}>
-                      <td>{index + 1}</td>
+                      <td> {LIMIT * (page - 1) + (index + 1)}</td>
                       <td>{invoice.fullname}</td>
                       <td>{invoice.email}</td>
                       <td>{invoice.phone}</td>
@@ -291,7 +334,7 @@ export default function ManagaAccessoryTransaction() {
                 )}
               </tbody>
             </table>
-            {/* {invoices && invoices.length > 0 && (
+            {invoiceAccessory && invoiceAccessory.length > 0 && (
               <div className="d-flex justify-content-center ">
                 <PaginationControl
                   page={page}
@@ -303,7 +346,7 @@ export default function ManagaAccessoryTransaction() {
                   ellipsis={1}
                 />
               </div>
-            )} */}
+            )}
           </div>
         </div>
       </div>
@@ -339,6 +382,20 @@ export default function ManagaAccessoryTransaction() {
                 name="phone"
                 onChange={onChange}
               />
+            </Form.Group>
+            <Form.Group className="mt-4">
+              <Form.Label>Chọn hình thức thanh toán</Form.Label>
+
+              <Form.Select
+                onChange={(e) => setMethodPaymentId(e.target.value)}
+                value={methodPaymentId}
+              >
+                {listPaymentMethod?.map((item, index) => (
+                  <option key={index} value={item.id}>
+                    {item.type} - {item.content}
+                  </option>
+                ))}
+              </Form.Select>
             </Form.Group>
             <Form.Group className="mt-3 wrap-accessory">
               <Form.Label>Chọn các phụ tùng sửa chữa</Form.Label>
@@ -394,9 +451,9 @@ export default function ManagaAccessoryTransaction() {
             <Modal.Title> Thông tin chi tiết giao dịch phụ tùng </Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <div class="container">
-              <h2 class="text-center">Bảng phụ tùng sửa chữa</h2>
-              <table class="table table-striped table-bordered">
+            <div className="container">
+              <h2 className="text-center">Bảng phụ tùng sửa chữa</h2>
+              <table className="table table-striped table-bordered">
                 <thead>
                   <tr>
                     <th scope="col">Tên phụ tùng</th>

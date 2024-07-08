@@ -145,8 +145,12 @@ export default function ManageFeature() {
                     STT
                   </th>
                   <th scope="col">Tên tính năng</th>
-                  <th scope="col">Mô tả tính năng</th>
-                  <th scope="col">keyMap</th>
+                  <th scope="col" style={{ width: "50%" }}>
+                    Mô tả tính năng
+                  </th>
+                  <th scope="col" className="text-center">
+                    keyMap
+                  </th>
                   <th scope="col" className="text-center">
                     Tác vụ
                   </th>
@@ -166,7 +170,7 @@ export default function ManageFeature() {
 
                       <td>{feature.name}</td>
                       <td>{feature.description}</td>
-                      <td>{feature.keyMap}</td>
+                      <td className="text-center">{feature.keyMap}</td>
                       <td className="text-center">
                         <button
                           className="btn btn-success btn-sm rounded-0 text-white mx-2"

@@ -3,35 +3,58 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
-import "./Appointment.scss";
-import appointmentApi from "../../apis/appointment.api";
-import { formatDate, formatTime } from "../../utils/common";
+import "./AppointmentSalon.scss";
 import { Form } from "react-bootstrap";
-import Header from "../../components/Header";
+import appointmentApi from "../../../apis/appointment.api";
+import { formatDate, formatTime } from "../../../utils/common";
+import salonApi from "../../../apis/salon.api";
 import { PaginationControl } from "react-bootstrap-pagination-control";
-const LIMIT = 4;
+import { debounce } from "lodash";
+className= = 5;
 
-export default function Appointment() {
+export default function AppointmentSalon() {
   const [showEdit, setShowEdit] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
   const [appointmentList, setAppointmentList] = useState([]);
   const [appointmentChoose, setAppointmentChoose] = useState(null);
-  const [note, setNote] = useState("");
+  const [accepted, setAccepted] = useState(null);
+  const [salon, setSalon] = useState({});
   const [totalPage, setTotalPage] = useState(0);
   const [page, setPage] = useState(1);
-
+  const [search, setSearch] = useState("");
   const showAccepted = {
     0: "Chưa phản hồi",
     1: "Đã xác nhận",
     2: "Từ chối",
   };
 
-  const fetchData = async (page) => {
-    const res = await appointmentApi.getAllAppointmentUser({
+  const handleSearch = (e) => {
+    setSearch(e.target.value);
+    const searchValue = e.target.value;
+    console.log("searchValue : ", searchValue);
+    debounce(() => {
+      setPage(1);
+      fetchData(1, searchValue);
+    }, 1000);
+  };
+
+  const fetchDataSalon = async () => {
+    const res = await salonApi.getSalonInfor();
+    if (res?.data?.salon) {
+      setSalon(res.data.salon);
+    }
+  };
+  useEffect(() => {
+    // call api to get features
+    fetchDataSalon();
+  }, []);
+  const fetchData = async (page, search) => {
+    const res = await appointmentApi.getAllAppointmentSalon({
+      salonId: salon.salon_id,
       page: page,
       per_page: LIMIT,
+      q: search,
     });
-    console.log("res : ", res);
     if (res?.data?.appointments) {
       const appointmentList = res.data.appointments;
       setAppointmentList(appointmentList);
@@ -39,12 +62,14 @@ export default function Appointment() {
     }
   };
   useEffect(() => {
-    fetchData(page);
-  }, [page]);
+    if (salon.salon_id) {
+      fetchData(page, search);
+    }
+  }, [salon, page, search]);
 
-  const handleShowEdit = (appointment) => {
+  const handleShowEdit = (appointment, accepted) => {
     setAppointmentChoose(appointment);
-    setNote(appointment.description);
+    setAccepted(accepted);
     setShowEdit(true);
   };
   const handleCloseEdit = () => {
@@ -59,60 +84,78 @@ export default function Appointment() {
     setAppointmentChoose(null);
     setShowDelete(false);
   };
-  console.log("appointmentList : ", appointmentList);
+
   const handleEditAppointment = async (e) => {
     try {
       e.preventDefault();
-      const res = await appointmentApi.updateAppointmentUser({
+      const status = accepted ? 1 : 2;
+      const res = await appointmentApi.updateAppointmentSalon({
         id: appointmentChoose.id,
-        description: note,
+        salonId: salon.salon_id,
+        status: status,
       });
       if (res?.data?.status === "success") {
         toast.success("Cập nhật lịch hẹn thành công");
       }
       handleCloseEdit();
-      fetchData(page);
+      fetchData(page, search);
     } catch (error) {
       toast.error("Cập nhật lịch hẹn thất bại");
     }
   };
   const handleDelete = async () => {
     try {
-      await appointmentApi.deleteAppointmentUser({
+      await appointmentApi.deleteAppointmentSalon({
+        salonId: salon.salon_id,
         id: appointmentChoose.id,
       });
       toast.success("Xóa lịch hẹn thành công");
       handleCloseDelete();
-      fetchData(page);
+      fetchData(page, search);
     } catch (error) {
       toast.error("Xóa lịch hẹn thất bại");
     }
   };
-  console.log("appointmentList : ", appointmentList);
+
   return (
     <>
-      <Header otherPage={true} />
       <div id="content" className="container-fluid">
         <div className="card">
           <div className="card-header fw-bold">
             <h4 className="text-center fw-bold py-1 my-0">
-              Danh sách các lịch hẹn
+              Danh sách các lịch hẹn với khách hàng
             </h4>
           </div>
           <div className="card-body">
+            <div className="my-3 d-flex justify-content-between align-items-center">
+              <div className="d-flex justify-content-between align-items-center">
+                <span style={{ width: "100px" }}>Tìm kiếm:</span>
+                <input
+                  type="text"
+                  name="search"
+                  id="search"
+                  className="form-control"
+                  style={{ width: "100%" }}
+                  placeholder="Nhập tên khách hàng"
+                  value={search}
+                  onChange={handleSearch}
+                />
+              </div>
+            </div>
             <table className="table mt-4 table-hover">
               <thead>
                 <tr>
                   <th scope="col" className="text-center">
                     STT
                   </th>
-                  <th scope="col">Tên salon</th>
                   <th scope="col">Hình ảnh xe</th>
                   <th scope="col">Tên xe</th>
+                  <th scope="col">Tên khách hàng</th>
+                  <th scope="col">Số điện thoại</th>
                   <th scope="col">Ngày hẹn</th>
                   <th scope="col">Giờ hẹn</th>
-                  <th scope="col">Lý do hẹn</th>
-                  <th scope="col">Phản hồi</th>
+                  <th scope="col">Mục đích hẹn</th>
+                  <th scope="col">Phản hồi của salon</th>
                   <th scope="col" className="text-center">
                     Tác vụ
                   </th>
@@ -123,6 +166,7 @@ export default function Appointment() {
                   appointmentList.map((appointment, index) => {
                     const date = new Date(appointment.date);
                     const status = showAccepted[appointment.status];
+
                     return (
                       <tr
                         key={appointment.id}
@@ -131,11 +175,10 @@ export default function Appointment() {
                         <td className="text-center">
                           {LIMIT * (page - 1) + (index + 1)}
                         </td>
-                        <td>{appointment.salon}</td>
                         <td>
                           <Link to={`/detail-car/${appointment.car_id}`}>
                             <img
-                              src={appointment.car.image[0]}
+                              src={appointment?.car?.image?.[0]}
                               alt="image_car"
                               style={{ width: "100px" }}
                             />
@@ -149,42 +192,43 @@ export default function Appointment() {
                             {appointment.car.name}{" "}
                           </Link>
                         </td>
+                        <td>{appointment.user.fullname}</td>
+                        <td>{appointment.user.phone}</td>
                         <td>{formatDate(date)}</td>
                         <td>{formatTime(date)}</td>
                         <td>{appointment.description}</td>
                         <td>{status}</td>
                         <td className="text-center">
-                          {appointment.from === "salon" ? (
+                          <button
+                            className="btn btn-danger btn-sm rounded-0 text-white mx-2"
+                            data-bs-toggle="tooltip"
+                            data-bs-placement="bottom"
+                            title="Từ chối"
+                            onClick={() => handleShowEdit(appointment, false)}
+                          >
+                            <i className="fa-solid fa-xmark"></i>
+                          </button>
+                          <button
+                            className="btn btn-success btn-sm rounded-0 text-white mx-2"
+                            data-bs-toggle="tooltip"
+                            data-bs-placement="bottom"
+                            title="Xác nhận"
+                            onClick={() => handleShowEdit(appointment, true)}
+                          >
+                            <i className="fa-solid fa-check"></i>
+                          </button>
+                          {new Date(appointment.date) < new Date() && (
                             <button
-                              className="btn btn-success btn-sm rounded-0 text-white mx-2"
+                              to="/"
+                              className="btn btn-danger btn-sm rounded-0 text-white"
                               data-bs-toggle="tooltip"
                               data-bs-placement="bottom"
-                              title="Xác nhận"
-                              onClick={() => handleShowEdit(appointment, true)}
+                              title="Xóa lịch hẹn"
+                              onClick={() => handleShowDelete(appointment)}
                             >
-                              <i className="fa-solid fa-check"></i>
-                            </button>
-                          ) : (
-                            <button
-                              className="btn btn-success btn-sm rounded-0 text-white mx-2"
-                              data-toggle="tooltip"
-                              data-placement="top"
-                              title="Edit"
-                              onClick={() => handleShowEdit(appointment)}
-                            >
-                              <i className="fa fa-edit"></i>
+                              <i className="fa fa-trash"></i>
                             </button>
                           )}
-                          <button
-                            to="/"
-                            className="btn btn-danger btn-sm rounded-0 text-white"
-                            data-toggle="tooltip"
-                            data-placement="top"
-                            title="Delete"
-                            onClick={() => handleShowDelete(appointment)}
-                          >
-                            <i className="fa fa-trash"></i>
-                          </button>
                         </td>
                       </tr>
                     );
@@ -225,23 +269,22 @@ export default function Appointment() {
               <Modal.Title>Cập nhật lịch hẹn</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-              <div className="row">
-                <div className="col-12">
-                  <div className="mt-3">
-                    <label for="note" className="fw-bold fs-5">
-                      Lý do hẹn (<span className="text-danger">*</span>)
-                    </label>
-                    <textarea
-                      required
-                      className="form-control"
-                      id="note"
-                      rows="5"
-                      value={note}
-                      onChange={(e) => setNote(e.target.value)}
-                    ></textarea>
-                  </div>
-                </div>
-              </div>
+              {appointmentChoose && (
+                <span>
+                  Bạn có muốn{" "}
+                  <strong>{accepted ? "xác nhận" : "từ chối"}</strong> lịch hẹn
+                  với khách hàng{" "}
+                  <strong>{appointmentChoose.user.fullname}</strong> vào lúc{" "}
+                  <strong>
+                    {formatTime(new Date(appointmentChoose.date))}{" "}
+                  </strong>
+                  ngày{" "}
+                  <strong>
+                    {formatDate(new Date(appointmentChoose.date))}
+                  </strong>{" "}
+                  không ?
+                </span>
+              )}
             </Modal.Body>
             <Modal.Footer>
               <Button variant="secondary" onClick={handleCloseEdit}>
@@ -259,8 +302,10 @@ export default function Appointment() {
           </Modal.Header>
           <Modal.Body>
             <span>
-              Bạn có chắc chắn muốn xóa lịch hẹn với{" "}
-              <strong>{appointmentChoose && appointmentChoose.salon}</strong>{" "}
+              Bạn có chắc chắn muốn xóa lịch hẹn với khách hàng{" "}
+              <strong>
+                {appointmentChoose && appointmentChoose.user.fullname}
+              </strong>{" "}
               này không ?
             </span>
           </Modal.Body>

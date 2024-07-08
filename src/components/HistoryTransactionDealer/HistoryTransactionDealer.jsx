@@ -79,15 +79,17 @@ export default function HistoryTransactionDealer() {
                     <td>{item?.stage?.name}</td>
                   ) : (
                     <td>
-                      <span class="badge bg-success">Hoàn thành</span>
+                      <span className="badge bg-success">Hoàn thành</span>
                     </td>
                   )}
 
                   <td>
                     {item?.status === "pending" ? (
-                      <span class="badge bg-warning text-dark">Đang xử lý</span>
+                      <span className="badge bg-warning text-dark">
+                        Đang xử lý
+                      </span>
                     ) : (
-                      <span class="badge bg-success">Hoàn thành</span>
+                      <span className="badge bg-success">Hoàn thành</span>
                     )}
                   </td>
                   <td className="text-center">

@@ -114,7 +114,13 @@ export default function SalonAppointment() {
       // Thiết lập giờ và phút cho ngày được chọn
       date.setHours(parseInt(hours, 10), parseInt(minutes, 10), 0, 0);
       try {
-        let res = await appointmentApi.createAppointmentWithUser(carId,salon_id, phone, date, note)
+        let res = await appointmentApi.createAppointmentWithUser(
+          carId,
+          salon_id,
+          phone,
+          date,
+          note
+        );
         if (res?.data?.status === "success") {
           setNote("");
           setSelectedTime(null);
@@ -128,17 +134,17 @@ export default function SalonAppointment() {
   };
   return (
     <div>
-      <div className="container mt-5" style={{padding : "0 200px"}}>
+      <div className="container mt-5" style={{ padding: "0 200px" }}>
         <div className="row">
           {/* <div className="col-4" style={{ paddingRight: "70px" }}>
             <div className="information_salon">
               <h2 className="text-uppercase fw-bold">
                 {carId ? "Đặt lịch hẹn xem xe" : "Đặt lịch hẹn"}
               </h2>
-              <div class="mt-3">
-                <div class="fs-5 d-flex">
+              <div className="mt-3">
+                <div className="fs-5 d-flex">
                   <i
-                    class="fa-solid fa-file-signature mt-1"
+                    className="fa-solid fa-file-signature mt-1"
                     style={{ width: "25px" }}
                   ></i>
                   <div className="mx-2">
@@ -147,10 +153,10 @@ export default function SalonAppointment() {
                   </div>
                 </div>
               </div>
-              <div class="mt-3">
-                <div class="fs-5 d-flex">
+              <div className="mt-3">
+                <div className="fs-5 d-flex">
                   <i
-                    class="fa-solid fa-location-dot mt-1"
+                    className="fa-solid fa-location-dot mt-1"
                     style={{ width: "25px" }}
                   ></i>
                   <div className="mx-3">
@@ -159,10 +165,10 @@ export default function SalonAppointment() {
                   </div>
                 </div>
               </div>
-              <div class="mt-3">
-                <div class="fs-5 d-flex">
+              <div className="mt-3">
+                <div className="fs-5 d-flex">
                   <i
-                    class="fa-solid fa-clock mt-1"
+                    className="fa-solid fa-clock mt-1"
                     style={{ width: "25px" }}
                   ></i>
                   <div className="mx-2">
@@ -171,10 +177,10 @@ export default function SalonAppointment() {
                   </div>
                 </div>
               </div>
-              <div class="mt-3">
-                <div class="fs-5 d-flex">
+              <div className="mt-3">
+                <div className="fs-5 d-flex">
                   <i
-                    class="fa-solid fa-square-phone mt-1"
+                    className="fa-solid fa-square-phone mt-1"
                     style={{ width: "25px" }}
                   ></i>
                   <div className="mx-2">
@@ -195,19 +201,19 @@ export default function SalonAppointment() {
                   <div className="col-12">
                     <div className="row">
                       <div className="col-6">
-                        <h3 class="fw-bold fs-5">Tên xe</h3>
+                        <h3 className="fw-bold fs-5">Tên xe</h3>
                         <p className="text-uppercase fs-5">{car?.name}</p>
-                        <h3 class="fw-bold fs-5">Hãng sản xuất</h3>
+                        <h3 className="fw-bold fs-5">Hãng sản xuất</h3>
                         <p className="text-uppercase fs-5">{car?.brand}</p>
-                        <h3 class="fw-bold fs-5">Nơi sản xuất</h3>
+                        <h3 className="fw-bold fs-5">Nơi sản xuất</h3>
                         <p className="text-uppercase fs-5">{car?.origin}</p>
-                        <h3 class="fw-bold fs-5">Mô tả</h3>
+                        <h3 className="fw-bold fs-5">Mô tả</h3>
                         <p className="text-uppercase fs-5">
                           {car?.description}
                         </p>
                       </div>
                       <div className="col-6">
-                        <h3 class="fw-bold fs-5">Hình ảnh xe</h3>
+                        <h3 className="fw-bold fs-5">Hình ảnh xe</h3>
                         <img
                           src={car?.image?.[0]}
                           alt="car"
@@ -223,7 +229,7 @@ export default function SalonAppointment() {
                 )} */}
 
                 <div className="col-6 mt-3">
-                  <h3 class="fw-bold fs-5">
+                  <h3 className="fw-bold fs-5">
                     Chọn ngày (<span className="text-danger">*</span>)
                   </h3>
                   <Calendar
@@ -236,10 +242,10 @@ export default function SalonAppointment() {
                   />
                 </div>
                 <div className="col-6 mt-3">
-                  <h3 class="fw-bold fs-5">
+                  <h3 className="fw-bold fs-5">
                     Chọn thời gian (<span className="text-danger">*</span>)
                   </h3>
-                  <div class="select-time row">
+                  <div className="select-time row">
                     {arrayTime.map((time, index) => {
                       const isClicked = time === selectedTime;
                       return (
@@ -270,24 +276,24 @@ export default function SalonAppointment() {
                   )}
                 </div>
                 <div className="col-12">
-                    <div class="mt-3">
-                      <label for="note" class="fw-bold fs-5 mb-2">
-                        Bạn muốn đặt lịch hẹn với khách hàng để làm gì? (
-                        <span className="text-danger">*</span>)
-                      </label>
-                      <textarea
-                        required
-                        class="form-control"
-                        id="note"
-                        rows="5"
-                        value={note}
-                        onChange={(e) => setNote(e.target.value)}
-                      ></textarea>
-                    </div>
+                  <div className="mt-3">
+                    <label for="note" className="fw-bold fs-5 mb-2">
+                      Bạn muốn đặt lịch hẹn với khách hàng để làm gì? (
+                      <span className="text-danger">*</span>)
+                    </label>
+                    <textarea
+                      required
+                      className="form-control"
+                      id="note"
+                      rows="5"
+                      value={note}
+                      onChange={(e) => setNote(e.target.value)}
+                    ></textarea>
                   </div>
+                </div>
 
                 <div className="col-12 mt-3 mb-5 text-end">
-                  <button type="submit" class="btn btn-danger">
+                  <button type="submit" className="btn btn-danger">
                     Gửi lịch hẹn cho khách hàng
                   </button>
                 </div>
@@ -299,4 +305,3 @@ export default function SalonAppointment() {
     </div>
   );
 }
-

@@ -37,7 +37,7 @@ export default function CarPostDetail() {
   const salon_id = localStorage.getItem("userIdSalon");
   const [post, setPost] = useState({});
   const [processId, setProcessId] = useState("");
-  const [mainImage, setMainImage] = useState("")
+  const [mainImage, setMainImage] = useState("");
 
   const params = useParams();
   const id = params.id;
@@ -70,7 +70,7 @@ export default function CarPostDetail() {
     console.log("res : ", res);
     if (res?.data?.post) {
       setPost(res.data.post);
-      setMainImage(res.data.post.image[0])
+      setMainImage(res.data.post.image[0]);
     }
   };
   useEffect(() => {
@@ -79,13 +79,13 @@ export default function CarPostDetail() {
   }, []);
   const handleConection = async (e) => {
     e.preventDefault();
-    try{
+    try {
       let res = await dealerApi.CreateConnecttion(post.post_id, processId);
-    }catch(e){
-        console.log(e)
-        if(e?.response?.data?.status === "failed"){
-          toast.error("Bạn đã gửi yêu cầu kết nối rồi")
-        }
+    } catch (e) {
+      console.log(e);
+      if (e?.response?.data?.status === "failed") {
+        toast.error("Bạn đã gửi yêu cầu kết nối rồi");
+      }
     }
   };
   return (
@@ -135,11 +135,11 @@ export default function CarPostDetail() {
               </div>
               <div className="price">{post.price} đ </div>
               <div className="address">
-                <i class="fa-solid fa-location-dot"></i> {post.address}
+                <i className="fa-solid fa-location-dot"></i> {post.address}
               </div>
               <div className="time-post">
                 {" "}
-                <i class="fa-solid fa-clock"></i> Đăng 5 giây trước
+                <i className="fa-solid fa-clock"></i> Đăng 5 giây trước
               </div>
             </div>
             <div className="car-info-detail">
@@ -256,15 +256,20 @@ export default function CarPostDetail() {
                 Kết nối hoa tiêu
               </button>
               <button className="chat">
-                <i class="fa-regular fa-comments"></i> Chat
+                <i className="fa-regular fa-comments"></i> Chat
               </button>
               <div className="chat-demo">
                 <button>Xe còn không ?</button>
                 <button>Xe chính chủ không ?</button>
               </div>
               <div className="infor-user">
-                <div className="rating">Độ tin cậy: <span>{post?.postedBy?.avgRating}%</span></div>
-                <div className="completing">Giao dịch hoàn thành : <span>{post?.postedBy?.completedTransactions}</span></div>
+                <div className="rating">
+                  Độ tin cậy: <span>{post?.postedBy?.avgRating}%</span>
+                </div>
+                <div className="completing">
+                  Giao dịch hoàn thành :{" "}
+                  <span>{post?.postedBy?.completedTransactions}</span>
+                </div>
               </div>
             </div>
           </div>

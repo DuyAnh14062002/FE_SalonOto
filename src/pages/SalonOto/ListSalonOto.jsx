@@ -99,7 +99,7 @@ export default function ListSalonOto() {
                           style={{ flexShrink: 0 }}
                         >
                           {profile.user_id === salon.user_id ? (
-                            <span class="highlight-label">Sở hữu</span>
+                            <span className="highlight-label">Sở hữu</span>
                           ) : (
                             ""
                           )}

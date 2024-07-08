@@ -46,6 +46,7 @@ export default function Header(props) {
 
   const fetchAppointmentApi = async () => {
     const res = await appointmentApi.getAllAppointmentUser();
+    console.log("res fetchAppointmentApi : ", res);
     if (res?.data?.appointments) {
       const appointmentList = res.data.appointments;
       let number = res.data.appointments.filter(
@@ -316,7 +317,7 @@ export default function Header(props) {
                         >
                           <span>{formattedTimeDifference}</span>
                           <i
-                            class="fa-regular fa-trash-can text-danger mx-2"
+                            className="fa-regular fa-trash-can text-danger mx-2"
                             title="Xóa thông báo"
                             onClick={() => handleDeleteNotify(notification.id)}
                           ></i>
@@ -397,7 +398,7 @@ export default function Header(props) {
                         >
                           <span>{formattedTimeDifference}</span>
                           <i
-                            class="fa-regular fa-trash-can text-danger mx-2"
+                            className="fa-regular fa-trash-can text-danger mx-2"
                             title="Xóa thông báo"
                             onClick={() => handleDeleteNotify(notification.id)}
                           ></i>
@@ -646,11 +647,11 @@ export default function Header(props) {
       <div className="container-box">
         <Link className="link position-relative" to="/appointment">
           <i
-            class="fa-solid fa-calendar-days"
+            className="fa-solid fa-calendar-days"
             style={{ color: "white", fontSize: "25px", marginRight: "25px" }}
           ></i>
           <span
-            class="badge rounded-pill badge-notification bg-danger position-absolute"
+            className="badge rounded-pill badge-notification bg-danger position-absolute"
             style={{ top: "-9px", left: "18px" }}
           >
             {numberOfCalender > 0 && numberOfCalender}
@@ -663,12 +664,12 @@ export default function Header(props) {
           rootClose={true}
         >
           <div
-            class="text-white position-relative"
+            className="text-white position-relative"
             style={{ cursor: "pointer", marginRight: "10px" }}
           >
-            <i class="fa-regular fa-bell fs-4"></i>
+            <i className="fa-regular fa-bell fs-4"></i>
             <span
-              class="badge rounded-pill badge-notification bg-danger position-absolute"
+              className="badge rounded-pill badge-notification bg-danger position-absolute"
               style={{ top: "-10px", left: "17px" }}
             >
               {numberOfNotification > 0 && numberOfNotification}
@@ -680,9 +681,9 @@ export default function Header(props) {
           onClick={HandleMessage}
           style={{ marginLeft: "15px" }}
         >
-          <i class="fa-brands fa-facebook-messenger"></i>
+          <i className="fa-brands fa-facebook-messenger"></i>
           <span
-            class="badge rounded-pill badge-notification bg-danger position-absolute"
+            className="badge rounded-pill badge-notification bg-danger position-absolute"
             style={{ top: "-6px", left: "34px" }}
           >
             {numberOfNotificationMessage > 0 && numberOfNotificationMessage}
@@ -774,11 +775,11 @@ export default function Header(props) {
       <div className="container-box">
         <Link className="link position-relative" to="/appointment">
           <i
-            class="fa-solid fa-calendar-days"
+            className="fa-solid fa-calendar-days"
             style={{ color: "white", fontSize: "25px", marginRight: "25px" }}
           ></i>
           <span
-            class="badge rounded-pill badge-notification bg-danger position-absolute"
+            className="badge rounded-pill badge-notification bg-danger position-absolute"
             style={{ top: "-9px", left: "18px" }}
           >
             {numberOfCalender > 0 && numberOfCalender}
@@ -791,12 +792,12 @@ export default function Header(props) {
           rootClose={true}
         >
           <div
-            class="text-white position-relative"
+            className="text-white position-relative"
             style={{ cursor: "pointer", marginRight: "10px" }}
           >
-            <i class="fa-regular fa-bell fs-4"></i>
+            <i className="fa-regular fa-bell fs-4"></i>
             <span
-              class="badge rounded-pill badge-notification bg-danger position-absolute"
+              className="badge rounded-pill badge-notification bg-danger position-absolute"
               style={{ top: "-10px", left: "17px" }}
             >
               {numberOfNotification > 0 && numberOfNotification}
@@ -808,9 +809,9 @@ export default function Header(props) {
           onClick={HandleMessage}
           style={{ marginLeft: "15px" }}
         >
-          <i class="fa-brands fa-facebook-messenger"></i>
+          <i className="fa-brands fa-facebook-messenger"></i>
           <span
-            class="badge rounded-pill badge-notification bg-danger position-absolute"
+            className="badge rounded-pill badge-notification bg-danger position-absolute"
             style={{ top: "-6px", left: "34px" }}
           >
             {numberOfNotificationMessage > 0 && numberOfNotificationMessage}

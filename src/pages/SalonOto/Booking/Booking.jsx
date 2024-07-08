@@ -153,10 +153,10 @@ export default function Booking() {
               <h2 className="text-uppercase fw-bold">
                 {carId ? "Đặt lịch hẹn xem xe" : "Đặt lịch hẹn"}
               </h2>
-              <div class="mt-3">
-                <div class="fs-5 d-flex">
+              <div className="mt-3">
+                <div className="fs-5 d-flex">
                   <i
-                    class="fa-solid fa-file-signature mt-1"
+                    className="fa-solid fa-file-signature mt-1"
                     style={{ width: "25px" }}
                   ></i>
                   <div className="mx-2">
@@ -165,10 +165,10 @@ export default function Booking() {
                   </div>
                 </div>
               </div>
-              <div class="mt-3">
-                <div class="fs-5 d-flex">
+              <div className="mt-3">
+                <div className="fs-5 d-flex">
                   <i
-                    class="fa-solid fa-location-dot mt-1"
+                    className="fa-solid fa-location-dot mt-1"
                     style={{ width: "25px" }}
                   ></i>
                   <div className="mx-3">
@@ -177,10 +177,10 @@ export default function Booking() {
                   </div>
                 </div>
               </div>
-              <div class="mt-3">
-                <div class="fs-5 d-flex">
+              <div className="mt-3">
+                <div className="fs-5 d-flex">
                   <i
-                    class="fa-solid fa-clock mt-1"
+                    className="fa-solid fa-clock mt-1"
                     style={{ width: "25px" }}
                   ></i>
                   <div className="mx-2">
@@ -189,10 +189,10 @@ export default function Booking() {
                   </div>
                 </div>
               </div>
-              <div class="mt-3">
-                <div class="fs-5 d-flex">
+              <div className="mt-3">
+                <div className="fs-5 d-flex">
                   <i
-                    class="fa-solid fa-square-phone mt-1"
+                    className="fa-solid fa-square-phone mt-1"
                     style={{ width: "25px" }}
                   ></i>
                   <div className="mx-2">
@@ -213,19 +213,19 @@ export default function Booking() {
                   <div className="col-12">
                     <div className="row">
                       <div className="col-6">
-                        <h3 class="fw-bold fs-5">Tên xe</h3>
+                        <h3 className="fw-bold fs-5">Tên xe</h3>
                         <p className="text-uppercase fs-5">{car?.name}</p>
-                        <h3 class="fw-bold fs-5">Hãng sản xuất</h3>
+                        <h3 className="fw-bold fs-5">Hãng sản xuất</h3>
                         <p className="text-uppercase fs-5">{car?.brand}</p>
-                        <h3 class="fw-bold fs-5">Nơi sản xuất</h3>
+                        <h3 className="fw-bold fs-5">Nơi sản xuất</h3>
                         <p className="text-uppercase fs-5">{car?.origin}</p>
-                        <h3 class="fw-bold fs-5">Mô tả</h3>
+                        <h3 className="fw-bold fs-5">Mô tả</h3>
                         <p className="text-uppercase fs-5">
                           {car?.description}
                         </p>
                       </div>
                       <div className="col-6">
-                        <h3 class="fw-bold fs-5">Hình ảnh xe</h3>
+                        <h3 className="fw-bold fs-5">Hình ảnh xe</h3>
                         <img
                           src={car?.image?.[0]}
                           alt="car"
@@ -241,7 +241,7 @@ export default function Booking() {
                 )}
 
                 <div className="col-6 mt-3">
-                  <h3 class="fw-bold fs-5">
+                  <h3 className="fw-bold fs-5">
                     Chọn ngày (<span className="text-danger">*</span>)
                   </h3>
                   <Calendar
@@ -254,10 +254,10 @@ export default function Booking() {
                   />
                 </div>
                 <div className="col-6 mt-3">
-                  <h3 class="fw-bold fs-5">
+                  <h3 className="fw-bold fs-5">
                     Chọn thời gian (<span className="text-danger">*</span>)
                   </h3>
-                  <div class="select-time row">
+                  <div className="select-time row">
                     {arrayTime.map((time, index) => {
                       const isClicked = time === selectedTime;
                       return (
@@ -289,14 +289,14 @@ export default function Booking() {
                 </div>
                 {!carId && (
                   <div className="col-12">
-                    <div class="mt-3">
-                      <label for="note" class="fw-bold fs-5">
+                    <div className="mt-3">
+                      <label for="note" className="fw-bold fs-5">
                         Bạn muốn đặt lịch hẹn để làm gì? (
                         <span className="text-danger">*</span>)
                       </label>
                       <textarea
                         required
-                        class="form-control"
+                        className="form-control"
                         id="note"
                         rows="5"
                         value={note}
@@ -307,7 +307,7 @@ export default function Booking() {
                 )}
 
                 <div className="col-12 mt-3 mb-5 text-end">
-                  <button type="submit" class="btn btn-danger">
+                  <button type="submit" className="btn btn-danger">
                     Đặt lịch
                   </button>
                 </div>

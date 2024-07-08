@@ -11,6 +11,9 @@ import processApi from "../../../apis/process.api";
 import ProcessForm from "../../ProcessForm/ProcessForm";
 import { PaginationControl } from "react-bootstrap-pagination-control";
 import { debounce } from "lodash";
+import paymentMethodApi from "../../../apis/paymentMethod.api";
+import paymentRequestApi from "../../../apis/paymentRequest.api";
+import carApi from "../../../apis/car.api";
 const LIMIT = 5;
 
 export default function ManageBuyCar() {
@@ -36,7 +39,19 @@ export default function ManageBuyCar() {
   const [totalPage, setTotalPage] = useState(0);
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
-  console.log("invoices:", invoices);
+  const [listPaymentMethod, setListPaymentMethod] = useState([]);
+  const [methodPaymentId, setMethodPaymentId] = useState("");
+
+  const fetchListPaymentMethod = async () => {
+    const res = await paymentMethodApi.getAllPaymentMethod();
+    if (res?.data?.data) {
+      setListPaymentMethod(res.data.data);
+      setMethodPaymentId(res.data.data[0].id);
+    }
+  };
+  useEffect(() => {
+    fetchListPaymentMethod();
+  }, []);
   const handleSearch = (e) => {
     setSearch(e.target.value);
     const searchValue = e.target.value;
@@ -62,6 +77,7 @@ export default function ManageBuyCar() {
   const handleFilterChange = (e) => {
     setFilter(e.target.value);
   };
+
   const filteredInvoices = invoices.filter((invoice) => {
     if (filter === "done") {
       return invoice.done;
@@ -87,7 +103,6 @@ export default function ManageBuyCar() {
     const res2 = await userApi.getLegalUser({
       phone: "0935722384",
     });
-    console.log("res2", res2);
   };
   const loadingInvoice = async (salon_id, page, search) => {
     let res = await invoiceApi.getAllInvoiceBuyCar(salon_id, {
@@ -95,7 +110,7 @@ export default function ManageBuyCar() {
       per_page: LIMIT,
       q: search,
     });
-    console.log("res invoice : ", res);
+
     if (res?.data?.invoices) {
       setInvoices(res?.data?.invoices);
       setTotalPage(res.data.total_page);
@@ -104,16 +119,25 @@ export default function ManageBuyCar() {
 
   const fetchDataSalon = async (page, search) => {
     const res = await salonApi.getSalonInfor();
-    if (res?.data?.salon?.cars) {
-      setCars(res.data.salon.cars);
-      setCarId(res.data.salon.cars[0].car_id);
-    }
     if (res?.data?.salon) {
       getAllEmployeeOfSalons(res.data.salon.salon_id);
       loadingInvoice(res.data.salon.salon_id, page, search);
       setSalon(res.data.salon);
     }
   };
+  const fetchAllCars = async (salonId) => {
+    let res = await carApi.getAllCarOfSalon(salonId, 1, 1000000);
+    console.log("res : ", res);
+    if (res?.data?.cars) {
+      setCars(res?.data?.cars);
+      setCarId(res.data.cars[0].car_id);
+    }
+  };
+  useEffect(() => {
+    if (salon?.salon_id) {
+      fetchAllCars(salon.salon_id);
+    }
+  }, [salon]);
   useEffect(() => {
     loadingUser();
     fetchDataSalon(page, search);
@@ -149,16 +173,20 @@ export default function ManageBuyCar() {
       selectedProcess,
       employeeId
     );
-    // toast.success("Thêm thông tin giao dịch thành công");
-    // handleCloseAdd();
-    // loadingInvoice(salon.salon_id);
-    // setBuyCarInfor({});
-    console.log("res add  : ", res);
+    console.log("res invoice hahahhaa", res);
     if (res?.data?.status === "success") {
       toast.success("Thêm thông tin giao dịch thành công");
       handleCloseAdd();
       loadingInvoice(salon.salon_id, 1, search);
       setBuyCarInfor({});
+      await paymentRequestApi.createPaymentRequest({
+        cusPhone: BuyCarInfor.phone,
+        cusFullname: BuyCarInfor.fullname,
+        amount: BuyCarInfor.expense,
+        salonId: salon.salon_id,
+        methodPaymentId,
+        invoiceId: res.data.invoice.invoice_id,
+      });
     } else {
       toast.error("Thêm thông tin giao dịch thất bại");
     }
@@ -194,7 +222,6 @@ export default function ManageBuyCar() {
   const handleProcessChange = (event) => {
     setSelectedProcess(event.target.value);
   };
-  console.log("employId : ", employeeId);
   return (
     <>
       <div id="content" className="container-fluid">
@@ -248,7 +275,7 @@ export default function ManageBuyCar() {
                   <th scope="col" style={{ width: "12%" }}>
                     Tên khách hàng
                   </th>
-                  <th scope="col">số điện thoại</th>
+                  <th scope="col">Số điện thoại</th>
                   {/* <th scope="col">Email</th> */}
                   <th scope="col">Tên xe</th>
                   <th scope="col">Tổng tiền</th>
@@ -280,9 +307,9 @@ export default function ManageBuyCar() {
                       <td>{invoice?.employee_id?.fullname}</td>
                       <td>
                         {invoice?.done ? (
-                          <span class="badge bg-success">Hoàn thành</span>
+                          <span className="badge bg-success">Hoàn thành</span>
                         ) : (
-                          <span class="badge bg-warning text-dark">
+                          <span className="badge bg-warning text-dark">
                             Đang xử lý
                           </span>
                         )}
@@ -411,6 +438,15 @@ export default function ManageBuyCar() {
               </Form.Select>
             </Form.Group>
             <Form.Group className="mt-4">
+              <Form.Label>Biển số xe</Form.Label>
+              <Form.Control
+                required
+                type="text"
+                name="licensePlate"
+                onChange={onChange}
+              />
+            </Form.Group>
+            <Form.Group className="mt-4">
               <Form.Label>Tổng tiền</Form.Label>
               <Form.Control
                 required
@@ -441,6 +477,20 @@ export default function ManageBuyCar() {
                 {employees?.map((employee, index) => (
                   <option key={index} value={employee.user_id}>
                     {employee.fullname}
+                  </option>
+                ))}
+              </Form.Select>
+            </Form.Group>
+            <Form.Group className="mt-4">
+              <Form.Label>Chọn hình thức thanh toán</Form.Label>
+
+              <Form.Select
+                onChange={(e) => setMethodPaymentId(e.target.value)}
+                value={methodPaymentId}
+              >
+                {listPaymentMethod?.map((item, index) => (
+                  <option key={index} value={item.id}>
+                    {item.type} - {item.content}
                   </option>
                 ))}
               </Form.Select>
@@ -478,6 +528,16 @@ export default function ManageBuyCar() {
           <Modal.Title>Thông tin bảo hành cho xe</Modal.Title>
         </Modal.Header>
         <Modal.Body>
+          <Form.Group className="mt-4">
+            <Form.Label>Biển số xe</Form.Label>
+            <Form.Control
+              required
+              type="text"
+              name="limit_kilometer"
+              value={warranty?.licensePlate}
+              readOnly
+            />
+          </Form.Group>
           <Form.Group className="mt-4">
             <Form.Label>Số kilomet bảo hành</Form.Label>
             <Form.Control

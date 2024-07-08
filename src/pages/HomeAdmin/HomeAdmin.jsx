@@ -240,7 +240,7 @@ export default function HomeAdmin() {
                   Danh sách các đơn hàng gần đây
                 </h2>
                 <div className="">
-                  <table class="table table-hover border">
+                  <table className="table table-hover border">
                     <thead>
                       <tr>
                         <th scope="col" className="text-center">

@@ -46,13 +46,13 @@ export default function AdminHeader() {
               data-bs-toggle="dropdown"
             >
               <i className="fa-solid fa-user mx-2"></i>
-              <span>DUC BA</span>
+              <span>Admin</span>
             </button>
             <div className="dropdown-menu dropdown-menu-right">
-              <Link className="dropdown-item" to="/">
+              {/* <Link className="dropdown-item" to="/">
                 Tài khoản
-              </Link>
-              <Link className="dropdown-item" to={path.loginAdmin}>
+              </Link> */}
+              <Link className="dropdown-item" to={path.login}>
                 Thoát
               </Link>
             </div>

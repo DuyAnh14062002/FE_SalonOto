@@ -176,9 +176,9 @@ export default function HistoryTransaction() {
             <Modal.Title> Thông tin chi tiết dịch vụ đã bảo dưỡng </Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <div class="container">
-              <h2 class="text-center">Bảng dịch vụ bảo dưỡng</h2>
-              <table class="table table-striped table-bordered">
+            <div className="container">
+              <h2 className="text-center">Bảng dịch vụ bảo dưỡng</h2>
+              <table className="table table-striped table-bordered">
                 <thead>
                   <tr>
                     <th scope="col">Tên dịch vụ bảo hành</th>
@@ -199,8 +199,8 @@ export default function HistoryTransaction() {
                     })}
                 </tbody>
               </table>
-              <h2 class="text-center">Bảng phụ tùng sửa chữa</h2>
-              <table class="table table-striped table-bordered">
+              <h2 className="text-center">Bảng phụ tùng sửa chữa</h2>
+              <table className="table table-striped table-bordered">
                 <thead>
                   <tr>
                     <th scope="col">Tên dịch vụ bảo hành</th>

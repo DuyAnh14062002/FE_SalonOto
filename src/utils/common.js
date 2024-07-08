@@ -143,3 +143,29 @@ export const formatDateDetail = (isoDate) => {
 
   return `${dayOfWeek}, ${day}/${month}/${year} ${hours}:${minutes}`;
 };
+export const formatDateDetailShortened = (isoDate) => {
+  const date = new Date(isoDate);
+
+  const months = [
+    "01",
+    "02",
+    "03",
+    "04",
+    "05",
+    "06",
+    "07",
+    "08",
+    "09",
+    "10",
+    "11",
+    "12",
+  ];
+
+  const day = date.getDate();
+  const month = months[date.getMonth()];
+  const year = date.getFullYear();
+  const hours = ("0" + date.getHours()).slice(-2);
+  const minutes = ("0" + date.getMinutes()).slice(-2);
+
+  return `${day}/${month}/${year} ${hours}:${minutes}`;
+};

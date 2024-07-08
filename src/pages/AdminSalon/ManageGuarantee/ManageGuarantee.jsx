@@ -64,7 +64,7 @@ export default function ManageGuarantee() {
   const handleCloseAdd = () => {
     setShowAdd(false);
   };
-  const handleShowAdd = (car) => {
+  const handleShowAdd = () => {
     setShowAdd(true);
   };
   const handleShowDelete = (warrantyItem) => {

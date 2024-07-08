@@ -286,7 +286,7 @@ export default function AdminSalonSidebar(props) {
           <li className="nav-link">
             <Link to={path.managePromotion} className="text-decoration-none ">
               <div className="nav-link-icon d-inline-flex mx-2">
-                <i class="fa-solid fa-percent"></i>
+                <i className="fa-solid fa-percent"></i>
               </div>
               Quản lý Khuyến mãi
             </Link>

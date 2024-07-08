@@ -4,34 +4,34 @@ import { Form, Image, Spinner } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 
-import "./PostSellCar.scss"
+import "./PostSellCar.scss";
 import salonApi from "../../apis/salon.api";
 import dealerApi from "../../apis/dealer.api";
 import { toast } from "react-toastify";
 export default function PostSellCar() {
-  const [show, setShow] = useState(false)
-  const [listSalon, setListSalon] = useState([])
-  const [infoCar, setInfoCar] = useState({})
+  const [show, setShow] = useState(false);
+  const [listSalon, setListSalon] = useState([]);
+  const [infoCar, setInfoCar] = useState({});
   const [image, setImage] = useState([]);
-  const [salonId, setSalonId] = useState([])
-  const [imagePreview, setImagePreview] = useState([])
-  const [checkAllSalon, setCheckAllSalon] = useState(false)
-  const [showGroupSalon, setShowGroupSalon] = useState(false)
-  const [nameGroupSalon, setNameGroupSalon] = useState("")
-  const [groupSalon, setGroupSalon] = useState([])
-  const [listNameSalon, setListNameSalon] = useState([])
-  const handleShowModal = () =>{
-    setShow(true)
-  }
+  const [salonId, setSalonId] = useState([]);
+  const [imagePreview, setImagePreview] = useState([]);
+  const [checkAllSalon, setCheckAllSalon] = useState(false);
+  const [showGroupSalon, setShowGroupSalon] = useState(false);
+  const [nameGroupSalon, setNameGroupSalon] = useState("");
+  const [groupSalon, setGroupSalon] = useState([]);
+  const [listNameSalon, setListNameSalon] = useState([]);
+  const handleShowModal = () => {
+    setShow(true);
+  };
   const handleCloseModal = () => {
-    setShow(false)
-  }
-  const handleShowGroupSalon = () =>{
-    setShowGroupSalon(true)
-  }
+    setShow(false);
+  };
+  const handleShowGroupSalon = () => {
+    setShowGroupSalon(true);
+  };
   const handleCloseGroupSalon = () => {
-    setShowGroupSalon(false)
-  }
+    setShowGroupSalon(false);
+  };
   const loadingSalon = async () => {
     let res = await salonApi.getAllSalonNoBlock();
     if (res?.data?.salons) {
@@ -39,75 +39,75 @@ export default function PostSellCar() {
     }
   };
   const handleChangeInfoCar = (e, name) => {
-     setInfoCar({...infoCar, [name] : e.target.value})
-  }
+    setInfoCar({ ...infoCar, [name]: e.target.value });
+  };
   const fetchAllGroupSalon = async () => {
-    try{
-        let res = await salonApi.getAllGroupSalon()
-        console.log("res :", res)
-        if(res?.data?.groupSalons){
-          setGroupSalon(res.data.groupSalons)
-        }
-    }catch(e){
-      console.log(e)
+    try {
+      let res = await salonApi.getAllGroupSalon();
+      console.log("res :", res);
+      if (res?.data?.groupSalons) {
+        setGroupSalon(res.data.groupSalons);
+      }
+    } catch (e) {
+      console.log(e);
     }
-  }
-  useEffect(() =>{
-     loadingSalon()
-     fetchAllGroupSalon()
-  }, [])
+  };
+  useEffect(() => {
+    loadingSalon();
+    fetchAllGroupSalon();
+  }, []);
   const handleSentPost = async (e) => {
     e.preventDefault();
     const form = new FormData();
-    if(infoCar?.title){
+    if (infoCar?.title) {
       form.append("title", infoCar.title);
     }
-    if(infoCar?.brand){
+    if (infoCar?.brand) {
       form.append("brand", infoCar.brand);
     }
-    if(infoCar?.type){
+    if (infoCar?.type) {
       form.append("type", infoCar.type);
     }
-    if(infoCar?.mfg){
+    if (infoCar?.mfg) {
       form.append("mfg", infoCar.mfg);
     }
-    if(infoCar?.version){
+    if (infoCar?.version) {
       form.append("version", infoCar.version);
     }
-    if(infoCar?.gear){
+    if (infoCar?.gear) {
       form.append("gear", infoCar.gear);
     }
-    if(infoCar?.fuel){
+    if (infoCar?.fuel) {
       form.append("fuel", infoCar.fuel);
     }
-    if(infoCar?.origin){
+    if (infoCar?.origin) {
       form.append("origin", infoCar.origin);
     }
-    if(infoCar?.design){
+    if (infoCar?.design) {
       form.append("design", infoCar.design);
     }
-    if(infoCar?.seat){
+    if (infoCar?.seat) {
       form.append("seat", infoCar.seat);
     }
-    if(infoCar?.color){
+    if (infoCar?.color) {
       form.append("color", infoCar.color);
     }
-    if(infoCar?.licensePlate){
+    if (infoCar?.licensePlate) {
       form.append("licensePlate", infoCar.licensePlate);
     }
-    if(infoCar?.ownerNumber){
+    if (infoCar?.ownerNumber) {
       form.append("ownerNumber", infoCar.ownerNumber);
     }
-    if(infoCar?.kilometer){
+    if (infoCar?.kilometer) {
       form.append("kilometer", infoCar.kilometer);
     }
-    if(infoCar?.price){
+    if (infoCar?.price) {
       form.append("price", infoCar.price);
     }
     // if(infoCar?.registrationDeadline){
     //   form.append("registrationDeadline", infoCar.registrationDeadline);
     // }
-    if(infoCar?.address){
+    if (infoCar?.address) {
       form.append("address", infoCar.address);
     }
     if (image) {
@@ -115,79 +115,79 @@ export default function PostSellCar() {
         form.append("image", item);
       });
     }
-    if(salonId){
+    if (salonId) {
       salonId.forEach((item) => {
         form.append("salons", item);
       });
     }
-    let res = await dealerApi.sentPost(form)
-  }
+    let res = await dealerApi.sentPost(form);
+  };
   const handleChooseSalon = (e) => {
-    let id = e.target.value
-    if(e.target.checked === true){
+    let id = e.target.value;
+    if (e.target.checked === true) {
       setSalonId([...salonId, id]);
-    }else{
-      let newListSalonId = salonId.filter((id) => id !== e.target.value)
-      setSalonId(newListSalonId)
+    } else {
+      let newListSalonId = salonId.filter((id) => id !== e.target.value);
+      setSalonId(newListSalonId);
     }
-  }
+  };
   const handleOnChangeImage = (e) => {
     const listImage = [];
-    const listImagePreview = []
+    const listImagePreview = [];
     for (let i = 0; i < e.target.files.length; i++) {
       listImage.push(e.target.files[i]);
-      listImagePreview.push(URL.createObjectURL(e.target.files[i]))
+      listImagePreview.push(URL.createObjectURL(e.target.files[i]));
     }
     setImage(listImage);
-    setImagePreview(listImagePreview)
+    setImagePreview(listImagePreview);
   };
   const handleChooseAllSalon = (e) => {
-    if(e.target.checked === true && listSalon?.length > 0){
+    if (e.target.checked === true && listSalon?.length > 0) {
       let allSalonId = [];
       listSalon.forEach((salon) => {
-        allSalonId.push(salon.salon_id)
-      })
-      setSalonId(allSalonId)
-      setCheckAllSalon(true)
-    }else{
-      setSalonId([])
-      setCheckAllSalon(false)
+        allSalonId.push(salon.salon_id);
+      });
+      setSalonId(allSalonId);
+      setCheckAllSalon(true);
+    } else {
+      setSalonId([]);
+      setCheckAllSalon(false);
     }
-  }
+  };
   const handleCreateGroupSalon = async (e) => {
     e.preventDefault();
-    try{
-       let res = await salonApi.createGroupSalon(nameGroupSalon, salonId)
-       if(res?.data?.status === "success"){
-        toast.success("Tạo nhóm salon thành công")
-        handleCloseGroupSalon()
-        setSalonId([])
-        setCheckAllSalon(false)
-        fetchAllGroupSalon()
-       }else{
-        toast.error("Tạo nhóm salon thất bại")
-       }
-    }catch(e){
-      console.log(e)
+    try {
+      let res = await salonApi.createGroupSalon(nameGroupSalon, salonId);
+      if (res?.data?.status === "success") {
+        toast.success("Tạo nhóm salon thành công");
+        handleCloseGroupSalon();
+        setSalonId([]);
+        setCheckAllSalon(false);
+        fetchAllGroupSalon();
+      } else {
+        toast.error("Tạo nhóm salon thất bại");
+      }
+    } catch (e) {
+      console.log(e);
     }
-  }
-  const onChangeGroupNameSalon = (e) =>{
-     setNameGroupSalon(e.target.value)
-  }
-  const handleOnchangeGroupSalon =(item) => {
-    console.log("onchange group salon : ",item)
-    if(item?.salons?.length > 0){
-      let listNameSalon = []
-      let lisIdsalon = []
+  };
+  const onChangeGroupNameSalon = (e) => {
+    setNameGroupSalon(e.target.value);
+  };
+  const handleOnchangeGroupSalon = (item) => {
+    console.log("onchange group salon : ", item);
+    if (item?.salons?.length > 0) {
+      let listNameSalon = [];
+      let lisIdsalon = [];
       item.salons.forEach((i) => {
-         lisIdsalon.push(i.id)
-         listNameSalon.push(i.name)
-      })
-      setListNameSalon(listNameSalon)
-      setSalonId(lisIdsalon)
+        lisIdsalon.push(i.id);
+        listNameSalon.push(i.name);
+      });
+      setListNameSalon(listNameSalon);
+      setSalonId(lisIdsalon);
     }
-  }
-  console.log("group salon : ", groupSalon)
+  };
+  console.log("group salon : ", groupSalon);
   return (
     <>
       <Header otherPage={true} />
@@ -196,22 +196,37 @@ export default function PostSellCar() {
           <div className="left-post-sell">
             <div className="title">Hình ảnh sản phẩm</div>
             <div className="image-preview">
-              {imagePreview?.length > 0 && imagePreview.map((item, index) => {
-                return(
-                  <div className="item" key={index} style={{backgroundImage: `url(${item})`}}></div>
-                )
-              })}
+              {imagePreview?.length > 0 &&
+                imagePreview.map((item, index) => {
+                  return (
+                    <div
+                      className="item"
+                      key={index}
+                      style={{ backgroundImage: `url(${item})` }}
+                    ></div>
+                  );
+                })}
             </div>
             <label className="image-post-sell" for="file">
-              <input type="file" id="file" onChange={(e) => handleOnChangeImage(e)}  multiple="true"/>
-              <i class="fa-solid fa-camera"></i>
+              <input
+                type="file"
+                id="file"
+                onChange={(e) => handleOnChangeImage(e)}
+                multiple="true"
+              />
+              <i className="fa-solid fa-camera"></i>
               <label>Đăng từ 1 đến 20 hình</label>
             </label>
           </div>
           <div className="right-post-sell">
             <div className="header-post-sell">
-               <div className="title">Thông tin chi tiết</div>
-               <button className="create-group-salon" onClick={handleShowGroupSalon}>Tạo nhóm salon</button>
+              <div className="title">Thông tin chi tiết</div>
+              <button
+                className="create-group-salon"
+                onClick={handleShowGroupSalon}
+              >
+                Tạo nhóm salon
+              </button>
             </div>
             <input
               placeholder="Hãng xe"
@@ -271,7 +286,7 @@ export default function PostSellCar() {
                   onChange={(e) => handleChangeInfoCar(e, "licensePlate")}
                 />
                 <div className="is-accessory">
-                  <span>Có phụ kiện đi kèm</span> <br/>
+                  <span>Có phụ kiện đi kèm</span> <br />
                   <button className="yes">Có</button>
                   <button className="no">Không</button>
                 </div>
@@ -296,7 +311,7 @@ export default function PostSellCar() {
                   onChange={(e) => handleChangeInfoCar(e, "ownerNumber")}
                 />
                 <div className="is-regis">
-                  <span>Còn hạn đăng kiểm</span> <br/>
+                  <span>Còn hạn đăng kiểm</span> <br />
                   <button className="yes">Có</button>
                   <button className="no">Không</button>
                 </div>
@@ -322,7 +337,9 @@ export default function PostSellCar() {
               className="car-detail-input"
               onChange={(e) => handleChangeInfoCar(e, "address")}
             />
-            <button className="btn-post-sell-car" onClick={handleShowModal}>Gửi tin cho salon</button>
+            <button className="btn-post-sell-car" onClick={handleShowModal}>
+              Gửi tin cho salon
+            </button>
           </div>
         </div>
       </div>
@@ -332,23 +349,30 @@ export default function PostSellCar() {
             <Modal.Title>Chọn Salon ô tô muốn gửi</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-          <Form.Group className="mt-4">
+            <Form.Group className="mt-4">
               {groupSalon?.length > 0 ? (
                 <>
-                   <Form.Label>Chọn nhóm salon muốn gửi</Form.Label>
-                   <Form.Select >
-                { groupSalon?.map((item)=>{
-                  return (
-                    <option onClick={() => handleOnchangeGroupSalon(item)}>{item.name}</option>
-                  )
-                })}
-              </Form.Select>
-                </>) : ( <>
-                <Form.Label style={{fontSize : "18px"}}>Bạn chưa tạo nhóm salon. Vui lòng tạo nhóm salon trước</Form.Label>
-                {/* <Button variant="primary">Tạo nhóm salon</Button> */}
-              </>) }
-          </Form.Group>
-          {/* <Form.Group className="mt-4">
+                  <Form.Label>Chọn nhóm salon muốn gửi</Form.Label>
+                  <Form.Select>
+                    {groupSalon?.map((item) => {
+                      return (
+                        <option onClick={() => handleOnchangeGroupSalon(item)}>
+                          {item.name}
+                        </option>
+                      );
+                    })}
+                  </Form.Select>
+                </>
+              ) : (
+                <>
+                  <Form.Label style={{ fontSize: "18px" }}>
+                    Bạn chưa tạo nhóm salon. Vui lòng tạo nhóm salon trước
+                  </Form.Label>
+                  {/* <Button variant="primary">Tạo nhóm salon</Button> */}
+                </>
+              )}
+            </Form.Group>
+            {/* <Form.Group className="mt-4">
               <Form.Check // prettier-ignore
                 type="checkbox"
                 id="custom-switch"
@@ -356,21 +380,23 @@ export default function PostSellCar() {
                 onClick={(e) => handleChooseAllSalon(e)}
               />
           </Form.Group> */}
-          {listNameSalon && listNameSalon.length > 0 && listNameSalon.map((item) => {
-                return(
+            {listNameSalon &&
+              listNameSalon.length > 0 &&
+              listNameSalon.map((item) => {
+                return (
                   <Form.Group className="mt-4">
-                  <Form.Check
-                    type="checkbox"
-                    id="custom-switch"
-                    label= {item}
-                    checked= "true"
-                  />
-              </Form.Group>
-                )
+                    <Form.Check
+                      type="checkbox"
+                      id="custom-switch"
+                      label={item}
+                      checked="true"
+                    />
+                  </Form.Group>
+                );
               })}
           </Modal.Body>
           <Modal.Footer>
-           <Button variant="primary" onClick={handleCloseModal} type="submit" >
+            <Button variant="primary" onClick={handleCloseModal} type="submit">
               Gửi
             </Button>
             <Button variant="secondary" onClick={handleCloseModal}>
@@ -379,53 +405,55 @@ export default function PostSellCar() {
           </Modal.Footer>
         </Form>
       </Modal>
-      <Modal show={showGroupSalon} onHide={handleCloseGroupSalon} backdrop="static">
+      <Modal
+        show={showGroupSalon}
+        onHide={handleCloseGroupSalon}
+        backdrop="static"
+      >
         <Form noValidate onSubmit={handleCreateGroupSalon}>
           <Modal.Header closeButton>
             <Modal.Title>Tạo nhóm salon</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-          <Form.Group className="mt-4">
-             <Form.Label>
-                 Đặt tên nhóm salon
-             </Form.Label>
-             <Form.Control
+            <Form.Group className="mt-4">
+              <Form.Label>Đặt tên nhóm salon</Form.Label>
+              <Form.Control
                 required
                 type="text"
                 name="fullname"
                 onChange={(e) => onChangeGroupNameSalon(e)}
                 //value= {data.fullname}
               />
-          </Form.Group>
-          <Form.Group className="mt-4">
-             <Form.Label>
-                 Chọn các salon muốn tạo nhóm
-             </Form.Label>
+            </Form.Group>
+            <Form.Group className="mt-4">
+              <Form.Label>Chọn các salon muốn tạo nhóm</Form.Label>
               <Form.Check // prettier-ignore
                 type="checkbox"
                 id="custom-switch"
                 label="Chọn tất cả Salon"
                 onClick={(e) => handleChooseAllSalon(e)}
               />
-          </Form.Group>
-          {listSalon && listSalon.length > 0 && listSalon.map((item) => {
-                return(
+            </Form.Group>
+            {listSalon &&
+              listSalon.length > 0 &&
+              listSalon.map((item) => {
+                return (
                   <Form.Group className="mt-4">
-                  <Form.Check
-                    type="checkbox"
-                    id="custom-switch"
-                    label= {item.name}
-                    value={item.salon_id}
-                    onClick={(e) => handleChooseSalon(e)}
-                    checked={salonId.includes(item.salon_id) || false }
-                    disabled= {checkAllSalon}
-                  />
-              </Form.Group>
-                )
+                    <Form.Check
+                      type="checkbox"
+                      id="custom-switch"
+                      label={item.name}
+                      value={item.salon_id}
+                      onClick={(e) => handleChooseSalon(e)}
+                      checked={salonId.includes(item.salon_id) || false}
+                      disabled={checkAllSalon}
+                    />
+                  </Form.Group>
+                );
               })}
           </Modal.Body>
           <Modal.Footer>
-           <Button variant="primary" onClick={handleCloseModal} type="submit" >
+            <Button variant="primary" onClick={handleCloseModal} type="submit">
               Tạo
             </Button>
             <Button variant="secondary" onClick={handleCloseModal}>

@@ -251,7 +251,9 @@ export default function ManagePackage() {
                   <th scope="col" className="text-center">
                     Tên gói
                   </th>
-                  <th scope="col">Mô tả gói</th>
+                  <th scope="col" style={{ width: "30%" }}>
+                    Mô tả gói
+                  </th>
                   <th scope="col" className="text-center">
                     Giá
                   </th>

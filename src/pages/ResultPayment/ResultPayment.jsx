@@ -12,7 +12,7 @@ export default function ResultPayment() {
   return data.rs === "success" ? (
     <div className="result-container">
       <div className="result-icon-success">
-        <i class="fa-solid fa-circle-check"></i>
+        <i className="fa-solid fa-circle-check"></i>
       </div>
       <div className="result-title-success">Thanh toán thành công</div>
       <div className="result-text-infor">Thông tin giao dịch</div>
@@ -26,18 +26,18 @@ export default function ResultPayment() {
         </div>
       </div>
       <div className="back-homepage" onClick={backHome}>
-        <i class="fa-solid fa-arrow-left"></i>
+        <i className="fa-solid fa-arrow-left"></i>
         <span>Trở về trang chủ</span>
       </div>
     </div>
   ) : (
     <div className="result-container">
       <div className="result-icon-faild">
-        <i class="fa-solid fa-circle-xmark"></i>
+        <i className="fa-solid fa-circle-xmark"></i>
       </div>
       <div className="result-title-faild">Thanh toán thất bại</div>
       <div className="back-homepage" onClick={backHome}>
-        <i class="fa-solid fa-arrow-left"></i>
+        <i className="fa-solid fa-arrow-left"></i>
         <span>Trở về trang chủ</span>
       </div>
     </div>
