@@ -55,9 +55,10 @@ const dealerApi = {
     return http.get(`/transactions?page=${page}&&per_page=${per_page}&&q=${q}`);
   },
 
-  nextProcess(id, rating) {
+  nextProcess(id, rating, commission) {
     return http.patch(`/transactions/${id}/next`, {
       rating: rating,
+      commission: commission,
     });
   },
 

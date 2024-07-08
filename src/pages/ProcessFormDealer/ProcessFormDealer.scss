@@ -4,7 +4,7 @@
   justify-content: center;
   position: relative;
   .box-rating {
-    width: 220px;
+    width: 236px;
     display: flex;
     position: absolute;
     top: 31px;
@@ -17,4 +17,7 @@
       font-weight: 500;
     }
   }
+}
+.award-money-box {
+  margin-top: 15px;
 }

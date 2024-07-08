@@ -25,8 +25,9 @@ export default function HistoryTransactionDealer() {
   };
   const fetchAllTransaction = async (page, search) => {
     let res = await dealerApi.getAllProcess(page, LIMIT, search);
-    if (res?.data?.transaction) {
-      setTransactions(res.data.transaction);
+    console.log("res : ", res)
+    if (res?.data?.transaction?.transaction) {
+      setTransactions(res.data.transaction?.transaction);
       setTotalPage(res.data.total_page);
     }
   };

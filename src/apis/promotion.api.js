@@ -23,6 +23,9 @@ const promotionApi = {
   deletePromotion(id) {
     return http.delete(`/promotions/${id}`);
   },
+  getAllPromotionOfSalon(salonId) {
+    return http.get(`/promotions/salon/${salonId}`);
+  },
 };
 
 export default promotionApi;

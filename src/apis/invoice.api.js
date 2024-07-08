@@ -79,6 +79,17 @@ const invoiceApi = {
   updateDoneInvoice(body) {
     return http.patch("/invoice/tick-done", body);
   },
+  getDetailInvoiceAccessory(id) {
+    return http.get(`/buy-accessory/${id}`);
+  },
+  getDetailInvoiceMaintenance(id) {
+    return http.get(`/invoice/${id}`);
+  },
+  satisticCustomer(year, quarter, month) {
+    return http.get(
+      `/invoice/get-invoice?year=${year}&quarter=${quarter}&month=${month}`
+    );
+  },
 };
 
 export default invoiceApi;

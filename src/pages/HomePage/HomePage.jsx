@@ -96,37 +96,39 @@ export default function HomePage() {
             {listPackage &&
               listPackage.length > 0 &&
               listPackage.map((item, index) => {
-                return (
-                  <div className="destination__card" key={index}>
-                    <div className="card__content">
-                      <h4>{item.name}</h4>
-                      <ul>
-                        {item &&
-                          item.features.length > 0 &&
-                          item.features.map((feature) => {
-                            return (
-                              <li>
-                                {" "}
-                                <i
-                                  className="fa-solid fa-circle-check"
-                                  style={{ color: "green" }}
-                                ></i>{" "}
-                                {feature.name}
-                              </li>
-                            );
-                          })}
-                      </ul>
-                      <button
-                        className="btn"
-                        onClick={() =>
-                          handleShowModal(item.price, item.package_id)
-                        }
-                      >
-                        Mua ngay
-                      </button>
+                if(index < 3){
+                  return (
+                    <div className="destination__card" key={index}>
+                      <div className="card__content">
+                        <h4>{item.name}</h4>
+                        <ul>
+                          {item &&
+                            item.features.length > 0 &&
+                            item.features.map((feature) => {
+                              return (
+                                <li>
+                                  {" "}
+                                  <i
+                                    className="fa-solid fa-circle-check"
+                                    style={{ color: "green" }}
+                                  ></i>{" "}
+                                  {feature.name}
+                                </li>
+                              );
+                            })}
+                        </ul>
+                        <button
+                          className="btn"
+                          onClick={() =>
+                            handleShowModal(item.price, item.package_id)
+                          }
+                        >
+                          Mua ngay
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                );
+                  );
+                }
               })}
           </div>
         </div>

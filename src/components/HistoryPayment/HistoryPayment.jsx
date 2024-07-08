@@ -4,6 +4,9 @@ import Header from "../Header";
 import paymentRequestApi from "../../apis/paymentRequest.api";
 import { PaginationControl } from "react-bootstrap-pagination-control";
 import { toast } from "react-toastify";
+import invoiceApi from "../../apis/invoice.api";
+import { Button, Modal } from "react-bootstrap";
+import { Form } from "react-router-dom";
 
 const LIMIT = 5;
 export default function HistoryPayment() {
@@ -11,7 +14,17 @@ export default function HistoryPayment() {
   const [totalPage, setTotalPage] = useState(0);
   const [page, setPage] = useState(1);
   const [filter, setFilter] = useState("all");
+  const [showInfor, setShowInfo] = useState(false);
+  const [showWarranty, setShowWarranty] = useState(false);
+  const [warranty, setWarranty] = useState({});
+  const [invoiceChoose, setInvoiceChoose] = useState({});
 
+  const handleCloseWarranty = () => {
+    setShowWarranty(false);
+  };
+  const handleCloseInfor = () => {
+    setShowInfo(false);
+  };
   const handleFilterChange = (e) => {
     setFilter(e.target.value);
   };
@@ -38,6 +51,25 @@ export default function HistoryPayment() {
     }
   };
   console.log("listPaymentRequest", listPaymentRequest);
+  const handleShowInfor = async (invoice) => {
+    if (invoice?.reason === "buy car") {
+      setShowWarranty(true);
+      setWarranty(invoice);
+    } else if (invoice?.reason === "Thanh toán hóa đơn bảo dưỡng") {
+      let res = await invoiceApi.getDetailInvoiceMaintenance(invoice.invoiceId);
+      if (res?.data?.invoice) {
+        setInvoiceChoose(res.data.invoice);
+      }
+      setShowInfo(true);
+    } else if (invoice?.reason === "Thanh toán hóa đơn phụ tùng") {
+      let res = await invoiceApi.getDetailInvoiceAccessory(invoice.invoiceId);
+      if (res?.data?.invoice) {
+        setInvoiceChoose(res.data.invoice);
+      }
+      console.log("res access : ", res);
+      setShowInfo(true);
+    }
+  };
   return (
     <>
       <Header otherPage={true} />
@@ -103,15 +135,18 @@ export default function HistoryPayment() {
                 </td>
                 <td>{formatDateDetail(item.create_date)}</td>
                 <td className="text-center">
-                  <button
-                    className="btn btn-warning btn-sm rounded-0 text-white mx-2"
-                    data-toggle="tooltip"
-                    data-placement="top"
-                    title="info"
-                    // onClick={() => handleShowInfor(invoice)}
-                  >
-                    <i className="fa-solid fa-circle-question"></i>
-                  </button>
+                  {item.invoiceId && (
+                    <button
+                      className="btn btn-warning btn-sm rounded-0 text-white mx-2"
+                      data-toggle="tooltip"
+                      data-placement="top"
+                      title="info"
+                      onClick={() => handleShowInfor(item)}
+                    >
+                      <i className="fa-solid fa-circle-question"></i>
+                    </button>
+                  )}
+
                   {!item.status && (
                     <button
                       to="/"
@@ -149,6 +184,116 @@ export default function HistoryPayment() {
           />
         </div>
       )}
+      <Modal
+        show={showInfor}
+        onHide={handleCloseInfor}
+        backdrop="static"
+        size="lg"
+      >
+        <Form>
+          <Modal.Header closeButton>
+            <Modal.Title> Thông tin chi tiết dịch vụ đã bảo dưỡng </Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <div className="container">
+              <h2 className="text-center">Bảng dịch vụ bảo dưỡng</h2>
+              <table className="table table-striped table-bordered">
+                <thead>
+                  <tr>
+                    <th scope="col">Tên dịch vụ bảo hành</th>
+                    <th scope="col">Giá (VND)</th>
+                    <th scope="col">Ngày bảo hành</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {invoiceChoose?.maintenanceServices?.length > 0
+                    ? invoiceChoose.maintenanceServices.map((item, index) => {
+                        console.log("item : ", item);
+                        return (
+                          <tr key={index}>
+                            <td>{item.name}</td>
+                            <td>{item.cost}</td>
+                            <td>{invoiceChoose?.invoiceDate}</td>
+                          </tr>
+                        );
+                      })
+                    : ""}
+                </tbody>
+              </table>
+              <h2 className="text-center">Bảng phụ tùng sửa chữa</h2>
+              <table className="table table-striped table-bordered">
+                <thead>
+                  <tr>
+                    <th scope="col">Tên dịch vụ bảo hành</th>
+                    <th scope="col">Giá (VND)</th>
+                    <th scope="col">Ngày bảo hành</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {invoiceChoose?.accessories?.length > 0
+                    ? invoiceChoose.accessories.map((item, index) => {
+                        return (
+                          <tr key={index}>
+                            <td>{item.name}</td>
+                            <td>{item.price}</td>
+                            <td>{invoiceChoose?.invoiceDate}</td>
+                          </tr>
+                        );
+                      })
+                    : ""}
+                </tbody>
+              </table>
+            </div>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleCloseInfor}>
+              Đóng
+            </Button>
+          </Modal.Footer>
+        </Form>
+      </Modal>
+      <Modal show={showWarranty} onHide={handleCloseWarranty} backdrop="static">
+        <Modal.Header closeButton>
+          <Modal.Title>Thông tin bảo hành cho xe</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form.Group className="mt-4">
+            <Form.Label>Số kilomet bảo hành</Form.Label>
+            <Form.Control
+              required
+              type="text"
+              name="limit_kilometer"
+              value={warranty?.limit_kilometer}
+              readOnly
+            />
+          </Form.Group>
+          <Form.Group className="mt-4">
+            <Form.Label>Số tháng bảo hành</Form.Label>
+            <Form.Control
+              required
+              type="text"
+              name="limit_kilometer"
+              value={warranty?.months}
+              readOnly
+            />
+          </Form.Group>
+          <Form.Group className="mt-4">
+            <Form.Label>Chính sách bảo hành</Form.Label>
+            <Form.Control
+              as="textarea"
+              //placeholder="Leave a comment here"
+              style={{ minHeight: "150px" }}
+              value={warranty?.policy}
+              readOnly
+            />
+          </Form.Group>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseWarranty}>
+            Đóng
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </>
   );
 }

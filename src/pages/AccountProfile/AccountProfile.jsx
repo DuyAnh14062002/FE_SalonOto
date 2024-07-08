@@ -189,6 +189,9 @@ const AccountProfile = (props) => {
   const handleShowTransactionDealer = () => {
     navigate(`${path.historyTransactionDealer}`);
   };
+  const handleShowSatisticDealer = () => {
+    navigate(`${path.satisticDealer}`);
+  };
   return (
     <>
       <Header otherPage={true} />
@@ -220,28 +223,38 @@ const AccountProfile = (props) => {
                               <div>
                                 <div className="info">
                                   <h4>Họ tên</h4>
-                                  <p>{profile1 && profile1.fullname}</p>
+                                  <p>
+                                    {(profile1 && profile1.fullname) ||
+                                      "Chưa cập nhật"}
+                                  </p>
                                 </div>
                               </div>
                               <div>
                                 <div className="info">
                                   <h4>Giới tính</h4>
                                   <p className="text-capitalize">
-                                    {profile1 && profile1.gender}
+                                    {(profile1 && profile1.gender) ||
+                                      "Chưa cập nhật"}
                                   </p>
                                 </div>
                               </div>
                               <div>
                                 <div className="info">
                                   <h4>Số điện thoại</h4>
-                                  <p>{profile1 && profile1.phone}</p>
+                                  <p>
+                                    {(profile1 && profile1.phone) ||
+                                      "Chưa cập nhật"}
+                                  </p>
                                 </div>
                               </div>
 
                               <div>
                                 <div className="info">
                                   <h4>Địa chỉ</h4>
-                                  <p>{profile1 && profile1.address}</p>
+                                  <p>
+                                    {(profile1 && profile1.address) ||
+                                      "Chưa cập nhật"}
+                                  </p>
                                 </div>
                               </div>
                               <div>
@@ -461,6 +474,22 @@ const AccountProfile = (props) => {
                           style={{ marginRight: "5px" }}
                         ></i>
                         Các giao dịch Hoa tiêu
+                      </Button>
+                      <Button
+                        className="mt-3 btn-profile function-additional"
+                        type="button"
+                        onClick={handleShowSatisticDealer}
+                        style={{
+                          backgroundColor: "rgb(30 116 10)",
+                          marginLeft: "10px",
+                          border: "none",
+                        }}
+                      >
+                        <i
+                          class="fa-solid fa-chart-simple"
+                          style={{ marginRight: "5px" }}
+                        ></i>
+                        Thống kê Hoa Tiêu
                       </Button>
                     </div>
                   </div>
