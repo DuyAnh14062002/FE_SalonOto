@@ -189,6 +189,9 @@ const AccountProfile = (props) => {
   const handleShowTransactionDealer = () => {
     navigate(`${path.historyTransactionDealer}`);
   };
+  const handleShowSatisticDealer = () => {
+    navigate(`${path.satisticDealer}`)
+  }
   return (
     <>
       <Header otherPage={true} />
@@ -461,6 +464,19 @@ const AccountProfile = (props) => {
                           style={{ marginRight: "5px" }}
                         ></i>
                         Các giao dịch Hoa tiêu
+                      </Button>
+                      <Button
+                        className="mt-3 btn-profile function-additional"
+                        type="button"
+                        onClick={handleShowSatisticDealer}
+                        style={{
+                          backgroundColor: "rgb(30 116 10)",
+                          marginLeft: "10px",
+                          border: "none",
+                        }}
+                      >
+                        <i class="fa-solid fa-chart-simple"  style={{ marginRight: "5px" }}></i> 
+                        Thống kê Hoa Tiêu
                       </Button>
                     </div>
                   </div>

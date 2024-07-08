@@ -8,6 +8,7 @@ import salonApi from "../../../apis/salon.api";
 import { toast } from "react-toastify";
 import { debounce, set } from "lodash";
 import { PaginationControl } from "react-bootstrap-pagination-control";
+import { Label } from "reactstrap";
 const LIMIT = 5;
 export default function ManageUser() {
   const [showUpdate, setShowUpdate] = useState(false);
@@ -15,16 +16,28 @@ export default function ManageUser() {
   const [detailRole, setDetailRole] = useState(false);
   const [detailRoleSalon, setDetailRoleSalon] = useState(false);
   const [detailRoleCalender, setDetailRoleCalender] = useState(false);
+  const [detailRoleMaintenance, setDetailRoleMaintenance] = useState(false);
+  const [detailRoleWRT, setDetailRoleWRT] = useState(false);
   const [employees, setEmployees] = useState([]);
   const [employee, setEmployee] = useState("");
   const [salonId, setSalonId] = useState("");
   const [salon, setSalon] = useState({});
-  const [permission, setPermission] = useState({});
+  const [permission, setPermission] = useState([]);
   //const testArr = ["getCar", "postCar", "deleteCar", "getCalender", "postCalender", "deleteCaleder", "getSalon", "patchSalon"];
   const [totalPage, setTotalPage] = useState(0);
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
-
+  const [showManageRole, setShowManageRole] = useState(false);
+  const [roles, setRoles] = useState([])
+  const [isAddRole, setIsAddRole] = useState(false)
+  const [nameRole, setNameRole] = useState("")
+  const [idRole, setIdRole] = useState("")
+  const handleShowManageRole = () => {
+    setShowManageRole(true);
+  };
+  const handleCloseManageRole = () => {
+    setShowManageRole(false);
+  };
   const handleSearch = (e) => {
     setSearch(e.target.value);
     const searchValue = e.target.value;
@@ -44,16 +57,28 @@ export default function ManageUser() {
         per_page: LIMIT,
         q: search,
       });
-      console.log("res2 : ", res2);
       if (res2?.data?.salonDb?.employees) {
         setEmployees(res2.data.salonDb.employees);
         setTotalPage(res2.data.total_page);
       }
     }
   };
+ const loadingAllRoleOfSalon = async () => {
+      try{
+        let res = await permissionApi.getAllRoleOfSalon()
+        if(res?.data?.data){
+          setRoles(res.data.data)
+        }
+      }catch(e){
+         console.log(e)
+      }
+  }
   useEffect(() => {
     loading(page, search);
   }, [page, search]);
+  useEffect(() => {
+    loadingAllRoleOfSalon()
+  }, [])
   const handleShowUpdate = (employee) => {
     loading();
     let listPermission = employee.permissions;
@@ -81,19 +106,21 @@ export default function ManageUser() {
   const handleToggleDetailRoleCalender = () => {
     setDetailRoleCalender(!detailRoleCalender);
   };
+  const handleToggleDetailRoleMaintenance = () => {
+    setDetailRoleMaintenance(!detailRoleMaintenance)
+  }
+  const handleToggleDetailRoleWRT = () => {
+    setDetailRoleWRT(!detailRoleWRT)
+  }
   const handleSetPermission = (e, name) => {
-    if (e.target.checked === true) {
-      setPermission((prevPermission) => ({
-        ...prevPermission,
-        [name]: name,
-      }));
+    if (e.target.checked) {
+        setPermission((prevPermission) => [...prevPermission, name]);
     } else {
-      setPermission((prevPermission) => ({
-        ...prevPermission,
-        [name]: null,
-      }));
+        setPermission((prevPermission) =>
+            prevPermission.filter((permission) => permission !== name)
+        );
     }
-  };
+};
   const handleSavePermission = () => {
     let listPermission = [];
     listPermission = Object.keys(permission).filter(
@@ -112,6 +139,37 @@ export default function ManageUser() {
 
     return `${day}/${month}/${year}`;
   };
+
+  const handleShowAddRole = (e) => {
+    e.preventDefault()
+    setIsAddRole(!isAddRole);
+    setPermission([])
+  }
+  const handleSaveRole = async() => {
+     try{
+        let res = await permissionApi.createRole(salonId, nameRole, permission)
+        if(res?.data?.status === "success"){
+          toast.success("Tạo Role thành công")
+          setPermission([])
+        }else{
+          toast.error("Tạo Role thất bại")
+        }
+     }catch(e){
+
+     }
+  }
+  const handleAssignPermission = async () =>{
+    try{
+       console.log("id : ", idRole)
+       console.log("idemploy : ", employee.user_id)
+       let res = await permissionApi.assignRole(employee.user_id, idRole)
+       console.log("res asign : ", res)
+    }catch(e){
+      console.log(e)
+    }
+  }
+  console.log("permissions : ", permission)
+  console.log("id : ", idRole)
   return (
     <>
       <div id="content" className="container-fluid">
@@ -136,6 +194,12 @@ export default function ManageUser() {
                   onChange={handleSearch}
                 />
               </div>
+              <button
+                className="btn btn-success"
+                onClick={handleShowManageRole}
+              >
+                Quản lý quyền
+              </button>
             </div>
             <table className="table mt-4 table-hover">
               <thead>
@@ -239,10 +303,94 @@ export default function ManageUser() {
                   readOnly
                 ></input>
               </div>
+              <div className="name-box col-6">
+                <label>Tên Role</label>
+                <Form.Select>
+                {roles?.length > 0 && roles.map((role) =>{
+                  return(
+                    <option onClick={() => setIdRole(role.id)}>
+                       {role.name}
+                    </option>
+                  )
+                })}
+                </Form.Select>
+              </div>
+            </div>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleCloseUpdate}>
+              Đóng
+            </Button>
+            <Button
+              variant="primary"
+              // onClick={handleUpdateCar}
+              disabled={isLoading}
+            >
+              {isLoading && <Spinner animation="border" size="sm" />}
+              <span className="mx-2" onClick={handleAssignPermission}>
+                Cập nhật
+              </span>
+            </Button>
+          </Modal.Footer>
+        </Form>
+      </Modal>
+      <Modal
+        show={showManageRole}
+        onHide={handleCloseManageRole}
+        size="lg"
+        backdrop="static"
+      >
+        <Form noValidate>
+          <Modal.Header closeButton>
+            <Modal.Title> Quản lý quyền</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <div className="row">
+              <div className="name-box d-flex justify-content-between align-items-center">
+                <div className="col-6">
+                  <label>Danh sách các role</label>
+                  <Form.Select
+                    className="form-control"
+                    readOnly
+                  >
+                     {roles?.length > 0 && roles.map((role) => {
+                      return (
+                        <option onClick={() => setPermission(role.permissions)}>{role.name}</option>
+                      )
+                     })}
+                  </Form.Select>
+                </div>
+                {isAddRole === true ? (
+                  <button
+                  className="btn btn-success"
+                  //onClick={(e) => handleShowAddRole(e)}
+                >
+                  Cập  nhật Role
+                </button>
+                ): (
+                  <button
+                className="btn btn-success"
+                onClick={(e) => handleShowAddRole(e)}
+              >
+                Tạo  Role
+              </button>
+                )}
+                
+              </div>
+              {isAddRole === true ? (
+                <Form.Group className="col-6 mt-3">
+                <Label>Tên Role: </Label>
+                <Form.Control
+                   type="text"
+                   onChange={(e) => setNameRole(e.target.value)}
+                >
+          
+                </Form.Control>
+              </Form.Group>
+              ): ""}
               <div className="list-role-container col-6">
                 <p className="permisstion-text">
-                  <strong>Quyền hạn</strong> Các quyền hạn được cho phép cho
-                  nhân viên này
+                  <strong>Quyền hạn</strong> cho Role
                 </p>
                 <div className="list-role-box">
                   <div className="list-role">
@@ -265,7 +413,7 @@ export default function ManageUser() {
                             type="checkbox"
                             className="switch-toggle"
                             checked={
-                              permission.R_SL && permission.R_SL === "R_SL"
+                              permission?.length >0 && permission?.includes("R_SL")
                             }
                             value={permission.R_SL}
                             onChange={(e) => handleSetPermission(e, "R_SL")}
@@ -281,7 +429,7 @@ export default function ManageUser() {
                             className="switch-toggle"
                             value={permission.U_SL}
                             checked={
-                              permission.U_SL && permission.U_SL === "U_SL"
+                             permission?.length >0 && permission?.includes("U_SL")
                             }
                             onChange={(e) => handleSetPermission(e, "U_SL")}
                           />
@@ -456,6 +604,178 @@ export default function ManageUser() {
                       ) : (
                         ""
                       )}
+                      <div
+                        className="role-item"
+                        onClick={() => handleToggleDetailRoleWRT()}
+                      >
+                        <div className="left-role-item">
+                          <i class="fa-solid fa-chevron-right"></i>
+                          <span>Quản lí bảo hành</span>
+                        </div>
+                        <div className="right-role-item">
+                          <input type="checkbox" className="switch-toggle" />
+                        </div>
+                      </div>
+                      {detailRoleWRT === true ? (
+                        <div className="role-item-detail-container">
+                          <div className="role-item-detail role-get">
+                            <input
+                              type="checkbox"
+                              className="switch-toggle"
+                              checked={
+                                permission.R_WRT && permission.R_WRT === "R_WRT"
+                              }
+                              value={permission.R_WRT}
+                              onChange={(e) => handleSetPermission(e, "R_WRT")}
+                            />
+                            <div className="role-detail">
+                              <p className="role-text-top">
+                                Xem thông gói bảo hành
+                              </p>
+                              <p className="get-method">GET</p>
+                            </div>
+                          </div>
+                          <div className="role-item-detail role-post">
+                            <input
+                              type="checkbox"
+                              className="switch-toggle"
+                              value={permission.C_WRT}
+                              onChange={(e) => handleSetPermission(e, "C_WRT")}
+                              checked={
+                                permission.C_WRT && permission.C_WRT === "C_WRT"
+                              }
+                            />
+                            <div className="role-detail">
+                              <p className="role-text-top">
+                                Thêm gói bảo hành
+                              </p>
+                              <p className="post-method">POST</p>
+                            </div>
+                          </div>
+                          <div className="role-item-detail role-delete">
+                            <input
+                              type="checkbox"
+                              className="switch-toggle"
+                              value={permission.D_WRT}
+                              checked={
+                                permission.D_WRT && permission.D_WRT === "D_WRT"
+                              }
+                              onChange={(e) => handleSetPermission(e, "D_WRT")}
+                            />
+                            <div className="role-detail">
+                              <p className="role-text-top">
+                                Xóa gói bảo hành
+                              </p>
+                              <p className="delete-method">DELETE</p>
+                            </div>
+                          </div>
+                          <div className="role-item-detail role-patch">
+                            <input
+                              type="checkbox"
+                              className="switch-toggle"
+                              value={permission.U_WRT}
+                              checked={
+                                permission.U_WRT && permission.U_WRT === "U_WRT"
+                              }
+                              onChange={(e) => handleSetPermission(e, "U_WRT")}
+                            />
+                            <div className="role-detail">
+                              <p className="role-text-top">
+                                Cập nhật gói bảo hành
+                              </p>
+                              <p className="patch-method">PATCH</p>
+                            </div>
+                          </div>
+                        </div>
+                      ) : (
+                        ""
+                      )}
+                      <div
+                        className="role-item"
+                        onClick={() => handleToggleDetailRoleMaintenance()}
+                      >
+                        <div className="left-role-item">
+                          <i class="fa-solid fa-chevron-right"></i>
+                          <span>Quản lí bảo dưỡng</span>
+                        </div>
+                        <div className="right-role-item">
+                          <input type="checkbox" className="switch-toggle" />
+                        </div>
+                      </div>
+                      {detailRoleMaintenance === true ? (
+                        <div className="role-item-detail-container">
+                          <div className="role-item-detail role-get">
+                            <input
+                              type="checkbox"
+                              className="switch-toggle"
+                              checked={
+                                permission.R_MT && permission.R_MT === "R_MT"
+                              }
+                              value={permission.R_MT}
+                              onChange={(e) => handleSetPermission(e, "R_MT")}
+                            />
+                            <div className="role-detail">
+                              <p className="role-text-top">
+                                Xem thông gói bảo dưỡng
+                              </p>
+                              <p className="get-method">GET</p>
+                            </div>
+                          </div>
+                          <div className="role-item-detail role-post">
+                            <input
+                              type="checkbox"
+                              className="switch-toggle"
+                              value={permission.C_MT}
+                              onChange={(e) => handleSetPermission(e, "C_MT")}
+                              checked={
+                                permission.C_MT && permission.C_MT === "C_MT"
+                              }
+                            />
+                            <div className="role-detail">
+                              <p className="role-text-top">
+                                Thêm gói bảo dưỡng
+                              </p>
+                              <p className="post-method">POST</p>
+                            </div>
+                          </div>
+                          <div className="role-item-detail role-delete">
+                            <input
+                              type="checkbox"
+                              className="switch-toggle"
+                              value={permission.D_MT}
+                              checked={
+                                permission.D_MT && permission.D_MT === "D_MT"
+                              }
+                              onChange={(e) => handleSetPermission(e, "D_MT")}
+                            />
+                            <div className="role-detail">
+                              <p className="role-text-top">
+                                Xóa gói bảo dưỡng
+                              </p>
+                              <p className="delete-method">DELETE</p>
+                            </div>
+                          </div>
+                          <div className="role-item-detail role-patch">
+                            <input
+                              type="checkbox"
+                              className="switch-toggle"
+                              value={permission.U_MT}
+                              checked={
+                                permission.U_MT && permission.U_MT === "U_MT"
+                              }
+                              onChange={(e) => handleSetPermission(e, "U_MT")}
+                            />
+                            <div className="role-detail">
+                              <p className="role-text-top">
+                                Cập nhật gói bảo dưỡng
+                              </p>
+                              <p className="patch-method">PATCH</p>
+                            </div>
+                          </div>
+                        </div>
+                      ) : (
+                        ""
+                      )}
                     </div>
                   </div>
                 </div>
@@ -463,7 +783,7 @@ export default function ManageUser() {
             </div>
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="secondary" onClick={handleCloseUpdate}>
+            <Button variant="secondary" onClick={handleCloseManageRole}>
               Đóng
             </Button>
             <Button
@@ -472,9 +792,15 @@ export default function ManageUser() {
               disabled={isLoading}
             >
               {isLoading && <Spinner animation="border" size="sm" />}
-              <span className="mx-2" onClick={handleSavePermission}>
+              {isAddRole === true ? (
+                 <span className="mx-2" onClick={handleSaveRole}>
+                 Tạo
+               </span>
+              ): (
+                <span className="mx-2">
                 Cập nhật
               </span>
+              )}
             </Button>
           </Modal.Footer>
         </Form>

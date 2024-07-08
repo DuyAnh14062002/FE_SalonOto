@@ -27,6 +27,7 @@ export const path = {
   promotionDetail: "/promotionDetail/:id",
   salonAppointment: "/salonAppointment",
   listPromotion: "/listPromotion",
+  satisticDealer: "/satisticDealer",
   //================SALON============================
   salonOto: "/salonOto/:id",
   DetailCar: "/detail-car/:id",

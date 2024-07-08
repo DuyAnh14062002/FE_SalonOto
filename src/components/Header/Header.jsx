@@ -87,7 +87,6 @@ export default function Header(props) {
   useEffect(() => {
     const loading = async () => {
       let res = await purchaseApi.getPurchase();
-      console.log("res purchase", res);
       if (res?.data?.purchasedPackages) {
         setPurchasedPackages(res.data.purchasedPackages);
       }
@@ -147,7 +146,7 @@ export default function Header(props) {
   const fetchAllNotificationUser = async () => {
     try {
       const res = await notificationApi.getAllNotificationUser();
-      console.log("listNotification : ", res);
+    
       setListNotification(res.data.notifications);
     } catch (error) {
       console.log(error);
@@ -243,21 +242,19 @@ export default function Header(props) {
   };
   const handleConnection = async (id) => {
     let res = await dealerApi.updateConnection(id, "accepted");
-    console.log("res connection apcept : ", res);
     if (res?.data?.status === "success") {
       toast.success("Kết nối thành công vs Salon");
     } else {
       toast.error("Kết nối thất bại");
     }
   };
-  console.log("notification : ", listNotification);
   const handleNavigateHistoryProcess = () => {
     navigate("/historyTransactionDealer");
   };
   const handleNavigateHistoryProcessPaper = () => {
     navigate("/historyTransaction");
   };
-  console.log("listNotification : ", listNotification);
+
   const popover = (
     <Popover id="popover-basic">
       <Popover.Header as="h3" className="fw-bold">

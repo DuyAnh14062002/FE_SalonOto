@@ -132,7 +132,7 @@ export default function HeaderSalon() {
       console.log(error);
     }
   };
-  console.log("listNotification : ", listNotification);
+
   const handleDeleteNotify = async (id) => {
     try {
       const confirm = window.confirm("Bạn có chắc chắn muốn xóa thông báo?");
@@ -159,7 +159,7 @@ export default function HeaderSalon() {
       );
       if (!confirm) return;
       let res = await salonApi.blockUser(postId);
-      console.log("res : ", res);
+
       if (res?.data?.status === "success") {
         //loading new notification after block
         await notificationApi.deleteNotificationSalon({
@@ -404,7 +404,6 @@ export default function HeaderSalon() {
 
     handleCloseCall();
   };
-  console.log("listNotification : ", listNotification);
   return (
     <div className="container-header">
       <div className="back-home">
@@ -422,7 +421,7 @@ export default function HeaderSalon() {
             Trang chủ
           </Link>
           <Link className="item-menu">Giới thiệu</Link>
-          <Link className="item-menu">Tin tức</Link>
+          <Link className="item-menu">Khuyến mãi</Link>
           <Link className="item-menu" to={path.accessory}>
             Phụ tùng
           </Link>

@@ -48,6 +48,7 @@ export default function CarPostDetail() {
     setShow(false);
   };
   const handleChooseProcess = (e) => {
+    console.log("process id : ",e.target.value )
     setProcessId(e.target.value);
   };
   const fetchSalon = async () => {
@@ -276,10 +277,12 @@ export default function CarPostDetail() {
             <Modal.Title>Chọn qui trình thực hiện với hoa tiêu</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <select
+            <Form.Select
               className="select-salon-car-sell"
-              onChange={(e) => handleChooseProcess(e)}
+              onChange={handleChooseProcess}
+              value={processId}
             >
+              <option>Chọn qui trình</option>
               {process?.length > 0 &&
                 process.map((item, index) => {
                   return (
@@ -288,7 +291,8 @@ export default function CarPostDetail() {
                     </option>
                   );
                 })}
-            </select>
+
+            </Form.Select>
           </Modal.Body>
           <Modal.Footer>
             <Button variant="primary" onClick={handleCloseModal} type="submit">

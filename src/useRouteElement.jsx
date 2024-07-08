@@ -61,6 +61,7 @@ import ManageUserAdmin from "./pages/ManageUserAdmin";
 import Accessory from "./pages/SalonOto/Accessory";
 import ManagePayment from "./pages/AdminSalon/ManagePayment";
 import HistoryPayment from "./components/HistoryPayment";
+import SatisticDealer from "./components/SatisticDealer";
 
 function ProtectedRoute() {
   const isAuthenticated = useSelector(
@@ -358,6 +359,10 @@ const router = createBrowserRouter([
     path: "*",
     element: <NotFound />,
   },
+  {
+    path: path.satisticDealer,
+    element: <SatisticDealer/>
+  }
 ]);
 
 export default router;

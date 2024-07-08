@@ -1,7 +1,7 @@
 import React from "react";
 import "./FooterSalon.scss";
 import { Link } from "react-router-dom";
-export default function FooterSalon() {
+export default function FooterSalon({phone, email, name, address}) {
   return (
     <div className="footer-container">
       <div className="header-footer">
@@ -11,7 +11,7 @@ export default function FooterSalon() {
           </div>
           <div className="hotline-content">
             <div className="hotline-title">HOTLINE (24/7)</div>
-            <div className="hotline-contact">0384496705</div>
+            <div className="hotline-contact">{phone}</div>
           </div>
         </div>
         <div className="hotline-container">
@@ -20,7 +20,7 @@ export default function FooterSalon() {
           </div>
           <div className="hotline-content">
             <div className="hotline-title">Liên hệ khiếu nại</div>
-            <div className="hotline-contact">0384496705</div>
+            <div className="hotline-contact">{phone}</div>
           </div>
         </div>
         <div className="hotline-container">
@@ -29,7 +29,7 @@ export default function FooterSalon() {
           </div>
           <div className="hotline-content">
             <div className="hotline-title">Liên hệ hợp tác</div>
-            <div className="hotline-contact">duyanh@gmail.com</div>
+            <div className="hotline-contact">{email}</div>
           </div>
         </div>
         <div className="hotline-container">
@@ -38,7 +38,7 @@ export default function FooterSalon() {
           </div>
           <div className="hotline-content">
             <div className="hotline-title">Liên hệ kinh doanh</div>
-            <div className="hotline-contact">ducba@gmail.com</div>
+            <div className="hotline-contact">{email}</div>
           </div>
         </div>
         <div className="hotline-container">
@@ -47,23 +47,22 @@ export default function FooterSalon() {
           </div>
           <div className="hotline-content">
             <div className="hotline-title">Chăm sóc khách hàng</div>
-            <div className="hotline-contact">ViNguyen@gmail.com</div>
+            <div className="hotline-contact">{email}</div>
           </div>
         </div>
       </div>
       <div className="body-footer">
         <div className="contact-salon">
-          <h4 className="name-salon">Salon ô tô Đức Thiện</h4>
+          <h4 className="name-salon">{name}</h4>
           <span className="address">
             {" "}
-            <i className="fa-solid fa-location-dot"></i> Số 5 Trần Vỹ, Mai Dịch,
-            Cầu Giấy, Hà Nội
+            <i className="fa-solid fa-location-dot"></i> {address}
           </span>
           <span className="phone">
-            <i className="fa-solid fa-phone"></i> 091 225 2526
+            <i className="fa-solid fa-phone"></i> {phone}
           </span>
           <span className="email">
-            <i className="fa-solid fa-envelope"></i> duyanh@gmail.com
+            <i className="fa-solid fa-envelope"></i> {email}
           </span>
         </div>
         <div className="user-manual">

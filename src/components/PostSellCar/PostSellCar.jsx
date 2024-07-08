@@ -20,6 +20,7 @@ export default function PostSellCar() {
   const [nameGroupSalon, setNameGroupSalon] = useState("")
   const [groupSalon, setGroupSalon] = useState([])
   const [listNameSalon, setListNameSalon] = useState([])
+  const [transactions, setTransactions] = useState([])
   const handleShowModal = () =>{
     setShow(true)
   }
@@ -34,10 +35,19 @@ export default function PostSellCar() {
   }
   const loadingSalon = async () => {
     let res = await salonApi.getAllSalonNoBlock();
+    console.log("res salon : ", res)
     if (res?.data?.salons) {
       setListSalon(res.data.salons);
     }
   };
+  const loadingTransaction = async () => {
+    try{
+       let resTran = await dealerApi.getAllProcess()
+       console.log("resTran : ", resTran)
+    }catch(e){
+      console.log(e)
+    }
+  }
   const handleChangeInfoCar = (e, name) => {
      setInfoCar({...infoCar, [name] : e.target.value})
   }
@@ -55,6 +65,7 @@ export default function PostSellCar() {
   useEffect(() =>{
      loadingSalon()
      fetchAllGroupSalon()
+     loadingTransaction()
   }, [])
   const handleSentPost = async (e) => {
     e.preventDefault();
@@ -174,12 +185,12 @@ export default function PostSellCar() {
   const onChangeGroupNameSalon = (e) =>{
      setNameGroupSalon(e.target.value)
   }
-  const handleOnchangeGroupSalon =(item) => {
-    console.log("onchange group salon : ",item)
-    if(item?.salons?.length > 0){
+  const handleOnchangeGroupSalon =(e) => {
+    let index = e.target.value
+    if(groupSalon?.[index]?.salons?.length > 0){
       let listNameSalon = []
       let lisIdsalon = []
-      item.salons.forEach((i) => {
+      groupSalon?.[index]?.salons.forEach((i) => {
          lisIdsalon.push(i.id)
          listNameSalon.push(i.name)
       })
@@ -336,10 +347,11 @@ export default function PostSellCar() {
               {groupSalon?.length > 0 ? (
                 <>
                    <Form.Label>Chọn nhóm salon muốn gửi</Form.Label>
-                   <Form.Select >
-                { groupSalon?.map((item)=>{
+                   <Form.Select onChange={handleOnchangeGroupSalon} >
+                { groupSalon?.map((item, index)=>{
+                  console.log("item : ", item)
                   return (
-                    <option onClick={() => handleOnchangeGroupSalon(item)}>{item.name}</option>
+                    <option value= {index}>{item.name}</option>
                   )
                 })}
               </Form.Select>

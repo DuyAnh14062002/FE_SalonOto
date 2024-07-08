@@ -20,6 +20,7 @@ const ProcessFormDealer = ({
   const [isNextButtonDisabled, setIsNextButtonDisabled] = useState(true);
   const [periodCurrent, setPeriodCurrent] = useState(null);
   const [rating, setRating] = useState("")
+  const [commission, setCommission] = useState("")
 
   const fetchDetailProcess = async () => {
     setCheckedDetailsId(selectedTransaction.checked)
@@ -114,7 +115,7 @@ const ProcessFormDealer = ({
           setCheckedDetailsId(resUpdate.data.transaction.checked)
          }
         }
-        let res = await dealerApi.nextProcess(selectedTransaction.transaction_id, rating)
+        let res = await dealerApi.nextProcess(selectedTransaction.transaction_id, rating, commission)
         console.log("res next process : ", res)
         if(res?.data?.status === "completed"){
           handleCloseModalProcess()
@@ -150,9 +151,7 @@ const ProcessFormDealer = ({
       toast.error("Cập nhật thất bại")
     }
   };
-  console.log("detail process : ", detailProcess)
-  console.log("selected transaction : ", selectedTransaction)
-  console.log("steps : ", steps)
+  console.log("commission : ", commission)
   return (
     <div className="container">
       <div className="box-title-process-dealer">
@@ -220,7 +219,7 @@ const ProcessFormDealer = ({
             )}
             <div className="award-money-box">
                <span>Tiền Hoa hồng </span>
-               <input />
+               <input type="number" onChange={(e) => setCommission(e.target.value)} />
             </div>
           </div>
         </div>

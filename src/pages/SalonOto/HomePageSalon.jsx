@@ -8,6 +8,8 @@ import salonApi from "../../apis/salon.api";
 import carApi from "../../apis/car.api";
 import { PaginationControl } from "react-bootstrap-pagination-control";
 import { formatCurrency } from "../../utils/common";
+import processApi from "../../apis/process.api";
+import promotionApi from "../../apis/promotion.api";
 
 const LIMIT = 6;
 export default function HomePageSalon() {
@@ -16,6 +18,7 @@ export default function HomePageSalon() {
   const [totalPage, setTotalPage] = useState(0);
   const [page, setPage] = useState(1);
   const [listCar, setListCar] = useState([]);
+  const [promotions, setPromotions] = useState([])
   const NavigateDetailCar = (id) => {
     navigate(`/detail-car/${id}`);
   };
@@ -31,7 +34,19 @@ export default function HomePageSalon() {
       console.log(e);
     }
   };
-
+  const loadingAllPromotion = async () => {
+    try{
+      let res = await promotionApi.getAllPromotionOfSalon(params.id)
+      if(res?.data?.promotion){
+        setPromotions(res.data.promotion)
+      }
+    }catch(e){
+      console.log(e)
+    }
+  }
+  useEffect(() => {
+    loadingAllPromotion()
+  }, [])
   useEffect(() => {
     if (params.id) {
       localStorage.setItem("idSalon", params.id);
@@ -53,7 +68,7 @@ export default function HomePageSalon() {
       <div
         className="banner-salon position-relative"
         style={{
-          backgroundImage: `url(${salon?.banner?.[0]})`,
+          backgroundImage: `url(${promotions?.length > 0 ? promotions[0].thumbnail : salon?.banner?.[0] })`,
         }}
       ></div>
       <div className="search-oto-container">
@@ -153,7 +168,7 @@ export default function HomePageSalon() {
           </div>
         )}
       </div>
-      <FooterSalon />
+      <FooterSalon phone = {salon?.phoneNumber} email = {salon?.email} name = {salon?.name} address = {salon?.address}/>
     </div>
   );
 }
