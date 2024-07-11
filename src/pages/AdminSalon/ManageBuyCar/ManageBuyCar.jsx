@@ -69,7 +69,7 @@ export default function ManageBuyCar() {
   };
   const getAllEmployeeOfSalons = async (salonId) => {
     let res = await salonApi.getAllEmployee(salonId);
-    if (res?.data?.data) {
+    if (res?.data?.data?.length > 0) {
       setEmployees(res.data.data);
       setEmployeeId(res.data.data[0].user_id);
     }
@@ -96,7 +96,7 @@ export default function ManageBuyCar() {
     const res = await processApi.getAllProcess({
       salonId: salon.salon_id,
     });
-    if (res?.data?.data) {
+    if (res?.data?.data?.length > 0) {
       setListProcess(res.data.data);
       setSelectedProcess(res.data.data[0].id);
     }

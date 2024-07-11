@@ -1,8 +1,24 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import "./SatisticDealer.scss"
 import Header from '../Header'
 import { formatCurrency } from "../../utils/common";
+import dealerApi from '../../apis/dealer.api';
 export default function SatisticDealer() {
+  const [satistics,setSatistics] = useState({})
+  const loadingSatisyicDealer = async () => {
+      try{
+        let res = await dealerApi.getAllProcess()
+        if(res?.data?.transaction){
+          setSatistics(res.data.transaction)
+        }
+      }catch(e){
+        console.log(e)
+      }
+  }
+  useEffect(() => {
+      loadingSatisyicDealer()
+  }, [])
+  console.log("transaction : ", satistics)
   return (
     <div>
       <Header otherPage = {true}/>
@@ -10,13 +26,13 @@ export default function SatisticDealer() {
       <div className='satistic-dealer-container'>
         <div className='satistic-dealer-item'>
            <div className='satistic-dealer-number'>
-               12
+               {satistics.totals.totalNumOfCompletedTran}
            </div>
            <div className='satistic-dealer-title'>Số giao dịch hoàn thành</div>
            
         </div>
         <div className='satistic-dealer-item'>
-           <div className='satistic-dealer-comission'>{formatCurrency(36000000)}</div>
+           <div className='satistic-dealer-comission'>{formatCurrency(satistics.totals.totalAmount)}</div>
            <div className='satistic-dealer-title'>Tổng tiền hoa hồng nhận được</div>
         </div>
       </div>
@@ -37,34 +53,38 @@ export default function SatisticDealer() {
                   <th scope="col" className="text-center">
                     Số tiền Hoa hồng nhận được
                   </th>
-                  <th scope="col" className="text-center">
+                  {/* <th scope="col" className="text-center">
                     Tác vụ
-                  </th>
+                  </th> */}
                 </tr>
               </thead>
               <tbody>
-              <tr  style={{ background: "rgb(247 247 247)" }}>
-                      <td className="text-center">
-                        1
-                      </td>
+                {satistics?.data?.length > 0 ? satistics.data.map((item) => {
+                  return(
+                    <tr  style={{ background: "rgb(247 247 247)" }}>
+                    <td className="text-center">
+                      1
+                    </td>
 
-                      <td>Salon Duy Anh</td>
-                      <td className="text-center">0384496705</td>
-                      <td className="text-center">5</td>
-                      <td className="text-center">
-                        {formatCurrency(7200000)}
-                      </td>
-                      <td className="text-center">
-                        <button
-                          className="btn btn-warning btn-sm rounded-0 text-white"
-                          data-toggle="tooltip"
-                          data-placement="top"
-                          title="info"
-                        >
-                          <i className="fa-solid fa-circle-question"></i>
-                        </button>
-                        </td>
-                        </tr>
+                    <td>{item.salon.name}</td>
+                    <td className="text-center">{item?.salon.phone}</td>
+                    <td className="text-center">{item?.numOfCompletedTran}</td>
+                    <td className="text-center">
+                      {item.amount ? formatCurrency(item.amount): ""}
+                    </td>
+                    {/* <td className="text-center">
+                      <button
+                        className="btn btn-warning btn-sm rounded-0 text-white"
+                        data-toggle="tooltip"
+                        data-placement="top"
+                        title="info"
+                      >
+                        <i className="fa-solid fa-circle-question"></i>
+                      </button>
+                      </td> */}
+                      </tr>
+                  )
+                }): ""}
                 {/* {cars && cars.length > 0 ? (
                   cars.map((car, index) => (
                     <tr key={index} style={{ background: "rgb(247 247 247)" }}>
