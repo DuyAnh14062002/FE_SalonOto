@@ -60,17 +60,25 @@ export default function ManageAccessory() {
     }
   };
   const fetchDataSalon = async (page, search) => {
-    const res = await salonApi.getSalonInfor();
-    if (res?.data?.salon) {
-      setSalon(res.data.salon);
-      loadingAccessory(res.data.salon.salon_id, page, search);
+    try{
+      const res = await salonApi.getSalonInfor();
+      if (res?.data?.salon) {
+        setSalon(res.data.salon);
+        loadingAccessory(res.data.salon.salon_id, page, search);
+      }
+    }catch(e){
+      console.log(e)
     }
   };
   const loadingAccessory = async (salon_id, page, search) => {
-    let res = await AccessoryApi.getAccessory(salon_id, page, LIMIT, search);
-    if (res?.data?.accessory) {
-      setAccessories(res.data.accessory);
-      setTotalPage(res.data.total_page);
+    try{
+      let res = await AccessoryApi.getAccessory(salon_id, page, LIMIT, search);
+      if (res?.data?.accessory) {
+        setAccessories(res.data.accessory);
+        setTotalPage(res.data.total_page);
+      }
+    }catch(e){
+      console.log(e)
     }
   };
   console.log("accessories : ", accessories);

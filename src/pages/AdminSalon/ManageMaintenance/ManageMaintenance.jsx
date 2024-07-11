@@ -46,15 +46,19 @@ export default function ManageMaintenance() {
     }
   };
   const loadingMaintenance = async (salonId, page, search) => {
-    let res = await maintenanceApi.getAllMaintenanceOfSalon(
-      salonId,
-      page,
-      LIMIT,
-      search
-    );
-    if (res?.data?.maintenance) {
-      setMaintenances(res.data.maintenance);
-      setTotalPage(res.data.total_page);
+    try{
+      let res = await maintenanceApi.getAllMaintenanceOfSalon(
+        salonId,
+        page,
+        LIMIT,
+        search
+      );
+      if (res?.data?.maintenance) {
+        setMaintenances(res.data.maintenance);
+        setTotalPage(res.data.total_page);
+      }
+    }catch(e){
+      console.log(e)
     }
   };
   useEffect(() => {

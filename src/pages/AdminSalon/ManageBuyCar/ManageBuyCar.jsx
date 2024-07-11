@@ -54,7 +54,7 @@ export default function ManageBuyCar() {
   };
   const getAllEmployeeOfSalons = async (salonId) => {
     let res = await salonApi.getAllEmployee(salonId);
-    if (res?.data?.data) {
+    if (res?.data?.data?.length > 0) {
       setEmployees(res.data.data);
       setEmployeeId(res.data.data[0].user_id);
     }
@@ -80,7 +80,7 @@ export default function ManageBuyCar() {
     const res = await processApi.getAllProcess({
       salonId: salon.salon_id,
     });
-    if (res?.data?.data) {
+    if (res?.data?.data?.length > 0) {
       setListProcess(res.data.data);
       setSelectedProcess(res.data.data[0].id);
     }
@@ -104,7 +104,7 @@ export default function ManageBuyCar() {
 
   const fetchDataSalon = async (page, search) => {
     const res = await salonApi.getSalonInfor();
-    if (res?.data?.salon?.cars) {
+    if (res?.data?.salon?.cars?.length > 0) {
       setCars(res.data.salon.cars);
       setCarId(res.data.salon.cars[0].car_id);
     }

@@ -168,6 +168,18 @@ export default function ManageUser() {
       console.log(e)
     }
   }
+  const handleUpdateRole = async () => {
+     try{
+        let res = await permissionApi.updateRole(idRole,nameRole,permission, salonId)
+        console.log("res update : ", res)
+     }catch(e){
+      console.log(e)
+     }
+  }
+  const handleChangeIdRole = (e) => {
+    console.log("id role : ", e.target.value)
+    setIdRole(e.target.value)
+  }
   console.log("permissions : ", permission)
   console.log("id : ", idRole)
   return (
@@ -305,10 +317,10 @@ export default function ManageUser() {
               </div>
               <div className="name-box col-6">
                 <label>Tên Role</label>
-                <Form.Select>
-                {roles?.length > 0 && roles.map((role) =>{
+                <Form.Select onChange={handleChangeIdRole} value={idRole}>
+                {roles?.length > 0 && roles.map((role, index) =>{
                   return(
-                    <option onClick={() => setIdRole(role.id)}>
+                    <option key={index} value={role.id}>
                        {role.name}
                     </option>
                   )
@@ -468,8 +480,8 @@ export default function ManageUser() {
                               type="checkbox"
                               className="switch-toggle"
                               checked={
-                                permission.R_CAR && permission.R_CAR === "R_CAR"
-                              }
+                                permission?.length >0 && permission?.includes("R_CAR")
+                               }
                               value={permission.R_CAR}
                               onChange={(e) => handleSetPermission(e, "R_CAR")}
                             />
@@ -487,8 +499,8 @@ export default function ManageUser() {
                               value={permission.C_CAR}
                               onChange={(e) => handleSetPermission(e, "C_CAR")}
                               checked={
-                                permission.C_CAR && permission.C_CAR === "C_CAR"
-                              }
+                                permission?.length >0 && permission?.includes("C_CAR")
+                               }
                             />
                             <div className="role-detail">
                               <p className="role-text-top">
@@ -503,8 +515,8 @@ export default function ManageUser() {
                               className="switch-toggle"
                               value={permission.D_CAR}
                               checked={
-                                permission.D_CAR && permission.D_CAR === "D_CAR"
-                              }
+                                permission?.length >0 && permission?.includes("D_CAR")
+                               }
                               onChange={(e) => handleSetPermission(e, "D_CAR")}
                             />
                             <div className="role-detail">
@@ -520,8 +532,8 @@ export default function ManageUser() {
                               className="switch-toggle"
                               value={permission.U_CAR}
                               checked={
-                                permission.U_CAR && permission.U_CAR === "U_CAR"
-                              }
+                                permission?.length >0 && permission?.includes("U_CAR")
+                               }
                               onChange={(e) => handleSetPermission(e, "U_CAR")}
                             />
                             <div className="role-detail">
@@ -554,8 +566,8 @@ export default function ManageUser() {
                               type="checkbox"
                               className="switch-toggle"
                               checked={
-                                permission.R_APM && permission.R_APM === "R_APM"
-                              }
+                                permission?.length >0 && permission?.includes("R_APM")
+                               }
                               value={permission.R_APM}
                               onChange={(e) => handleSetPermission(e, "R_APM")}
                             />
@@ -572,8 +584,8 @@ export default function ManageUser() {
                               className="switch-toggle"
                               value={permission.D_APM}
                               checked={
-                                permission.D_APM && permission.D_APM === "D_APM"
-                              }
+                                permission?.length >0 && permission?.includes("D_APM")
+                               }
                               onChange={(e) => handleSetPermission(e, "D_APM")}
                             />
                             <div className="role-detail">
@@ -589,8 +601,8 @@ export default function ManageUser() {
                               className="switch-toggle"
                               value={permission.U_APM}
                               checked={
-                                permission.U_APM && permission.U_APM === "U_APM"
-                              }
+                                permission?.length >0 && permission?.includes("U_APM")
+                               }
                               onChange={(e) => handleSetPermission(e, "U_APM")}
                             />
                             <div className="role-detail">
@@ -623,8 +635,8 @@ export default function ManageUser() {
                               type="checkbox"
                               className="switch-toggle"
                               checked={
-                                permission.R_WRT && permission.R_WRT === "R_WRT"
-                              }
+                                permission?.length >0 && permission?.includes("R_WRT")
+                               }
                               value={permission.R_WRT}
                               onChange={(e) => handleSetPermission(e, "R_WRT")}
                             />
@@ -642,8 +654,8 @@ export default function ManageUser() {
                               value={permission.C_WRT}
                               onChange={(e) => handleSetPermission(e, "C_WRT")}
                               checked={
-                                permission.C_WRT && permission.C_WRT === "C_WRT"
-                              }
+                                permission?.length >0 && permission?.includes("C_WRT")
+                               }
                             />
                             <div className="role-detail">
                               <p className="role-text-top">
@@ -658,8 +670,8 @@ export default function ManageUser() {
                               className="switch-toggle"
                               value={permission.D_WRT}
                               checked={
-                                permission.D_WRT && permission.D_WRT === "D_WRT"
-                              }
+                                permission?.length >0 && permission?.includes("D_WRT")
+                               }
                               onChange={(e) => handleSetPermission(e, "D_WRT")}
                             />
                             <div className="role-detail">
@@ -675,8 +687,8 @@ export default function ManageUser() {
                               className="switch-toggle"
                               value={permission.U_WRT}
                               checked={
-                                permission.U_WRT && permission.U_WRT === "U_WRT"
-                              }
+                                permission?.length >0 && permission?.includes("U_WRT")
+                               }
                               onChange={(e) => handleSetPermission(e, "U_WRT")}
                             />
                             <div className="role-detail">
@@ -709,8 +721,8 @@ export default function ManageUser() {
                               type="checkbox"
                               className="switch-toggle"
                               checked={
-                                permission.R_MT && permission.R_MT === "R_MT"
-                              }
+                                permission?.length >0 && permission?.includes("R_MT")
+                               }
                               value={permission.R_MT}
                               onChange={(e) => handleSetPermission(e, "R_MT")}
                             />
@@ -728,8 +740,8 @@ export default function ManageUser() {
                               value={permission.C_MT}
                               onChange={(e) => handleSetPermission(e, "C_MT")}
                               checked={
-                                permission.C_MT && permission.C_MT === "C_MT"
-                              }
+                                permission?.length >0 && permission?.includes("C_MT")
+                               }
                             />
                             <div className="role-detail">
                               <p className="role-text-top">
@@ -744,8 +756,8 @@ export default function ManageUser() {
                               className="switch-toggle"
                               value={permission.D_MT}
                               checked={
-                                permission.D_MT && permission.D_MT === "D_MT"
-                              }
+                                permission?.length >0 && permission?.includes("D_MT")
+                               }
                               onChange={(e) => handleSetPermission(e, "D_MT")}
                             />
                             <div className="role-detail">
@@ -761,8 +773,8 @@ export default function ManageUser() {
                               className="switch-toggle"
                               value={permission.U_MT}
                               checked={
-                                permission.U_MT && permission.U_MT === "U_MT"
-                              }
+                                permission?.length >0 && permission?.includes("U_MT")
+                               }
                               onChange={(e) => handleSetPermission(e, "U_MT")}
                             />
                             <div className="role-detail">
@@ -797,7 +809,7 @@ export default function ManageUser() {
                  Tạo
                </span>
               ): (
-                <span className="mx-2">
+                <span className="mx-2" onClick={handleUpdateRole}>
                 Cập nhật
               </span>
               )}
