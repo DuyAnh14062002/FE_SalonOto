@@ -9,10 +9,12 @@ export default function ListPackage() {
   const [price, setPrice] = useState();
   const [packages, setPackages] = useState([]);
   const [packageId, setPackageId] = useState("");
-  const handleShowModal = (price, packageId) => {
+  const [name, setName] = useState("");
+  const handleShowModal = (price, packageId, name) => {
     setShow(true);
     setPrice(price);
     setPackageId(packageId);
+    setName(name);
   };
   const handleHideModal = () => {
     setShow(false);
@@ -71,7 +73,9 @@ export default function ListPackage() {
                   </ul>
                   <button
                     className="btn"
-                    onClick={() => handleShowModal(item.price, item.package_id)}
+                    onClick={() =>
+                      handleShowModal(item.price, item.package_id, item.name)
+                    }
                   >
                     Mua ngay
                   </button>
@@ -85,6 +89,7 @@ export default function ListPackage() {
         handleHideModal={handleHideModal}
         price={price}
         packageId={packageId}
+        name={name}
       />
     </>
   );

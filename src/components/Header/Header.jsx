@@ -50,7 +50,7 @@ export default function Header(props) {
     if (res?.data?.appointments) {
       const appointmentList = res.data.appointments;
       let number = res.data.appointments.filter(
-        (item) => item.status === 0
+        (item) => item.read === false
       ).length;
       setNumberOfCalender(number);
     }
@@ -147,7 +147,7 @@ export default function Header(props) {
   const fetchAllNotificationUser = async () => {
     try {
       const res = await notificationApi.getAllNotificationUser();
-    
+
       setListNotification(res.data.notifications);
     } catch (error) {
       console.log(error);
@@ -583,6 +583,18 @@ export default function Header(props) {
 
     handleCloseCall();
   };
+  const handleUpdateReadAppointment = async () => {
+    try {
+      const res = await appointmentApi.updateReadAppointmentUser();
+      if (res.data.status === "success") {
+        fetchAppointmentApi();
+      }
+
+      navigate("/appointment");
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return otherPage === true ? (
     <nav style={{ backgroundColor: "rgb(1 37 255 / 70%)", padding: "5px 5px" }}>
       <Modal show={showCall} backdrop="static">
@@ -642,7 +654,11 @@ export default function Header(props) {
         <input type="text" placeholder="Tìm kiếm" />
       </div> */}
       <div className="container-box">
-        <Link className="link position-relative" to="/appointment">
+        <button
+          className="link position-relative"
+          onClick={handleUpdateReadAppointment}
+          style={{ background: "transparent", outline: "none", border: "none" }}
+        >
           <i
             className="fa-solid fa-calendar-days"
             style={{ color: "white", fontSize: "25px", marginRight: "25px" }}
@@ -653,7 +669,7 @@ export default function Header(props) {
           >
             {numberOfCalender > 0 && numberOfCalender}
           </span>
-        </Link>
+        </button>
         <OverlayTrigger
           trigger="click"
           placement="bottom"
@@ -770,7 +786,11 @@ export default function Header(props) {
         </span>
       </div> */}
       <div className="container-box">
-        <Link className="link position-relative" to="/appointment">
+        <button
+          className="link position-relative"
+          onClick={handleUpdateReadAppointment}
+          style={{ background: "transparent", outline: "none", border: "none" }}
+        >
           <i
             className="fa-solid fa-calendar-days"
             style={{ color: "white", fontSize: "25px", marginRight: "25px" }}
@@ -781,7 +801,7 @@ export default function Header(props) {
           >
             {numberOfCalender > 0 && numberOfCalender}
           </span>
-        </Link>
+        </button>
         <OverlayTrigger
           trigger="click"
           placement="bottom"

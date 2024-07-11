@@ -14,7 +14,11 @@ const LIMIT = 10;
 export default function ManageProcess() {
   const [listProcess, setListProcess] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [process, setProcess] = useState({});
+  const [process, setProcess] = useState({
+    name: "",
+    description: "",
+    type: "0",
+  });
   const [showUpdate, setShowUpdate] = useState(false);
   const [showAdd, setShowAdd] = useState(false);
   const [showDelete, setShowDelete] = useState(false);

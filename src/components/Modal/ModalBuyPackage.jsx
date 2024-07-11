@@ -6,6 +6,7 @@ import "./ModalBuyPackage.scss";
 import { useState } from "react";
 import paymentApi from "../../apis/payment.api";
 import { toast } from "react-toastify";
+import axios from "axios";
 export default function ModalBuyPackage(props) {
   const [activeZaloPayment, setActiveZaloPayment] = useState(false);
   const [activeVisaPayment, setActiveVisaPayment] = useState(false);
@@ -64,12 +65,39 @@ export default function ModalBuyPackage(props) {
       toast.error("bạn phải chọn ít nhất 1 phương thức thanh toán");
     } else {
       if (activeZaloPayment === true) {
-        const res = await paymentApi.createPayment(amount, "");
-        if (res.data && res.data.data && res.data.data.order_url) {
-          window.open(`${res.data.data.order_url}`, "_self");
-        }
+        toast.error("Chức năng đang phát triển");
+        // const res = await axios.post(
+        //   "https://salon-gateway.onrender.com/payment/createOrder",
+        //   {
+        //     bank_code: "",
+        //     amount: amount,
+        //   },
+        //   {
+        //     headers: {
+        //       "Content-Type": "application/json",
+        //       Authorization: "Bearer " + localStorage.getItem("access_token"),
+        //     },
+        //   }
+        // );
+        // if (res.data && res.data.data && res.data.data.order_url) {
+        //   window.open(`${res.data.data.order_url}`, "_self");
+        // }
       } else if (activeVnPay === true) {
-        const res = await paymentApi.paymentVnpay(props.packageId, month);
+        // const res = await paymentApi.paymentVnpay(props.packageId, month);
+        const res = await axios.post(
+          "https://salon-gateway.onrender.com/payment/create_payment_url",
+          {
+            package_id: props.packageId,
+            months: month,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: "Bearer " + localStorage.getItem("access_token"),
+            },
+          }
+        );
+
         if (res?.data?.vnpUrl) {
           window.open(`${res.data.vnpUrl}`, "_self");
         } else {
@@ -78,10 +106,23 @@ export default function ModalBuyPackage(props) {
           );
         }
       } else {
-        const res = await paymentApi.createPayment(amount, "CC");
-        if (res.data && res.data.data && res.data.data.order_url) {
-          window.open(`${res.data.data.order_url}`, "_self");
-        }
+        toast.error("Chức năng đang phát triển");
+        // const res = await axios.post(
+        //   "https://salon-gateway.onrender.com/payment/createOrder",
+        //   {
+        //     bank_code: "CC",
+        //     amount: amount,
+        //   },
+        //   {
+        //     headers: {
+        //       "Content-Type": "application/json",
+        //       Authorization: "Bearer " + localStorage.getItem("access_token"),
+        //     },
+        //   }
+        // );
+        // if (res.data && res.data.data && res.data.data.order_url) {
+        //   window.open(`${res.data.data.order_url}`, "_self");
+        // }
       }
     }
   };
@@ -96,7 +137,7 @@ export default function ModalBuyPackage(props) {
           </Modal.Header>
           <Modal.Body>
             <Card.Body md="4">
-              <Card.Title>Gói salon oto cơ bản</Card.Title>
+              <Card.Title>{props.name}</Card.Title>
               <Card.Text style={{ color: "#4ABAB9" }}>
                 Giá: {props.price}đ/Tháng
               </Card.Text>
