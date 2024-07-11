@@ -10,6 +10,9 @@ const appointmentApi = {
   updateAppointmentUser(body) {
     return http.patch("/appointment/update-one-user", body);
   },
+  updateReadAppointmentUser() {
+    return http.patch("/appointment/read");
+  },
   deleteAppointmentUser(body) {
     return http.delete("/appointment/delete-appoint-user", {
       data: body,
