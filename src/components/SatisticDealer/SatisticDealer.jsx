@@ -26,13 +26,13 @@ export default function SatisticDealer() {
       <div className='satistic-dealer-container'>
         <div className='satistic-dealer-item'>
            <div className='satistic-dealer-number'>
-               {satistics.totals.totalNumOfCompletedTran}
+               {satistics?.totals?.totalNumOfCompletedTran ? satistics?.totals?.totalNumOfCompletedTran : 0}
            </div>
            <div className='satistic-dealer-title'>Số giao dịch hoàn thành</div>
            
         </div>
         <div className='satistic-dealer-item'>
-           <div className='satistic-dealer-comission'>{formatCurrency(satistics.totals.totalAmount)}</div>
+           <div className='satistic-dealer-comission'>{satistics?.totals?.totalAmount ? formatCurrency(satistics?.totals?.totalAmount) : formatCurrency(0)}</div>
            <div className='satistic-dealer-title'>Tổng tiền hoa hồng nhận được</div>
         </div>
       </div>

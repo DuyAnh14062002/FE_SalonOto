@@ -128,7 +128,7 @@ export default function ManageBuyCar() {
   const fetchAllCars = async (salonId) => {
     let res = await carApi.getAllCarOfSalon(salonId, 1, 1000000);
     console.log("res : ", res);
-    if (res?.data?.cars) {
+    if (res?.data?.cars?.length > 0) {
       setCars(res?.data?.cars);
       setCarId(res.data.cars[0].car_id);
     }
