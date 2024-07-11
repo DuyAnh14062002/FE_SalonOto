@@ -30,51 +30,51 @@ export default function NotificationDetailUser() {
         <div className="row">
           <div className="col-12">
             {appointment ? (
-              <div class="mt-3">
+              <div className="mt-3">
                 <h2 className="fw-bold text-center">Chi tiết lịch hẹn</h2>
                 <div className="form-group mt-3">
-                  <label for="note" class="fw-bold fs-5">
+                  <label for="note" className="fw-bold fs-5">
                     Tên salon
                   </label>
                   <input
                     type="text"
-                    class="form-control"
+                    className="form-control"
                     id="note"
                     value={appointment.salon}
                     disabled
                   />
                 </div>
                 <div className="form-group mt-3">
-                  <label for="note" class="fw-bold fs-5">
+                  <label for="note" className="fw-bold fs-5">
                     Ngày hẹn
                   </label>
                   <input
                     type="text"
-                    class="form-control"
+                    className="form-control"
                     id="note"
                     value={formatDate(new Date(appointment.date))}
                     disabled
                   />
                 </div>
                 <div className="form-group mt-3">
-                  <label for="note" class="fw-bold fs-5">
+                  <label for="note" className="fw-bold fs-5">
                     Giờ hẹn
                   </label>
                   <input
                     type="text"
-                    class="form-control"
+                    className="form-control"
                     id="note"
                     value={formatTime(new Date(appointment.date))}
                     disabled
                   />
                 </div>
                 <div className="form-group mt-3">
-                  <label for="note" class="fw-bold fs-5">
+                  <label for="note" className="fw-bold fs-5">
                     Mục đích hẹn
                   </label>
                   <textarea
                     required
-                    class="form-control"
+                    className="form-control"
                     id="note"
                     rows="5"
                     value={appointment.description}

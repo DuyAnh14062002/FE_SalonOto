@@ -10,6 +10,8 @@ import maintenanceApi from "../../../apis/maintenance.api";
 import { formatCurrency } from "../../../utils/common";
 import { debounce } from "lodash";
 import { PaginationControl } from "react-bootstrap-pagination-control";
+import paymentMethodApi from "../../../apis/paymentMethod.api";
+import paymentRequestApi from "../../../apis/paymentRequest.api";
 const LIMIT = 4;
 
 export default function ManageBuyMaintenance() {
@@ -30,7 +32,20 @@ export default function ManageBuyMaintenance() {
   const [totalPage, setTotalPage] = useState(0);
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
+  const [listPaymentMethod, setListPaymentMethod] = useState([]);
+  const [methodPaymentId, setMethodPaymentId] = useState("");
 
+  const fetchListPaymentMethod = async () => {
+    const res = await paymentMethodApi.getAllPaymentMethod();
+    if (res?.data?.data) {
+      setListPaymentMethod(res.data.data);
+      setMethodPaymentId(res.data.data[0].id);
+    }
+  };
+
+  useEffect(() => {
+    fetchListPaymentMethod();
+  }, []);
   const handleSearch = (e) => {
     setSearch(e.target.value);
     const searchValue = e.target.value;
@@ -168,11 +183,20 @@ export default function ManageBuyMaintenance() {
       listMaintenanceId,
       listAccessoryId
     );
+
     if (res?.data?.status === "success") {
       toast.success("Thêm giao dịch bảo dưỡng thành công");
       handleCloseAdd();
       loadingInvoice(page, search);
       setMaintenanceItem({});
+      await paymentRequestApi.createPaymentRequest({
+        cusPhone: maintenanceItem.phone,
+        cusFullname: maintenanceItem.fullname,
+        amount: res.data.maintain.expense,
+        salonId: salon.salon_id,
+        methodPaymentId,
+        invoiceId: res.data.maintain.invoice_id,
+      });
     } else {
       toast.error("Thêm giao dịch bảo dưỡng thất bại");
     }
@@ -348,7 +372,7 @@ export default function ManageBuyMaintenance() {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="6" className="fst-italic">
+                    <td colSpan="8" className="fst-italic">
                       Không có dữ liệu nào
                     </td>
                   </tr>
@@ -422,35 +446,59 @@ export default function ManageBuyMaintenance() {
                 onChange={onChange}
               />
             </Form.Group>
-            <Form.Group className="mt-3 feature">
-              <Form.Label>Chọn các dịch vụ bảo dưỡng</Form.Label>
-              {maintenances &&
-                maintenances.map((item, index) => (
-                  <Form.Check
-                    key={index}
-                    type="checkbox"
-                    checked={item.checked}
-                    onChange={() =>
-                      handleChangeMaintenance(item.maintenance_id)
-                    }
-                    value={item.maintenance_id}
-                    label={item.name}
-                  />
+            <Form.Group className="mt-4">
+              <Form.Label>Chọn hình thức thanh toán</Form.Label>
+
+              <Form.Select
+                onChange={(e) => setMethodPaymentId(e.target.value)}
+                value={methodPaymentId}
+              >
+                {listPaymentMethod?.map((item, index) => (
+                  <option key={index} value={item.id}>
+                    {item.type} - {item.content}
+                  </option>
                 ))}
+              </Form.Select>
             </Form.Group>
-            <Form.Group className="mt-3 feature">
+            <Form.Group className="mt-3">
+              <Form.Label>Chọn các dịch vụ bảo dưỡng</Form.Label>
+              <div style={{ maxHeight: "300px", overflowY: "scroll" }}>
+                {maintenances &&
+                  maintenances.map((item, index) => (
+                    <Form.Check
+                      key={index}
+                      type="checkbox"
+                      checked={item.checked}
+                      onChange={() =>
+                        handleChangeMaintenance(item.maintenance_id)
+                      }
+                      value={item.maintenance_id}
+                      label={item.name}
+                    />
+                  ))}
+              </div>
+            </Form.Group>
+            <Form.Group className="mt-3">
               <Form.Label>Chọn các phụ tùng sửa chữa</Form.Label>
-              {accessory &&
-                accessory.map((item, index) => (
-                  <Form.Check
-                    key={index}
-                    type="checkbox"
-                    checked={item.checked}
-                    onChange={() => handleChangeAccessory(item)}
-                    value={item.accessory_id}
-                    label={item?.name}
-                  />
-                ))}
+              <div
+                style={{
+                  maxHeight: "150px",
+                  overflowY: "scroll",
+                  marginTop: "5px",
+                }}
+              >
+                {accessory &&
+                  accessory.map((item, index) => (
+                    <Form.Check
+                      key={index}
+                      type="checkbox"
+                      checked={item.checked}
+                      onChange={() => handleChangeAccessory(item)}
+                      value={item.accessory_id}
+                      label={item?.name}
+                    />
+                  ))}
+              </div>
             </Form.Group>
           </Modal.Body>
           <Modal.Footer>
@@ -475,9 +523,9 @@ export default function ManageBuyMaintenance() {
             <Modal.Title> Thông tin chi tiết dịch vụ đã bảo dưỡng </Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <div class="container">
-              <h2 class="text-center">Bảng dịch vụ bảo dưỡng</h2>
-              <table class="table table-striped table-bordered">
+            <div className="container">
+              <h2 className="text-center">Bảng dịch vụ bảo dưỡng</h2>
+              <table className="table table-striped table-bordered">
                 <thead>
                   <tr>
                     <th scope="col">Tên dịch vụ bảo hành</th>
@@ -498,8 +546,8 @@ export default function ManageBuyMaintenance() {
                     })}
                 </tbody>
               </table>
-              <h2 class="text-center">Bảng phụ tùng sửa chữa</h2>
-              <table class="table table-striped table-bordered">
+              <h2 className="text-center">Bảng phụ tùng sửa chữa</h2>
+              <table className="table table-striped table-bordered">
                 <thead>
                   <tr>
                     <th scope="col">Tên dịch vụ bảo hành</th>
@@ -601,35 +649,51 @@ export default function ManageBuyMaintenance() {
                 value={maintenanceItem.email}
               />
             </Form.Group>
-            <Form.Group className="mt-3 feature">
+            <Form.Group className="mt-3 ">
               <Form.Label>Chọn các dịch vụ bảo dưỡng</Form.Label>
-              {maintenances &&
-                maintenances.map((item, index) => (
-                  <Form.Check
-                    key={index}
-                    type="checkbox"
-                    checked={item.checked}
-                    onChange={() =>
-                      handleChangeMaintenance(item.maintenance_id)
-                    }
-                    value={item.maintenance_id}
-                    label={item.name}
-                  />
-                ))}
+              <div
+                style={{
+                  maxHeight: "150px",
+                  overflowY: "scroll",
+                  marginTop: "5px",
+                }}
+              >
+                {maintenances &&
+                  maintenances.map((item, index) => (
+                    <Form.Check
+                      key={index}
+                      type="checkbox"
+                      checked={item.checked}
+                      onChange={() =>
+                        handleChangeMaintenance(item.maintenance_id)
+                      }
+                      value={item.maintenance_id}
+                      label={item.name}
+                    />
+                  ))}
+              </div>
             </Form.Group>
-            <Form.Group className="mt-3 feature">
+            <Form.Group className="mt-3">
               <Form.Label>Chọn các phụ tùng sửa chữa</Form.Label>
-              {accessory &&
-                accessory.map((item, index) => (
-                  <Form.Check
-                    key={index}
-                    type="checkbox"
-                    checked={item.checked}
-                    onChange={() => handleChangeAccessory(item)}
-                    value={item.accessory_id}
-                    label={item?.name}
-                  />
-                ))}
+              <div
+                style={{
+                  maxHeight: "150px",
+                  overflowY: "scroll",
+                  marginTop: "5px",
+                }}
+              >
+                {accessory &&
+                  accessory.map((item, index) => (
+                    <Form.Check
+                      key={index}
+                      type="checkbox"
+                      checked={item.checked}
+                      onChange={() => handleChangeAccessory(item)}
+                      value={item.accessory_id}
+                      label={item?.name}
+                    />
+                  ))}
+              </div>
             </Form.Group>
           </Modal.Body>
           <Modal.Footer>

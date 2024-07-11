@@ -157,11 +157,11 @@ export default function ModalBuyPackage(props) {
                   <div className="payment-select">
                     {activeZaloPayment === true ? (
                       <i
-                        class="fa-solid fa-circle"
+                        className="fa-solid fa-circle"
                         style={{ color: "blue" }}
                       ></i>
                     ) : (
-                      <i class="fa-regular fa-circle"></i>
+                      <i className="fa-regular fa-circle"></i>
                     )}
                   </div>
                 </div>
@@ -183,11 +183,11 @@ export default function ModalBuyPackage(props) {
                   <div className="payment-select">
                     {activeVisaPayment === true ? (
                       <i
-                        class="fa-solid fa-circle"
+                        className="fa-solid fa-circle"
                         style={{ color: "blue" }}
                       ></i>
                     ) : (
-                      <i class="fa-regular fa-circle"></i>
+                      <i className="fa-regular fa-circle"></i>
                     )}
                   </div>
                 </div>
@@ -209,11 +209,11 @@ export default function ModalBuyPackage(props) {
                   <div className="payment-select">
                     {activeVnPay === true ? (
                       <i
-                        class="fa-solid fa-circle"
+                        className="fa-solid fa-circle"
                         style={{ color: "blue" }}
                       ></i>
                     ) : (
-                      <i class="fa-regular fa-circle"></i>
+                      <i className="fa-regular fa-circle"></i>
                     )}
                   </div>
                 </div>

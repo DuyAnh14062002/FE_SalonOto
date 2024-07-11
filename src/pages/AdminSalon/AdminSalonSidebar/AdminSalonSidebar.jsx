@@ -266,39 +266,84 @@ export default function AdminSalonSidebar(props) {
                   </li>
                 );
               }
+              if (
+                keyMap === "f9" &&
+                permissions &&
+                (permissions[0] === "OWNER" || permissions?.includes("R_AC"))
+              ) {
+                return (
+                  <li className="nav-link">
+                    <Link
+                      to={path.manageProcess}
+                      className="text-decoration-none "
+                    >
+                      <div className="nav-link-icon d-inline-flex mx-2">
+                        <i className="fa-solid fa-table-list"></i>
+                      </div>
+                      Quản lý quy trình
+                    </Link>
+                  </li>
+                );
+              }
+              if (
+                keyMap === "f10" &&
+                permissions &&
+                (permissions[0] === "OWNER" || permissions?.includes("R_AC"))
+              ) {
+                return (
+                  <li className="nav-link">
+                    <Link
+                      to={path.manageStage}
+                      className="text-decoration-none "
+                    >
+                      <div className="nav-link-icon d-inline-flex mx-2">
+                        <i className="fa-solid fa-bars-staggered"></i>
+                      </div>
+                      Quản lý giai đoạn
+                    </Link>
+                  </li>
+                );
+              }
+              if (
+                keyMap === "f11" &&
+                permissions &&
+                (permissions[0] === "OWNER" || permissions?.includes("R_AC"))
+              ) {
+                return (
+                  <li className="nav-link">
+                    <Link
+                      to={path.managePromotion}
+                      className="text-decoration-none "
+                    >
+                      <div className="nav-link-icon d-inline-flex mx-2">
+                        <i className="fa-solid fa-percent"></i>
+                      </div>
+                      Quản lý Khuyến mãi
+                    </Link>
+                  </li>
+                );
+              }
+              if (
+                keyMap === "f12" &&
+                permissions &&
+                (permissions[0] === "OWNER" || permissions?.includes("R_AC"))
+              ) {
+                return (
+                  <li className="nav-link">
+                    <Link
+                      to={path.managePayment}
+                      className="text-decoration-none "
+                    >
+                      <div className="nav-link-icon d-inline-flex mx-2">
+                        <i className="fa-solid fa-money-bill-wave"></i>
+                      </div>
+                      Quản lý thanh toán
+                    </Link>
+                  </li>
+                );
+              }
             })}
-          <li className="nav-link">
-            <Link to={path.manageProcess} className="text-decoration-none ">
-              <div className="nav-link-icon d-inline-flex mx-2">
-                <i className="fa-solid fa-table-list"></i>
-              </div>
-              Quản lý quy trình
-            </Link>
-          </li>
-          <li className="nav-link">
-            <Link to={path.manageStage} className="text-decoration-none ">
-              <div className="nav-link-icon d-inline-flex mx-2">
-                <i className="fa-solid fa-bars-staggered"></i>
-              </div>
-              Quản lý giai đoạn
-            </Link>
-          </li>
-          <li className="nav-link">
-            <Link to={path.managePromotion} className="text-decoration-none ">
-              <div className="nav-link-icon d-inline-flex mx-2">
-                <i class="fa-solid fa-percent"></i>
-              </div>
-              Quản lý Khuyến mãi
-            </Link>
-          </li>
-          <li className="nav-link">
-            <Link to={path.managePayment} className="text-decoration-none ">
-              <div className="nav-link-icon d-inline-flex mx-2">
-                <i className="fa-solid fa-money-bill-wave"></i>
-              </div>
-              Quản lý thanh toán
-            </Link>
-          </li>
+
           <li className="nav-link">
             <Link to="/" className="text-decoration-none ">
               <div className="nav-link-icon d-inline-flex mx-2">

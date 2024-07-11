@@ -25,8 +25,10 @@ const AccessoryApi = {
   deleteAccessory(id) {
     return http.delete(`/accessory/${id}`);
   },
-  getInvoiceBuyAccessory() {
-    return http.get("/buy-accessory");
+  getInvoiceBuyAccessory(page = 1, per_page = 1000, q = "") {
+    return http.get(
+      `/buy-accessory?page=${page}&&per_page=${per_page}&&q=${q}`
+    );
   },
   getAccessoryDetail(id) {
     return http.get(`/buy-accessory:/${id}`);

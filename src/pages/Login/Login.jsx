@@ -22,14 +22,23 @@ export default function Login() {
   const navigate = useNavigate();
   const onSubmit = handleSubmit(async (data) => {
     try {
-      const res = await authApi.login(data);
-      if (res.data.status === "success") {
-        dispatch(loginUser(res.data.user));
-        setProfile(res.data.user);
-        navigate("/");
-      }
-      if (res.data.status === "failed") {
-        toast.error(res.data.msg);
+      if (
+        data.username === "admin-team-salon-oto" &&
+        data.password === "admin123abcDEF@@"
+      ) {
+        await authApi.login(data);
+
+        navigate("/admin");
+      } else {
+        const res = await authApi.login(data);
+        if (res.data.status === "success") {
+          dispatch(loginUser(res.data.user));
+          setProfile(res.data.user);
+          navigate("/");
+        }
+        if (res.data.status === "failed") {
+          toast.error(res.data.msg);
+        }
       }
     } catch (error) {
       console.log("error", error);
@@ -38,14 +47,20 @@ export default function Login() {
 
   const handleLoginGoogle = async () => {
     try {
-      window.open("https://server-graduation-thesis-1.onrender.com/auth/google", "_self");
+      window.open(
+        "https://server-graduation-thesis-1.onrender.com/auth/google",
+        "_self"
+      );
     } catch (error) {
       console.log(error);
     }
   };
   const handleLoginFacebook = async () => {
     try {
-      window.open("https://server-graduation-thesis-1.onrender.com/auth/facebook", "_self");
+      window.open(
+        "https://server-graduation-thesis-1.onrender.com/auth/facebook",
+        "_self"
+      );
     } catch (error) {
       console.log(error);
     }

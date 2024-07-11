@@ -411,7 +411,7 @@ export default function ManageUser() {
                       onClick={() => handleToggleDetailRoleSalon()}
                     >
                       <div className="left-role-item">
-                        <i class="fa-solid fa-chevron-right"></i>
+                        <i className="fa-solid fa-chevron-right"></i>
                         <span>Quản lí Salon</span>
                       </div>
                       <div className="right-role-item">
@@ -463,9 +463,9 @@ export default function ManageUser() {
                       >
                         <div className="left-role-item">
                           {detailRole === false ? (
-                            <i class="fa-solid fa-chevron-right"></i>
+                            <i className="fa-solid fa-chevron-right"></i>
                           ) : (
-                            <i class="fa-solid fa-angle-down"></i>
+                            <i className="fa-solid fa-angle-down"></i>
                           )}
                           <span>Quản lí xe hơi</span>
                         </div>
@@ -552,7 +552,7 @@ export default function ManageUser() {
                         onClick={() => handleToggleDetailRoleCalender()}
                       >
                         <div className="left-role-item">
-                          <i class="fa-solid fa-chevron-right"></i>
+                          <i className="fa-solid fa-chevron-right"></i>
                           <span>Quản lí lịch hẹn</span>
                         </div>
                         <div className="right-role-item">

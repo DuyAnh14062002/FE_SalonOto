@@ -364,11 +364,11 @@ export default function Message() {
       <div className="message-sidebar">
         <div className="message-sidebar-top">
           <span className="title-message">Nhắn tin</span>
-          <i class="fa-regular fa-pen-to-square"></i>
+          <i className="fa-regular fa-pen-to-square"></i>
         </div>
         <div className="message-sidebar-search">
           <input type="text" placeholder="Tìm kiếm..."></input>
-          <i class="fa-solid fa-magnifying-glass"></i>
+          <i className="fa-solid fa-magnifying-glass"></i>
         </div>
         <div className="message-sidebar-bottom">
           {users &&
@@ -448,8 +448,11 @@ export default function Message() {
             </div>
           </div>
           <div className="message-main-top-option">
-            <i class="fa-solid fa-video" onClick={handleCallVideo}></i>
-            <i class="fa-solid fa-right-from-bracket" onClick={backHome}></i>
+            <i className="fa-solid fa-video" onClick={handleCallVideo}></i>
+            <i
+              className="fa-solid fa-right-from-bracket"
+              onClick={backHome}
+            ></i>
           </div>
         </div>
         <div className="message-main-content">
@@ -473,7 +476,7 @@ export default function Message() {
                   user={user}
                   receiverId={message.receiverId}
                   key={index}
-                  shakeClass={shakeClass}
+                  shakeclassName={shakeClass}
                   isMessage={isMessage}
                 />
               );
@@ -494,17 +497,18 @@ export default function Message() {
             onChange={(e) => handleChange(e)}
           />
           <label className="acttachment" for="file">
-            <i class="fa-solid fa-image"></i>
+            <i className="fa-solid fa-image"></i>
           </label>
           {imagePreview?.length > 0 ? (
             <div className="imgPreview-box">
               <div className="imgPreview-box-flex">
                 {imagePreview?.length > 0 &&
-                  imagePreview.map((img) => {
+                  imagePreview.map((img, index) => {
                     return (
                       <div
                         className="imgPreview"
                         style={{ backgroundImage: `url(${img})` }}
+                        key={index}
                       ></div>
                     );
                   })}
@@ -527,11 +531,11 @@ export default function Message() {
               onChange={(e) => handleChangeTextMessage(e)}
               value={text}
             ></input>
-            <i class="fa-solid fa-face-smile"></i>
+            <i className="fa-solid fa-face-smile"></i>
           </div>
           <div className="send">
             <i
-              class="fa-solid fa-location-arrow"
+              className="fa-solid fa-location-arrow"
               onClick={handleSendMessage}
             ></i>
           </div>

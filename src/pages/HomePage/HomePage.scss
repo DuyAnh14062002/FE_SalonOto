@@ -14,7 +14,11 @@
 }
 .container-homepage {
   font-family: "Montserrat", sans-serif;
-  background: linear-gradient(to right, rgba(2, 82, 89, 0.9), rgba(255, 255, 255, 0)),
+  background: linear-gradient(
+      to right,
+      rgba(2, 82, 89, 0.9),
+      rgba(255, 255, 255, 0)
+    ),
     url("https://bont.design/bont/wp-content/uploads/2020/03/MAIN-SHOT.RGB_color.jpg");
   background-position: center center;
   background-size: cover;

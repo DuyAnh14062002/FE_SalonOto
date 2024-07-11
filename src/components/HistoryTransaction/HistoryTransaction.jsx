@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./HistoryTransaction.scss";
 import Header from "../Header";
-import { Form} from "react-bootstrap";
+import { Form } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import invoiceApi from "../../apis/invoice.api";
@@ -15,10 +15,10 @@ export default function HistoryTransaction() {
   const [showWarranty, setShowWarranty] = useState(false);
   const [selectedInvoice, setSelectedInvoice] = useState({});
   const [showModalProcess, setShowModalProcess] = useState(false);
-  const [satisticCustomer, setSatisticCustomer] = useState({})
-  const [startType, setStartType] = useState("all")
-  const [month, setMonth] = useState("")
-  const [quarter, setQuarter] = useState("")
+  const [satisticCustomer, setSatisticCustomer] = useState({});
+  const [startType, setStartType] = useState("all");
+  const [month, setMonth] = useState("");
+  const [quarter, setQuarter] = useState("");
   const handleShowProcess = (invoice) => {
     setSelectedInvoice(invoice);
     setShowModalProcess(true);
@@ -32,125 +32,155 @@ export default function HistoryTransaction() {
     if (invoice?.type === "buy car") {
       setShowWarranty(true);
       setWarranty(invoice);
-    } else if(invoice?.type === "maintenance") {
-      let res = await invoiceApi.getDetailInvoiceMaintenance(invoice.invoiceId)
-      if(res?.data?.invoice){
-         setInvoiceChoose(res.data.invoice)
+    } else if (invoice?.type === "maintenance") {
+      let res = await invoiceApi.getDetailInvoiceMaintenance(invoice.invoiceId);
+      console.log("res maintennace : ", res);
+      if (res?.data?.invoice) {
+        setInvoiceChoose(res.data.invoice);
       }
-      console.log("res maintennace : ", res)
-      setInvoiceChoose(invoice);
       setShowInfo(true);
-    }else{
-      let res = await invoiceApi.getDetailInvoiceAccessory(invoice.invoiceId)
-      if(res?.data?.invoice){
-        setInvoiceChoose(res.data.invoice)
+    } else {
+      let res = await invoiceApi.getDetailInvoiceAccessory(invoice.invoiceId);
+      if (res?.data?.invoice) {
+        setInvoiceChoose(res.data.invoice);
       }
-      console.log("res access : ", res)
-      setInvoiceChoose(invoice);
+      console.log("res access : ", res);
       setShowInfo(true);
     }
   };
   const handleCloseInfor = () => {
     setShowInfo(false);
   };
-  const loadingSatisticCustomer = async (year,quarter,month) => {
-    try{
-       let res = await invoiceApi.satisticCustomer(year,quarter,month)
-       console.log("res satistic :", res)
-       if(res?.data){
-        setSatisticCustomer(res.data)
-       }
-    }catch(e){
-      console.log(e)
+  const loadingSatisticCustomer = async (year, quarter, month) => {
+    try {
+      let res = await invoiceApi.satisticCustomer(year, quarter, month);
+      console.log("res satistic :", res);
+      if (res?.data) {
+        setSatisticCustomer(res.data);
+      }
+    } catch (e) {
+      console.log(e);
     }
-  }
+  };
   useEffect(() => {
-    loadingSatisticCustomer("2024","","")
+    loadingSatisticCustomer("2024", "", "");
   }, []);
 
   const handleCloseWarranty = () => {
     setShowWarranty(false);
   };
   const handleFilterTransactions = async (type) => {
-    console.log("oke")
-    if(type === "All"){
-      let res = await invoiceApi.satisticCustomer()
-      if(res?.data){
-        setSatisticCustomer(res.data)
-       }
+    console.log("oke");
+    if (type === "All") {
+      let res = await invoiceApi.satisticCustomer();
+      if (res?.data) {
+        setSatisticCustomer(res.data);
+      }
     }
 
-    if(type === "buyCar"){
-      let res = await invoiceApi.satisticCustomerBuycar()
-      if(res?.data){
-        setSatisticCustomer(res.data)
-       }
+    if (type === "buyCar") {
+      let res = await invoiceApi.satisticCustomerBuycar();
+      if (res?.data) {
+        setSatisticCustomer(res.data);
+      }
     }
-  }
+  };
   const handleSetStartType = (e) => {
-    setStartType(e.target.value)
-    if(e.target.value){
-      loadingSatisticCustomer("2024", "", "")
+    setStartType(e.target.value);
+    if (e.target.value) {
+      loadingSatisticCustomer("2024", "", "");
     }
-  }
+  };
   const handleChangeMonth = (e) => {
-     setMonth(e.target.value)
-     loadingSatisticCustomer("2024", "", e.target.value)
-  }
-  const handleChangeQuarter = (e) =>{
-     setQuarter(e.target.value)
-     loadingSatisticCustomer("2024", e.target.value, "")
-  }
+    setMonth(e.target.value);
+    loadingSatisticCustomer("2024", "", e.target.value);
+  };
+  const handleChangeQuarter = (e) => {
+    setQuarter(e.target.value);
+    loadingSatisticCustomer("2024", e.target.value, "");
+  };
   return (
     <>
       <Header otherPage={true} />
-      <h2 style={{textAlign : "center", marginTop: "15px"}}>Thống kê của bạn</h2>
+      <h2 style={{ textAlign: "center", marginTop: "15px" }}>
+        Thống kê của bạn
+      </h2>
       <div className="satistic-time">
-         <Form.Select className="satistic-time-select">
-           <option>2024</option>
-         </Form.Select>
-         <Form.Select className="satistic-time-select" onChange={handleSetStartType} value={startType}>
-           <option value="all">Tất cả</option>
-           <option value="quarter">Quý</option>
-           <option value="month">Tháng</option>
-         </Form.Select>
-         {startType === "quarter" ? (
-           <Form.Select className="satistic-time-select" onChange={handleChangeQuarter}>
-           <option value="1">Quý 1</option>
-           <option value="2">Quý 2</option>
-           <option value="3">Quý 3</option>
-           <option value="4">Quý 4</option>
-         </Form.Select>
-         ) : (startType === "month" ? ( <Form.Select className="satistic-time-select" onChange={handleChangeMonth}>
-          <option value="1">Tháng 1</option>
-          <option value="2">Tháng 2</option>
-          <option value="3">Tháng 3</option>
-          <option value="4">Tháng 4</option>
-          <option value="5">Tháng 5</option>
-          <option value="6">Tháng 6</option>
-          <option value="7">Tháng 7</option>
-          <option value="8">Tháng 8</option>
-          <option value="9">Tháng 9</option>
-          <option value="10">Tháng 10</option>
-          <option value="11">Tháng 11</option>
-          <option value="12">Tháng 12</option>
-        </Form.Select>) : "")}
+        <Form.Select className="satistic-time-select">
+          <option>2024</option>
+        </Form.Select>
+        <Form.Select
+          className="satistic-time-select"
+          onChange={handleSetStartType}
+          value={startType}
+        >
+          <option value="all">Tất cả</option>
+          <option value="quarter">Quý</option>
+          <option value="month">Tháng</option>
+        </Form.Select>
+        {startType === "quarter" ? (
+          <Form.Select
+            className="satistic-time-select"
+            onChange={handleChangeQuarter}
+          >
+            <option value="1">Quý 1</option>
+            <option value="2">Quý 2</option>
+            <option value="3">Quý 3</option>
+            <option value="4">Quý 4</option>
+          </Form.Select>
+        ) : startType === "month" ? (
+          <Form.Select
+            className="satistic-time-select"
+            onChange={handleChangeMonth}
+          >
+            <option value="1">Tháng 1</option>
+            <option value="2">Tháng 2</option>
+            <option value="3">Tháng 3</option>
+            <option value="4">Tháng 4</option>
+            <option value="5">Tháng 5</option>
+            <option value="6">Tháng 6</option>
+            <option value="7">Tháng 7</option>
+            <option value="8">Tháng 8</option>
+            <option value="9">Tháng 9</option>
+            <option value="10">Tháng 10</option>
+            <option value="11">Tháng 11</option>
+            <option value="12">Tháng 12</option>
+          </Form.Select>
+        ) : (
+          ""
+        )}
       </div>
       <div className="satistic-container">
         <div className="satistic-item satistic-total">
-          <div className="satistic-money">{satisticCustomer.totalExpense ? formatCurrency(satisticCustomer.totalExpense) : formatCurrency(0)}</div>
+          <div className="satistic-money">
+            {satisticCustomer.totalExpense
+              ? formatCurrency(satisticCustomer.totalExpense)
+              : formatCurrency(0)}
+          </div>
           <div className="satistic-title">Tổng chi phí</div>
         </div>
         <div className="satistic-item satistic-buyCar">
-          <div className="satistic-money">{satisticCustomer.totalExpenseBuyCar ? formatCurrency(satisticCustomer.totalExpenseBuyCar): formatCurrency(0)}</div>
+          <div className="satistic-money">
+            {satisticCustomer.totalExpenseBuyCar
+              ? formatCurrency(satisticCustomer.totalExpenseBuyCar)
+              : formatCurrency(0)}
+          </div>
           <div className="satistic-title">Tổng chi phí mua xe</div>
         </div>
         <div className="satistic-item satistic-maintenance">
-          <div className="satistic-money">{satisticCustomer.totalExpenseMaintenance ? formatCurrency(satisticCustomer.totalExpenseMaintenance): formatCurrency(0)}</div>
+          <div className="satistic-money">
+            {satisticCustomer.totalExpenseMaintenance
+              ? formatCurrency(satisticCustomer.totalExpenseMaintenance)
+              : formatCurrency(0)}
+          </div>
           <div className="satistic-title">Tổng chi phí bảo dưỡng</div>
         </div>
         <div className="satistic-item satistic-accessory">
-          <div className="satistic-money">{satisticCustomer.totalExpenseBuyAccessory ? formatCurrency(satisticCustomer.totalExpenseBuyAccessory) : formatCurrency(0)}</div>
+          <div className="satistic-money">
+            {satisticCustomer.totalExpenseBuyAccessory
+              ? formatCurrency(satisticCustomer.totalExpenseBuyAccessory)
+              : formatCurrency(0)}
+          </div>
           <div className="satistic-title">Tổng chi phí phụ tùng</div>
         </div>
       </div>
@@ -193,8 +223,16 @@ export default function HistoryTransaction() {
                 <td>{invoice?.salonName}</td>
                 <td>{invoice.phone}</td>
                 <td>{invoice.createdAt}</td>
-                <td>{invoice?.expense ? formatCurrency(invoice?.expense): ""}</td>
-                <td>{invoice?.type === "buy car" ? "Mua xe" : (invoice?.type === "maintenance" ? "Bảo dưỡng" : "Mua phụ tùng")}</td>
+                <td>
+                  {invoice?.expense ? formatCurrency(invoice?.expense) : ""}
+                </td>
+                <td>
+                  {invoice?.type === "buy car"
+                    ? "Mua xe"
+                    : invoice?.type === "maintenance"
+                    ? "Bảo dưỡng"
+                    : "Mua phụ tùng"}
+                </td>
                 <td className="text-center">
                   {invoice?.type === "buy car" && (
                     <button
@@ -240,9 +278,9 @@ export default function HistoryTransaction() {
             <Modal.Title> Thông tin chi tiết dịch vụ đã bảo dưỡng </Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <div class="container">
-              <h2 class="text-center">Bảng dịch vụ bảo dưỡng</h2>
-              <table class="table table-striped table-bordered">
+            <div className="container">
+              <h2 className="text-center">Bảng dịch vụ bảo dưỡng</h2>
+              <table className="table table-striped table-bordered">
                 <thead>
                   <tr>
                     <th scope="col">Tên dịch vụ bảo hành</th>
@@ -251,20 +289,22 @@ export default function HistoryTransaction() {
                   </tr>
                 </thead>
                 <tbody>
-                  {invoiceChoose?.maintenanceServices?.length > 0 ?
-                    invoiceChoose.maintenanceServices.map((item, index) => {
-                      return (
-                        <tr key={index}>
-                          <td>{item.name}</td>
-                          <td>{item.cost}</td>
-                          <td>{invoiceChoose?.invoiceDate}</td>
-                        </tr>
-                      );
-                    }) : ""}
+                  {invoiceChoose?.maintenanceServices?.length > 0
+                    ? invoiceChoose.maintenanceServices.map((item, index) => {
+                        console.log("item : ", item);
+                        return (
+                          <tr key={index}>
+                            <td>{item.name}</td>
+                            <td>{item.cost}</td>
+                            <td>{invoiceChoose?.invoiceDate}</td>
+                          </tr>
+                        );
+                      })
+                    : ""}
                 </tbody>
               </table>
-              <h2 class="text-center">Bảng phụ tùng sửa chữa</h2>
-              <table class="table table-striped table-bordered">
+              <h2 className="text-center">Bảng phụ tùng sửa chữa</h2>
+              <table className="table table-striped table-bordered">
                 <thead>
                   <tr>
                     <th scope="col">Tên dịch vụ bảo hành</th>
@@ -273,16 +313,17 @@ export default function HistoryTransaction() {
                   </tr>
                 </thead>
                 <tbody>
-                  {invoiceChoose?.accessories?.length > 0 ?
-                    invoiceChoose.accessories.map((item, index) => {
-                      return (
-                        <tr key={index}>
-                          <td>{item.name}</td>
-                          <td>{item.price}</td>
-                          <td>{invoiceChoose?.invoiceDate}</td>
-                        </tr>
-                      );
-                    }) : ""}
+                  {invoiceChoose?.accessories?.length > 0
+                    ? invoiceChoose.accessories.map((item, index) => {
+                        return (
+                          <tr key={index}>
+                            <td>{item.name}</td>
+                            <td>{item.price}</td>
+                            <td>{invoiceChoose?.invoiceDate}</td>
+                          </tr>
+                        );
+                      })
+                    : ""}
                 </tbody>
               </table>
             </div>

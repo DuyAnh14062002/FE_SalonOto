@@ -10,7 +10,7 @@ import { formatDate, formatTime } from "../../../utils/common";
 import salonApi from "../../../apis/salon.api";
 import { PaginationControl } from "react-bootstrap-pagination-control";
 import { debounce } from "lodash";
-const LIMIT = 2;
+const LIMIT = 5;
 
 export default function AppointmentSalon() {
   const [showEdit, setShowEdit] = useState(false);
@@ -206,7 +206,7 @@ export default function AppointmentSalon() {
                             title="Từ chối"
                             onClick={() => handleShowEdit(appointment, false)}
                           >
-                            <i class="fa-solid fa-xmark"></i>
+                            <i className="fa-solid fa-xmark"></i>
                           </button>
                           <button
                             className="btn btn-success btn-sm rounded-0 text-white mx-2"
@@ -215,7 +215,7 @@ export default function AppointmentSalon() {
                             title="Xác nhận"
                             onClick={() => handleShowEdit(appointment, true)}
                           >
-                            <i class="fa-solid fa-check"></i>
+                            <i className="fa-solid fa-check"></i>
                           </button>
                           {new Date(appointment.date) < new Date() && (
                             <button

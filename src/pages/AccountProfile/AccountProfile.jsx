@@ -190,8 +190,8 @@ const AccountProfile = (props) => {
     navigate(`${path.historyTransactionDealer}`);
   };
   const handleShowSatisticDealer = () => {
-    navigate(`${path.satisticDealer}`)
-  }
+    navigate(`${path.satisticDealer}`);
+  };
   return (
     <>
       <Header otherPage={true} />
@@ -223,28 +223,38 @@ const AccountProfile = (props) => {
                               <div>
                                 <div className="info">
                                   <h4>Họ tên</h4>
-                                  <p>{profile1 && profile1.fullname}</p>
+                                  <p>
+                                    {(profile1 && profile1.fullname) ||
+                                      "Chưa cập nhật"}
+                                  </p>
                                 </div>
                               </div>
                               <div>
                                 <div className="info">
                                   <h4>Giới tính</h4>
                                   <p className="text-capitalize">
-                                    {profile1 && profile1.gender}
+                                    {(profile1 && profile1.gender) ||
+                                      "Chưa cập nhật"}
                                   </p>
                                 </div>
                               </div>
                               <div>
                                 <div className="info">
                                   <h4>Số điện thoại</h4>
-                                  <p>{profile1 && profile1.phone}</p>
+                                  <p>
+                                    {(profile1 && profile1.phone) ||
+                                      "Chưa cập nhật"}
+                                  </p>
                                 </div>
                               </div>
 
                               <div>
                                 <div className="info">
                                   <h4>Địa chỉ</h4>
-                                  <p>{profile1 && profile1.address}</p>
+                                  <p>
+                                    {(profile1 && profile1.address) ||
+                                      "Chưa cập nhật"}
+                                  </p>
                                 </div>
                               </div>
                               <div>
@@ -285,7 +295,7 @@ const AccountProfile = (props) => {
                         </div>
                         <div className="col-lg-4 col-md-4 col-12 ">
                           <div className="update-container">
-                            <i class="fa-solid fa-venus-mars mx-2"></i>
+                            <i className="fa-solid fa-venus-mars mx-2"></i>
                             <input
                               type="text"
                               name="gender"
@@ -309,7 +319,7 @@ const AccountProfile = (props) => {
                         </div>
                         <div className="col-lg-4 col-md-4 col-12 mt-3">
                           <div className="update-container">
-                            <i class="fa-solid fa-location-dot mx-2"></i>
+                            <i className="fa-solid fa-location-dot mx-2"></i>
                             <input
                               type="text"
                               name="address"
@@ -321,7 +331,7 @@ const AccountProfile = (props) => {
                         </div>
                         <div className="col-lg-4 col-md-4 col-12 mt-3">
                           <div className="update-container">
-                            <i class="fa-solid fa-cake-candles mx-2"></i>
+                            <i className="fa-solid fa-cake-candles mx-2"></i>
                             <input
                               type="date"
                               name="date_of_birth"
@@ -383,7 +393,7 @@ const AccountProfile = (props) => {
                       >
                         {profile1?.google && (
                           <span className="tick">
-                            <i class="fa-solid fa-circle-check"></i>
+                            <i className="fa-solid fa-circle-check"></i>
                           </span>
                         )}
                         <i className="fab fa-google me-2"></i> Liên kết với
@@ -397,7 +407,7 @@ const AccountProfile = (props) => {
                       >
                         {profile1?.facebook && (
                           <span className="tick">
-                            <i class="fa-solid fa-circle-check"></i>
+                            <i className="fa-solid fa-circle-check"></i>
                           </span>
                         )}
                         <i className="fab fa-facebook-f me-2"></i>Liên kết với
@@ -413,7 +423,7 @@ const AccountProfile = (props) => {
                         }}
                       >
                         <i
-                          class="fa-solid fa-clock-rotate-left"
+                          className="fa-solid fa-clock-rotate-left"
                           style={{ marginRight: "5px" }}
                         ></i>
                         Xem lịch sử giao dịch
@@ -428,7 +438,7 @@ const AccountProfile = (props) => {
                         }}
                       >
                         <i
-                          class="fa-solid fa-clock-rotate-left"
+                          className="fa-solid fa-clock-rotate-left"
                           style={{ marginRight: "5px" }}
                         ></i>
                         Xem lịch sử thanh toán
@@ -444,7 +454,7 @@ const AccountProfile = (props) => {
                         }}
                       >
                         <i
-                          class="fa-solid fa-pen-to-square"
+                          className="fa-solid fa-pen-to-square"
                           style={{ marginRight: "5px" }}
                         ></i>
                         Giới thiệu bán xe cho Salon
@@ -460,7 +470,7 @@ const AccountProfile = (props) => {
                         }}
                       >
                         <i
-                          class="fa-solid fa-pen-to-square"
+                          className="fa-solid fa-pen-to-square"
                           style={{ marginRight: "5px" }}
                         ></i>
                         Các giao dịch Hoa tiêu
@@ -475,7 +485,10 @@ const AccountProfile = (props) => {
                           border: "none",
                         }}
                       >
-                        <i class="fa-solid fa-chart-simple"  style={{ marginRight: "5px" }}></i> 
+                        <i
+                          class="fa-solid fa-chart-simple"
+                          style={{ marginRight: "5px" }}
+                        ></i>
                         Thống kê Hoa Tiêu
                       </Button>
                     </div>
