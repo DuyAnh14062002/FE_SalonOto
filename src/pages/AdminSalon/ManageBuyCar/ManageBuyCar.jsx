@@ -44,7 +44,7 @@ export default function ManageBuyCar() {
 
   const fetchListPaymentMethod = async () => {
     const res = await paymentMethodApi.getAllPaymentMethod();
-    if (res?.data?.data) {
+    if (res?.data?.data?.length > 0) {
       setListPaymentMethod(res.data.data);
       setMethodPaymentId(res.data.data[0].id);
     }
