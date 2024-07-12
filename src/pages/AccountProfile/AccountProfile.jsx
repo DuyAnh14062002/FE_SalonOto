@@ -139,6 +139,9 @@ const AccountProfile = (props) => {
     if (profile.fullname) {
       form.append("fullname", profile.fullname);
     }
+    if (profile.email) {
+      form.append("email", profile.email);
+    }
     if (profile.phone) {
       form.append("phone", profile.phone);
     }
@@ -267,6 +270,15 @@ const AccountProfile = (props) => {
                                   </p>
                                 </div>
                               </div>
+                              <div>
+                                <div className="info">
+                                  <h4>Email</h4>
+                                  <p>
+                                    {(profile1 && profile1.email) ||
+                                      "Chưa cập nhật"}
+                                  </p>
+                                </div>
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -281,7 +293,7 @@ const AccountProfile = (props) => {
                     </h2>
                     <div className="form mt-5">
                       <div className="row mt-3">
-                        <div className="col-lg-4 col-md-4 col-12 ">
+                        <div className="col-lg-3 col-md-3 col-12 ">
                           <div className="update-container">
                             <i className="fa fa-user mx-2"></i>
                             <input
@@ -293,7 +305,19 @@ const AccountProfile = (props) => {
                             />
                           </div>
                         </div>
-                        <div className="col-lg-4 col-md-4 col-12 ">
+                        <div className="col-lg-3 col-md-3 col-12 ">
+                          <div className="update-container">
+                            <i className="fa-regular fa-envelope"></i>
+                            <input
+                              type="text"
+                              name="email"
+                              placeholder="Email"
+                              value={profile.email}
+                              onChange={handleOnchange}
+                            />
+                          </div>
+                        </div>
+                        <div className="col-lg-3 col-md-3 col-12 ">
                           <div className="update-container">
                             <i className="fa-solid fa-venus-mars mx-2"></i>
                             <input
@@ -305,7 +329,7 @@ const AccountProfile = (props) => {
                             />
                           </div>
                         </div>
-                        <div className="col-lg-4 col-md-4 col-12 ">
+                        <div className="col-lg-3 col-md-3 col-12 ">
                           <div className="update-container">
                             <i className="fa fa-phone mx-2"></i>
                             <input

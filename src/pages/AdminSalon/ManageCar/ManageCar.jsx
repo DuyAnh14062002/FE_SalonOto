@@ -733,7 +733,7 @@ export default function ManageCar() {
                     <Form.Label>Giá</Form.Label>
                     <Form.Control
                       required
-                      type="text"
+                      type="number"
                       value={car.price}
                       name="price"
                       onChange={onChange}
@@ -929,7 +929,7 @@ export default function ManageCar() {
                     <Form.Label>Giá</Form.Label>
                     <Form.Control
                       required
-                      type="text"
+                      type="number"
                       name="price"
                       onChange={onChange}
                     />

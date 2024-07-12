@@ -160,6 +160,7 @@ export default function Message() {
 
   const handleSendMessage = async () => {
     let res = "";
+    console.log("user : ", user?.salon_id);
     if (user?.salon_id) {
       const form = new FormData();
       if (images) {
@@ -171,6 +172,7 @@ export default function Message() {
         form.append("message", text);
       }
       res = await messageApi.postMessage(user.salon_id, text);
+
       setImages([]);
       setText("");
       setImagePreview([]);

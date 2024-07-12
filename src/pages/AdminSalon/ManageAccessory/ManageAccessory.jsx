@@ -11,7 +11,7 @@ import { formatCurrency } from "../../../utils/common";
 import { debounce } from "lodash";
 import { PaginationControl } from "react-bootstrap-pagination-control";
 import "./ManageAccessory.scss";
-const LIMIT = 4;
+const LIMIT = 5;
 export default function ManageAccessory() {
   const [isLoading, setIsLoading] = useState(false);
   const [showUpdate, setShowUpdate] = useState(false);
@@ -60,25 +60,25 @@ export default function ManageAccessory() {
     }
   };
   const fetchDataSalon = async (page, search) => {
-    try{
+    try {
       const res = await salonApi.getSalonInfor();
       if (res?.data?.salon) {
         setSalon(res.data.salon);
         loadingAccessory(res.data.salon.salon_id, page, search);
       }
-    }catch(e){
-      console.log(e)
+    } catch (e) {
+      console.log(e);
     }
   };
   const loadingAccessory = async (salon_id, page, search) => {
-    try{
+    try {
       let res = await AccessoryApi.getAccessory(salon_id, page, LIMIT, search);
       if (res?.data?.accessory) {
         setAccessories(res.data.accessory);
         setTotalPage(res.data.total_page);
       }
-    }catch(e){
-      console.log(e)
+    } catch (e) {
+      console.log(e);
     }
   };
   console.log("accessories : ", accessories);
@@ -198,7 +198,9 @@ export default function ManageAccessory() {
                     STT
                   </th>
                   <th scope="col">Tên phụ tùng</th>
-                  <th scope="col">Ảnh phụ tùng</th>
+                  <th scope="col" className="text-center">
+                    Ảnh phụ tùng
+                  </th>
                   <th scope="col">Nhà sản xuất</th>
                   <th scope="col" className="text-center">
                     Giá
@@ -217,9 +219,9 @@ export default function ManageAccessory() {
                       </td>
 
                       <td>{item.name}</td>
-                      <td>
+                      <td className="text-center">
                         <div
-                          className="img-accessory"
+                          className="img-accessory text-center"
                           style={{ backgroundImage: `url(${item.icon})` }}
                         ></div>
                       </td>

@@ -50,19 +50,21 @@ export default function HistoryPayment() {
       toast.error("Xác nhận thanh toán thất bại");
     }
   };
-  console.log("listPaymentRequest", listPaymentRequest);
+  console.log("listPaymentRequest", invoiceChoose);
   const handleShowInfor = async (invoice) => {
     if (invoice?.reason === "buy car") {
       setShowWarranty(true);
       setWarranty(invoice);
     } else if (invoice?.reason === "Thanh toán hóa đơn bảo dưỡng") {
-      let res = await invoiceApi.getDetailInvoiceMaintenance(invoice.invoiceId);
+      let res = await invoiceApi.getDetailInvoiceMaintenance(
+        invoice.invoice_id
+      );
       if (res?.data?.invoice) {
         setInvoiceChoose(res.data.invoice);
       }
       setShowInfo(true);
     } else if (invoice?.reason === "Thanh toán hóa đơn phụ tùng") {
-      let res = await invoiceApi.getDetailInvoiceAccessory(invoice.invoiceId);
+      let res = await invoiceApi.getDetailInvoiceAccessory(invoice.invoice_id);
       if (res?.data?.invoice) {
         setInvoiceChoose(res.data.invoice);
       }
@@ -135,7 +137,7 @@ export default function HistoryPayment() {
                 </td>
                 <td>{formatDateDetail(item.create_date)}</td>
                 <td className="text-center">
-                  {item.invoiceId && (
+                  {item.invoice_id && (
                     <button
                       className="btn btn-warning btn-sm rounded-0 text-white mx-2"
                       data-toggle="tooltip"
@@ -206,18 +208,24 @@ export default function HistoryPayment() {
                   </tr>
                 </thead>
                 <tbody>
-                  {invoiceChoose?.maintenanceServices?.length > 0
-                    ? invoiceChoose.maintenanceServices.map((item, index) => {
-                        console.log("item : ", item);
-                        return (
-                          <tr key={index}>
-                            <td>{item.name}</td>
-                            <td>{item.cost}</td>
-                            <td>{invoiceChoose?.invoiceDate}</td>
-                          </tr>
-                        );
-                      })
-                    : ""}
+                  {invoiceChoose?.maintenanceServices?.length > 0 ? (
+                    invoiceChoose.maintenanceServices.map((item, index) => {
+                      console.log("item : ", item);
+                      return (
+                        <tr key={index}>
+                          <td>{item.name}</td>
+                          <td>{item.cost}</td>
+                          <td>{invoiceChoose?.invoiceDate}</td>
+                        </tr>
+                      );
+                    })
+                  ) : (
+                    <tr>
+                      <td colSpan="3" className="fst-italic">
+                        Không có dữ liệu nào
+                      </td>
+                    </tr>
+                  )}
                 </tbody>
               </table>
               <h2 className="text-center">Bảng phụ tùng sửa chữa</h2>
@@ -230,17 +238,23 @@ export default function HistoryPayment() {
                   </tr>
                 </thead>
                 <tbody>
-                  {invoiceChoose?.accessories?.length > 0
-                    ? invoiceChoose.accessories.map((item, index) => {
-                        return (
-                          <tr key={index}>
-                            <td>{item.name}</td>
-                            <td>{item.price}</td>
-                            <td>{invoiceChoose?.invoiceDate}</td>
-                          </tr>
-                        );
-                      })
-                    : ""}
+                  {invoiceChoose?.accessories?.length > 0 ? (
+                    invoiceChoose.accessories.map((item, index) => {
+                      return (
+                        <tr key={index}>
+                          <td>{item.name}</td>
+                          <td>{item.price}</td>
+                          <td>{invoiceChoose?.invoiceDate}</td>
+                        </tr>
+                      );
+                    })
+                  ) : (
+                    <tr>
+                      <td colSpan="3" className="fst-italic">
+                        Không có dữ liệu nào
+                      </td>
+                    </tr>
+                  )}
                 </tbody>
               </table>
             </div>
