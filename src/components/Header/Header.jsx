@@ -46,9 +46,7 @@ export default function Header(props) {
 
   const fetchAppointmentApi = async () => {
     const res = await appointmentApi.getAllAppointmentUser();
-    console.log("res fetchAppointmentApi : ", res);
     if (res?.data?.appointments) {
-      const appointmentList = res.data.appointments;
       let number = res.data.appointments.filter(
         (item) => item.read === false
       ).length;
@@ -147,7 +145,7 @@ export default function Header(props) {
   const fetchAllNotificationUser = async () => {
     try {
       const res = await notificationApi.getAllNotificationUser();
-
+      console.log("res.data.notifications", res.data.notifications);
       setListNotification(res.data.notifications);
     } catch (error) {
       console.log(error);
@@ -595,6 +593,7 @@ export default function Header(props) {
       console.log(error);
     }
   };
+  console.log("list notification : ", listNotification);
   return otherPage === true ? (
     <nav style={{ backgroundColor: "rgb(1 37 255 / 70%)", padding: "5px 5px" }}>
       <Modal show={showCall} backdrop="static">

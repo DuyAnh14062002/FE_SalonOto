@@ -413,7 +413,7 @@ export default function ManageSalon() {
               />
             </Form.Group>
             <Form.Group className="mt-4">
-              <Form.Label>Số tài khoản</Form.Label>
+              <Form.Label>Số tài khoản/Số điện thoại</Form.Label>
               <Form.Control
                 required
                 type="text"

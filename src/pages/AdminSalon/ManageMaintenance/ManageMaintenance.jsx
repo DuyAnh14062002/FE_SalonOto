@@ -9,7 +9,7 @@ import { toast } from "react-toastify";
 import { formatCurrency } from "../../../utils/common";
 import { debounce } from "lodash";
 import { PaginationControl } from "react-bootstrap-pagination-control";
-const LIMIT = 2;
+const LIMIT = 5;
 
 export default function ManageMaintenance() {
   const [permissions, setPermission] = useState([]);
@@ -46,7 +46,7 @@ export default function ManageMaintenance() {
     }
   };
   const loadingMaintenance = async (salonId, page, search) => {
-    try{
+    try {
       let res = await maintenanceApi.getAllMaintenanceOfSalon(
         salonId,
         page,
@@ -57,8 +57,8 @@ export default function ManageMaintenance() {
         setMaintenances(res.data.maintenance);
         setTotalPage(res.data.total_page);
       }
-    }catch(e){
-      console.log(e)
+    } catch (e) {
+      console.log(e);
     }
   };
   useEffect(() => {
@@ -279,6 +279,7 @@ export default function ManageMaintenance() {
               <Form.Label>Mô tả dịch vụ</Form.Label>
               <Form.Control
                 required
+                as="textarea"
                 type="text"
                 name="description"
                 onChange={onChange}
@@ -288,7 +289,7 @@ export default function ManageMaintenance() {
               <Form.Label>Giá</Form.Label>
               <Form.Control
                 required
-                type="text"
+                type="number"
                 name="cost"
                 onChange={onChange}
               />
@@ -325,6 +326,7 @@ export default function ManageMaintenance() {
               <Form.Label>Mô tả dịch vụ</Form.Label>
               <Form.Control
                 required
+                as="textarea"
                 type="text"
                 name="description"
                 onChange={onChange}
@@ -335,7 +337,7 @@ export default function ManageMaintenance() {
               <Form.Label>Giá</Form.Label>
               <Form.Control
                 required
-                type="text"
+                type="number"
                 name="cost"
                 onChange={onChange}
                 value={maintenanceItem.cost}

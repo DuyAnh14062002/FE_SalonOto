@@ -8,7 +8,7 @@ import { toast } from "react-toastify";
 import warrantyApi from "../../../apis/warranty.api";
 import { debounce } from "lodash";
 import { PaginationControl } from "react-bootstrap-pagination-control";
-const LIMIT = 2;
+const LIMIT = 5;
 
 export default function ManageGuarantee() {
   const [permissions, setPermission] = useState([]);
@@ -174,7 +174,9 @@ export default function ManageGuarantee() {
                   <th scope="col" className="text-center">
                     Thời gian bảo hành
                   </th>
-                  <th scope="col">Chính sách bảo hành</th>
+                  <th scope="col" style={{ width: "40%" }}>
+                    Chính sách bảo hành
+                  </th>
                   {/* <th scope="col">Ghi chú</th> */}
                   <th
                     scope="col"
@@ -291,6 +293,7 @@ export default function ManageGuarantee() {
               <Form.Label>Chính sách bảo hành</Form.Label>
               <Form.Control
                 required
+                as="textarea"
                 type="text"
                 name="policy"
                 onChange={onChange}
@@ -357,7 +360,8 @@ export default function ManageGuarantee() {
               <Form.Label>Chính sách bảo hành</Form.Label>
               <Form.Control
                 required
-                type="textarea"
+                as="textarea"
+                type="text"
                 name="policy"
                 onChange={onChange}
                 value={warrantyItem.policy}
