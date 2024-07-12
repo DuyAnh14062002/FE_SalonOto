@@ -17,6 +17,7 @@ export const SocketContextProvider = ({ children }) => {
     if (profile !== null) {
       let socket = "";
       let res = await salonApi.checkOwnSalon();
+      console.log("checkOwnsalon : ", res)
       if (res.data.salonId === null) {
         socket = io("https://server-graduation-thesis-1.onrender.com", {
           query: {

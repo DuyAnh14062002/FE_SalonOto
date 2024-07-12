@@ -116,7 +116,7 @@ export default function HomePageSalon() {
                     <div
                       className="image-car"
                       style={{
-                        backgroundImage: `url(https://bizweb.dktcdn.net/thumb/large/100/437/558/products/z4887061899879-10dac384e4991ed265f9f67a1e3c84f9.jpg?v=1702520973857)`,
+                        backgroundImage: `url(${car?.image?.length > 0 ? car.image[0] : "https://bizweb.dktcdn.net/thumb/large/100/437/558/products/z4887061899879-10dac384e4991ed265f9f67a1e3c84f9.jpg?v=1702520973857"})`,
                       }}
                     ></div>
                   </div>

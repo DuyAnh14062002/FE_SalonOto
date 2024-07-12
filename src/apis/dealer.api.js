@@ -76,6 +76,9 @@ const dealerApi = {
   deleteProcess(id) {
     return http.delete(`/transactions/${id}`);
   },
+  statisticDealer() {
+    return http.get("/transactions/statistics");
+  },
 };
 
 export default dealerApi;

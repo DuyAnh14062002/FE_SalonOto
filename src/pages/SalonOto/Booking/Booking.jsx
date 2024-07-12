@@ -77,7 +77,7 @@ export default function Booking() {
     // Thiết lập giờ và phút cho ngày được chọn
     date.setHours(parseInt(hours, 10), parseInt(minutes, 10), 0, 0);
 
-    for (let i = 0; i < busyTime.length; i++) {
+    for (let i = 0; i < busyTime?.length; i++) {
       const busyDate = new Date(busyTime[i].date);
       if (date.getTime() === busyDate.getTime()) {
         console.log("busyTime", busyTime[i].time);

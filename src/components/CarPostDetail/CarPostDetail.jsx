@@ -11,6 +11,7 @@ import salonApi from "../../apis/salon.api";
 import { useParams } from "react-router-dom";
 import dealerApi from "../../apis/dealer.api";
 import { toast } from "react-toastify";
+import { formatCurrency } from "../../utils/common";
 export default function CarPostDetail() {
   const responsive = {
     superLargeDesktop: {
@@ -134,7 +135,7 @@ export default function CarPostDetail() {
               <div className="name-car">
                 {post.brand} {post.type} {post.mfg}
               </div>
-              <div className="price">{post.price} đ </div>
+              <div className="price">{post?.price ? formatCurrency(post.price) : ""} </div>
               <div className="address">
                 <i className="fa-solid fa-location-dot"></i> {post.address}
               </div>

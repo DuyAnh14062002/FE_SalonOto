@@ -7,7 +7,8 @@ export default function SatisticDealer() {
   const [satistics,setSatistics] = useState({})
   const loadingSatisyicDealer = async () => {
       try{
-        let res = await dealerApi.getAllProcess()
+        let res = await dealerApi.statisticDealer()
+        console.log("statistic : ", res)
         if(res?.data?.transaction){
           setSatistics(res.data.transaction)
         }
@@ -53,9 +54,6 @@ export default function SatisticDealer() {
                   <th scope="col" className="text-center">
                     Số tiền Hoa hồng nhận được
                   </th>
-                  {/* <th scope="col" className="text-center">
-                    Tác vụ
-                  </th> */}
                 </tr>
               </thead>
               <tbody>
@@ -72,89 +70,9 @@ export default function SatisticDealer() {
                     <td className="text-center">
                       {item.amount ? formatCurrency(item.amount): ""}
                     </td>
-                    {/* <td className="text-center">
-                      <button
-                        className="btn btn-warning btn-sm rounded-0 text-white"
-                        data-toggle="tooltip"
-                        data-placement="top"
-                        title="info"
-                      >
-                        <i className="fa-solid fa-circle-question"></i>
-                      </button>
-                      </td> */}
-                      </tr>
+                    </tr>
                   )
                 }): ""}
-                {/* {cars && cars.length > 0 ? (
-                  cars.map((car, index) => (
-                    <tr key={index} style={{ background: "rgb(247 247 247)" }}>
-                      <td className="text-center">
-                        {LIMIT * (page - 1) + (index + 1)}
-                      </td>
-
-                      <td>{car.name}</td>
-                      <td className="text-center">{car.brand}</td>
-                      <td className="text-center">{car.model}</td>
-                      <td className="text-center">
-                        {formatCurrency(car.price)}
-                      </td>
-                      <td className="text-center">
-                        <button
-                          className="btn btn-warning btn-sm rounded-0 text-white"
-                          data-toggle="tooltip"
-                          data-placement="top"
-                          title="info"
-                          onClick={() => handleShowInfor(car)}
-                        >
-                          <i className="fa-solid fa-circle-question"></i>
-                        </button>
-                        {(permissions?.includes("OWNER") ||
-                          permissions.includes("U_CAR")) && (
-                          <button
-                            className="btn btn-success btn-sm rounded-0 text-white mx-2"
-                            data-toggle="tooltip"
-                            data-placement="top"
-                            title="Edit"
-                            onClick={() => handleShowUpdate(car)}
-                          >
-                            <i className="fa fa-edit"></i>
-                          </button>
-                        )}
-                        {(permissions?.includes("OWNER") ||
-                          permissions.includes("D_CAR")) && (
-                          <button
-                            to="/"
-                            className="btn btn-danger btn-sm rounded-0 text-white"
-                            data-toggle="tooltip"
-                            data-placement="top"
-                            title="Delete"
-                            onClick={() => handleShowDelete(car)}
-                          >
-                            <i className="fa fa-trash"></i>
-                          </button>
-                        )}
-                        {(permissions?.includes("OWNER") ||
-                          permissions.includes("U_CAR")) && (
-                          <button
-                            className="btn btn-success btn-sm rounded-0 text-white mx-2"
-                            data-toggle="tooltip"
-                            data-placement="top"
-                            title="Edit"
-                            onClick={() => handleShowWarranty(car)}
-                          >
-                            <i class="fa-solid fa-shield"></i>
-                          </button>
-                        )}
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan="6" className="fst-italic">
-                      Không có dữ liệu nào
-                    </td>
-                  </tr>
-                )} */}
               </tbody>
             </table>
     </div>
