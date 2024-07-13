@@ -29,7 +29,7 @@ export default function HeaderSalon() {
   const [dataResponseFromVideoCall, setDataResponseFromVideoCall] = useState(
     {}
   );
-
+  console.log("listNotification", listNotification);
   useEffect(() => {
     const getSalonInfo = async () => {
       try {
@@ -123,11 +123,8 @@ export default function HeaderSalon() {
         id: id,
         salonId: idSalon,
       });
-      if (idAppoint) {
-        navigate(`/notification-salon/${idAppoint}`);
-      } else {
-        navigate(`/notification-salon/b8e75977-48c9-4a30-83c8-e88e7c8d0909`);
-      }
+      fetchAllNotificationSalon();
+      navigate(`/adminSalon/appointment`);
     } catch (error) {
       console.log(error);
     }
@@ -332,6 +329,50 @@ export default function HeaderSalon() {
                       </div>
                     </div>
                   )}
+                  {notification.types === "invite" && (
+                    <div className="d-flex align-items-center">
+                      <img
+                        src={
+                          notification.avatar ||
+                          "https://scontent.fsgn2-5.fna.fbcdn.net/v/t1.30497-1/143086968_2856368904622192_1959732218791162458_n.png?_nc_cat=1&ccb=1-7&_nc_sid=5f2048&_nc_ohc=BCnRaxZCfRkAX8a1rU3&_nc_ht=scontent.fsgn2-5.fna&oh=00_AfD29zpAHOxBSwhZkEnW47vMd-hoaCLBDDjywB4cGeF7YA&oe=662C6938"
+                        }
+                        alt=""
+                        className="rounded-circle"
+                        style={{ width: "56px", height: "56px" }}
+                        onClick={() => updateReadNotification(notification.id)}
+                      />
+                      <div style={{ marginLeft: "10px" }}>
+                        <div
+                          className="notify-title"
+                          style={notification.read ? {} : { fontWeight: "500" }}
+                          onClick={() =>
+                            updateReadNotification(notification.id)
+                          }
+                        >
+                          {notification.description}
+                        </div>
+                        <div
+                          className={
+                            notification.read
+                              ? "text-muted mt-1 d-flex justify-content-between align-items-center"
+                              : "text-primary mt-1 d-flex justify-content-between align-items-center"
+                          }
+                          style={notification.read ? {} : { fontWeight: "500" }}
+                        >
+                          <span>{formattedTimeDifference}</span>
+                          <div className="d-flex justify-content-end align-items-center">
+                            <i
+                              className="fa-regular fa-trash-can text-danger mx-2"
+                              title="Xóa thông báo"
+                              onClick={() =>
+                                handleDeleteNotify(notification.id)
+                              }
+                            ></i>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                   {notification.types === "salon-payment" && (
                     <div className="d-flex align-items-center">
                       <img
@@ -368,6 +409,50 @@ export default function HeaderSalon() {
                         >
                           <span>{formattedTimeDifference}</span>
 
+                          <i
+                            className="fa-regular fa-trash-can text-danger mx-2"
+                            title="Xóa thông báo"
+                            onClick={() => handleDeleteNotify(notification.id)}
+                          ></i>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  {notification.types === "connection" && (
+                    <div className="d-flex">
+                      <img
+                        src={
+                          notification.avatar ||
+                          "https://scontent.fsgn2-5.fna.fbcdn.net/v/t1.30497-1/143086968_2856368904622192_1959732218791162458_n.png?_nc_cat=1&ccb=1-7&_nc_sid=5f2048&_nc_ohc=BCnRaxZCfRkAX8a1rU3&_nc_ht=scontent.fsgn2-5.fna&oh=00_AfD29zpAHOxBSwhZkEnW47vMd-hoaCLBDDjywB4cGeF7YA&oe=662C6938"
+                        }
+                        alt=""
+                        className="rounded-circle"
+                        style={{ width: "56px", height: "56px" }}
+                        onClick={() => {
+                          navigate("/adminSalon/manageDealerProcess");
+                          updateReadNotification(notification.id);
+                        }}
+                      />
+                      <div style={{ marginLeft: "10px" }}>
+                        <div
+                          className="notify-title"
+                          style={notification.read ? {} : { fontWeight: "500" }}
+                          onClick={() => {
+                            navigate("/adminSalon/manageDealerProcess");
+                            updateReadNotification(notification.id);
+                          }}
+                        >
+                          {notification.description}
+                        </div>
+                        <div
+                          className={
+                            notification.read
+                              ? "text-muted d-flex justify-content-between align-items-center"
+                              : "text-primary d-flex justify-content-between align-items-center"
+                          }
+                          style={notification.read ? {} : { fontWeight: "500" }}
+                        >
+                          <span>{formattedTimeDifference}</span>
                           <i
                             className="fa-regular fa-trash-can text-danger mx-2"
                             title="Xóa thông báo"

@@ -33,6 +33,7 @@ export default function ManagaAccessoryTransaction() {
   const [totalPage, setTotalPage] = useState(0);
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
+  const [searchAccessory, setSearchAccessory] = useState("");
 
   const handleSearch = (e) => {
     setSearch(e.target.value);
@@ -76,6 +77,11 @@ export default function ManagaAccessoryTransaction() {
     loadingPermistion();
     fetchDataSalon();
   }, [page, search]);
+  useEffect(() => {
+    if (salon?.salon_id) {
+      loadingAccessory(salon.salon_id, searchAccessory);
+    }
+  }, [salon, searchAccessory]);
   const handleAddInvoiceBuyAccessory = async (e) => {
     e.preventDefault();
     const listAccessoryChecked = accessory.filter((item) => item.checked);
@@ -147,8 +153,8 @@ export default function ManagaAccessoryTransaction() {
   const handleCloseUpdate = () => {
     setShowUpdate(false);
   };
-  const loadingAccessory = async (salon_id) => {
-    let res = await invoiceApi.getAccessory(salon_id);
+  const loadingAccessory = async (salon_id, search) => {
+    let res = await AccessoryApi.getAccessory(salon_id, 1, 10000, search);
 
     if (res?.data?.accessory) {
       const allAccessory = res.data.accessory;
@@ -159,10 +165,9 @@ export default function ManagaAccessoryTransaction() {
     }
   };
 
-  const fetchDataSalon = async () => {
+  const fetchDataSalon = async (search) => {
     const res = await salonApi.getSalonInfor();
     if (res?.data?.salon) {
-      loadingAccessory(res.data.salon.salon_id);
       setSalon(res.data.salon);
     }
   };
@@ -227,7 +232,13 @@ export default function ManagaAccessoryTransaction() {
     }
   };
   console.log("accessory : ", accessory);
- 
+  const handleSearchAccessory = (e) => {
+    setSearchAccessory(e.target.value);
+    const searchValue = e.target.value;
+    debounce(() => {
+      loadingAccessory(salon.salon_id, 1, searchValue);
+    }, 1000);
+  };
   return (
     <>
       <div id="content" className="container-fluid">
@@ -400,11 +411,27 @@ export default function ManagaAccessoryTransaction() {
             </Form.Group>
             <Form.Group className="mt-3 wrap-accessory">
               <Form.Label>Chọn các phụ tùng sửa chữa</Form.Label>
-              <div className="row">
+              <div className="d-flex align-items-center">
+                <span style={{ width: "80px" }}>Tìm kiếm:</span>
+                <input
+                  type="text"
+                  name="search"
+                  id="search"
+                  className="form-control"
+                  style={{ width: "60%" }}
+                  placeholder="Nhập tên phụ tùng"
+                  value={searchAccessory}
+                  onChange={handleSearchAccessory}
+                />
+              </div>
+              <div className="row list-accessory">
                 {accessory &&
                   accessory.map((item, index) => (
                     <div className="accessory-box">
-                      <div className="col-md-4" style={{ display : "flex", alignItems :"center"}}>
+                      <div
+                        className="col-md-4"
+                        style={{ display: "flex", alignItems: "center" }}
+                      >
                         <Form.Check
                           key={index}
                           type="checkbox"
@@ -413,7 +440,13 @@ export default function ManagaAccessoryTransaction() {
                           value={item.accessory_id}
                           label={item?.name}
                         />
-                        <div className="image-accessory-transaction" style={{backgroundImage: `url(${item.icon})`, marginLeft: "10px"}}></div>
+                        <div
+                          className="image-accessory-transaction"
+                          style={{
+                            backgroundImage: `url(${item.icon})`,
+                            marginLeft: "10px",
+                          }}
+                        ></div>
                       </div>
                       <div className="col-md-8">
                         <div className="quantity-accessory">
@@ -554,7 +587,10 @@ export default function ManagaAccessoryTransaction() {
                           value={item.accessory_id}
                           label={item?.name}
                         />
-                        <div className="icon-accesory" style={{backgroundImage : `url(${item.icon})`}}></div>
+                        <div
+                          className="icon-accesory"
+                          style={{ backgroundImage: `url(${item.icon})` }}
+                        ></div>
                       </div>
                       <div className="col-md-8">
                         <div className="quantity-accessory">

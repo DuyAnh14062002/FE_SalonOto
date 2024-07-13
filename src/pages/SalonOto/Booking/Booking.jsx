@@ -115,6 +115,7 @@ export default function Booking() {
 
       // Thiết lập giờ và phút cho ngày được chọn
       date.setHours(parseInt(hours, 10), parseInt(minutes, 10), 0, 0);
+
       try {
         let res;
         if (car) {
