@@ -17,6 +17,7 @@ export default function ManageUser() {
   const [detailRoleSalon, setDetailRoleSalon] = useState(false);
   const [detailRoleCalender, setDetailRoleCalender] = useState(false);
   const [detailRoleMaintenance, setDetailRoleMaintenance] = useState(false);
+  const [detailRoleInvoice, setDetailRoleInvoice] = useState(false);
   const [detailRoleWRT, setDetailRoleWRT] = useState(false);
   const [employees, setEmployees] = useState([]);
   const [employee, setEmployee] = useState("");
@@ -57,6 +58,7 @@ export default function ManageUser() {
         per_page: LIMIT,
         q: search,
       });
+      console.log("res2 : ", res2)
       if (res2?.data?.salonDb?.employees) {
         setEmployees(res2.data.salonDb.employees);
         setTotalPage(res2.data.total_page);
@@ -81,6 +83,9 @@ export default function ManageUser() {
   }, [])
   const handleShowUpdate = (employee) => {
     loading();
+    if(roles?.length > 0){
+      setIdRole(roles[0].id)
+    }
     let listPermission = employee.permissions;
     let objectPermission = {};
     if (listPermission && listPermission.length > 0) {
@@ -102,7 +107,9 @@ export default function ManageUser() {
   const handleToggleDetailRoleSalon = () => {
     setDetailRoleSalon(!detailRoleSalon);
   };
-
+  const handleToggleDetailRoleInvoice = () => {
+    setDetailRoleInvoice(!detailRoleInvoice);
+  };
   const handleToggleDetailRoleCalender = () => {
     setDetailRoleCalender(!detailRoleCalender);
   };
@@ -163,7 +170,12 @@ export default function ManageUser() {
        console.log("id : ", idRole)
        console.log("idemploy : ", employee.user_id)
        let res = await permissionApi.assignRole(employee.user_id, idRole)
-       console.log("res asign : ", res)
+       console.log("res assign : ", res)
+       if(res?.data?.status === "success"){
+        toast.success("gán quyền thành công")
+       }else{
+        toast.error("Gán quyền thất bại")
+       }
     }catch(e){
       console.log(e)
     }
@@ -316,7 +328,7 @@ export default function ManageUser() {
                 ></input>
               </div>
               <div className="name-box col-6">
-                <label>Tên Role</label>
+                <label>Nhóm quyền</label>
                 <Form.Select onChange={handleChangeIdRole} value={idRole}>
                 {roles?.length > 0 && roles.map((role, index) =>{
                   return(
@@ -780,6 +792,92 @@ export default function ManageUser() {
                             <div className="role-detail">
                               <p className="role-text-top">
                                 Cập nhật gói bảo dưỡng
+                              </p>
+                              <p className="patch-method">PATCH</p>
+                            </div>
+                          </div>
+                        </div>
+                      ) : (
+                        ""
+                      )}
+                      <div
+                        className="role-item"
+                        onClick={() => handleToggleDetailRoleInvoice()}
+                      >
+                        <div className="left-role-item">
+                          <i class="fa-solid fa-chevron-right"></i>
+                          <span>Quản lí giao dịch</span>
+                        </div>
+                        <div className="right-role-item">
+                          <input type="checkbox" className="switch-toggle" />
+                        </div>
+                      </div>
+                      {detailRoleInvoice === true ? (
+                        <div className="role-item-detail-container">
+                          <div className="role-item-detail role-get">
+                            <input
+                              type="checkbox"
+                              className="switch-toggle"
+                              checked={
+                                permission?.length >0 && permission?.includes("R_IV")
+                               }
+                              value={permission.R_IV}
+                              onChange={(e) => handleSetPermission(e, "R_IV")}
+                            />
+                            <div className="role-detail">
+                              <p className="role-text-top">
+                                Xem thông tin giao dịch
+                              </p>
+                              <p className="get-method">GET</p>
+                            </div>
+                          </div>
+                          <div className="role-item-detail role-post">
+                            <input
+                              type="checkbox"
+                              className="switch-toggle"
+                              value={permission.C_IV}
+                              onChange={(e) => handleSetPermission(e, "C_IV")}
+                              checked={
+                                permission?.length >0 && permission?.includes("C_IV")
+                               }
+                            />
+                            <div className="role-detail">
+                              <p className="role-text-top">
+                                Thêm thông tin giao dịch
+                              </p>
+                              <p className="post-method">POST</p>
+                            </div>
+                          </div>
+                          <div className="role-item-detail role-delete">
+                            <input
+                              type="checkbox"
+                              className="switch-toggle"
+                              value={permission.D_IV}
+                              checked={
+                                permission?.length >0 && permission?.includes("D_IV")
+                               }
+                              onChange={(e) => handleSetPermission(e, "D_IV")}
+                            />
+                            <div className="role-detail">
+                              <p className="role-text-top">
+                                Xóa thông tin giao dịch
+                              </p>
+                              <p className="delete-method">DELETE</p>
+                            </div>
+                          </div>
+                          <div className="role-item-detail role-patch">
+                            <input
+                              type="checkbox"
+                              className="switch-toggle"
+                              value={permission.U_IV}
+                              checked={
+                                permission?.length >0 && permission?.includes("U_IV")
+                               }
+                              onChange={(e) => handleSetPermission(e, "U_IV")}
+                            />
+                            <div className="role-detail">
+                              <p className="role-text-top">
+                                Cập nhật thông tin giao dịch
                               </p>
                               <p className="patch-method">PATCH</p>
                             </div>

@@ -86,6 +86,7 @@ export default function Header(props) {
   useEffect(() => {
     const loading = async () => {
       let res = await purchaseApi.getPurchase();
+      console.log("res purchase: ", res)
       if (res?.data?.purchasedPackages) {
         setPurchasedPackages(res.data.purchasedPackages);
       }

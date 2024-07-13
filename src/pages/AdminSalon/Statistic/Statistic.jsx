@@ -4,6 +4,8 @@ import { CategoryScale } from "chart.js";
 import Chart from "chart.js/auto";
 import salonApi from "../../../apis/salon.api";
 import { formatCurrency } from "../../../utils/common";
+import dealerApi from "../../../apis/dealer.api";
+import Header from "../../../components/Header";
 Chart.register(CategoryScale);
 export default function Statistic() {
   const startYear = 2023;
@@ -17,7 +19,7 @@ export default function Statistic() {
   const months = Array.from({ length: 12 }, (_, i) => i + 1);
   const quarters = [1, 2, 3, 4];
   const [selectedMonthOrQuarter, setSelectedMonthOrQuarter] = useState("1");
-
+  const [satistics,setSatistics] = useState({})
   const handleChangeStatType = (event) => {
     setStatType(event.target.value);
   };
@@ -41,6 +43,7 @@ export default function Statistic() {
       });
       setStatistic(res.data);
     };
+    
     const fetchTopBestSellingData = async () => {
       let res;
       if (statType === "month") {
@@ -62,6 +65,20 @@ export default function Statistic() {
     fetchStatistic();
     fetchTopBestSellingData();
   }, [selectedYear, selectedMonthOrQuarter, statType, salon.salon_id]);
+  const loadingSatisyicDealer = async () => {
+    try{
+      let res = await dealerApi.statisticDealer()
+      console.log("statistic : ", res)
+      if(res?.data?.transaction){
+        setSatistics(res.data.transaction)
+      }
+    }catch(e){
+      console.log(e)
+    }
+}
+useEffect(() => {
+    loadingSatisyicDealer()
+}, [])
   const handleChangeYear = (e) => {
     setSelectedYear(e.target.value);
   };
@@ -254,6 +271,15 @@ export default function Statistic() {
                 onClick={() => handleButtonClick("revenue")}
               >
                 Thống kê doanh thu
+              </button>
+              <button
+                className="btn mx-3 text-white"
+                style={{
+                  background: activeButton === "dealer" ? "#2a47cc" : "#4463ee",
+                }}
+               onClick={() => handleButtonClick("dealer")}
+              >
+                Thống kê hoa tiêu
               </button>
               <button
                 className="btn mx-3 text-white"
@@ -565,6 +591,61 @@ export default function Statistic() {
                   </div>
                 </div>
               </>
+            )}
+            {activeButton === "dealer" && (
+               <div>
+               {/* <h2 style={{marginTop: "20px"}} className='text-center'>Thống Kê hoa tiêu</h2> */}
+               <div className='satistic-dealer-container'>
+                 <div className='satistic-dealer-item'>
+                    <div className='satistic-dealer-number'>
+                        {satistics?.totals?.totalNumOfCompletedTran ? satistics?.totals?.totalNumOfCompletedTran : 0}
+                    </div>
+                    <div className='satistic-dealer-title'>Số giao dịch hoàn thành</div>
+                    
+                 </div>
+                 <div className='satistic-dealer-item'>
+                    <div className='satistic-dealer-comission'>{satistics?.totals?.totalAmount ? formatCurrency(satistics?.totals?.totalAmount) : formatCurrency(0)}</div>
+                    <div className='satistic-dealer-title'>Tổng số tiền đã chi cho Hoa tiêu</div>
+                 </div>
+               </div>
+               <h2 style={{marginTop: "35px"}} className='text-center'>Danh sách các Hoa tiêu đã giao dịch</h2>
+               <table className="table mt-4 table-hover">
+                       <thead>
+                         <tr>
+                           <th scope="col" className="text-center">
+                             STT
+                           </th>
+                           <th scope="col">Tên Salon</th>
+                           <th scope="col" className="text-center">
+                             Số điện thoại
+                           </th>
+                           <th scope="col" className="text-center">
+                             Số giao dịch hoàn thành
+                           </th>
+                           <th scope="col" className="text-center">
+                             Số tiền hoa hồng đã chi 
+                           </th>
+                         </tr>
+                       </thead>
+                       <tbody>
+                         {satistics?.data?.length > 0 ? satistics.data.map((item) => {
+                           return(
+                             <tr  style={{ background: "rgb(247 247 247)" }}>
+                             <td className="text-center">
+                               1
+                             </td>
+                             <td>{item?.user?.name}</td>
+                             <td className="text-center">{item?.user?.phone}</td>
+                             <td className="text-center">{item.numOfCompletedTran}</td>
+                             <td className="text-center">
+                               {item.amount ? formatCurrency(item.amount): ""}
+                             </td>
+                             </tr>
+                           )
+                         }): ""}
+                       </tbody>
+                     </table>
+             </div>
             )}
           </div>
         </div>
