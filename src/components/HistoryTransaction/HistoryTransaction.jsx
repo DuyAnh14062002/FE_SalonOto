@@ -279,30 +279,39 @@ export default function HistoryTransaction() {
           </Modal.Header>
           <Modal.Body>
             <div className="container">
-              <h2 className="text-center">Bảng dịch vụ bảo dưỡng</h2>
-              <table className="table table-striped table-bordered">
-                <thead>
-                  <tr>
-                    <th scope="col">Tên dịch vụ bảo hành</th>
-                    <th scope="col">Giá (VND)</th>
-                    <th scope="col">Ngày bảo hành</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {invoiceChoose?.maintenanceServices?.length > 0
-                    ? invoiceChoose.maintenanceServices.map((item, index) => {
-                        console.log("item : ", item);
-                        return (
-                          <tr key={index}>
-                            <td>{item.name}</td>
-                            <td>{item.cost}</td>
-                            <td>{invoiceChoose?.invoiceDate}</td>
-                          </tr>
-                        );
-                      })
-                    : ""}
-                </tbody>
-              </table>
+              {invoiceChoose?.maintenanceServices?.length > 0 ? (
+                <>
+                  <h2 className="text-center">Bảng dịch vụ bảo dưỡng</h2>
+                  <table className="table table-striped table-bordered">
+                    <thead>
+                      <tr>
+                        <th scope="col">Tên dịch vụ bảo hành</th>
+                        <th scope="col">Giá (VND)</th>
+                        <th scope="col">Ngày bảo hành</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {invoiceChoose?.maintenanceServices?.length > 0
+                        ? invoiceChoose.maintenanceServices.map(
+                            (item, index) => {
+                              console.log("item : ", item);
+                              return (
+                                <tr key={index}>
+                                  <td>{item.name}</td>
+                                  <td>{item.cost}</td>
+                                  <td>{invoiceChoose?.invoiceDate}</td>
+                                </tr>
+                              );
+                            }
+                          )
+                        : ""}
+                    </tbody>
+                  </table>
+                </>
+              ) : (
+                ""
+              )}
+
               <h2 className="text-center">Bảng phụ tùng sửa chữa</h2>
               <table className="table table-striped table-bordered">
                 <thead>
