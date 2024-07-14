@@ -100,9 +100,6 @@ export default function ManageBuyCar() {
       setListProcess(res.data.data);
       setSelectedProcess(res.data.data[0].id);
     }
-    const res2 = await userApi.getLegalUser({
-      phone: "0935722384",
-    });
   };
   const loadingInvoice = async (salon_id, page, search) => {
     let res = await invoiceApi.getAllInvoiceBuyCar(salon_id, {
@@ -126,8 +123,7 @@ export default function ManageBuyCar() {
     }
   };
   const fetchAllCars = async (salonId) => {
-    let res = await carApi.getAllCarOfSalon(salonId, 1, 1000000);
-    console.log("res : ", res);
+    let res = await carApi.getAllCarOfSalon(salonId, 1, 1000000, "", "1");
     if (res?.data?.cars?.length > 0) {
       setCars(res?.data?.cars);
       setCarId(res.data.cars[0].car_id);
@@ -431,7 +427,13 @@ export default function ManageBuyCar() {
                   cars.map((item, index) => {
                     return (
                       <option value={item.car_id} key={index}>
-                        {item.name}
+                        {item.car_id.slice(0, 6) +
+                          " - " +
+                          item.name +
+                          " - " +
+                          item.type +
+                          " - " +
+                          item.origin}
                       </option>
                     );
                   })}

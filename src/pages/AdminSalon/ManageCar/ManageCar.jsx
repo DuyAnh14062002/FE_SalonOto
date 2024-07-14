@@ -8,7 +8,7 @@ import salonApi from "../../../apis/salon.api";
 import carApi from "../../../apis/car.api";
 import userApi from "../../../apis/user.api";
 import warrantyApi from "../../../apis/warranty.api";
-import { formatCurrency } from "../../../utils/common";
+import { formatCurrency, formatDate } from "../../../utils/common";
 import { debounce } from "lodash";
 import { PaginationControl } from "react-bootstrap-pagination-control";
 const LIMIT = 10;
@@ -32,14 +32,60 @@ export default function ManageCar() {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState("");
+  const [filter, setFilter] = useState("all");
+  console.log("cars : ", cars);
+  const carBrands = [
+    "Toyota",
+    "Honda",
+    "Ford",
+    "BMW",
+    "Mercedes-Benz",
+    "Audi",
+    "Hyundai",
+    "Kia",
+    "Mazda",
+    "Nissan",
+    "Lexus",
+    "Chevrolet",
+    "Volkswagen",
+    "Peugeot",
+    "Volvo",
+    "Land Rover",
+    "Jeep",
+    "Subaru",
+    "Suzuki",
+    "Mitsubishi",
+  ];
+  const carModels = [
+    "Sedan",
+    "SUV",
+    "Crossover",
+    "Coupe",
+    "Convertible",
+    "Hatchback",
+    "Wagon",
+    "Van",
+    "Truck",
+    "Minivan",
+    "Crew Cab Pickup",
+    "Extended Cab Pickup",
+    "Regular Cab Pickup",
+    "Cargo Van",
+    "Passenger Van",
+    "Compact",
+    "Subcompact",
+  ];
 
+  const handleFilterChange = (e) => {
+    setFilter(e.target.value);
+  };
   const handleSearch = (e) => {
     setSearch(e.target.value);
     const searchValue = e.target.value;
     console.log("searchValue : ", searchValue);
     debounce(() => {
       setPage(1);
-      fetchAllCars(1, searchValue);
+      fetchAllCars(salon.salon_id, 1, searchValue, filter, sort);
     }, 1000);
   };
   const loadingUser = async () => {
@@ -48,9 +94,16 @@ export default function ManageCar() {
       setPermission(res.data.profile.permissions);
     }
   };
-  const fetchAllCars = async (salonId, page, search, sort) => {
-    let res = await carApi.getAllCarOfSalon(salonId, page, LIMIT, search, sort);
-    console.log("res : ", res);
+  const fetchAllCars = async (salonId, page, search, filter, sort) => {
+    let res = await carApi.getAllCarOfSalon(
+      salonId,
+      page,
+      LIMIT,
+      search,
+      filter,
+      sort
+    );
+
     if (res?.data?.cars) {
       setCars(res?.data?.cars);
       setTotalPage(res?.data?.total_page);
@@ -74,9 +127,9 @@ export default function ManageCar() {
   };
   useEffect(() => {
     if (salon?.salon_id) {
-      fetchAllCars(salon.salon_id, page, search, sort);
+      fetchAllCars(salon.salon_id, page, search, filter, sort);
     }
-  }, [page, search, salon, sort]);
+  }, [page, search, salon, sort, filter]);
   useEffect(() => {
     loadingUser();
     fetchDataSalon();
@@ -201,7 +254,7 @@ export default function ManageCar() {
     setIsLoading(true);
     let res = await carApi.updateCar(car.car_id, form);
     fetchDataSalon();
-    fetchAllCars(salon.salon_id, page, search);
+    fetchAllCars(salon.salon_id, page, search, filter, sort);
     handleCloseUpdate();
     if (res?.data?.status && res.data.status === "success") {
       toast.success("Cập nhật thông tin xe thành công");
@@ -275,7 +328,7 @@ export default function ManageCar() {
     let res = await carApi.addCar(form);
     console.log("res add car: ", res);
     fetchDataSalon();
-    fetchAllCars(salon.salon_id, page, search);
+    fetchAllCars(salon.salon_id, page, search, filter, sort);
     handleCloseAdd();
     if (res?.data?.status && res.data.status === "success") {
       setCar({});
@@ -289,7 +342,7 @@ export default function ManageCar() {
   const handleDelete = async () => {
     let res = await carApi.deleteCar(car.car_id, salon.salon_id);
     fetchDataSalon();
-    fetchAllCars(salon.salon_id, page, search);
+    fetchAllCars(salon.salon_id, page, search, filter, sort);
     handleCloseDelete();
     if (res?.data?.status && res.data.status === "success") {
       toast.success("Xóa thông tin xe thành công");
@@ -356,6 +409,21 @@ export default function ManageCar() {
                 />
               </div>
               <div className="d-flex align-items-center">
+                <span style={{ width: "34px" }}>Lọc: </span>
+                <select
+                  className="form-select mx-2"
+                  style={{ width: "80%" }}
+                  aria-label=""
+                  value={filter}
+                  onChange={handleFilterChange}
+                >
+                  <option value="all">Tất cả</option>
+                  <option value="1">Danh sách xe mới</option>
+                  <option value="0">Danh sách xe đã bán</option>
+                </select>
+              </div>
+
+              <div className="d-flex align-items-center">
                 <span style={{ width: "135px" }}>Sắp xếp theo: </span>
                 <select
                   className="form-select mx-2"
@@ -381,15 +449,25 @@ export default function ManageCar() {
                   <th scope="col" className="text-center">
                     STT
                   </th>
-                  <th scope="col">Tên xe</th>
                   <th scope="col" className="text-center">
-                    Nhẵn hiệu
+                    Mã xe
                   </th>
                   <th scope="col" className="text-center">
-                    Modal
+                    Tên xe
                   </th>
+
+                  <th scope="col" className="text-center">
+                    Dòng xe
+                  </th>
+
                   <th scope="col" className="text-center">
                     Giá
+                  </th>
+                  <th scope="col" className="text-center">
+                    Năm sản xuất
+                  </th>
+                  <th scope="col" className="text-center">
+                    Ngày nhập xe
                   </th>
                   <th scope="col" className="text-center">
                     Tác vụ
@@ -403,12 +481,16 @@ export default function ManageCar() {
                       <td className="text-center">
                         {LIMIT * (page - 1) + (index + 1)}
                       </td>
+                      <td className="text-center">{car.car_id.slice(0, 6)}</td>
+                      <td className="text-center">{car.name}</td>
+                      <td className="text-center">{car.type}</td>
 
-                      <td>{car.name}</td>
-                      <td className="text-center">{car.brand}</td>
-                      <td className="text-center">{car.model}</td>
                       <td className="text-center">
                         {formatCurrency(car.price)}
+                      </td>
+                      <td className="text-center">{car.origin}</td>
+                      <td className="text-center">
+                        {formatDate(new Date(car.date_in))}
                       </td>
                       <td className="text-center">
                         <button
@@ -636,7 +718,7 @@ export default function ManageCar() {
                 </div>
                 <div className="col-md-4">
                   <Form.Group className="mt-3">
-                    <Form.Label>Model</Form.Label>
+                    <Form.Label>Modern</Form.Label>
                     <Form.Control
                       required
                       type="text"
@@ -706,26 +788,41 @@ export default function ManageCar() {
                     />
                   </Form.Group>
                 </div>
+
                 <div className="col-md-6">
                   <Form.Group className="mt-3">
                     <Form.Label>Nhãn hiệu</Form.Label>
-                    <Form.Control
-                      type="text"
-                      value={car.brand}
+                    <Form.Select
+                      required
                       name="brand"
+                      value={car.brand}
                       onChange={onChange}
-                    />
+                    >
+                      <option value="">Chọn nhãn hiệu</option>
+                      {carBrands.map((brand) => (
+                        <option key={brand} value={brand}>
+                          {brand}
+                        </option>
+                      ))}
+                    </Form.Select>
                   </Form.Group>
                 </div>
                 <div className="col-md-6">
                   <Form.Group className="mt-3">
                     <Form.Label>Dòng xe</Form.Label>
-                    <Form.Control
-                      type="text"
-                      value={car.type}
+                    <Form.Select
+                      required
                       name="type"
+                      value={car.type}
                       onChange={onChange}
-                    />
+                    >
+                      <option value="">Chọn dòng xe</option>
+                      {carModels.map((model) => (
+                        <option key={model} value={model}>
+                          {model}
+                        </option>
+                      ))}
+                    </Form.Select>
                   </Form.Group>
                 </div>
                 <div className="col-md-6">
@@ -821,7 +918,7 @@ export default function ManageCar() {
                 </div>
                 <div className="col-md-4">
                   <Form.Group className="mt-3">
-                    <Form.Label>Model</Form.Label>
+                    <Form.Label>Modern</Form.Label>
                     <Form.Control
                       required
                       type="text"
@@ -905,23 +1002,27 @@ export default function ManageCar() {
                 <div className="col-md-6">
                   <Form.Group className="mt-3">
                     <Form.Label>Nhãn hiệu</Form.Label>
-                    <Form.Control
-                      required
-                      type="text"
-                      name="brand"
-                      onChange={onChange}
-                    />
+                    <Form.Select required name="brand" onChange={onChange}>
+                      <option value="">Chọn nhãn hiệu</option>
+                      {carBrands.map((brand) => (
+                        <option key={brand} value={brand}>
+                          {brand}
+                        </option>
+                      ))}
+                    </Form.Select>
                   </Form.Group>
                 </div>
                 <div className="col-md-6">
                   <Form.Group className="mt-3">
                     <Form.Label>Dòng xe</Form.Label>
-                    <Form.Control
-                      required
-                      type="text"
-                      name="type"
-                      onChange={onChange}
-                    />
+                    <Form.Select required name="type" onChange={onChange}>
+                      <option value="">Chọn dòng xe</option>
+                      {carModels.map((model) => (
+                        <option key={model} value={model}>
+                          {model}
+                        </option>
+                      ))}
+                    </Form.Select>
                   </Form.Group>
                 </div>
                 <div className="col-md-6">
@@ -947,7 +1048,6 @@ export default function ManageCar() {
                     />
                   </Form.Group>
                 </div>
-
                 <div className="col-md-4">
                   <Form.Group className="mt-3">
                     <Form.Label>Năm sản xuất</Form.Label>
@@ -1016,7 +1116,7 @@ export default function ManageCar() {
                 </div>
                 <div className="col-md-4">
                   <Form.Group className="mt-3">
-                    <Form.Label>Model</Form.Label>
+                    <Form.Label>Modern</Form.Label>
                     <Form.Control
                       required
                       type="text"
@@ -1025,7 +1125,6 @@ export default function ManageCar() {
                     />
                   </Form.Group>
                 </div>
-
                 <div className="col-md-4">
                   <Form.Group className="mt-3">
                     <Form.Label>Màu nội thất</Form.Label>
@@ -1075,6 +1174,7 @@ export default function ManageCar() {
           </Modal.Footer>
         </Form>
       </Modal>
+
       <Modal show={showDelete} onHide={handleCloseDelete} backdrop="static">
         <Modal.Header closeButton>
           <Modal.Title>Xóa tính năng</Modal.Title>

@@ -202,7 +202,8 @@ export default function Header(props) {
       await notificationApi.updateNotificationUser({
         id: id,
       });
-      navigate(`/notification-user/${idAppoint}`);
+      fetchAllNotificationUser();
+      navigate(`/appointment`);
     } catch (error) {
       console.log(error);
     }
@@ -322,17 +323,19 @@ export default function Header(props) {
                           <div className="connection-box">
                             <button
                               className="see-process"
-                              onClick={() =>
-                                handleNavigateDetail(notification.data)
-                              }
+                              onClick={() => {
+                                handleNavigateDetail(notification.data);
+                                updateReadNotification(notification.id);
+                              }}
                             >
                               Xem qui trình
                             </button>
                             <button
                               className="agree-connection"
-                              onClick={() =>
-                                handleConnection(notification.data)
-                              }
+                              onClick={() => {
+                                handleConnection(notification.data);
+                                updateReadNotification(notification.id);
+                              }}
                             >
                               Kết nối
                             </button>
@@ -343,7 +346,10 @@ export default function Header(props) {
                         {notification?.types === "updateStage" ? (
                           <button
                             className="see-process"
-                            onClick={handleNavigateHistoryProcess}
+                            onClick={() => {
+                              handleNavigateHistoryProcess();
+                              updateReadNotification(notification.id);
+                            }}
                           >
                             Xem ngay
                           </button>
@@ -353,7 +359,10 @@ export default function Header(props) {
                         {notification?.types === "process" ? (
                           <button
                             className="see-process"
-                            onClick={handleNavigateHistoryProcessPaper}
+                            onClick={() => {
+                              handleNavigateHistoryProcessPaper();
+                              updateReadNotification(notification.id);
+                            }}
                           >
                             Xem ngay
                           </button>

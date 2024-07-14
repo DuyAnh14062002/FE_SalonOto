@@ -407,114 +407,121 @@ const AccountProfile = (props) => {
                           <i className="fa-solid fa-user-plus"></i> Mời bạn bè
                         </Button>
                       )}
-                      <Button
-                        className="mt-3 btn-profile function-additional"
-                        style={{
-                          backgroundColor: "red",
-                        }}
-                        type="button"
-                        onClick={handleLinkGoogle}
-                      >
-                        {profile1?.google && (
-                          <span className="tick">
-                            <i className="fa-solid fa-circle-check"></i>
-                          </span>
-                        )}
-                        <i className="fab fa-google me-2"></i> Liên kết với
-                        google
-                      </Button>
-                      <Button
-                        className="mt-3 btn-profile function-additional"
-                        style={{ backgroundColor: "#dd4b39;" }}
-                        type="button"
-                        onClick={handleLinkFacebook}
-                      >
-                        {profile1?.facebook && (
-                          <span className="tick">
-                            <i className="fa-solid fa-circle-check"></i>
-                          </span>
-                        )}
-                        <i className="fab fa-facebook-f me-2"></i>Liên kết với
-                        facebook
-                      </Button>
-                      <Button
-                        className="mt-3 btn-profile function-additional"
-                        type="button"
-                        onClick={handleShowHistory}
-                        style={{
-                          backgroundColor: "#883342",
-                          border: "none",
-                        }}
-                      >
-                        <i
-                          className="fa-solid fa-clock-rotate-left"
-                          style={{ marginRight: "5px" }}
-                        ></i>
-                        Xem lịch sử giao dịch
-                      </Button>
-                      <Button
-                        className="mt-3 btn-profile function-additional"
-                        type="button"
-                        onClick={handleShowHistoryPayment}
-                        style={{
-                          backgroundColor: "#b90d86",
-                          border: "none",
-                        }}
-                      >
-                        <i
-                          className="fa-solid fa-clock-rotate-left"
-                          style={{ marginRight: "5px" }}
-                        ></i>
-                        Xem lịch sử thanh toán
-                      </Button>
-                      <Button
-                        className="mt-3 btn-profile function-additional"
-                        type="button"
-                        onClick={handleShowPostSell}
-                        style={{
-                          backgroundColor: "#fd720d",
-                          marginLeft: "10px",
-                          border: "none",
-                        }}
-                      >
-                        <i
-                          className="fa-solid fa-pen-to-square"
-                          style={{ marginRight: "5px" }}
-                        ></i>
-                        Giới thiệu bán xe cho Salon
-                      </Button>
-                      <Button
-                        className="mt-3 btn-profile function-additional"
-                        type="button"
-                        onClick={handleShowTransactionDealer}
-                        style={{
-                          backgroundColor: "rgb(30 116 10)",
-                          marginLeft: "10px",
-                          border: "none",
-                        }}
-                      >
-                        <i
-                          className="fa-solid fa-pen-to-square"
-                          style={{ marginRight: "5px" }}
-                        ></i>
-                        Các giao dịch Hoa tiêu
-                      </Button>
-                      <Button
-                        className="mt-3 btn-profile function-additional"
-                        type="button"
-                        onClick={handleShowSatisticDealer}
-                        style={{
-                          backgroundColor: "rgb(30 116 10)",
-                          marginLeft: "10px",
-                          border: "none",
-                        }}
-                      >
-                        <i
-                          class="fa-solid fa-chart-simple"
-                          style={{ marginRight: "5px" }}
-                        ></i>
-                        Thống kê Hoa Tiêu
-                      </Button>
+                      <div className="mt-2">
+                        <Button
+                          className="mt-3 btn-profile function-additional"
+                          style={{
+                            backgroundColor: "red",
+                          }}
+                          type="button"
+                          onClick={handleLinkGoogle}
+                        >
+                          {profile1?.google && (
+                            <span className="tick">
+                              <i className="fa-solid fa-circle-check"></i>
+                            </span>
+                          )}
+                          <i className="fab fa-google me-2"></i> Liên kết với
+                          google
+                        </Button>
+                        <Button
+                          className="mt-3 btn-profile function-additional"
+                          style={{ backgroundColor: "#dd4b39;" }}
+                          type="button"
+                          onClick={handleLinkFacebook}
+                        >
+                          {profile1?.facebook && (
+                            <span className="tick">
+                              <i className="fa-solid fa-circle-check"></i>
+                            </span>
+                          )}
+                          <i className="fab fa-facebook-f me-2"></i>Liên kết với
+                          facebook
+                        </Button>
+                      </div>
+                      <div className="">
+                        <Button
+                          className="mt-3 btn-profile function-additional"
+                          type="button"
+                          onClick={handleShowHistory}
+                          style={{
+                            backgroundColor: "#883342",
+                            border: "none",
+                          }}
+                        >
+                          <i
+                            className="fa-solid fa-clock-rotate-left"
+                            style={{ marginRight: "5px" }}
+                          ></i>
+                          Xem lịch sử giao dịch
+                        </Button>
+                        <Button
+                          className="mt-3 btn-profile function-additional"
+                          type="button"
+                          onClick={handleShowHistoryPayment}
+                          style={{
+                            backgroundColor: "#883342",
+                            border: "none",
+                          }}
+                        >
+                          <i
+                            className="fa-solid fa-clock-rotate-left"
+                            style={{ marginRight: "5px" }}
+                          ></i>
+                          Xem lịch sử thanh toán
+                        </Button>
+                      </div>
+                      <div>
+                        <Button
+                          className="mt-3 btn-profile function-additional"
+                          type="button"
+                          onClick={handleShowTransactionDealer}
+                          style={{
+                            backgroundColor: "#b90d86",
+                            marginLeft: "10px",
+                            border: "none",
+                          }}
+                        >
+                          <i
+                            className="fa-solid fa-pen-to-square"
+                            style={{ marginRight: "5px" }}
+                          ></i>
+                          Các giao dịch Hoa tiêu
+                        </Button>
+                        <Button
+                          className="mt-3 btn-profile function-additional"
+                          type="button"
+                          onClick={handleShowPostSell}
+                          style={{
+                            backgroundColor: "#b90d86",
+                            marginLeft: "10px",
+                            border: "none",
+                          }}
+                        >
+                          <i
+                            className="fa-solid fa-pen-to-square"
+                            style={{ marginRight: "5px" }}
+                          ></i>
+                          Giới thiệu bán xe cho Salon
+                        </Button>
+
+                        <Button
+                          className="mt-3 btn-profile function-additional"
+                          type="button"
+                          onClick={handleShowSatisticDealer}
+                          style={{
+                            backgroundColor: "#b90d86",
+                            marginLeft: "10px",
+                            border: "none",
+                          }}
+                        >
+                          <i
+                            class="fa-solid fa-chart-simple"
+                            style={{ marginRight: "5px" }}
+                          ></i>
+                          Thống kê Hoa Tiêu
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 </div>

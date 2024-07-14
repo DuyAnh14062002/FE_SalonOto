@@ -18,14 +18,14 @@ export default function HomePageSalon() {
   const [totalPage, setTotalPage] = useState(0);
   const [page, setPage] = useState(1);
   const [listCar, setListCar] = useState([]);
-  const [promotions, setPromotions] = useState([])
+  const [promotions, setPromotions] = useState([]);
   const NavigateDetailCar = (id) => {
     navigate(`/detail-car/${id}`);
   };
   const [salon, setSalon] = useState({});
   const loadAllCarOfSalon = async (salonId, page) => {
     try {
-      let res = await carApi.getAllCarOfSalon(salonId, page, LIMIT);
+      let res = await carApi.getAllCarOfSalon(salonId, page, LIMIT, "", "1");
       if (res?.data?.cars) {
         setListCar(res.data.cars);
         setTotalPage(res?.data?.total_page);
@@ -35,18 +35,18 @@ export default function HomePageSalon() {
     }
   };
   const loadingAllPromotion = async () => {
-    try{
-      let res = await promotionApi.getAllPromotionOfSalon(params.id)
-      if(res?.data?.promotion){
-        setPromotions(res.data.promotion)
+    try {
+      let res = await promotionApi.getAllPromotionOfSalon(params.id);
+      if (res?.data?.promotion) {
+        setPromotions(res.data.promotion);
       }
-    }catch(e){
-      console.log(e)
+    } catch (e) {
+      console.log(e);
     }
-  }
+  };
   useEffect(() => {
-    loadingAllPromotion()
-  }, [])
+    loadingAllPromotion();
+  }, []);
   useEffect(() => {
     if (params.id) {
       localStorage.setItem("idSalon", params.id);
@@ -68,7 +68,11 @@ export default function HomePageSalon() {
       <div
         className="banner-salon position-relative"
         style={{
-          backgroundImage: `url(${promotions?.length > 0 ? promotions[0].thumbnail : salon?.banner?.[0] })`,
+          backgroundImage: `url(${
+            promotions?.length > 0
+              ? promotions[0].thumbnail
+              : salon?.banner?.[0]
+          })`,
         }}
       ></div>
       <div className="search-oto-container">
@@ -168,7 +172,12 @@ export default function HomePageSalon() {
           </div>
         )}
       </div>
-      <FooterSalon phone = {salon?.phoneNumber} email = {salon?.email} name = {salon?.name} address = {salon?.address}/>
+      <FooterSalon
+        phone={salon?.phoneNumber}
+        email={salon?.email}
+        name={salon?.name}
+        address={salon?.address}
+      />
     </div>
   );
 }
