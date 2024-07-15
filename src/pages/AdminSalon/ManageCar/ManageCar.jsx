@@ -489,9 +489,7 @@ export default function ManageCar() {
                         {formatCurrency(car.price)}
                       </td>
                       <td className="text-center">{car.origin}</td>
-                      <td className="text-center">
-                        {formatDate(new Date(car.date_in))}
-                      </td>
+                      <td className="text-center">{car.date_in}</td>
                       <td className="text-center">
                         <button
                           className="btn btn-warning btn-sm rounded-0 text-white"

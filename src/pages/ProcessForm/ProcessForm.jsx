@@ -6,6 +6,10 @@ import { toast } from "react-toastify";
 import invoiceApi from "../../apis/invoice.api";
 import { useNavigate } from "react-router-dom";
 import { path } from "../../constants/path";
+import { Button, Form, Modal, Spinner } from "react-bootstrap";
+import paymentRequestApi from "../../apis/paymentRequest.api";
+import paymentMethodApi from "../../apis/paymentMethod.api";
+
 const ProcessForm = ({
   invoice,
   salonId,
@@ -18,9 +22,61 @@ const ProcessForm = ({
   const [checkedDetails, setCheckedDetails] = useState([]);
   const [isNextButtonDisabled, setIsNextButtonDisabled] = useState(true);
   const [periodCurrent, setPeriodCurrent] = useState(null);
-
+  const [showAdd, setShowAdd] = useState(false);
+  const [paymentRequestItem, setPaymentRequestItem] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
+  const [listPaymentMethod, setListPaymentMethod] = useState([]);
   const navigate = useNavigate();
-  console.log("detailProcess", detailProcess);
+
+  const [methodPaymentId, setMethodPaymentId] = useState("");
+
+  const fetchListPaymentMethod = async () => {
+    const res = await paymentMethodApi.getAllPaymentMethod();
+    if (res?.data?.data?.length > 0) {
+      setListPaymentMethod(res.data.data);
+      setMethodPaymentId(res.data.data[0].id);
+    }
+  };
+  useEffect(() => {
+    fetchListPaymentMethod();
+  }, []);
+  const handleCloseAdd = () => setShowAdd(false);
+  const handleShowAdd = () => {
+    setShowAdd(true);
+  };
+
+  const onChange = (e) => {
+    setPaymentRequestItem({
+      ...paymentRequestItem,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleAddPaymentRequest = async (e) => {
+    try {
+      e.preventDefault();
+      setIsLoading(true);
+      let res = await paymentRequestApi.createPaymentRequest({
+        cusPhone: invoice?.phone,
+        cusFullname: invoice?.fullname,
+        reason: paymentRequestItem.reason,
+        amount: paymentRequestItem.amount,
+        salonId: invoice?.seller?.salon_id,
+        methodPaymentId,
+      });
+      if (res?.data?.status === "success") {
+        toast.success("Thêm yêu cầu thanh toán thành công");
+        handleCloseAdd();
+        setPaymentRequestItem({});
+      } else {
+        toast.error("Thêm yêu cầu thanh toán thất bại");
+      }
+      setIsLoading(false);
+    } catch (error) {
+      toast.error("Thêm yêu cầu thanh toán thất bại");
+      setIsLoading(false);
+    }
+  };
   const fetchDetailInvoice = async () => {
     try {
       let res = await invoiceApi.getDetailInvoiceBuyCar({
@@ -187,12 +243,19 @@ const ProcessForm = ({
   return (
     <>
       <div className="container">
-        <button
-          className="create-schedule-paper"
-          onClick={() => handleNavigateSalonAppointment()}
-        >
-          Tạo lịch hẹn
-        </button>
+        <div className="d-flex justify-content-end">
+          <div>
+            <button
+              onClick={() => handleNavigateSalonAppointment()}
+              className="btn btn-primary mx-2"
+            >
+              Tạo lịch hẹn
+            </button>
+            <button className="btn btn-primary" onClick={handleShowAdd}>
+              Tạo yêu cầu thanh toán
+            </button>
+          </div>
+        </div>
         <h1 className="text-center mt-4">{detailProcess?.name}</h1>
         <Stepper
           steps={steps?.map((step) => ({ label: step.label }))}
@@ -278,6 +341,58 @@ const ProcessForm = ({
           )}
         </div>
       </div>
+      <Modal show={showAdd} onHide={handleCloseAdd} backdrop="static">
+        <Form onSubmit={handleAddPaymentRequest}>
+          <Modal.Header closeButton>
+            <Modal.Title>Thêm mới yêu cầu thanh toán</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Form.Group className="mt-4">
+              <Form.Label>Nội dung thanh toán</Form.Label>
+              <Form.Control
+                as="textarea"
+                rows={3}
+                required
+                type="text"
+                name="reason"
+                onChange={onChange}
+              />
+            </Form.Group>
+            <Form.Group className="mt-4">
+              <Form.Label>Giá tiền</Form.Label>
+              <Form.Control
+                required
+                type="number"
+                name="amount"
+                onChange={onChange}
+              />
+            </Form.Group>
+            <Form.Group className="mt-4">
+              <Form.Label>Chọn hình thức thanh toán</Form.Label>
+
+              <Form.Select
+                onChange={(e) => setMethodPaymentId(e.target.value)}
+                value={methodPaymentId}
+              >
+                {listPaymentMethod?.map((item, index) => (
+                  <option key={index} value={item.id}>
+                    {item.type} - {item.content}
+                  </option>
+                ))}
+              </Form.Select>
+            </Form.Group>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleCloseAdd}>
+              Đóng
+            </Button>
+            <Button variant="primary" disabled={isLoading} type="submit">
+              {isLoading && <Spinner animation="border" size="sm" />}
+              <span className="mx-2">Thêm</span>
+            </Button>
+          </Modal.Footer>
+        </Form>
+      </Modal>
     </>
   );
 };
