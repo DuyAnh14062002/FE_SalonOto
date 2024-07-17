@@ -72,7 +72,7 @@ export default function Booking() {
   }, [idSalon]);
   const isPastTime = (timeStr) => {
     const [hours, minutes] = timeStr.split(":");
-    const date = value;
+    let date = value;
     // console.log("date1", date);
     // Thiết lập giờ và phút cho ngày được chọn
     date.setHours(parseInt(hours, 10), parseInt(minutes, 10), 0, 0);
@@ -105,7 +105,7 @@ export default function Booking() {
   };
   const handleBooking = async (e) => {
     e.preventDefault();
-    const date = value;
+    let date = value;
     if (!selectedTime) {
       setErrorTime(true);
       return;
