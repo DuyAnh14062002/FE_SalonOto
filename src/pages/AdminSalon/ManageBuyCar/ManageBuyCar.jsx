@@ -61,6 +61,7 @@ export default function ManageBuyCar() {
     }, 1000);
   };
   const handleShowProcess = (invoice) => {
+    setCarId(invoice?.legals_user?.car_id);
     setSelectedInvoice(invoice);
     setShowModalProcess(true);
   };
@@ -126,7 +127,7 @@ export default function ManageBuyCar() {
     let res = await carApi.getAllCarOfSalon(salonId, 1, 1000000, "", "1");
     if (res?.data?.cars?.length > 0) {
       setCars(res?.data?.cars);
-      setCarId(res.data.cars[0].car_id);
+      setCarId(res.data.cars[0]?.car_id);
     }
   };
   useEffect(() => {
