@@ -106,17 +106,21 @@ export default function ManageGuarantee() {
   const handleAddMaintenance = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    let res = await warrantyApi.createWarranty(salon.salon_id, warrantyItem);
-    console.log("res create warranty : ", res);
-    if (res?.data?.status === "success") {
-      toast.success("Thêm gói bảo hành thành công");
-      handleCloseAdd();
-      loadingWarranty(salon.salon_id, page, search);
-      setWarrantyItem({});
-    } else {
-      toast.error("Thêm gói bảo hành thất bại");
+    try{
+      let res = await warrantyApi.createWarranty(salon.salon_id, warrantyItem);
+      console.log("res create warranty : ", res);
+      if (res?.data?.status === "success") {
+        toast.success("Thêm gói bảo hành thành công");
+        handleCloseAdd();
+        loadingWarranty(salon.salon_id, page, search);
+        setWarrantyItem({});
+      } else {
+        toast.error("Thêm gói bảo hành thất bại");
+      }
+      setIsLoading(false);
+    }catch(e){
+      console.log(e)
     }
-    setIsLoading(false);
   };
   const handleUpdateMaintenance = async (e) => {
     e.preventDefault();
@@ -156,6 +160,7 @@ export default function ManageGuarantee() {
     });
     setMaintenances(newAllMaintenances);
   };
+  console.log("maintenance : ", maintenances)
   return (
     <>
       <div id="content" className="container-fluid">

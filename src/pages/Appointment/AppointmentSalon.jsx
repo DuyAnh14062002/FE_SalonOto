@@ -10,7 +10,8 @@ import { formatDate, formatTime } from "../../../utils/common";
 import salonApi from "../../../apis/salon.api";
 import { PaginationControl } from "react-bootstrap-pagination-control";
 import { debounce } from "lodash";
-className= = 5;
+const LIMIT = 5;
+
 
 export default function AppointmentSalon() {
   const [showEdit, setShowEdit] = useState(false);
@@ -116,7 +117,7 @@ export default function AppointmentSalon() {
       toast.error("Xóa lịch hẹn thất bại");
     }
   };
-
+   console.log("appointmentList : ", appointmentList)
   return (
     <>
       <div id="content" className="container-fluid">
