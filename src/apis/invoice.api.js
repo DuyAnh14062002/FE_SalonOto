@@ -28,7 +28,7 @@ const invoiceApi = {
     });
   },
 
-  createMaintenanceInvoice(data, services, accessory) {
+  createMaintenanceInvoice(data, services, accessory, invoiceId) {
     return http.post("/invoice", {
       licensePlate: data.licensePlate,
       carName: data.carName,
@@ -37,6 +37,7 @@ const invoiceApi = {
       email: data.email,
       phone: data.phone,
       accessories: accessory,
+      invoiceId: invoiceId,
     });
   },
 

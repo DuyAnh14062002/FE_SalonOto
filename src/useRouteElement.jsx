@@ -62,6 +62,7 @@ import Accessory from "./pages/SalonOto/Accessory";
 import ManagePayment from "./pages/AdminSalon/ManagePayment";
 import HistoryPayment from "./components/HistoryPayment";
 import SatisticDealer from "./components/SatisticDealer";
+import MyCar from "./components/MyCar/MyCar";
 
 function ProtectedRoute() {
   const isAuthenticated = useSelector(
@@ -362,6 +363,10 @@ const router = createBrowserRouter([
   {
     path: path.satisticDealer,
     element: <SatisticDealer/>
+  },
+  {
+    path: path.myCar,
+    element: <MyCar/>
   }
 ]);
 

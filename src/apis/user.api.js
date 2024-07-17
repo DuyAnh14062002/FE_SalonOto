@@ -22,6 +22,9 @@ const userApi = {
   getLegalUser(body) {
     return http.post("/legals/get-legals-user", body);
   },
+  getAllCarOfuser() {
+    return http.get("/cars/user");
+  },
 };
 
 export default userApi;

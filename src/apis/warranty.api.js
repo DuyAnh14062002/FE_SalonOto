@@ -55,6 +55,13 @@ const warrantyApi = {
       },
     });
   },
+
+  addMaintenance(warrantyId, maintenanceArray) {
+    return http.post("/warranty/add-maintenance", {
+      warrantyId: warrantyId,
+      maintenanceArray: maintenanceArray,
+    });
+  },
 };
 
 export default warrantyApi;

@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import warrantyApi from "../../../apis/warranty.api";
 import { debounce } from "lodash";
 import { PaginationControl } from "react-bootstrap-pagination-control";
+import maintenanceApi from "../../../apis/maintenance.api";
 const LIMIT = 5;
 
 export default function ManageGuarantee() {
@@ -22,6 +23,7 @@ export default function ManageGuarantee() {
   const [totalPage, setTotalPage] = useState(0);
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
+  const [maintenances, setMaintenances] = useState([]);
 
   const handleSearch = (e) => {
     setSearch(e.target.value);
@@ -41,9 +43,26 @@ export default function ManageGuarantee() {
     const res = await salonApi.getSalonInfor();
     if (res?.data?.salon) {
       loadingWarranty(res.data.salon.salon_id, page, search);
+      loadingMaintenance(res.data.salon.salon_id)
       setSalon(res.data.salon);
     }
   };
+  const loadingMaintenance = async (salonId) => {
+    try {
+      let res = await maintenanceApi.getAllMaintenanceOfSalon(
+        salonId
+      );
+      if (res?.data?.maintenance) {
+        setMaintenances(res.data.maintenance);
+        setTotalPage(res.data.total_page);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  useEffect(() => {
+    loadingMaintenance()
+  }, [])
   const loadingWarranty = async (salonId, page, search) => {
     let res = await warrantyApi.getAllWarranty({
       salonId,
@@ -127,6 +146,15 @@ export default function ManageGuarantee() {
     } else {
       toast.error("Xóa gói bảo hành thất bại");
     }
+  };
+  const handleChangeMaintenance = (maintenance_id) => {
+    const newAllMaintenances = maintenances.map((item) => {
+      if (item.maintenance_id === maintenance_id) {
+        return { ...item, checked: !item.checked };
+      }
+      return item;
+    });
+    setMaintenances(newAllMaintenances);
   };
   return (
     <>
@@ -299,15 +327,30 @@ export default function ManageGuarantee() {
                 onChange={onChange}
               />
             </Form.Group>
-            {/* <Form.Group className="mt-4">
-              <Form.Label>ghi chú</Form.Label>
-              <Form.Control
-                required
-                type="text"
-                name="note"
-                onChange={onChange}
-              />
-            </Form.Group> */}
+            <Form.Group className="mt-4">
+              <Form.Label>Thêm gói bảo dưỡng cho gói bảo hành</Form.Label>
+              <div
+                style={{
+                  maxHeight: "150px",
+                  overflowY: "scroll",
+                  marginTop: "5px",
+                }}
+              >
+                {maintenances &&
+                  maintenances.map((item, index) => (
+                    <Form.Check
+                      key={index}
+                      type="checkbox"
+                      checked={item.checked}
+                      onChange={() =>
+                        handleChangeMaintenance(item.maintenance_id)
+                      }
+                      value={item.maintenance_id}
+                      label={item.name}
+                    />
+                  ))}
+              </div>
+            </Form.Group>
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={handleCloseAdd}>

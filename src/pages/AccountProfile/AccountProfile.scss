@@ -65,3 +65,23 @@
   justify-content: end;
   height: 100%;
 }
+.top-info-profile {
+  display: flex;
+  justify-content: space-between;
+  .no-content {
+    margin-right: 200px;
+  }
+  .my-car {
+    padding: 10px 50px;
+    border-radius: 3px;
+    background-color: red;
+    color: #fff;
+    font-weight: 700;
+    outline: none;
+    border: none;
+    &:hover {
+      background-color: rgb(76, 46, 247);
+      transition: 0.2s;
+    }
+  }
+}

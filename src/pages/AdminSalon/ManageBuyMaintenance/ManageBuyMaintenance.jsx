@@ -401,6 +401,15 @@ export default function ManageBuyMaintenance() {
             <Modal.Title> Thêm mới giao dịch bảo dưỡng </Modal.Title>
           </Modal.Header>
           <Modal.Body>
+          <Form.Group className="mt-4">
+              <Form.Label>Nhập mã giao dịch mua xe (nếu có)</Form.Label>
+              <Form.Control
+                required
+                type="text"
+                name="licensePlate"
+                onChange={onChange}
+              />
+            </Form.Group>
             <Form.Group className="mt-4">
               <Form.Label>Biển số xe</Form.Label>
               <Form.Control

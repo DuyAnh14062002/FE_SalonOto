@@ -28,6 +28,7 @@ export const path = {
   salonAppointment: "/salonAppointment",
   listPromotion: "/listPromotion",
   satisticDealer: "/satisticDealer",
+  myCar: "/myCar",
   //================SALON============================
   salonOto: "/salonOto/:id",
   DetailCar: "/detail-car/:id",

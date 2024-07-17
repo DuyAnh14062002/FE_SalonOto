@@ -195,6 +195,9 @@ const AccountProfile = (props) => {
   const handleShowSatisticDealer = () => {
     navigate(`${path.satisticDealer}`);
   };
+  const handleNavigateMyCar = () => {
+    navigate(`${path.myCar}`)
+  }
   return (
     <>
       <Header otherPage={true} />
@@ -205,9 +208,13 @@ const AccountProfile = (props) => {
               <div className="row">
                 <div className="col-12 profile">
                   <div className="blog-comments">
-                    <h2 className="text-center fw-bold text-uppercase">
-                      Thông tin cá nhân
-                    </h2>
+                    <div className="top-info-profile">
+                      <div className="no-content"></div>
+                      <h2 className="text-center fw-bold text-uppercase">
+                        Thông tin cá nhân
+                      </h2>
+                      <button className="my-car" onClick={handleNavigateMyCar}>Xe của tôi</button>
+                    </div>
                     <div className="comments-body mt-5">
                       <div className="single-comments">
                         <div className="main">

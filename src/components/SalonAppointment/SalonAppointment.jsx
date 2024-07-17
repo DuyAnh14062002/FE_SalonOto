@@ -8,6 +8,7 @@ import { set } from "lodash";
 import appointmentApi from "../../apis/appointment.api";
 import carApi from "../../apis/car.api";
 import salonApi from "../../apis/salon.api";
+import Header from "../Header";
 export default function SalonAppointment() {
   const arrayTime = [
     "8:00",
@@ -40,6 +41,7 @@ export default function SalonAppointment() {
   const carId = location?.state?.carId || null;
   const phone = location?.state?.phone || null;
   const salon_id = location?.state?.salonId || null;
+  const type = location?.state?.type || null;
   const [busyTime, setBusyTime] = useState([]);
   useEffect(() => {
     const fetchBusyTime = async () => {
@@ -114,13 +116,24 @@ export default function SalonAppointment() {
       // Thiết lập giờ và phút cho ngày được chọn
       date.setHours(parseInt(hours, 10), parseInt(minutes, 10), 0, 0);
       try {
-        let res = await appointmentApi.createAppointmentWithUser(
-          carId,
-          salon_id,
-          phone,
-          date,
-          note
-        );
+        let res= {};
+        if(type === "maintenance"){
+          res = await appointmentApi.createAppointment({
+            carId,
+            salonId: salon_id,
+            date,
+            description: "Bảo dưỡng xe",
+          });
+        }else{
+          res = await appointmentApi.createAppointmentWithUser(
+            carId,
+            salon_id,
+            phone,
+            date,
+            note
+          );
+        }
+        console.log("res : ", res)
         if (res?.data?.status === "success") {
           setNote("");
           setSelectedTime(null);
@@ -134,6 +147,12 @@ export default function SalonAppointment() {
   };
   return (
     <div>
+      {type === "maintenance" ? (
+         <Header otherPage = {true}/>
+      ) : ""}
+      {type === "maintenance" ? (
+        <h2 className="text-center" style={{marginTop: "25px"}}>Đặt lịch bảo dưỡng</h2>
+      ): ""}
       <div className="container mt-5" style={{ padding: "0 200px" }}>
         <div className="row">
           {/* <div className="col-4" style={{ paddingRight: "70px" }}>
@@ -278,7 +297,8 @@ export default function SalonAppointment() {
                 <div className="col-12">
                   <div className="mt-3">
                     <label for="note" className="fw-bold fs-5 mb-2">
-                      Bạn muốn đặt lịch hẹn với khách hàng để làm gì? (
+                      {type === "maintenance" ? "Bạn muốn đặt lịch làm gì" : "Bạn muốn đặt lịch hẹn với khách hàng để làm gì?"}
+                       (
                       <span className="text-danger">*</span>)
                     </label>
                     <textarea
@@ -294,7 +314,7 @@ export default function SalonAppointment() {
 
                 <div className="col-12 mt-3 mb-5 text-end">
                   <button type="submit" className="btn btn-danger">
-                    Gửi lịch hẹn cho khách hàng
+                    {type === "maintenance" ? "Gửi lịch hẹn cho salon" : "Gửi lịch hẹn cho khách hàng"}
                   </button>
                 </div>
               </div>

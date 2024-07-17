@@ -1,0 +1,48 @@
+.my-car-container {
+  max-width: 1080px;
+  margin: 0 auto;
+  .my-car-item {
+    width: 100%;
+    .my-car-image {
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+      width: 600px;
+      height: 300px;
+      margin: 30px auto;
+    }
+    .my-car-content {
+      margin: 0 auto;
+      width: 600px;
+      min-height: 210px;
+      margin-bottom: 20px;
+      .my-car-content-info {
+        font-size: 20px;
+        margin-top: 5px;
+        span {
+          font-weight: bold;
+        }
+      }
+    }
+    .button-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      button {
+        padding: 10px 50px;
+        border-radius: 3px;
+        background-color: red;
+        color: #fff;
+        font-weight: 700;
+        outline: none;
+        border: none;
+        margin: 0 auto;
+        &:hover {
+          background-color: rgb(76, 46, 247);
+          transition: 0.2s;
+        }
+      }
+    }
+  }
+}
