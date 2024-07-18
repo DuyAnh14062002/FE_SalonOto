@@ -505,8 +505,9 @@ export default function HeaderSalon() {
           <Link to={`/salonOto/${idSalon}`} className="item-menu">
             Trang chủ
           </Link>
-          <Link className="item-menu">Giới thiệu</Link>
-          <Link className="item-menu" to={"/listPromotion"}>Khuyến mãi</Link>
+          <Link className="item-menu" to={path.listPromotion}>
+            Khuyến mãi
+          </Link>
           <Link className="item-menu" to={path.accessory}>
             Phụ tùng
           </Link>
@@ -521,7 +522,9 @@ export default function HeaderSalon() {
               <i className="fa-brands fa-facebook-messenger"></i>
             </div>
           ) : (
-            <button onClick={handleMessage} style={{marginRight: "10px"}}>Nhắn tin với salon</button>
+            <button onClick={handleMessage} style={{ marginRight: "10px" }}>
+              Nhắn tin với salon
+            </button>
           )}
           {salon?.salon_id === idSalon && (
             <OverlayTrigger

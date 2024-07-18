@@ -26,7 +26,7 @@ export const path = {
   historyTransactionDealer: "/historyTransactionDealer",
   promotionDetail: "/promotionDetail/:id",
   salonAppointment: "/salonAppointment",
-  listPromotion: "/listPromotion",
+
   satisticDealer: "/satisticDealer",
   myCar: "/myCar",
   //================SALON============================
@@ -43,6 +43,7 @@ export const path = {
   listMaintenance: "/listMaintenance",
   contact: "/salonOto/contact",
   accessory: "/salonOto/accessory",
+  listPromotion: "/salonOto/listPromotion",
 
   //========ADMIN SALON PATH=====================
   adminSalon: "/adminSalon",

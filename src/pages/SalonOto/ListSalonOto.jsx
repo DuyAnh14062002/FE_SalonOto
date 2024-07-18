@@ -36,7 +36,6 @@ export default function ListSalonOto() {
   useEffect(() => {
     loading(page, search);
   }, [page, search]);
-  console.log("profile : ", profile);
   return (
     <div>
       <Header otherPage={true} />
@@ -98,7 +97,7 @@ export default function ListSalonOto() {
                           className="image-container"
                           style={{ flexShrink: 0 }}
                         >
-                          {profile.user_id === salon.user_id ? (
+                          {profile?.user_id === salon?.user_id ? (
                             <span className="highlight-label">Sở hữu</span>
                           ) : (
                             ""

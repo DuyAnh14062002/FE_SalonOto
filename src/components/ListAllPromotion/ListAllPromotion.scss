@@ -6,17 +6,17 @@
 }
 .list-promotion-container {
   max-width: 1100px;
-  min-height: 100vh;
   margin: 0 auto;
   margin-top: 50px;
   display: flex;
   flex-wrap: wrap;
   .promotion-box {
+    padding: 10px;
     margin-top: 10px;
     border: 1px solid black;
     width: 30%;
     margin: 0px 15px;
-    height: 300px;
+    min-height: 300px;
     cursor: pointer;
     .thumnail-promotion {
       background-position: center;

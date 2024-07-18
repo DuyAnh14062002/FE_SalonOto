@@ -96,6 +96,9 @@ const invoiceApi = {
       invoiceId: invoiceId,
     });
   },
+  getInvoiceDetailHistoryBuyCarForCustomer(id) {
+    return http.post(`/invoice/get-invoice-buy-car?id=${id}`);
+  },
 };
 
 export default invoiceApi;

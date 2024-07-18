@@ -159,8 +159,7 @@ export default function Message() {
   };
 
   const handleSendMessage = async () => {
-    let res = "";
-    console.log("user : ", user?.salon_id);
+    let res = {};
     if (user?.salon_id) {
       const form = new FormData();
       if (images) {
@@ -171,7 +170,7 @@ export default function Message() {
       if (text) {
         form.append("message", text);
       }
-      res = await messageApi.postMessage(user.salon_id, text);
+      res = await messageApi.postMessage(user?.salon_id, form);
 
       setImages([]);
       setText("");
@@ -187,12 +186,12 @@ export default function Message() {
       if (text) {
         form.append("message", text);
       }
-      res = await messageApi.postMessage(user.id, form);
+      res = await messageApi.postMessage(user?.id, form);
       setImages([]);
       setText("");
       setImagePreview([]);
     }
-    console.log("res send : ", res);
+
     if (res?.data?.message) {
       setMessages([res.data.message, ...messages]);
     }
@@ -219,7 +218,6 @@ export default function Message() {
     //let res = await userApi.getAllUsers()
     if (res?.data?.chattingUsers && res.data.chattingUsers.length > 0) {
       setUsers(res.data.chattingUsers);
-      console.log("chatting users : ", res.data.chattingUsers);
       if (!user.id && !user.salon_id && !idSalon) {
         setUser(res.data.chattingUsers[0]);
       }
@@ -317,7 +315,6 @@ export default function Message() {
     navigate(dataResponseFromVideoCall.linkVideoCall);
   };
   const handleRefuse = () => {
-    console.log("refuse");
     socket?.emit("refuseCallVideo", {
       receiverId: dataResponseFromVideoCall.senderId,
     });
@@ -377,7 +374,7 @@ export default function Message() {
             users.length > 0 &&
             users.map((u) => {
               const isOnline = onlineUsers.includes(u.id);
-              console.log("u.message.time : ", u.message.time);
+
               return (
                 <div
                   className={

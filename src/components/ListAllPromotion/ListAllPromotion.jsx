@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import Header from "../Header";
 import "./ListAllPromotion.scss";
 import promotionApi from "../../apis/promotion.api";
 import { useNavigate } from "react-router-dom";
+import HeaderSalon from "../Header/HeaderSalon";
 export default function ListAllPromotion() {
   const navigate = useNavigate();
   const [promotions, setPromotions] = useState([]);
@@ -25,7 +25,7 @@ export default function ListAllPromotion() {
   };
   return (
     <>
-      <Header otherPage={true} />
+      <HeaderSalon />
       <h2 className="list-promotion-header-text">Danh sách các khuyến mãi</h2>
       <div className="list-promotion-container">
         {promotions?.length > 0 &&

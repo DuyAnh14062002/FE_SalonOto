@@ -116,7 +116,7 @@ export default function AppointmentSalon() {
       toast.error("Xóa lịch hẹn thất bại");
     }
   };
-  console.log("listAppointment : ",appointmentList )
+  console.log("listAppointment : ", appointmentList);
   return (
     <>
       <div id="content" className="container-fluid">

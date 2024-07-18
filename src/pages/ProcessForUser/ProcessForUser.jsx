@@ -13,7 +13,7 @@ const ProcessForUser = ({ invoice }) => {
     const fetchDetailProcess = async () => {
       try {
         let res = await processApi.getAllProcess({
-          salonId: invoice.seller.salon_id,
+          salonId: invoice?.seller?.salon_id,
           processId: invoice?.legals_user?.processId,
         });
         setDetailProcess(res.data.data);
@@ -45,7 +45,7 @@ const ProcessForUser = ({ invoice }) => {
       documents: item?.details?.map((detail) => detail.name),
     };
   });
-  
+
   const handleNext = async () => {
     setActiveStep((prevStep) => prevStep + 1);
   };
