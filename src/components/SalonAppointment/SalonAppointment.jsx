@@ -43,6 +43,7 @@ export default function SalonAppointment() {
   const salon_id = location?.state?.salonId || null;
   const type = location?.state?.type || null;
   const [busyTime, setBusyTime] = useState([]);
+  console.log("carId: ", carId)
   useEffect(() => {
     const fetchBusyTime = async () => {
       let res = await appointmentApi.getBusyTime({ salonId: idSalon, carId });
