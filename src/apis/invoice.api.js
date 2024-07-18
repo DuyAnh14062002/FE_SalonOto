@@ -91,6 +91,11 @@ const invoiceApi = {
       `/invoice/get-invoice?year=${year}&quarter=${quarter}&month=${month}`
     );
   },
+  LookupInvoiceMaintenance(invoiceId) {
+    return http.post("/invoice/lookup", {
+      invoiceId: invoiceId,
+    });
+  },
 };
 
 export default invoiceApi;

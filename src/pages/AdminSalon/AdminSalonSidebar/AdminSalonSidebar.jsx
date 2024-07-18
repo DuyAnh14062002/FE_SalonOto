@@ -250,7 +250,7 @@ export default function AdminSalonSidebar(props) {
               if (
                 keyMap === "f8" &&
                 permissions &&
-                (permissions[0] === "OWNER" || permissions?.includes("R_AC"))
+                (permissions[0] === "OWNER" || permissions?.includes("R_ASS"))
               ) {
                 return (
                   <li className="nav-link">
@@ -269,7 +269,7 @@ export default function AdminSalonSidebar(props) {
               if (
                 keyMap === "f9" &&
                 permissions &&
-                (permissions[0] === "OWNER" || permissions?.includes("R_AC"))
+                (permissions[0] === "OWNER" || permissions?.includes("R_PC"))
               ) {
                 return (
                   <li className="nav-link">
@@ -288,7 +288,7 @@ export default function AdminSalonSidebar(props) {
               if (
                 keyMap === "f10" &&
                 permissions &&
-                (permissions[0] === "OWNER" || permissions?.includes("R_AC"))
+                (permissions[0] === "OWNER" || permissions?.includes("R_DC"))
               ) {
                 return (
                   <li className="nav-link">
@@ -307,7 +307,7 @@ export default function AdminSalonSidebar(props) {
               if (
                 keyMap === "f11" &&
                 permissions &&
-                (permissions[0] === "OWNER" || permissions?.includes("R_AC"))
+                (permissions[0] === "OWNER" || permissions?.includes("R_PRM"))
               ) {
                 return (
                   <li className="nav-link">
@@ -326,7 +326,7 @@ export default function AdminSalonSidebar(props) {
               if (
                 keyMap === "f12" &&
                 permissions &&
-                (permissions[0] === "OWNER" || permissions?.includes("R_AC"))
+                (permissions[0] === "OWNER" || permissions?.includes("R_PYM"))
               ) {
                 return (
                   <li className="nav-link">

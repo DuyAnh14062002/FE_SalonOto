@@ -185,7 +185,7 @@ export default function ManageAccessory() {
                 />
               </div>
               {(permissions?.includes("OWNER") ||
-                permissions.includes("C_AC")) && (
+                permissions.includes("C_ASS")) && (
                 <button className="btn btn-success" onClick={handleShowAdd}>
                   Thêm mới phụ tùng
                 </button>
@@ -231,7 +231,7 @@ export default function ManageAccessory() {
                       </td>
                       <td className="text-center">
                         {(permissions?.includes("OWNER") ||
-                          permissions.includes("U_AC")) && (
+                          permissions.includes("U_ASS")) && (
                           <button
                             className="btn btn-success btn-sm rounded-0 text-white mx-2"
                             data-toggle="tooltip"
@@ -243,7 +243,7 @@ export default function ManageAccessory() {
                           </button>
                         )}
                         {(permissions?.includes("OWNER") ||
-                          permissions.includes("D_AC")) && (
+                          permissions.includes("D_ASS")) && (
                           <button
                             to="/"
                             className="btn btn-danger btn-sm rounded-0 text-white"

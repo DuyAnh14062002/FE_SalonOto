@@ -42,8 +42,8 @@ export default function ManageGuarantee() {
   const fetchDataSalon = async (page, search) => {
     const res = await salonApi.getSalonInfor();
     if (res?.data?.salon) {
-      loadingWarranty(res.data.salon.salon_id, page, search);
       loadingMaintenance(res.data.salon.salon_id)
+      loadingWarranty(res.data.salon.salon_id, page, search);
       setSalon(res.data.salon);
     }
   };
@@ -70,7 +70,6 @@ export default function ManageGuarantee() {
       per_page: LIMIT,
       q: search,
     });
-    console.log("res warranty : ", res);
     if (res?.data?.warranties) {
       setWarranties(res.data.warranties);
       setTotalPage(res.data.total_page);
@@ -94,7 +93,18 @@ export default function ManageGuarantee() {
     setShowDelete(false);
   };
   const handleShowUpdate = (warrantyItem) => {
+    console.log("warantyItem : ", warrantyItem)
     setShowUpdate(true);
+    setMaintenances((prev) =>
+      prev.map((maintenance) => {
+        if (
+          warrantyItem.maintenance.find((f) => f.maintenance_id === maintenance.maintenance_id)
+        ) {
+          return { ...maintenance, checked: true };
+        }
+        return { ...maintenance, checked: false };
+      })
+    );
     setWarrantyItem(warrantyItem);
   };
   const handleCloseUpdate = () => {
@@ -108,7 +118,6 @@ export default function ManageGuarantee() {
     setIsLoading(true);
     try{
       let res = await warrantyApi.createWarranty(salon.salon_id, warrantyItem);
-      console.log("res create warranty : ", res);
       if (res?.data?.status === "success") {
         toast.success("Thêm gói bảo hành thành công");
         handleCloseAdd();
@@ -125,16 +134,27 @@ export default function ManageGuarantee() {
   const handleUpdateMaintenance = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    let res = await warrantyApi.updateWarranty(salon.salon_id, warrantyItem);
-    if (res?.data?.status === "success") {
-      toast.success("Cập nhật gói bảo hành thành công");
-      handleCloseUpdate();
-      loadingWarranty(salon.salon_id, page, search);
-      setWarrantyItem({});
-    } else {
-      toast.error("Cập nhật gói bảo hành thất bại");
+    try{
+      const listMaintenanceChecked = maintenances.filter(
+        (maintenance) => maintenance.checked
+      );
+      const listMaintenanceId = listMaintenanceChecked.map((maintenance) =>
+        maintenance.maintenance_id.toString()
+      );
+      let res = await warrantyApi.updateWarranty(salon.salon_id, warrantyItem);
+     let resUpdateMaintenance = await warrantyApi.addMaintenance(warrantyItem.warranty_id, listMaintenanceId)
+      if (res?.data?.status === "success") {
+        toast.success("Cập nhật gói bảo hành thành công");
+        handleCloseUpdate();
+        loadingWarranty(salon.salon_id, page, search);
+        setWarrantyItem({});
+      } else {
+        toast.error("Cập nhật gói bảo hành thất bại");
+      }
+      setIsLoading(false);
+    }catch(e){
+      console.log(e)
     }
-    setIsLoading(false);
   };
 
   const handleDelete = async () => {
@@ -332,7 +352,7 @@ export default function ManageGuarantee() {
                 onChange={onChange}
               />
             </Form.Group>
-            <Form.Group className="mt-4">
+            {/* <Form.Group className="mt-4">
               <Form.Label>Thêm gói bảo dưỡng cho gói bảo hành</Form.Label>
               <div
                 style={{
@@ -355,7 +375,7 @@ export default function ManageGuarantee() {
                     />
                   ))}
               </div>
-            </Form.Group>
+            </Form.Group> */}
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={handleCloseAdd}>
@@ -415,16 +435,30 @@ export default function ManageGuarantee() {
                 value={warrantyItem.policy}
               />
             </Form.Group>
-            {/* <Form.Group className="mt-4">
-              <Form.Label>ghi chú</Form.Label>
-              <Form.Control
-                required
-                type="text"
-                name="note"
-                onChange={onChange}
-                value={warrantyItem.note}
-              />
-            </Form.Group> */}
+            <Form.Group className="mt-4">
+              <Form.Label>Thêm gói bảo dưỡng cho gói bảo hành</Form.Label>
+              <div
+                style={{
+                  maxHeight: "150px",
+                  overflowY: "scroll",
+                  marginTop: "5px",
+                }}
+              >
+                {maintenances &&
+                  maintenances.map((item, index) => (
+                    <Form.Check
+                      key={index}
+                      type="checkbox"
+                      checked={item.checked}
+                      onChange={() =>
+                        handleChangeMaintenance(item.maintenance_id)
+                      }
+                      value={item.maintenance_id}
+                      label={item.name}
+                    />
+                  ))}
+              </div>
+            </Form.Group>
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={handleCloseAdd}>

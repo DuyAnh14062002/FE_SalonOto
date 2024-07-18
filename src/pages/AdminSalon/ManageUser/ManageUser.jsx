@@ -19,6 +19,11 @@ export default function ManageUser() {
   const [detailRoleMaintenance, setDetailRoleMaintenance] = useState(false);
   const [detailRoleInvoice, setDetailRoleInvoice] = useState(false);
   const [detailRoleWRT, setDetailRoleWRT] = useState(false);
+  const [detailRoleAccessory, setDetailRoleAccessory] = useState(false);
+  const [detailRolePayment, setDetailRolePayment] = useState(false);
+  const [detailRoleProcess, setDetailRoleProcess] = useState(false);
+  const [detailRoleState, setDetailRoleState] = useState(false);
+  const [detailRolePromote, setDetailRolePromote] = useState(false);
   const [employees, setEmployees] = useState([]);
   const [employee, setEmployee] = useState("");
   const [salonId, setSalonId] = useState("");
@@ -118,6 +123,21 @@ export default function ManageUser() {
   }
   const handleToggleDetailRoleWRT = () => {
     setDetailRoleWRT(!detailRoleWRT)
+  }
+  const handleToggleDetailRoleProcess = () => {
+    setDetailRoleProcess(!detailRoleProcess)
+  }
+  const handleToggleDetailRolePromote = () => {
+    setDetailRolePromote(!detailRolePromote)
+  }
+  const handleToggleDetailRoleState = () => {
+    setDetailRoleState(!detailRoleState)
+  }
+  const handleToggleDetailRolePayment = () => {
+    setDetailRolePayment(!detailRolePayment)
+  }
+  const handleToggleDetailRoleAccessory = () => {
+    setDetailRoleAccessory(!detailRoleAccessory)
   }
   const handleSetPermission = (e, name) => {
     if (e.target.checked) {
@@ -878,6 +898,436 @@ export default function ManageUser() {
                             <div className="role-detail">
                               <p className="role-text-top">
                                 Cập nhật thông tin giao dịch
+                              </p>
+                              <p className="patch-method">PATCH</p>
+                            </div>
+                          </div>
+                        </div>
+                      ) : (
+                        ""
+                      )}
+                       <div
+                        className="role-item"
+                        onClick={() => handleToggleDetailRoleAccessory()}
+                      >
+                        <div className="left-role-item">
+                          <i class="fa-solid fa-chevron-right"></i>
+                          <span>Quản lí phụ tùng</span>
+                        </div>
+                        <div className="right-role-item">
+                          <input type="checkbox" className="switch-toggle" />
+                        </div>
+                      </div>
+                      {detailRoleAccessory === true ? (
+                        <div className="role-item-detail-container">
+                          <div className="role-item-detail role-get">
+                            <input
+                              type="checkbox"
+                              className="switch-toggle"
+                              checked={
+                                permission?.length >0 && permission?.includes("R_ASS")
+                               }
+                              value={permission.R_ASS}
+                              onChange={(e) => handleSetPermission(e, "R_ASS")}
+                            />
+                            <div className="role-detail">
+                              <p className="role-text-top">
+                                Xem thông tin phụ tùng
+                              </p>
+                              <p className="get-method">GET</p>
+                            </div>
+                          </div>
+                          <div className="role-item-detail role-post">
+                            <input
+                              type="checkbox"
+                              className="switch-toggle"
+                              value={permission.C_ASS}
+                              onChange={(e) => handleSetPermission(e, "C_ASS")}
+                              checked={
+                                permission?.length >0 && permission?.includes("C_ASS")
+                               }
+                            />
+                            <div className="role-detail">
+                              <p className="role-text-top">
+                                Thêm thông tin phụ tùng
+                              </p>
+                              <p className="post-method">POST</p>
+                            </div>
+                          </div>
+                          <div className="role-item-detail role-delete">
+                            <input
+                              type="checkbox"
+                              className="switch-toggle"
+                              value={permission.D_ASS}
+                              checked={
+                                permission?.length > 0 && permission?.includes("D_ASS")
+                               }
+                              onChange={(e) => handleSetPermission(e, "D_ASS")}
+                            />
+                            <div className="role-detail">
+                              <p className="role-text-top">
+                                Xóa thông tin phụ tùng
+                              </p>
+                              <p className="delete-method">DELETE</p>
+                            </div>
+                          </div>
+                          <div className="role-item-detail role-patch">
+                            <input
+                              type="checkbox"
+                              className="switch-toggle"
+                              value={permission.U_ASS}
+                              checked={
+                                permission?.length >0 && permission?.includes("U_ASS")
+                               }
+                              onChange={(e) => handleSetPermission(e, "U_ASS")}
+                            />
+                            <div className="role-detail">
+                              <p className="role-text-top">
+                                Cập nhật thông tin phụ tùng
+                              </p>
+                              <p className="patch-method">PATCH</p>
+                            </div>
+                          </div>
+                        </div>
+                      ) : (
+                        ""
+                      )}
+                       <div
+                        className="role-item"
+                        onClick={() => handleToggleDetailRoleProcess()}
+                      >
+                        <div className="left-role-item">
+                          <i class="fa-solid fa-chevron-right"></i>
+                          <span>Quản lí qui trình</span>
+                        </div>
+                        <div className="right-role-item">
+                          <input type="checkbox" className="switch-toggle" />
+                        </div>
+                      </div>
+                      {detailRoleProcess === true ? (
+                        <div className="role-item-detail-container">
+                          <div className="role-item-detail role-get">
+                            <input
+                              type="checkbox"
+                              className="switch-toggle"
+                              checked={
+                                permission?.length >0 && permission?.includes("R_PC")
+                               }
+                              value={permission.R_PC}
+                              onChange={(e) => handleSetPermission(e, "R_PC")}
+                            />
+                            <div className="role-detail">
+                              <p className="role-text-top">
+                                Xem thông tin qui trình
+                              </p>
+                              <p className="get-method">GET</p>
+                            </div>
+                          </div>
+                          <div className="role-item-detail role-post">
+                            <input
+                              type="checkbox"
+                              className="switch-toggle"
+                              value={permission.C_PC}
+                              onChange={(e) => handleSetPermission(e, "C_PC")}
+                              checked={
+                                permission?.length >0 && permission?.includes("C_PC")
+                               }
+                            />
+                            <div className="role-detail">
+                              <p className="role-text-top">
+                                Thêm thông tin qui trình
+                              </p>
+                              <p className="post-method">POST</p>
+                            </div>
+                          </div>
+                          <div className="role-item-detail role-delete">
+                            <input
+                              type="checkbox"
+                              className="switch-toggle"
+                              value={permission.D_PC}
+                              checked={
+                                permission?.length > 0 && permission?.includes("D_PC")
+                               }
+                              onChange={(e) => handleSetPermission(e, "D_PC")}
+                            />
+                            <div className="role-detail">
+                              <p className="role-text-top">
+                                Xóa thông tin qui trình
+                              </p>
+                              <p className="delete-method">DELETE</p>
+                            </div>
+                          </div>
+                          <div className="role-item-detail role-patch">
+                            <input
+                              type="checkbox"
+                              className="switch-toggle"
+                              value={permission.U_PC}
+                              checked={
+                                permission?.length >0 && permission?.includes("U_PC")
+                               }
+                              onChange={(e) => handleSetPermission(e, "U_PC")}
+                            />
+                            <div className="role-detail">
+                              <p className="role-text-top">
+                                Cập nhật thông tin qui trình
+                              </p>
+                              <p className="patch-method">PATCH</p>
+                            </div>
+                          </div>
+                        </div>
+                      ) : (
+                        ""
+                      )}
+                       <div
+                        className="role-item"
+                        onClick={() => handleToggleDetailRoleState()}
+                      >
+                        <div className="left-role-item">
+                          <i class="fa-solid fa-chevron-right"></i>
+                          <span>Quản lí giai đoạn</span>
+                        </div>
+                        <div className="right-role-item">
+                          <input type="checkbox" className="switch-toggle" />
+                        </div>
+                      </div>
+                      {detailRoleState === true ? (
+                        <div className="role-item-detail-container">
+                          <div className="role-item-detail role-get">
+                            <input
+                              type="checkbox"
+                              className="switch-toggle"
+                              checked={
+                                permission?.length >0 && permission?.includes("R_DC")
+                               }
+                              value={permission.R_DC}
+                              onChange={(e) => handleSetPermission(e, "R_DC")}
+                            />
+                            <div className="role-detail">
+                              <p className="role-text-top">
+                                Xem thông tin giai đoạn
+                              </p>
+                              <p className="get-method">GET</p>
+                            </div>
+                          </div>
+                          <div className="role-item-detail role-post">
+                            <input
+                              type="checkbox"
+                              className="switch-toggle"
+                              value={permission.C_DC}
+                              onChange={(e) => handleSetPermission(e, "C_DC")}
+                              checked={
+                                permission?.length >0 && permission?.includes("C_DC")
+                               }
+                            />
+                            <div className="role-detail">
+                              <p className="role-text-top">
+                                Thêm thông tin giai đoạn
+                              </p>
+                              <p className="post-method">POST</p>
+                            </div>
+                          </div>
+                          <div className="role-item-detail role-delete">
+                            <input
+                              type="checkbox"
+                              className="switch-toggle"
+                              value={permission.D_DC}
+                              checked={
+                                permission?.length > 0 && permission?.includes("D_DC")
+                               }
+                              onChange={(e) => handleSetPermission(e, "D_DC")}
+                            />
+                            <div className="role-detail">
+                              <p className="role-text-top">
+                                Xóa thông tin giai đoạn
+                              </p>
+                              <p className="delete-method">DELETE</p>
+                            </div>
+                          </div>
+                          <div className="role-item-detail role-patch">
+                            <input
+                              type="checkbox"
+                              className="switch-toggle"
+                              value={permission.U_DC}
+                              checked={
+                                permission?.length >0 && permission?.includes("U_DC")
+                               }
+                              onChange={(e) => handleSetPermission(e, "U_DC")}
+                            />
+                            <div className="role-detail">
+                              <p className="role-text-top">
+                                Cập nhật thông tin giai đoạn
+                              </p>
+                              <p className="patch-method">PATCH</p>
+                            </div>
+                          </div>
+                        </div>
+                      ) : (
+                        ""
+                      )}
+                      <div
+                        className="role-item"
+                        onClick={() => handleToggleDetailRolePayment()}
+                      >
+                        <div className="left-role-item">
+                          <i class="fa-solid fa-chevron-right"></i>
+                          <span>Quản lí thanh toán</span>
+                        </div>
+                        <div className="right-role-item">
+                          <input type="checkbox" className="switch-toggle" />
+                        </div>
+                      </div>
+                      {detailRolePayment === true ? (
+                        <div className="role-item-detail-container">
+                          <div className="role-item-detail role-get">
+                            <input
+                              type="checkbox"
+                              className="switch-toggle"
+                              checked={
+                                permission?.length >0 && permission?.includes("R_PYM")
+                               }
+                              value={permission.R_PYM}
+                              onChange={(e) => handleSetPermission(e, "R_PYM")}
+                            />
+                            <div className="role-detail">
+                              <p className="role-text-top">
+                                Xem thông tin thanh toán
+                              </p>
+                              <p className="get-method">GET</p>
+                            </div>
+                          </div>
+                          <div className="role-item-detail role-post">
+                            <input
+                              type="checkbox"
+                              className="switch-toggle"
+                              value={permission.C_PYM}
+                              onChange={(e) => handleSetPermission(e, "C_PYM")}
+                              checked={
+                                permission?.length >0 && permission?.includes("C_PYM")
+                               }
+                            />
+                            <div className="role-detail">
+                              <p className="role-text-top">
+                                 Tạo yêu cầu thanh toán
+                              </p>
+                              <p className="post-method">POST</p>
+                            </div>
+                          </div>
+                          <div className="role-item-detail role-delete">
+                            <input
+                              type="checkbox"
+                              className="switch-toggle"
+                              value={permission.D_PYM}
+                              checked={
+                                permission?.length > 0 && permission?.includes("D_PYM")
+                               }
+                              onChange={(e) => handleSetPermission(e, "D_PYM")}
+                            />
+                            <div className="role-detail">
+                              <p className="role-text-top">
+                                Xóa yêu cầu thanh toán
+                              </p>
+                              <p className="delete-method">DELETE</p>
+                            </div>
+                          </div>
+                          <div className="role-item-detail role-patch">
+                            <input
+                              type="checkbox"
+                              className="switch-toggle"
+                              value={permission.U_PYM}
+                              checked={
+                                permission?.length >0 && permission?.includes("U_PYM")
+                               }
+                              onChange={(e) => handleSetPermission(e, "U_PYM")}
+                            />
+                            <div className="role-detail">
+                              <p className="role-text-top">
+                                Cập nhật yêu cầu thanh toán
+                              </p>
+                              <p className="patch-method">PATCH</p>
+                            </div>
+                          </div>
+                        </div>
+                      ) : (
+                        ""
+                      )}
+                      <div
+                        className="role-item"
+                        onClick={() => handleToggleDetailRolePromote()}
+                      >
+                        <div className="left-role-item">
+                          <i class="fa-solid fa-chevron-right"></i>
+                          <span>Quản lí khuyến mãi</span>
+                        </div>
+                        <div className="right-role-item">
+                          <input type="checkbox" className="switch-toggle" />
+                        </div>
+                      </div>
+                      {detailRolePromote === true ? (
+                        <div className="role-item-detail-container">
+                          <div className="role-item-detail role-get">
+                            <input
+                              type="checkbox"
+                              className="switch-toggle"
+                              checked={
+                                permission?.length >0 && permission?.includes("R_PRM")
+                               }
+                              value={permission.R_PRM}
+                              onChange={(e) => handleSetPermission(e, "R_PRM")}
+                            />
+                            <div className="role-detail">
+                              <p className="role-text-top">
+                                Xem thông tin khuyến mãi
+                              </p>
+                              <p className="get-method">GET</p>
+                            </div>
+                          </div>
+                          <div className="role-item-detail role-post">
+                            <input
+                              type="checkbox"
+                              className="switch-toggle"
+                              value={permission.C_PRM}
+                              onChange={(e) => handleSetPermission(e, "C_PRM")}
+                              checked={
+                                permission?.length >0 && permission?.includes("C_PRM")
+                               }
+                            />
+                            <div className="role-detail">
+                              <p className="role-text-top">
+                                 Tạo thông tin khuyến mãi
+                              </p>
+                              <p className="post-method">POST</p>
+                            </div>
+                          </div>
+                          <div className="role-item-detail role-delete">
+                            <input
+                              type="checkbox"
+                              className="switch-toggle"
+                              value={permission.D_PRM}
+                              checked={
+                                permission?.length > 0 && permission?.includes("D_PRM")
+                               }
+                              onChange={(e) => handleSetPermission(e, "D_PRM")}
+                            />
+                            <div className="role-detail">
+                              <p className="role-text-top">
+                                Xóa thông tin khuyến mãi
+                              </p>
+                              <p className="delete-method">DELETE</p>
+                            </div>
+                          </div>
+                          <div className="role-item-detail role-patch">
+                            <input
+                              type="checkbox"
+                              className="switch-toggle"
+                              value={permission.U_PRM}
+                              checked={
+                                permission?.length >0 && permission?.includes("U_PRM")
+                               }
+                              onChange={(e) => handleSetPermission(e, "U_PRM")}
+                            />
+                            <div className="role-detail">
+                              <p className="role-text-top">
+                                Cập nhật thông tin khuyến mãi
                               </p>
                               <p className="patch-method">PATCH</p>
                             </div>

@@ -154,7 +154,7 @@ export default function ManagePromotion() {
                 />
               </div>
               {(permissions?.includes("OWNER") ||
-                permissions.includes("C_CAR")) && (
+                permissions.includes("C_PRM")) && (
                 <button className="btn btn-success" onClick={handleAddPromotion}>Thêm khuyến mãi mới</button>
               )}
             </div>
@@ -223,7 +223,7 @@ export default function ManagePromotion() {
                       <td className="text-center">{promo.endDate}</td>
                       <td className="text-center">
                         {(permissions?.includes("OWNER") ||
-                          permissions.includes("U_CAR")) && (
+                          permissions.includes("U_PRM")) && (
                           <button
                             className="btn btn-success btn-sm rounded-0 text-white mx-2"
                             data-toggle="tooltip"
@@ -235,7 +235,7 @@ export default function ManagePromotion() {
                           </button>
                         )}
                         {(permissions?.includes("OWNER") ||
-                          permissions.includes("D_CAR")) && (
+                          permissions.includes("D_PRM")) && (
                           <button
                             to="/"
                             className="btn btn-danger btn-sm rounded-0 text-white"

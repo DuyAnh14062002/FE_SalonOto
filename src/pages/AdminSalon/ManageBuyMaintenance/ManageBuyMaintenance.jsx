@@ -34,7 +34,7 @@ export default function ManageBuyMaintenance() {
   const [search, setSearch] = useState("");
   const [listPaymentMethod, setListPaymentMethod] = useState([]);
   const [methodPaymentId, setMethodPaymentId] = useState("");
-
+  const [invoiceMaintenance, setInvoiceMaintenance] = useState({})
   const fetchListPaymentMethod = async () => {
     const res = await paymentMethodApi.getAllPaymentMethod();
     if (res?.data?.data) {
@@ -178,11 +178,21 @@ export default function ManageBuyMaintenance() {
       accessory_id: item.accessory_id.toString(),
       quantity: 1,
     }));
-    let res = await invoiceApi.createMaintenanceInvoice(
-      maintenanceItem,
-      listMaintenanceId,
-      listAccessoryId
-    );
+
+    let res = {}
+    if(invoiceMaintenance?.length > 0){
+      res= await invoiceApi.createMaintenanceInvoice(
+        invoiceMaintenance?.[0],
+        listMaintenanceId,
+        listAccessoryId
+      );
+    }else{
+      res= await invoiceApi.createMaintenanceInvoice(
+        maintenanceItem,
+        listMaintenanceId,
+        listAccessoryId
+      );
+    }
 
     if (res?.data?.status === "success") {
       toast.success("Thêm giao dịch bảo dưỡng thành công");
@@ -264,7 +274,21 @@ export default function ManageBuyMaintenance() {
     });
     setAccessory(newAllAccessory);
   };
-
+  const handleLookupInvoiceId = async () =>{
+     try{
+        let res = await invoiceApi.LookupInvoiceMaintenance(maintenanceItem.invoiceId)
+        console.log("res : ", res)
+        if(res?.data?.invoice){
+          setInvoiceMaintenance(res.data.invoice)
+        }else{
+          toast.error("Không tìm thấy giao dịch này !!!")
+        }
+     }catch(e){
+      console.log(e)
+     }
+  }
+  console.log("invoiceMaintenance : ", invoiceMaintenance)
+  console.log("maintenanceItem : ", maintenanceItem)
   return (
     <>
       <div id="content" className="container-fluid">
@@ -402,11 +426,14 @@ export default function ManageBuyMaintenance() {
           </Modal.Header>
           <Modal.Body>
           <Form.Group className="mt-4">
+              <Button onClick={() => handleLookupInvoiceId(maintenanceItem.invoiceId)}>Tìm mã giao dịch</Button>
+          </Form.Group>
+          <Form.Group className="mt-4">
               <Form.Label>Nhập mã giao dịch mua xe (nếu có)</Form.Label>
               <Form.Control
                 required
                 type="text"
-                name="licensePlate"
+                name="invoiceId"
                 onChange={onChange}
               />
             </Form.Group>
@@ -417,6 +444,7 @@ export default function ManageBuyMaintenance() {
                 type="text"
                 name="licensePlate"
                 onChange={onChange}
+                value={invoiceMaintenance?.[0]?.licensePlate || maintenanceItem?.licensePlate}
               />
             </Form.Group>
             <Form.Group className="mt-4">
@@ -426,6 +454,7 @@ export default function ManageBuyMaintenance() {
                 type="text"
                 name="carName"
                 onChange={onChange}
+                value={invoiceMaintenance?.[0]?.carName || maintenanceItem?.carName}
               />
             </Form.Group>
             <Form.Group className="mt-4">
@@ -435,6 +464,7 @@ export default function ManageBuyMaintenance() {
                 type="text"
                 name="fullname"
                 onChange={onChange}
+                value={invoiceMaintenance?.[0]?.fullname || maintenanceItem?.fullname}
               />
             </Form.Group>
             <Form.Group className="mt-4">
@@ -444,6 +474,7 @@ export default function ManageBuyMaintenance() {
                 type="text"
                 name="phone"
                 onChange={onChange}
+                value={invoiceMaintenance?.[0]?.phone || maintenanceItem?.phone}
               />
             </Form.Group>
             <Form.Group className="mt-4">
@@ -453,6 +484,7 @@ export default function ManageBuyMaintenance() {
                 type="text"
                 name="email"
                 onChange={onChange}
+                value={invoiceMaintenance?.[0]?.email || maintenanceItem?.email}
               />
             </Form.Group>
             <Form.Group className="mt-4">

@@ -43,13 +43,13 @@ export default function MyCar() {
             }}
           ></div>
           <div className="my-car-content">
-            <div className="my-car-content-info car-code"><span>Mã giao dịch : </span> {cars?.car?.car_id.slice(0, 6)}</div>
+            <div className="my-car-content-info car-code"><span>Mã giao dịch : </span> {cars?.invoice?.invoice_id}</div>
             <div className="my-car-content-info car-name"><span>Tên xe : </span> {cars?.car?.name}</div>
             <div className="my-car-content-info car-color"><span>Màu sắc : </span>{cars?.car?.outColor}</div>
             <div className="my-car-content-info car-furniture"><span>Màu nội thất: </span>{cars?.car?.inColor}</div>
             <div className="my-car-content-info car-type"><span>Kiểu dáng : </span>{cars?.car?.type}</div>
             <div className="my-car-content-info car-year"><span>Năm sản xuất : </span>{cars?.car?.origin}</div>
-            <div className="my-car-content-info date-buy"><span>Ngày mua : </span>{formatDate(new Date(cars?.car?.date_in))}</div>
+            <div className="my-car-content-info date-buy"><span>Ngày mua : </span>{cars?.car?.date_in ? formatDate(new Date(cars?.car?.date_in)): ""}</div>
             <div className="my-car-content-info date-buy"><span>Salon mua : </span> Salon Duy Anh</div>
           </div>
           <div class="button-container">
