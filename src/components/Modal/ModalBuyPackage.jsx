@@ -85,7 +85,7 @@ export default function ModalBuyPackage(props) {
       } else if (activeVnPay === true) {
         // const res = await paymentApi.paymentVnpay(props.packageId, month);
         const res = await axios.post(
-          "https://salon-gateway.onrender.com/payment/create_payment_url",
+          "https://gateway-3uvg.onrender.com/payment/create_payment_url",
           {
             package_id: props.packageId,
             months: month,

@@ -42,8 +42,8 @@ export default function ManageGuarantee() {
   const fetchDataSalon = async (page, search) => {
     const res = await salonApi.getSalonInfor();
     if (res?.data?.salon) {
-      loadingMaintenance(res.data.salon.salon_id)
-      loadingWarranty(res.data.salon.salon_id, page, search);
+      loadingMaintenance(res.data.salon?.salon_id)
+      loadingWarranty(res.data.salon?.salon_id, page, search);
       setSalon(res.data.salon);
     }
   };
@@ -60,9 +60,6 @@ export default function ManageGuarantee() {
       console.log(e);
     }
   };
-  useEffect(() => {
-    loadingMaintenance()
-  }, [])
   const loadingWarranty = async (salonId, page, search) => {
     let res = await warrantyApi.getAllWarranty({
       salonId,
