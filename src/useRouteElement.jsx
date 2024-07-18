@@ -110,6 +110,11 @@ const router = createBrowserRouter([
     element: <ProtectedRoute />,
     children: [
       {
+        path: path.home,
+        index: true,
+        element: <HomePage />,
+      },
+      {
         path: path.profile,
         element: <AccountProfile />,
       },
@@ -298,11 +303,7 @@ const router = createBrowserRouter([
       },
     ],
   },
-  {
-    path: path.home,
-    index: true,
-    element: <HomePage />,
-  },
+
   {
     path: path.salonOto,
     element: <HomePageSalon />,

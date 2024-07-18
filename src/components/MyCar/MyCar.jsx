@@ -13,7 +13,7 @@ export default function MyCar() {
       let res = await userApi.getAllCarOfuser()
       console.log("res user car : ", res )
       if(res?.data?.data?.length > 0){
-        setCars(res.data.data[0])
+        setCars(res.data.data)
         
       }
     }catch(e){
@@ -23,39 +23,45 @@ export default function MyCar() {
   useEffect(() => {
      loadingCarOfUser()
   }, [])
-  const handleNavigateMaintenanceAppointment = () => {
+  const handleNavigateMaintenanceAppointment = (carId) => {
     navigate(`${path.salonAppointment}`, {
       state: {
         type: "maintenance",
-        carId: cars.car_id
+        carId: carId
       },
     });
   };
+  console.log("cars : ", cars)
   return (
     <div>
       <Header otherPage={true} />
       <div className="my-car-container">
-        <div className="my-car-item">
-          <div
-            className="my-car-image"
-            style={{
-              backgroundImage: `url(${cars?.car?.image?.[0]})`,
-            }}
-          ></div>
-          <div className="my-car-content">
-            <div className="my-car-content-info car-code"><span>Mã giao dịch : </span> {cars?.invoice?.invoice_id}</div>
-            <div className="my-car-content-info car-name"><span>Tên xe : </span> {cars?.car?.name}</div>
-            <div className="my-car-content-info car-color"><span>Màu sắc : </span>{cars?.car?.outColor}</div>
-            <div className="my-car-content-info car-furniture"><span>Màu nội thất: </span>{cars?.car?.inColor}</div>
-            <div className="my-car-content-info car-type"><span>Kiểu dáng : </span>{cars?.car?.type}</div>
-            <div className="my-car-content-info car-year"><span>Năm sản xuất : </span>{cars?.car?.origin}</div>
-            <div className="my-car-content-info date-buy"><span>Ngày mua : </span>{cars?.car?.date_in ? formatDate(new Date(cars?.car?.date_in)): ""}</div>
-            <div className="my-car-content-info date-buy"><span>Salon mua : </span> Salon Duy Anh</div>
+        {cars?.length > 0 && cars?.map((item) =>{
+          console.log("item : ", item)
+          return(
+            <div className="my-car-item">
+            <div
+              className="my-car-image"
+              style={{
+                backgroundImage: `url(${item?.car?.image?.[0]})`,
+              }}
+            ></div>
+            <div className="my-car-content">
+              <div className="my-car-content-info car-code"><span>Mã giao dịch : </span> {item?.invoice?.invoice_id}</div>
+              <div className="my-car-content-info car-name"><span>Tên xe : </span> {item?.car?.name}</div>
+              <div className="my-car-content-info car-color"><span>Màu sắc : </span>{item?.car?.outColor}</div>
+              <div className="my-car-content-info car-furniture"><span>Màu nội thất: </span>{item?.car?.inColor}</div>
+              <div className="my-car-content-info car-type"><span>Kiểu dáng : </span>{item?.car?.type}</div>
+              <div className="my-car-content-info car-year"><span>Năm sản xuất : </span>{item?.car?.origin}</div>
+              <div className="my-car-content-info date-buy"><span>Ngày mua : </span>{item?.car?.date_in ? formatDate(new Date(item?.car?.date_in)): ""}</div>
+              <div className="my-car-content-info date-buy"><span>Salon mua : </span> {item?.invoice?.seller?.name}</div>
+            </div>
+            <div class="button-container">
+              <button onClick={() => handleNavigateMaintenanceAppointment(item.car_id)}>Đặt lịch bảo dưỡng</button>
+            </div>
           </div>
-          <div class="button-container">
-            <button onClick={handleNavigateMaintenanceAppointment}>Đặt lịch bảo dưỡng</button>
-          </div>
-        </div>
+          )
+        })}
       </div>
     </div>
   );

@@ -632,7 +632,8 @@ export default function Header(props) {
       </Modal>
       <div className="nav__logo">
         <img
-          src="https://res.cloudinary.com/dok6ou3xz/image/upload/v1713170637/salon-car/1000_F_481502134_PBF5iVXkoOkoV3SNXLPSIvXPoaGzwTbv_mru1zy.jpg"
+        src="https://s.bonbanh.com/uploads/users/701283/salon/l_1678849916.jpg"
+          //src="https://res.cloudinary.com/dok6ou3xz/image/upload/v1713170637/salon-car/1000_F_481502134_PBF5iVXkoOkoV3SNXLPSIvXPoaGzwTbv_mru1zy.jpg"
           alt="logo"
           style={{ borderRadius: "50%", cursor: "pointer" }}
           //https://s.bonbanh.com/uploads/users/701283/salon/l_1678849916.jpg
@@ -761,7 +762,8 @@ export default function Header(props) {
       </Modal>
       <div className="nav__logo">
         <img
-          src="https://res.cloudinary.com/dok6ou3xz/image/upload/v1713170637/salon-car/1000_F_481502134_PBF5iVXkoOkoV3SNXLPSIvXPoaGzwTbv_mru1zy.jpg"
+         src="https://s.bonbanh.com/uploads/users/701283/salon/l_1678849916.jpg"
+          //src="https://res.cloudinary.com/dok6ou3xz/image/upload/v1713170637/salon-car/1000_F_481502134_PBF5iVXkoOkoV3SNXLPSIvXPoaGzwTbv_mru1zy.jpg"
           alt="logo"
           style={{ borderRadius: "50%" }}
         />

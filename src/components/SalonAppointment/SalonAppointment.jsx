@@ -43,6 +43,7 @@ export default function SalonAppointment() {
   const salon_id = location?.state?.salonId || null;
   const type = location?.state?.type || null;
   const [busyTime, setBusyTime] = useState([]);
+  console.log("carId: ", carId)
   useEffect(() => {
     const fetchBusyTime = async () => {
       let res = await appointmentApi.getBusyTime({ salonId: idSalon, carId });
@@ -115,10 +116,10 @@ export default function SalonAppointment() {
 
       // Thiết lập giờ và phút cho ngày được chọn
       date.setHours(parseInt(hours, 10), parseInt(minutes, 10), 0, 0);
-
       try {
         let res = {};
         if (type === "maintenance") {
+          console.log("date",date)
           res = await appointmentApi.createAppointment({
             carId,
             salonId: salon_id,
