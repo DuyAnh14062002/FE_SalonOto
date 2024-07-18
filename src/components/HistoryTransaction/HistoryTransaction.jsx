@@ -19,8 +19,12 @@ export default function HistoryTransaction() {
   const [startType, setStartType] = useState("all");
   const [month, setMonth] = useState("");
   const [quarter, setQuarter] = useState("");
-  const handleShowProcess = (invoice) => {
-    setSelectedInvoice(invoice);
+  const handleShowProcess = async (invoice) => {
+    let res = await invoiceApi.getInvoiceDetailHistoryBuyCarForCustomer(
+      invoice.invoiceId
+    );
+
+    setSelectedInvoice(res?.data?.invoices?.[0]);
     setShowModalProcess(true);
   };
   const handleCloseModalProcess = () => {
@@ -28,13 +32,11 @@ export default function HistoryTransaction() {
     setSelectedInvoice({});
   };
   const handleShowInfor = async (invoice) => {
-    console.log("invoice : ", invoice);
     if (invoice?.type === "buy car") {
       setShowWarranty(true);
       setWarranty(invoice);
     } else if (invoice?.type === "maintenance") {
       let res = await invoiceApi.getDetailInvoiceMaintenance(invoice.invoiceId);
-      console.log("res maintennace : ", res);
       if (res?.data?.invoice) {
         setInvoiceChoose(res.data.invoice);
       }
@@ -44,7 +46,6 @@ export default function HistoryTransaction() {
       if (res?.data?.invoice) {
         setInvoiceChoose(res.data.invoice);
       }
-      console.log("res access : ", res);
       setShowInfo(true);
     }
   };
@@ -54,7 +55,6 @@ export default function HistoryTransaction() {
   const loadingSatisticCustomer = async (year, quarter, month) => {
     try {
       let res = await invoiceApi.satisticCustomer(year, quarter, month);
-      console.log("res satistic :", res);
       if (res?.data) {
         setSatisticCustomer(res.data);
       }
@@ -70,7 +70,6 @@ export default function HistoryTransaction() {
     setShowWarranty(false);
   };
   const handleFilterTransactions = async (type) => {
-    console.log("oke");
     if (type === "All") {
       let res = await invoiceApi.satisticCustomer();
       if (res?.data) {

@@ -86,7 +86,7 @@ export default function Header(props) {
   useEffect(() => {
     const loading = async () => {
       let res = await purchaseApi.getPurchase();
-      console.log("res purchase: ", res)
+      console.log("res purchase: ", res);
       if (res?.data?.purchasedPackages) {
         setPurchasedPackages(res.data.purchasedPackages);
       }
@@ -146,7 +146,6 @@ export default function Header(props) {
   const fetchAllNotificationUser = async () => {
     try {
       const res = await notificationApi.getAllNotificationUser();
-      console.log("res.data.notifications", res.data.notifications);
       setListNotification(res.data.notifications);
     } catch (error) {
       console.log(error);
@@ -720,7 +719,7 @@ export default function Header(props) {
             <i className="ri-user-3-fill"></i>
           </span>
           <span style={{ fontSize: "15px" }}>
-            {userInfo?.fullname || userInfo?.username}
+            {userInfo?.fullname || userInfo?.username || "Khách hàng"}
           </span>
           <div className="profile-arrow">
             <div className="virtual_class"></div>
@@ -852,7 +851,7 @@ export default function Header(props) {
             <i className="ri-user-3-fill"></i>
           </span>
           <span style={{ fontSize: "15px" }}>
-            {userInfo?.fullname || userInfo?.username}
+            {userInfo?.fullname || userInfo?.username || "Khách hàng"}
           </span>
           <div className="profile-arrow">
             <div className="virtual_class"></div>

@@ -80,10 +80,6 @@ function RejectedRoute() {
 }
 const router = createBrowserRouter([
   {
-    path: path.verifyTokenEMail,
-    element: <VerifyTokenEmail />,
-  },
-  {
     path: "",
     element: <RejectedRoute />,
     children: [
@@ -95,6 +91,18 @@ const router = createBrowserRouter([
         path: path.login,
         element: <Login />,
       },
+      {
+        path: path.callBackGoogle,
+        element: <LoginSocial />,
+      },
+      {
+        path: path.callBackFacebook,
+        element: <LoginSocialFaceBook />,
+      },
+      {
+        path: path.verifyTokenEMail,
+        element: <VerifyTokenEmail />,
+      },
     ],
   },
   {
@@ -102,34 +110,18 @@ const router = createBrowserRouter([
     element: <ProtectedRoute />,
     children: [
       {
-        path: path.home,
-        index: true,
-        element: <HomePage />,
-      },
-      {
         path: path.profile,
         element: <AccountProfile />,
+      },
+      {
+        path: path.listMaintenance,
+        element: <ListMaintenance />,
       },
       {
         path: path.appointment,
         element: <Appointment />,
       },
-      {
-        path: path.listSalon,
-        element: <ListSalonOto />,
-      },
-      {
-        path: path.salonOto,
-        element: <HomePageSalon />,
-      },
-      {
-        path: path.DetailCar,
-        element: <DetailCar />,
-      },
-      {
-        path: path.ListPackage,
-        element: <ListPackage />,
-      },
+
       {
         path: path.getResultPayment,
         element: <ResultPayment />,
@@ -146,151 +138,170 @@ const router = createBrowserRouter([
         path: path.room,
         element: <Room />,
       },
+      {
+        path: path.historyPayment,
+        element: <HistoryPayment />,
+      },
+      {
+        path: path.booking,
+        element: <Booking />,
+      },
+      {
+        path: path.myCar,
+        element: <MyCar />,
+      },
+      {
+        path: path.postSellCar,
+        element: <PostSellCar />,
+      },
+      {
+        path: path.carPostDetail,
+        element: <CarPostDetail />,
+      },
+      {
+        path: path.message,
+        element: <Message />,
+      },
+      {
+        path: path.historyTransaction,
+        element: <HistoryTransaction />,
+      },
+      {
+        path: path.historyTransactionDealer,
+        element: <HistoryTransactionDealer />,
+      },
+      {
+        path: path.salonAppointment,
+        element: <SalonAppointment />,
+      },
+      {
+        path: path.satisticDealer,
+        element: <SatisticDealer />,
+      },
+      {
+        path: path.detailProcess,
+        element: <DetailProcess />,
+      },
+      {
+        path: path.accessory,
+        element: <Accessory />,
+      },
+      //===========Route admin salon=================
+      {
+        path: "/adminSalon",
+        element: <AdminSalonLayout />,
+        children: [
+          {
+            path: "",
+            element: <Statistic />,
+          },
+          {
+            path: path.manageSalon,
+            element: <ManageSalon />,
+          },
+          {
+            path: path.manageCar,
+            element: <ManageCar />,
+          },
+          {
+            path: path.manageUser,
+            element: <ManageUser />,
+          },
+          {
+            path: path.appointmentSalon,
+            element: <AppointmentSalon />,
+          },
+          {
+            path: path.statistic,
+            element: <Statistic />,
+          },
+          {
+            path: path.manageMaintenance,
+            element: <ManageMaintenance />,
+          },
+          {
+            path: path.manageGuarantee,
+            element: <ManageGuarantee />,
+          },
+          {
+            path: path.manageTransaction,
+            element: <ManageTransaction />,
+          },
+          {
+            path: path.manageBuyCar,
+            element: <ManageBuyCar />,
+          },
+          {
+            path: path.manageBuyMaintenance,
+            element: <ManageBuyMaintenance />,
+          },
+          {
+            path: path.manageAccessory,
+            element: <ManageAccessory />,
+          },
+          {
+            path: path.manageProcess,
+            element: <ManageProcess />,
+          },
+          {
+            path: path.manageStage,
+            element: <ManageStage />,
+          },
+          {
+            path: path.processForm,
+            element: <ProcessForm />,
+          },
+          {
+            path: path.manageDealerProcess,
+            element: <ManageProcessDealer />,
+          },
+          {
+            path: path.manageAccessoryTransaction,
+            element: <ManageAccessoryTransaction />,
+          },
+          {
+            path: path.managePromotion,
+            element: <ManagePromotion />,
+          },
+          {
+            path: path.managePayment,
+            element: <ManagePayment />,
+          },
+        ],
+      },
+      //==========Route admin===============
+      {
+        path: "/admin",
+        element: <AdminLayout />,
+        children: [
+          {
+            path: path.homeAdmin,
+            element: <HomeAdmin />,
+          },
+          {
+            path: path.managePackage,
+            element: <ManagePackage />,
+          },
+          {
+            path: path.manageFeature,
+            element: <ManageFeature />,
+          },
+          {
+            path: path.manageSalonAdmin,
+            element: <ManageSalonAdmin />,
+          },
+          {
+            path: path.manageUserAdmin,
+            element: <ManageUserAdmin />,
+          },
+        ],
+      },
     ],
   },
-  //==========Route admin===============
   {
-    path: "/admin",
-    element: <AdminLayout />,
-    children: [
-      {
-        path: path.homeAdmin,
-        element: <HomeAdmin />,
-      },
-      {
-        path: path.managePackage,
-        element: <ManagePackage />,
-      },
-      {
-        path: path.manageFeature,
-        element: <ManageFeature />,
-      },
-      {
-        path: path.manageSalonAdmin,
-        element: <ManageSalonAdmin />,
-      },
-      {
-        path: path.manageUserAdmin,
-        element: <ManageUserAdmin />,
-      },
-    ],
-  },
-  //===========Route admin salon=================
-  {
-    path: "/adminSalon",
-    element: <AdminSalonLayout />,
-    children: [
-      {
-        path: "",
-        element: <Statistic />,
-      },
-      {
-        path: path.manageSalon,
-        element: <ManageSalon />,
-      },
-      {
-        path: path.manageCar,
-        element: <ManageCar />,
-      },
-      {
-        path: path.manageUser,
-        element: <ManageUser />,
-      },
-      {
-        path: path.appointmentSalon,
-        element: <AppointmentSalon />,
-      },
-      {
-        path: path.statistic,
-        element: <Statistic />,
-      },
-      {
-        path: path.manageMaintenance,
-        element: <ManageMaintenance />,
-      },
-      {
-        path: path.manageGuarantee,
-        element: <ManageGuarantee />,
-      },
-      {
-        path: path.manageTransaction,
-        element: <ManageTransaction />,
-      },
-      {
-        path: path.manageBuyCar,
-        element: <ManageBuyCar />,
-      },
-      {
-        path: path.manageBuyMaintenance,
-        element: <ManageBuyMaintenance />,
-      },
-      {
-        path: path.manageAccessory,
-        element: <ManageAccessory />,
-      },
-      {
-        path: path.manageProcess,
-        element: <ManageProcess />,
-      },
-      {
-        path: path.manageStage,
-        element: <ManageStage />,
-      },
-      {
-        path: path.processForm,
-        element: <ProcessForm />,
-      },
-      {
-        path: path.manageDealerProcess,
-        element: <ManageProcessDealer />,
-      },
-      {
-        path: path.manageAccessoryTransaction,
-        element: <ManageAccessoryTransaction />,
-      },
-      {
-        path: path.managePromotion,
-        element: <ManagePromotion />,
-      },
-      {
-        path: path.managePayment,
-        element: <ManagePayment />,
-      },
-    ],
-  },
-  {
-    path: path.historyPayment,
-    element: <HistoryPayment />,
-  },
-  {
-    path: path.booking,
-    element: <Booking />,
-  },
-  {
-    path: path.contact,
-    element: <Contact />,
-  },
-  {
-    path: path.accessory,
-    element: <Accessory />,
-  },
-  {
-    path: path.loginAdmin,
-    element: <LoginAdmin />,
-  },
-
-  {
-    path: path.callBackGoogle,
-    element: <LoginSocial />,
-  },
-  {
-    path: path.callBackFacebook,
-    element: <LoginSocialFaceBook />,
-  },
-
-  {
-    path: path.listSalon,
-    element: <ListSalonOto />,
+    path: path.home,
+    index: true,
+    element: <HomePage />,
   },
   {
     path: path.salonOto,
@@ -301,16 +312,17 @@ const router = createBrowserRouter([
     element: <DetailCar />,
   },
   {
+    path: path.contact,
+    element: <Contact />,
+  },
+
+  {
+    path: path.listSalon,
+    element: <ListSalonOto />,
+  },
+  {
     path: path.ListPackage,
     element: <ListPackage />,
-  },
-  {
-    path: path.getResultPayment,
-    element: <ResultPayment />,
-  },
-  {
-    path: path.message,
-    element: <Message />,
   },
   {
     path: path.news,
@@ -319,34 +331,6 @@ const router = createBrowserRouter([
   {
     path: path.detailNew,
     element: <DetailNews />,
-  },
-  {
-    path: path.listMaintenance,
-    element: <ListMaintenance />,
-  },
-  {
-    path: path.historyTransaction,
-    element: <HistoryTransaction />,
-  },
-  {
-    path: path.postSellCar,
-    element: <PostSellCar />,
-  },
-  {
-    path: path.carPostDetail,
-    element: <CarPostDetail />,
-  },
-  {
-    path: path.detailProcess,
-    element: <DetailProcess />,
-  },
-  {
-    path: path.historyTransactionDealer,
-    element: <HistoryTransactionDealer />,
-  },
-  {
-    path: path.salonAppointment,
-    element: <SalonAppointment />,
   },
   {
     path: path.promotionDetail,
@@ -360,14 +344,6 @@ const router = createBrowserRouter([
     path: "*",
     element: <NotFound />,
   },
-  {
-    path: path.satisticDealer,
-    element: <SatisticDealer/>
-  },
-  {
-    path: path.myCar,
-    element: <MyCar/>
-  }
 ]);
 
 export default router;

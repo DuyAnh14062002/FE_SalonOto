@@ -91,6 +91,9 @@ const invoiceApi = {
       `/invoice/get-invoice?year=${year}&quarter=${quarter}&month=${month}`
     );
   },
+  getInvoiceDetailHistoryBuyCarForCustomer(id) {
+    return http.post(`/invoice/get-invoice-buy-car?id=${id}`);
+  },
 };
 
 export default invoiceApi;
