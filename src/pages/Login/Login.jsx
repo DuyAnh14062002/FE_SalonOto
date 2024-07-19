@@ -48,7 +48,7 @@ export default function Login() {
   const handleLoginGoogle = async () => {
     try {
       window.open(
-        "https://server-graduation-thesis-1.onrender.com/auth/google",
+        "https://koxe.onrender.com/auth/google",
         "_self"
       );
     } catch (error) {
@@ -58,7 +58,7 @@ export default function Login() {
   const handleLoginFacebook = async () => {
     try {
       window.open(
-        "https://server-graduation-thesis-1.onrender.com/auth/facebook",
+        "https://koxe.onrender.com/auth/facebook",
         "_self"
       );
     } catch (error) {

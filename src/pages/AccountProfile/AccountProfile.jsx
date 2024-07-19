@@ -105,7 +105,7 @@ const AccountProfile = (props) => {
         toast.error("Bạn đã liên kết tài khoản google rồi");
       } else {
         window.open(
-          "https://server-graduation-thesis-1.onrender.com/auth/google",
+          "https://koxe.onrender.com/auth/google",
           "_self"
         );
       }
@@ -119,7 +119,7 @@ const AccountProfile = (props) => {
         toast.error("Bạn đã liên kết tài khoản facebook rồi");
       } else {
         window.open(
-          "https://server-graduation-thesis-1.onrender.com/auth/facebook",
+          "https://koxe.onrender.com/auth/facebook",
           "_self"
         );
       }
