@@ -8,7 +8,7 @@ import salonApi from "../../../apis/salon.api";
 import appointmentApi from "../../../apis/appointment.api";
 import { toast } from "react-toastify";
 import carApi from "../../../apis/car.api";
-import { set } from "lodash";
+
 export default function Booking() {
   const arrayTime = [
     "8:00",
@@ -105,7 +105,7 @@ export default function Booking() {
   };
   const handleBooking = async (e) => {
     e.preventDefault();
-    let date = value;
+
     if (!selectedTime) {
       setErrorTime(true);
       return;
@@ -114,21 +114,30 @@ export default function Booking() {
       const [hours, minutes] = selectedTime.split(":");
 
       // Thiết lập giờ và phút cho ngày được chọn
-      date.setHours(parseInt(hours, 10), parseInt(minutes, 10), 0, 0);
 
       try {
         let res;
         if (car) {
           res = await appointmentApi.createAppointment({
             salonId: idSalon,
-            date,
+            date: value.setHours(
+              parseInt(hours, 10),
+              parseInt(minutes, 10),
+              0,
+              0
+            ),
             description: "Xem xe",
             carId,
           });
         } else {
           res = await appointmentApi.createAppointment({
             salonId: idSalon,
-            date,
+            date: value.setHours(
+              parseInt(hours, 10),
+              parseInt(minutes, 10),
+              0,
+              0
+            ),
             description: note,
           });
         }

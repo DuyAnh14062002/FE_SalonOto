@@ -43,7 +43,7 @@ export default function SalonAppointment() {
   const salon_id = location?.state?.salonId || null;
   const type = location?.state?.type || null;
   const [busyTime, setBusyTime] = useState([]);
-  console.log("carId: ", carId)
+  console.log("carId: ", carId);
   useEffect(() => {
     const fetchBusyTime = async () => {
       let res = await appointmentApi.getBusyTime({ salonId: idSalon, carId });
@@ -106,7 +106,7 @@ export default function SalonAppointment() {
   };
   const handleBooking = async (e) => {
     e.preventDefault();
-    let date = value;
+
     if (!selectedTime) {
       setErrorTime(true);
       return;
@@ -114,26 +114,33 @@ export default function SalonAppointment() {
       setErrorTime(false);
       const [hours, minutes] = selectedTime.split(":");
 
-      // Thiết lập giờ và phút cho ngày được chọn
-      date.setHours(parseInt(hours, 10), parseInt(minutes, 10), 0, 0);
       try {
         let res = {};
         if (type === "maintenance") {
-          console.log("date",date)
           res = await appointmentApi.createAppointment({
             carId,
             salonId: salon_id,
-            date,
+            date: value.setHours(
+              parseInt(hours, 10),
+              parseInt(minutes, 10),
+              0,
+              0
+            ),
             description: "Bảo dưỡng xe",
           });
         } else {
-          res = await appointmentApi.createAppointmentWithUser(
+          res = await appointmentApi.createAppointmentWithUser({
             carId,
-            salon_id,
+            salonId: salon_id,
             phone,
-            date,
-            note
-          );
+            date: value.setHours(
+              parseInt(hours, 10),
+              parseInt(minutes, 10),
+              0,
+              0
+            ),
+            description: note,
+          });
         }
         console.log("res : ", res);
         if (res?.data?.status === "success") {
