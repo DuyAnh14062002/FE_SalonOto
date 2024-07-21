@@ -75,7 +75,10 @@ function RejectedRoute() {
   const isAuthenticated = useSelector(
     (state) => state.userSlice.isAuthenticated
   );
-
+  const username = useSelector((state) => state.userSlice.userInfo?.username);
+  if (username === "admin-team-salon-oto" && isAuthenticated) {
+    return <Navigate to="/admin" />;
+  }
   return !isAuthenticated ? <Outlet /> : <Navigate to="/" />;
 }
 const router = createBrowserRouter([
@@ -303,7 +306,6 @@ const router = createBrowserRouter([
       },
     ],
   },
-
   {
     path: path.salonOto,
     element: <HomePageSalon />,

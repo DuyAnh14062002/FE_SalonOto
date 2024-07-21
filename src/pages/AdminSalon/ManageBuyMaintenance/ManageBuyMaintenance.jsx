@@ -12,6 +12,7 @@ import { debounce } from "lodash";
 import { PaginationControl } from "react-bootstrap-pagination-control";
 import paymentMethodApi from "../../../apis/paymentMethod.api";
 import paymentRequestApi from "../../../apis/paymentRequest.api";
+import AccessoryApi from "../../../apis/accessory.api";
 const LIMIT = 4;
 
 export default function ManageBuyMaintenance() {
@@ -34,7 +35,9 @@ export default function ManageBuyMaintenance() {
   const [search, setSearch] = useState("");
   const [listPaymentMethod, setListPaymentMethod] = useState([]);
   const [methodPaymentId, setMethodPaymentId] = useState("");
-  const [invoiceMaintenance, setInvoiceMaintenance] = useState({})
+  const [invoiceMaintenance, setInvoiceMaintenance] = useState({});
+  const [searchAccessory, setSearchAccessory] = useState("");
+
   const fetchListPaymentMethod = async () => {
     const res = await paymentMethodApi.getAllPaymentMethod();
     if (res?.data?.data) {
@@ -70,8 +73,8 @@ export default function ManageBuyMaintenance() {
       setMaintenances(newAllMaintenances);
     }
   };
-  const loadingAccessory = async (salon_id) => {
-    let res = await invoiceApi.getAccessory(salon_id);
+  const loadingAccessory = async (salon_id, search) => {
+    let res = await AccessoryApi.getAccessory(salon_id, 1, 10000, search);
     if (res?.data?.accessory) {
       const allAccessory = res.data.accessory;
       const newAllAccessory = allAccessory.map((item) => {
@@ -85,7 +88,6 @@ export default function ManageBuyMaintenance() {
     const res = await salonApi.getSalonInfor();
     if (res?.data?.salon) {
       loadingMaintenance(res.data.salon.salon_id);
-      loadingAccessory(res.data.salon.salon_id);
       setSalon(res.data.salon);
     }
   };
@@ -96,6 +98,11 @@ export default function ManageBuyMaintenance() {
       setTotalPage(res.data.total_page);
     }
   };
+  useEffect(() => {
+    if (salon?.salon_id) {
+      loadingAccessory(salon.salon_id, searchAccessory);
+    }
+  }, [salon, searchAccessory]);
   useEffect(() => {
     loadingUser();
     fetchDataSalon();
@@ -176,18 +183,18 @@ export default function ManageBuyMaintenance() {
     const listAccessoryChecked = accessory.filter((item) => item.checked);
     const listAccessoryId = listAccessoryChecked.map((item) => ({
       accessory_id: item.accessory_id.toString(),
-      quantity: 1,
+      quantity: item.quantity,
     }));
 
-    let res = {}
-    if(invoiceMaintenance?.length > 0){
-      res= await invoiceApi.createMaintenanceInvoice(
+    let res = {};
+    if (invoiceMaintenance?.length > 0) {
+      res = await invoiceApi.createMaintenanceInvoice(
         invoiceMaintenance?.[0],
         listMaintenanceId,
         listAccessoryId
       );
-    }else{
-      res= await invoiceApi.createMaintenanceInvoice(
+    } else {
+      res = await invoiceApi.createMaintenanceInvoice(
         maintenanceItem,
         listMaintenanceId,
         listAccessoryId
@@ -220,9 +227,6 @@ export default function ManageBuyMaintenance() {
       return item;
     });
     setMaintenances(newAllMaintenances);
-  };
-  const handleChangeSearch = (e) => {
-    setSearchInput(e.target.value);
   };
 
   const handleDelete = async () => {
@@ -274,21 +278,37 @@ export default function ManageBuyMaintenance() {
     });
     setAccessory(newAllAccessory);
   };
-  const handleLookupInvoiceId = async () =>{
-     try{
-        let res = await invoiceApi.LookupInvoiceMaintenance(maintenanceItem.invoiceId)
-        console.log("res : ", res)
-        if(res?.data?.invoice){
-          setInvoiceMaintenance(res.data.invoice)
-        }else{
-          toast.error("Không tìm thấy giao dịch này !!!")
-        }
-     }catch(e){
-      console.log(e)
-     }
-  }
-  console.log("invoiceMaintenance : ", invoiceMaintenance)
-  console.log("maintenanceItem : ", maintenanceItem)
+  const handleLookupInvoiceId = async () => {
+    try {
+      let res = await invoiceApi.LookupInvoiceMaintenance(
+        maintenanceItem.invoiceId
+      );
+      console.log("res : ", res);
+      if (res?.data?.invoice) {
+        setInvoiceMaintenance(res.data.invoice);
+      } else {
+        toast.error("Không tìm thấy giao dịch này !!!");
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  const handleSearchAccessory = (e) => {
+    setSearchAccessory(e.target.value);
+    const searchValue = e.target.value;
+    debounce(() => {
+      loadingAccessory(salon.salon_id, 1, searchValue);
+    }, 1000);
+  };
+  const onChangeQuantity = (data, e) => {
+    const newAllAccessory = accessory.map((item) => {
+      if (item.accessory_id === data.accessory_id) {
+        return { ...item, quantity: e.target.value };
+      }
+      return item;
+    });
+    setAccessory(newAllAccessory);
+  };
   return (
     <>
       <div id="content" className="container-fluid">
@@ -425,10 +445,14 @@ export default function ManageBuyMaintenance() {
             <Modal.Title> Thêm mới giao dịch bảo dưỡng </Modal.Title>
           </Modal.Header>
           <Modal.Body>
-          <Form.Group className="mt-4">
-              <Button onClick={() => handleLookupInvoiceId(maintenanceItem.invoiceId)}>Tìm mã giao dịch</Button>
-          </Form.Group>
-          <Form.Group className="mt-4">
+            <Form.Group className="mt-4">
+              <Button
+                onClick={() => handleLookupInvoiceId(maintenanceItem.invoiceId)}
+              >
+                Tìm mã giao dịch
+              </Button>
+            </Form.Group>
+            <Form.Group className="mt-4">
               <Form.Label>Nhập mã giao dịch mua xe (nếu có)</Form.Label>
               <Form.Control
                 required
@@ -444,7 +468,10 @@ export default function ManageBuyMaintenance() {
                 type="text"
                 name="licensePlate"
                 onChange={onChange}
-                value={invoiceMaintenance?.[0]?.licensePlate || maintenanceItem?.licensePlate}
+                value={
+                  invoiceMaintenance?.[0]?.licensePlate ||
+                  maintenanceItem?.licensePlate
+                }
               />
             </Form.Group>
             <Form.Group className="mt-4">
@@ -454,7 +481,9 @@ export default function ManageBuyMaintenance() {
                 type="text"
                 name="carName"
                 onChange={onChange}
-                value={invoiceMaintenance?.[0]?.carName || maintenanceItem?.carName}
+                value={
+                  invoiceMaintenance?.[0]?.carName || maintenanceItem?.carName
+                }
               />
             </Form.Group>
             <Form.Group className="mt-4">
@@ -464,7 +493,9 @@ export default function ManageBuyMaintenance() {
                 type="text"
                 name="fullname"
                 onChange={onChange}
-                value={invoiceMaintenance?.[0]?.fullname || maintenanceItem?.fullname}
+                value={
+                  invoiceMaintenance?.[0]?.fullname || maintenanceItem?.fullname
+                }
               />
             </Form.Group>
             <Form.Group className="mt-4">
@@ -519,25 +550,57 @@ export default function ManageBuyMaintenance() {
                   ))}
               </div>
             </Form.Group>
-            <Form.Group className="mt-3">
+            <Form.Group className="mt-3 wrap-accessory">
               <Form.Label>Chọn các phụ tùng sửa chữa</Form.Label>
-              <div
-                style={{
-                  maxHeight: "150px",
-                  overflowY: "scroll",
-                  marginTop: "5px",
-                }}
-              >
+              <div className="d-flex align-items-center">
+                <span style={{ width: "80px" }}>Tìm kiếm:</span>
+                <input
+                  type="text"
+                  name="search"
+                  id="search"
+                  className="form-control"
+                  style={{ width: "60%" }}
+                  placeholder="Nhập tên phụ tùng"
+                  value={searchAccessory}
+                  onChange={handleSearchAccessory}
+                />
+              </div>
+              <div className="row list-accessory">
                 {accessory &&
                   accessory.map((item, index) => (
-                    <Form.Check
-                      key={index}
-                      type="checkbox"
-                      checked={item.checked}
-                      onChange={() => handleChangeAccessory(item)}
-                      value={item.accessory_id}
-                      label={item?.name}
-                    />
+                    <div className="accessory-box">
+                      <div
+                        className="col-md-4"
+                        style={{ display: "flex", alignItems: "center" }}
+                      >
+                        <Form.Check
+                          key={index}
+                          type="checkbox"
+                          checked={item.checked}
+                          onChange={() => handleChangeAccessory(item)}
+                          value={item.accessory_id}
+                          label={item?.name}
+                        />
+                        <div
+                          className="image-accessory-transaction"
+                          style={{
+                            backgroundImage: `url(${item.icon})`,
+                            marginLeft: "10px",
+                          }}
+                        ></div>
+                      </div>
+                      <div className="col-md-8">
+                        <div className="quantity-accessory">
+                          <label>Số lượng : </label>
+                          <input
+                            type="number"
+                            min="0"
+                            name={item.name}
+                            onChange={(e) => onChangeQuantity(item, e)}
+                          />
+                        </div>
+                      </div>
+                    </div>
                   ))}
               </div>
             </Form.Group>

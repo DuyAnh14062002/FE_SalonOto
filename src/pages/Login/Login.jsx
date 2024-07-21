@@ -26,9 +26,12 @@ export default function Login() {
         data.username === "admin-team-salon-oto" &&
         data.password === "admin123abcDEF@@"
       ) {
-        await authApi.login(data);
-
-        navigate("/admin");
+        const res = await authApi.login(data);
+        if (res.data.status === "success") {
+          dispatch(loginUser(res.data.user));
+          setProfile(res.data.user);
+          navigate("/admin");
+        }
       } else {
         const res = await authApi.login(data);
         if (res.data.status === "success") {
