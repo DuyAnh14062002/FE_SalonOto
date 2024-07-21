@@ -140,14 +140,20 @@ export default function ManagaAccessoryTransaction() {
   const handleShowUpdate = (invoice) => {
     setShowUpdate(true);
     setAccessory((prev) =>
-      prev.map((item) => {
-        if (invoice.accessories.find((f) => f?.name === item?.name)) {
-          return { ...item, checked: true, quantity: item.quantity };
+      prev?.map((accessory) => {
+        if (invoice.accessories.find((f) => f.name === accessory.name)) {
+          return {
+            ...accessory,
+            checked: true,
+            quantity: invoice.accessories.find((f) => f.name === accessory.name)
+              .quantity,
+          };
         }
-        return { ...item, checked: false, quantity: item.quantity };
+        return { ...accessory, checked: false, quantity: 0 };
       })
     );
     setData(invoice);
+    setInvoiceChoose(invoice);
   };
   const handleCloseUpdate = () => {
     setShowUpdate(false);
@@ -205,6 +211,7 @@ export default function ManagaAccessoryTransaction() {
       console.log(e);
     }
   };
+  console.log("invoiceChoose : ", invoiceChoose);
   const handleUpdateInvoiceBuyAccessory = async (e) => {
     e.preventDefault();
     const listAccessoryChecked = accessory.filter((item) => item.checked);

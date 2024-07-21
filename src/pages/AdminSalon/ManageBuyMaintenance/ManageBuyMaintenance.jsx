@@ -136,6 +136,7 @@ export default function ManageBuyMaintenance() {
     setShowDelete(false);
   };
   const handleShowInfor = (invoice) => {
+    console.log("invoice choose: ", invoice);
     setInvoiceChoose(invoice);
     setShowInfo(true);
   };
@@ -144,11 +145,12 @@ export default function ManageBuyMaintenance() {
   };
   const handleShowUpdate = (invoice) => {
     console.log("invoice : ", invoice);
+    setInvoiceChoose(invoice);
     setMaintenanceItem(invoice);
     setMaintenances((prev) => {
       return prev?.map((maintenance) => {
         if (
-          invoice.maintenanceServices.find((f) => f.name === maintenance.name)
+          invoice.maintenanceServices.find((f) => f?.name === maintenance?.name)
         ) {
           return { ...maintenance, checked: true };
         }
@@ -156,13 +158,19 @@ export default function ManageBuyMaintenance() {
       });
     });
     setAccessory((prev) =>
-      prev.map((item) => {
-        if (invoice.accessories.find((f) => f?.name === item?.name)) {
-          return { ...item, checked: true };
+      prev?.map((accessory) => {
+        if (invoice.accessories.find((f) => f?.name === accessory?.name)) {
+          return {
+            ...accessory,
+            checked: true,
+            quantity: invoice.accessories.find((f) => f.name === accessory.name)
+              .quantity,
+          };
         }
-        return { ...item, checked: false };
+        return { ...accessory, checked: false, quantity: 0 };
       })
     );
+
     setShowUpdate(true);
   };
   const handleCloseUpdate = () => {
@@ -174,6 +182,7 @@ export default function ManageBuyMaintenance() {
 
   const handleAddMaintenance = async (e) => {
     e.preventDefault();
+
     const listMaintenanceChecked = maintenances.filter((item) => item.checked);
     const listMaintenanceId = listMaintenanceChecked.map((item) => ({
       maintenance_id: item.maintenance_id.toString(),
@@ -255,7 +264,7 @@ export default function ManageBuyMaintenance() {
     const listAccessoryChecked = accessory.filter((item) => item.checked);
     const listAccessoryId = listAccessoryChecked.map((item) => ({
       accessory_id: item.accessory_id.toString(),
-      quantity: 1,
+      quantity: item.quantity,
     }));
     let res = await invoiceApi.updateInvoiceMaintenance(
       maintenanceItem,
@@ -311,6 +320,7 @@ export default function ManageBuyMaintenance() {
     });
     setAccessory(newAllAccessory);
   };
+  console.log("accessory : ", accessory);
   return (
     <>
       <div id="content" className="container-fluid">
@@ -635,17 +645,19 @@ export default function ManageBuyMaintenance() {
                 <thead>
                   <tr>
                     <th scope="col">Tên dịch vụ bảo hành</th>
-                    <th scope="col">Giá (VND)</th>
+                    <th scope="col" className="text-center">
+                      Giá (VND)
+                    </th>
                     <th scope="col">Ngày bảo hành</th>
                   </tr>
                 </thead>
                 <tbody>
                   {invoiceChoose?.maintenanceServices?.length > 0 &&
-                    invoiceChoose.maintenanceServices.map((item, index) => {
+                    invoiceChoose?.maintenanceServices?.map((item, index) => {
                       return (
                         <tr key={index}>
-                          <td>{item.name}</td>
-                          <td>{item.cost}</td>
+                          <td>{item?.name}</td>
+                          <td className="text-center">{item?.cost}</td>
                           <td>{invoiceChoose?.invoiceDate}</td>
                         </tr>
                       );
@@ -657,17 +669,23 @@ export default function ManageBuyMaintenance() {
                 <thead>
                   <tr>
                     <th scope="col">Tên dịch vụ bảo hành</th>
-                    <th scope="col">Giá (VND)</th>
+                    <th scope="col" className="text-center">
+                      Số lượng
+                    </th>
+                    <th scope="col" className="text-center">
+                      Giá (VND)
+                    </th>
                     <th scope="col">Ngày bảo hành</th>
                   </tr>
                 </thead>
                 <tbody>
                   {invoiceChoose?.accessories?.length > 0 &&
-                    invoiceChoose.accessories.map((item, index) => {
+                    invoiceChoose?.accessories?.map((item, index) => {
                       return (
                         <tr key={index}>
-                          <td>{item.name}</td>
-                          <td>{item.price}</td>
+                          <td>{item?.name}</td>
+                          <td className="text-center">{item?.quantity}</td>
+                          <td className="text-center">{item?.price}</td>
                           <td>{invoiceChoose?.invoiceDate}</td>
                         </tr>
                       );
@@ -779,25 +797,38 @@ export default function ManageBuyMaintenance() {
                   ))}
               </div>
             </Form.Group>
-            <Form.Group className="mt-3">
+            <Form.Group className="mt-3 wrap-accessory">
               <Form.Label>Chọn các phụ tùng sửa chữa</Form.Label>
-              <div
-                style={{
-                  maxHeight: "150px",
-                  overflowY: "scroll",
-                  marginTop: "5px",
-                }}
-              >
+              <div className="row">
                 {accessory &&
                   accessory.map((item, index) => (
-                    <Form.Check
-                      key={index}
-                      type="checkbox"
-                      checked={item.checked}
-                      onChange={() => handleChangeAccessory(item)}
-                      value={item.accessory_id}
-                      label={item?.name}
-                    />
+                    <div className="accessory-box">
+                      <div className="col-md-4">
+                        <Form.Check
+                          key={index}
+                          type="checkbox"
+                          checked={item.checked}
+                          onChange={() => handleChangeAccessory(item)}
+                          value={item.accessory_id}
+                          label={item?.name}
+                        />
+                        <div
+                          className="icon-accesory"
+                          style={{ backgroundImage: `url(${item.icon})` }}
+                        ></div>
+                      </div>
+                      <div className="col-md-8">
+                        <div className="quantity-accessory">
+                          <label>Số lượng : </label>
+                          <input
+                            type="number"
+                            name={item.name}
+                            onChange={(e) => onChangeQuantity(item, e)}
+                            value={item.quantity}
+                          />
+                        </div>
+                      </div>
+                    </div>
                   ))}
               </div>
             </Form.Group>

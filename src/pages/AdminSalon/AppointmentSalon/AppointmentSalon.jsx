@@ -152,10 +152,18 @@ export default function AppointmentSalon() {
                   <th scope="col">Tên xe</th>
                   <th scope="col">Tên khách hàng</th>
                   <th scope="col">Số điện thoại</th>
-                  <th scope="col">Ngày hẹn</th>
-                  <th scope="col">Giờ hẹn</th>
-                  <th scope="col">Mục đích hẹn</th>
-                  <th scope="col">Phản hồi của salon</th>
+                  <th scope="col" className="text-center">
+                    Ngày hẹn
+                  </th>
+                  <th scope="col" className="text-center">
+                    Giờ hẹn
+                  </th>
+                  <th scope="col" style={{ width: "18%" }}>
+                    Mục đích hẹn
+                  </th>
+                  <th scope="col" className="text-center">
+                    Phản hồi của salon
+                  </th>
                   <th scope="col" className="text-center">
                     Tác vụ
                   </th>
@@ -194,10 +202,10 @@ export default function AppointmentSalon() {
                         </td>
                         <td>{appointment.user.fullname}</td>
                         <td>{appointment.user.phone}</td>
-                        <td>{formatDate(date)}</td>
-                        <td>{formatTime(date)}</td>
+                        <td className="text-center">{formatDate(date)}</td>
+                        <td className="text-center">{formatTime(date)}</td>
                         <td>{appointment.description}</td>
-                        <td>{status}</td>
+                        <td className="text-center">{status}</td>
                         <td className="text-center">
                           <button
                             className="btn btn-danger btn-sm rounded-0 text-white mx-2"
