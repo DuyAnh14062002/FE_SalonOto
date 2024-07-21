@@ -1,7 +1,27 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { path } from "../../constants/path";
 import "./AdminHeader.scss";
+import authApi from "../../apis/auth.api";
+import { useDispatch, useSelector } from "react-redux";
+import { useAuthContext } from "../../context/AuthContext";
+import { logoutUser } from "../../redux/slices/UserSlice";
+
 export default function AdminHeader() {
+  const dispatch = useDispatch();
+  let navigate = useNavigate();
+  const userInfo = useSelector((state) => state.userSlice.userInfo);
+  const { setProfile } = useAuthContext();
+  let handleLogout = async () => {
+    try {
+      await authApi.logout({ user_id: userInfo.user_id });
+      setProfile(null);
+    } catch (error) {
+      console.log("error:", error);
+    }
+
+    dispatch(logoutUser());
+    navigate("/login");
+  };
   return (
     <nav className="topnav-admin shadow navbar-light bg-white d-flex">
       <div className="navbar-brand">
@@ -52,9 +72,9 @@ export default function AdminHeader() {
               {/* <Link className="dropdown-item" to="/">
                 Tài khoản
               </Link> */}
-              <Link className="dropdown-item" to={path.login}>
+              <button className="dropdown-item" onClick={handleLogout}>
                 Thoát
-              </Link>
+              </button>
             </div>
           </div>
         </div>

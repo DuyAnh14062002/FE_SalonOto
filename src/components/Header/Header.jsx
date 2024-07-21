@@ -19,7 +19,6 @@ import userApi from "../../apis/user.api";
 import salonApi from "../../apis/salon.api";
 import appointmentApi from "../../apis/appointment.api";
 import dealerApi from "../../apis/dealer.api";
-import { update } from "lodash";
 const intervalDuration = 3000;
 let timerId;
 let timeOut;
@@ -632,7 +631,7 @@ export default function Header(props) {
       </Modal>
       <div className="nav__logo">
         <img
-        src="https://s.bonbanh.com/uploads/users/701283/salon/l_1678849916.jpg"
+          src="https://s.bonbanh.com/uploads/users/701283/salon/l_1678849916.jpg"
           //src="https://res.cloudinary.com/dok6ou3xz/image/upload/v1713170637/salon-car/1000_F_481502134_PBF5iVXkoOkoV3SNXLPSIvXPoaGzwTbv_mru1zy.jpg"
           alt="logo"
           style={{ borderRadius: "50%", cursor: "pointer" }}
@@ -762,7 +761,7 @@ export default function Header(props) {
       </Modal>
       <div className="nav__logo">
         <img
-         src="https://s.bonbanh.com/uploads/users/701283/salon/l_1678849916.jpg"
+          src="https://s.bonbanh.com/uploads/users/701283/salon/l_1678849916.jpg"
           //src="https://res.cloudinary.com/dok6ou3xz/image/upload/v1713170637/salon-car/1000_F_481502134_PBF5iVXkoOkoV3SNXLPSIvXPoaGzwTbv_mru1zy.jpg"
           alt="logo"
           style={{ borderRadius: "50%" }}

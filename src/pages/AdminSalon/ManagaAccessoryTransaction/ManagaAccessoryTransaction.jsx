@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import userApi from "../../../apis/user.api";
-import invoiceApi from "../../../apis/invoice.api";
 import salonApi from "../../../apis/salon.api";
 import { Form, Spinner } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
@@ -12,7 +11,7 @@ import { formatCurrency } from "../../../utils/common";
 import "./ManagaAccessoryTransaction.scss";
 import paymentMethodApi from "../../../apis/paymentMethod.api";
 import paymentRequestApi from "../../../apis/paymentRequest.api";
-import { debounce, set } from "lodash";
+import { debounce } from "lodash";
 const LIMIT = 4;
 
 export default function ManagaAccessoryTransaction() {
@@ -141,14 +140,20 @@ export default function ManagaAccessoryTransaction() {
   const handleShowUpdate = (invoice) => {
     setShowUpdate(true);
     setAccessory((prev) =>
-      prev.map((item) => {
-        if (invoice.accessories.find((f) => f?.name === item?.name)) {
-          return { ...item, checked: true, quantity: item.quantity };
+      prev?.map((accessory) => {
+        if (invoice.accessories.find((f) => f.name === accessory.name)) {
+          return {
+            ...accessory,
+            checked: true,
+            quantity: invoice.accessories.find((f) => f.name === accessory.name)
+              .quantity,
+          };
         }
-        return { ...item, checked: false, quantity: item.quantity };
+        return { ...accessory, checked: false, quantity: 0 };
       })
     );
     setData(invoice);
+    setInvoiceChoose(invoice);
   };
   const handleCloseUpdate = () => {
     setShowUpdate(false);
@@ -165,7 +170,7 @@ export default function ManagaAccessoryTransaction() {
     }
   };
 
-  const fetchDataSalon = async (search) => {
+  const fetchDataSalon = async () => {
     const res = await salonApi.getSalonInfor();
     if (res?.data?.salon) {
       setSalon(res.data.salon);
@@ -206,6 +211,7 @@ export default function ManagaAccessoryTransaction() {
       console.log(e);
     }
   };
+  console.log("invoiceChoose : ", invoiceChoose);
   const handleUpdateInvoiceBuyAccessory = async (e) => {
     e.preventDefault();
     const listAccessoryChecked = accessory.filter((item) => item.checked);
@@ -231,7 +237,7 @@ export default function ManagaAccessoryTransaction() {
       console.log(e);
     }
   };
-  console.log("accessory : ", accessory);
+
   const handleSearchAccessory = (e) => {
     setSearchAccessory(e.target.value);
     const searchValue = e.target.value;

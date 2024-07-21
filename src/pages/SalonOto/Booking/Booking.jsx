@@ -113,8 +113,6 @@ export default function Booking() {
       setErrorTime(false);
       const [hours, minutes] = selectedTime.split(":");
 
-      // Thiết lập giờ và phút cho ngày được chọn
-
       try {
         let res;
         if (car) {
