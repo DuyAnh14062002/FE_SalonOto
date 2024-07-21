@@ -12,6 +12,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { path } from "../../constants/path";
 import { loginUser } from "../../redux/slices/UserSlice";
 import { useDispatch } from "react-redux";
+import purchaseApi from "../../apis/purchase.api";
 
 const AccountProfile = (props) => {
   const [emailInvite, setEmailInvite] = useState("");
@@ -21,6 +22,7 @@ const AccountProfile = (props) => {
   const [profile1, setProfile1] = useState({});
   const [password, setPassword] = useState("");
   const [retypePassword, setRetypePassword] = useState("");
+  const [listKeyMap, setlistKeyMap] = useState([]);
   const [profile, setProfile] = useState({
     fullname: "",
     phone: "",
@@ -34,6 +36,30 @@ const AccountProfile = (props) => {
   const [image, setImage] = useState(null);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+
+  const removeDuplicate = (data) => {
+    return data.filter((value, index) => data.indexOf(value) === index);
+  };
+
+  const getListKeyMap = (purchasedPackage) => {
+    let list = [];
+    purchasedPackage.forEach((item) => {
+      item.features.forEach((i) => {
+        list.push(i.keyMap);
+      });
+    });
+    let listAfter = removeDuplicate(list);
+    setlistKeyMap(listAfter);
+  };
+  useEffect(() => {
+    const loading = async () => {
+      let res = await purchaseApi.getPurchase();
+      if (res?.data?.purchasedPackages) {
+        getListKeyMap(res.data.purchasedPackages);
+      }
+    };
+    loading();
+  }, []);
   useEffect(() => {
     const createPassword = location?.state?.createPassword;
     if (createPassword && createPassword === true) {
@@ -105,7 +131,7 @@ const AccountProfile = (props) => {
         toast.error("Bạn đã liên kết tài khoản google rồi");
       } else {
         window.open(
-          "https://server-graduation-thesis-1.onrender.com/auth/google",
+          "https://koxe.onrender.com/auth/google",
           "_self"
         );
       }
@@ -119,7 +145,7 @@ const AccountProfile = (props) => {
         toast.error("Bạn đã liên kết tài khoản facebook rồi");
       } else {
         window.open(
-          "https://server-graduation-thesis-1.onrender.com/auth/facebook",
+          "https://koxe.onrender.com/auth/facebook",
           "_self"
         );
       }

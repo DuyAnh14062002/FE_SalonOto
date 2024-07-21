@@ -191,13 +191,15 @@ export default function ManageBuyMaintenance() {
       res = await invoiceApi.createMaintenanceInvoice(
         invoiceMaintenance?.[0],
         listMaintenanceId,
-        listAccessoryId
+        listAccessoryId,
+        maintenanceItem.invoiceId
       );
     } else {
       res = await invoiceApi.createMaintenanceInvoice(
         maintenanceItem,
         listMaintenanceId,
-        listAccessoryId
+        listAccessoryId,
+        maintenanceItem.invoiceId
       );
     }
 
