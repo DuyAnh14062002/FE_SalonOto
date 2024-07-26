@@ -385,14 +385,12 @@ export default function HeaderSalon() {
                         style={{ width: "56px", height: "56px" }}
                         onClick={() => {
                           updateReadNotification(notification.id);
-                          console.log("id: ", notification.id )
-                          console.log("type: ", notification.types )
-                          // navigate("/adminSalon/managePayment", {
-                          //   state: {
-                          //     id : notification.id,
-                          //     type: notification.types
-                          //   },
-                          // });
+                          navigate("/adminSalon/managePayment", {
+                            state: {
+                              id : notification.data,
+                              type: notification.types
+                            },
+                          });
                         }}
                       />
                       <div style={{ marginLeft: "10px" }}>
@@ -401,7 +399,12 @@ export default function HeaderSalon() {
                           style={notification.read ? {} : { fontWeight: "500" }}
                           onClick={() => {
                             updateReadNotification(notification.id);
-                            navigate("/adminSalon/managePayment");
+                            navigate("/adminSalon/managePayment",  {
+                              state: {
+                                id : notification.data,
+                                type: notification.types
+                              },
+                            });
                           }}
                         >
                           {notification.description}

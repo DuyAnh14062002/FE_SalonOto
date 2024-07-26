@@ -493,6 +493,7 @@ export default function ManagaAccessoryTransaction() {
           </Modal.Header>
           <Modal.Body>
             <div className="container">
+            <div style={{margin: "15px 0"}}>Mã giao dịch: {invoiceChoose?.invoice_id}</div>
               <h2 className="text-center">Bảng phụ tùng sửa chữa</h2>
               <table className="table table-striped table-bordered">
                 <thead>

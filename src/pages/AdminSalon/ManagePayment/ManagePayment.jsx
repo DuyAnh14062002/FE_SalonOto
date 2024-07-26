@@ -22,19 +22,23 @@ export default function ManagePayment() {
   const [permissions, setPermission] = useState([]);
   const [showAdd, setShowAdd] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
-  const [showInfor, setShowInfor] = useState(true);
+  const [showInfor, setShowInfor] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [listPaymentRequest, setListPaymentRequest] = useState([]);
   const [paymentRequestItem, setPaymentRequestItem] = useState({});
   const [salon, setSalon] = useState({});
-  const [invoice, setInvoice] = useState({})
-
-  const location = useLocation()
+  const [invoice, setInvoice] = useState({});
+  const [idInvoiceFromNotify, setIdInvoiceFromNotify] = useState("");
+  const location = useLocation();
   let id = location?.state?.id;
   let type = location?.state?.type;
-
-  console.log("id : ", id)
-  console.log("type :", type)
+  useEffect(() => {
+    if (id) {
+      setIdInvoiceFromNotify(id);
+    }
+  }, [id]);
+  console.log("id : ", id);
+  console.log("type :", type);
 
   const handleSearch = (e) => {
     setSearch(e.target.value);
@@ -58,7 +62,7 @@ export default function ManagePayment() {
   };
   const loadingPaymentRequest = async (page, search) => {
     let res = await paymentRequestApi.getAllPaymentRequest(page, LIMIT, search);
-    console.log("res payment : ", res)
+    console.log("res payment : ", res);
     if (res?.data?.data.data) {
       setListPaymentRequest(res.data.data.data);
       setTotalPage(res.data.data.total_page);
@@ -73,12 +77,12 @@ export default function ManagePayment() {
   }, [page, search]);
 
   const handleShowInfo = () => {
-    setShowInfor(true)
-  }
+    setShowInfor(true);
+  };
   const handleCloseInfo = () => {
-    setInvoice({})
-    setShowInfor(false)
-  }
+    setInvoice({});
+    setShowInfor(false);
+  };
   const handleShowAdd = () => setShowAdd(true);
   const handleCloseAdd = () => {
     setShowAdd(false);
@@ -130,6 +134,7 @@ export default function ManagePayment() {
       if (res?.data?.status === "success") {
         toast.success("Xác nhận thanh toán thành công");
         loadingPaymentRequest(page, search);
+        setIdInvoiceFromNotify("");
       }
     } catch (error) {
       toast.error("Xác nhận thanh toán thất bại");
@@ -154,19 +159,40 @@ export default function ManagePayment() {
       console.log(error);
     }
   };
-  const handleLoadingDetailInvoicePayment = async (invoiceId) => {
-    handleShowInfo()
-    try{
-         let res = await invoiceApi.LookupInvoiceMaintenance(invoiceId)
-         console.log("res : ", res)
-         if(res?.data?.invoice){
-          setInvoice(res.data.invoice)
-         }
-    }catch(e){
-         console.log(e)
+  const handleLoadingDetailInvoicePayment = async (invoice) => {
+    handleShowInfo();
+    console.log("invoice show : ", invoice);
+    try {
+      if (invoice?.reason === "Thanh toán hóa đơn mua xe") {
+        let res = await invoiceApi.LookupInvoiceMaintenance(
+          invoice?.invoice_id
+        );
+        console.log("res buy car: ", res);
+        if (res?.data?.invoice) {
+          setInvoice(res.data.invoice);
+        }
+      } else if (invoice?.reason === "Thanh toán hóa đơn bảo dưỡng") {
+        let res = await invoiceApi.getDetailInvoiceMaintenance(
+          invoice?.invoice_id
+        );
+        console.log("res buy maintenance: ", res);
+        if (res?.data?.invoice) {
+          setInvoice(res.data.invoice);
+        }
+      } else {
+        let res = await invoiceApi.getDetailInvoiceAccessory(
+          invoice?.invoice_id
+        );
+        console.log("res buy accessory: ", res);
+        if (res?.data?.invoice) {
+          setInvoice(res.data.invoice);
+        }
+      }
+    } catch (e) {
+      console.log(e);
     }
-  }
-  console.log("invoice : ", invoice)
+  };
+  console.log("invoice : ", invoice);
   return (
     <>
       <div id="content" className="container-fluid">
@@ -230,7 +256,14 @@ export default function ManagePayment() {
               <tbody>
                 {listPaymentRequest && listPaymentRequest.length > 0 ? (
                   listPaymentRequest.map((item, index) => (
-                    <tr key={index} style={{ background: "rgb(247 247 247)" }}>
+                    <tr
+                      key={index}
+                      style={
+                        item.id === idInvoiceFromNotify
+                          ? { background: "#d3cfcf" }
+                          : { background: "rgb(247 247 247)" }
+                      }
+                    >
                       <td className="text-center">
                         {LIMIT * (page - 1) + (index + 1)}
                       </td>
@@ -256,7 +289,7 @@ export default function ManagePayment() {
                       <td className="text-center">
                         {formatDateDetailShortened(item.create_date)}
                       </td>
-                      <td className="text-center" style={{width: "15%"}}>
+                      <td className="text-center" style={{ width: "15%" }}>
                         {permissions?.includes("OWNER") && (
                           <>
                             <button
@@ -264,7 +297,9 @@ export default function ManagePayment() {
                               data-toggle="tooltip"
                               data-placement="top"
                               title="info"
-                              onClick={() => handleLoadingDetailInvoicePayment(item?.invoice_id)}
+                              onClick={() =>
+                                handleLoadingDetailInvoicePayment(item)
+                              }
                             >
                               <i className="fa-solid fa-circle-question"></i>
                             </button>
@@ -329,17 +364,102 @@ export default function ManagePayment() {
             <Modal.Title> Thông tin chi tiết hóa đơn thanh toán </Modal.Title>
           </Modal.Header>
           <Modal.Body>
-              <div className="container">
-                <div className="row">
-                  <div className="col-12 mt-3">Mã hóa đơn: {invoice?.[0]?.invoice_id}</div>
-                  <div className="col-12 mt-3">Tên khách hàng: {invoice?.[0]?.fullname}</div>
-                  <div className="col-12 mt-3">Tổng số tiền: {formatCurrency(invoice?.[0]?.expense)}</div>
-                  <div className="col-12 mt-3">Tên xe: {invoice?.[0]?.carName} </div>
-                  <div className="col-12 mt-3">Mã xe: Mazda 3</div>
-                  <div className="col-12 mt-3">Ngày mua: {formatDateDetailShortened(invoice?.[0]?.create_at)}</div>
-                  <div className="col-12 mt-3">Chi tiết tiền: note</div>
+            <div className="container">
+              <div className="row">
+                <div className="col-12 mt-3">
+                  Mã hóa đơn: {invoice?.[0]?.invoice_id || invoice?.invoice_id}
                 </div>
+                <div className="col-12 mt-3">
+                  Tên khách hàng: {invoice?.[0]?.fullname || invoice?.fullname}
+                </div>
+                <div className="col-12 mt-3">
+                  Tổng số tiền:{" "}
+                  {(invoice?.[0]?.expense
+                    ? formatCurrency(invoice?.[0]?.expense)
+                    : "") ||
+                    (invoice?.total ? formatCurrency(invoice?.total) : "")}
+                </div>
+                <div className="col-12 mt-3">
+                  Tên xe: {invoice?.[0]?.carName || invoice?.carName}{" "}
+                </div>
+                <div className="col-12 mt-3">
+                  Ngày mua:{" "}
+                  {(invoice?.[0]?.create_at
+                    ? formatDateDetailShortened(invoice?.[0]?.create_at)
+                    : "") || invoice?.invoiceDate}
+                </div>
+                {invoice?.[0]?.note ? (
+                  <div className="col-12 mt-3">
+                    Chi tiết tiền: {invoice?.[0]?.note}
+                  </div>
+                ) : (
+                  ""
+                )}
               </div>
+            </div>
+            <div className="container">
+              {invoice?.maintenanceServices?.length > 0 ? (
+                <>
+                  <h2 className="text-center mt-3">Bảng dịch vụ bảo dưỡng</h2>
+                  <table className="table table-striped table-bordered">
+                    <thead>
+                      <tr>
+                        <th scope="col">Tên dịch vụ bảo hành</th>
+                        <th scope="col">Giá (VND)</th>
+                        <th scope="col">Ngày bảo hành</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {invoice?.maintenanceServices?.length > 0
+                        ? invoice.maintenanceServices.map((item, index) => {
+                            console.log("item : ", item);
+                            return (
+                              <tr key={index}>
+                                <td>{item.name}</td>
+                                <td>{item.cost}</td>
+                                <td>{invoice?.invoiceDate}</td>
+                              </tr>
+                            );
+                          })
+                        : ""}
+                    </tbody>
+                  </table>
+                </>
+              ) : (
+                ""
+              )}
+              {invoice?.accessories?.length > 0 ? (
+                <>
+                  <h2 className="text-center mt-3">Bảng phụ tùng sửa chữa</h2>
+                  <table className="table table-striped table-bordered">
+                    <thead>
+                      <tr>
+                        <th scope="col">Tên dịch vụ bảo hành</th>
+                        <th scope="col">Số lượng</th>
+                        <th scope="col">Giá (VND)</th>
+                        <th scope="col">Ngày bảo hành</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {invoice?.accessories?.length > 0
+                        ? invoice.accessories.map((item, index) => {
+                            return (
+                              <tr key={index}>
+                                <td>{item.name}</td>
+                                <td>{item.quantity}</td>
+                                <td>{item.price}</td>
+                                <td>{invoice?.invoiceDate}</td>
+                              </tr>
+                            );
+                          })
+                        : ""}
+                    </tbody>
+                  </table>
+                </>
+              ) : (
+                ""
+              )}
+            </div>
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={handleCloseInfo}>

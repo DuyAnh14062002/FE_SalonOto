@@ -27,7 +27,6 @@ export default function Statistic() {
   const [satistics, setSatistics] = useState({});
   const [totalPage, setTotalPage] = useState(0);
   const [page, setPage] = useState(1);
-
   console.log("statistic", statistic);
   const handleChangeStatType = (event) => {
     setStatType(event.target.value);

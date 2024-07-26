@@ -640,6 +640,7 @@ export default function ManageBuyMaintenance() {
           </Modal.Header>
           <Modal.Body>
             <div className="container">
+              <div style={{margin: "15px 0"}}>Mã giao dịch: {invoiceChoose?.invoice_id}</div>
               <h2 className="text-center">Bảng dịch vụ bảo dưỡng</h2>
               <table className="table table-striped table-bordered">
                 <thead>

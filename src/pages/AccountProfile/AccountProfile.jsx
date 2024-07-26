@@ -506,56 +506,73 @@ const AccountProfile = (props) => {
                         </Button>
                       </div>
                       <div>
-                        
-                        <Button
-                          className="mt-3 btn-profile function-additional"
-                          type="button"
-                          onClick={handleShowTransactionDealer}
-                          style={{
-                            backgroundColor: "#b90d86",
-                            marginLeft: "10px",
-                            border: "none",
-                          }}
-                        >
-                          <i
-                            className="fa-solid fa-pen-to-square"
-                            style={{ marginRight: "5px" }}
-                          ></i>
-                          Các giao dịch Hoa tiêu
-                        </Button>
-                        <Button
-                          className="mt-3 btn-profile function-additional"
-                          type="button"
-                          onClick={handleShowPostSell}
-                          style={{
-                            backgroundColor: "#b90d86",
-                            marginLeft: "10px",
-                            border: "none",
-                          }}
-                        >
-                          <i
-                            className="fa-solid fa-pen-to-square"
-                            style={{ marginRight: "5px" }}
-                          ></i>
-                          Giới thiệu bán xe cho Salon
-                        </Button>
+                        {
+                          listKeyMap &&
+                          listKeyMap.length > 0 && listKeyMap.map((keyMap) =>{
+                             if(keyMap === "f15"){
+                              return(
+                                <Button
+                                className="mt-3 btn-profile function-additional"
+                                type="button"
+                                onClick={handleShowTransactionDealer}
+                                style={{
+                                  backgroundColor: "#b90d86",
+                                  marginLeft: "10px",
+                                  border: "none",
+                                }}
+                              >
+                                <i
+                                  className="fa-solid fa-pen-to-square"
+                                  style={{ marginRight: "5px" }}
+                                ></i>
+                                Các giao dịch Hoa tiêu
+                               </Button>
+                              )
+                             }
 
-                        <Button
-                          className="mt-3 btn-profile function-additional"
-                          type="button"
-                          onClick={handleShowSatisticDealer}
-                          style={{
-                            backgroundColor: "#b90d86",
-                            marginLeft: "10px",
-                            border: "none",
-                          }}
-                        >
-                          <i
-                            class="fa-solid fa-chart-simple"
-                            style={{ marginRight: "5px" }}
-                          ></i>
-                          Thống kê Hoa Tiêu
-                        </Button>
+                             if(keyMap === "f13"){
+                                return(
+                                  <Button
+                                  className="mt-3 btn-profile function-additional"
+                                  type="button"
+                                  onClick={handleShowPostSell}
+                                  style={{
+                                    backgroundColor: "#b90d86",
+                                    marginLeft: "10px",
+                                    border: "none",
+                                  }}
+                                >
+                                  <i
+                                    className="fa-solid fa-pen-to-square"
+                                    style={{ marginRight: "5px" }}
+                                  ></i>
+                                  Giới thiệu bán xe cho Salon
+                                </Button>
+                                )
+                             }
+
+                             if(keyMap === "f14"){
+                                return(
+                                <Button
+                                  className="mt-3 btn-profile function-additional"
+                                  type="button"
+                                  onClick={handleShowSatisticDealer}
+                                  style={{
+                                    backgroundColor: "#b90d86",
+                                    marginLeft: "10px",
+                                    border: "none",
+                                  }}
+                                >
+                                  <i
+                                    class="fa-solid fa-chart-simple"
+                                    style={{ marginRight: "5px" }}
+                                  ></i>
+                                  Thống kê Hoa Tiêu
+                                </Button>
+                                )
+                             }
+                          })
+                        }
                       </div>
                     </div>
                   </div>

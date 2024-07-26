@@ -532,9 +532,19 @@ export default function ManageBuyCar() {
       </Modal>
       <Modal show={showWarranty} onHide={handleCloseWarranty} backdrop="static">
         <Modal.Header closeButton>
-          <Modal.Title>Thông tin bảo hành cho xe</Modal.Title>
+          <Modal.Title>Thông tin thêm cho giao dịch</Modal.Title>
         </Modal.Header>
         <Modal.Body>
+        <Form.Group className="mt-4">
+            <Form.Label>Mã giao dịch</Form.Label>
+            <Form.Control
+              required
+              type="text"
+              name="limit_kilometer"
+              value={warranty?.invoice_id}
+              readOnly
+            />
+          </Form.Group>
           <Form.Group className="mt-4">
             <Form.Label>Biển số xe</Form.Label>
             <Form.Control
