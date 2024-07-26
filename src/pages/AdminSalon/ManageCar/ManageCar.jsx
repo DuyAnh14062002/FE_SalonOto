@@ -109,6 +109,7 @@ export default function ManageCar() {
       setTotalPage(res?.data?.total_page);
     }
   };
+  console.log("cars : ", cars);
 
   const fetchDataSalon = async () => {
     const res = await salonApi.getSalonInfor();
@@ -542,7 +543,7 @@ export default function ManageCar() {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="6" className="fst-italic">
+                    <td colSpan="8" className="fst-italic">
                       Không có dữ liệu nào
                     </td>
                   </tr>
@@ -579,7 +580,12 @@ export default function ManageCar() {
             <div className="container">
               <div className="row">
                 <div className="col-md-12 d-flex justify-content-center mt-3">
-                  <Image src={car.image} rounded width="300" height="auto" />
+                  <Image
+                    src={car?.image?.[0]}
+                    rounded
+                    width="300"
+                    height="auto"
+                  />
                 </div>
                 <div className="col-md-6">
                   <Form.Group className="mt-3">
@@ -750,6 +756,32 @@ export default function ManageCar() {
                     />
                   </Form.Group>
                 </div>
+                <div className="col-md-4">
+                  <Form.Group className="mt-3">
+                    <Form.Label>Ngày nhập xe</Form.Label>
+                    <Form.Control
+                      required
+                      type="text"
+                      value={car.date_in || ""}
+                      name="outColor"
+                      readOnly
+                    />
+                  </Form.Group>
+                </div>
+                {car.date_out && (
+                  <div className="col-md-4">
+                    <Form.Group className="mt-3">
+                      <Form.Label>Ngày bán xe</Form.Label>
+                      <Form.Control
+                        required
+                        type="text"
+                        value={car.date_out}
+                        name="outColor"
+                        readOnly
+                      />
+                    </Form.Group>
+                  </div>
+                )}
               </div>
             </div>
           </Modal.Body>

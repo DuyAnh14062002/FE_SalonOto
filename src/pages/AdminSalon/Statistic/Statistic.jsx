@@ -1,12 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { Bar, Pie } from "react-chartjs-2";
+import { Bar } from "react-chartjs-2";
 import { CategoryScale } from "chart.js";
 import Chart from "chart.js/auto";
 import salonApi from "../../../apis/salon.api";
-import { formatCurrency } from "../../../utils/common";
+import {
+  formatCurrency,
+  formatDateDetailShortened,
+} from "../../../utils/common";
 import dealerApi from "../../../apis/dealer.api";
-import Header from "../../../components/Header";
+import { PaginationControl } from "react-bootstrap-pagination-control";
 Chart.register(CategoryScale);
+
+const LIMIT = 5;
 export default function Statistic() {
   const startYear = 2023;
   const currentYear = new Date().getFullYear();
@@ -19,7 +24,11 @@ export default function Statistic() {
   const months = Array.from({ length: 12 }, (_, i) => i + 1);
   const quarters = [1, 2, 3, 4];
   const [selectedMonthOrQuarter, setSelectedMonthOrQuarter] = useState("1");
-  const [satistics,setSatistics] = useState({})
+  const [satistics, setSatistics] = useState({});
+  const [totalPage, setTotalPage] = useState(0);
+  const [page, setPage] = useState(1);
+
+  console.log("statistic", statistic);
   const handleChangeStatType = (event) => {
     setStatType(event.target.value);
   };
@@ -43,42 +52,51 @@ export default function Statistic() {
       });
       setStatistic(res.data);
     };
-    
-    const fetchTopBestSellingData = async () => {
+
+    fetchStatistic();
+  }, [selectedYear, salon.salon_id]);
+  useEffect(() => {
+    const fetchTopBestSellingData = async (page) => {
       let res;
       if (statType === "month") {
-        res = await salonApi.getTop({
-          year: `${selectedYear}`,
-          months: selectedMonthOrQuarter,
-          salonId: salon.salon_id,
-        });
+        res = await salonApi.getTop(
+          {
+            year: `${selectedYear}`,
+            months: selectedMonthOrQuarter,
+            salonId: salon.salon_id,
+          },
+          page,
+          LIMIT
+        );
       } else {
-        res = await salonApi.getTop({
-          year: `${selectedYear}`,
-          quater: selectedMonthOrQuarter,
-          salonId: salon.salon_id,
-        });
+        res = await salonApi.getTop(
+          {
+            year: `${selectedYear}`,
+            quater: selectedMonthOrQuarter,
+            salonId: salon.salon_id,
+          },
+          page,
+          LIMIT
+        );
       }
-
       setTopBestSelling(res.data);
+      setTotalPage(res.data.carDb.total_page);
     };
-    fetchStatistic();
-    fetchTopBestSellingData();
-  }, [selectedYear, selectedMonthOrQuarter, statType, salon.salon_id]);
+    fetchTopBestSellingData(page);
+  }, [selectedYear, selectedMonthOrQuarter, statType, salon.salon_id, page]);
   const loadingSatisyicDealer = async () => {
-    try{
-      let res = await dealerApi.statisticDealer()
-      console.log("statistic : ", res)
-      if(res?.data?.transaction){
-        setSatistics(res.data.transaction)
+    try {
+      let res = await dealerApi.statisticDealer();
+      if (res?.data?.transaction) {
+        setSatistics(res.data.transaction);
       }
-    }catch(e){
-      console.log(e)
+    } catch (e) {
+      console.log(e);
     }
-}
-useEffect(() => {
-    loadingSatisyicDealer()
-}, [])
+  };
+  useEffect(() => {
+    loadingSatisyicDealer();
+  }, []);
   const handleChangeYear = (e) => {
     setSelectedYear(e.target.value);
   };
@@ -168,7 +186,7 @@ useEffect(() => {
             },
           ],
   };
-  console.log("topBestSelling", topBestSelling);
+
   const topSellingCarData = {
     labels: topBestSelling?.buyCarTop?.slice(0, 10)?.map((car) => car.name),
     datasets: [
@@ -254,6 +272,7 @@ useEffect(() => {
   const handleChangeMonthOrQuarter = (event) => {
     setSelectedMonthOrQuarter(event.target.value);
   };
+  console.log("topBestSelling", topBestSelling);
   return (
     <div id="content" className="container-fluid">
       <div className="card">
@@ -277,7 +296,7 @@ useEffect(() => {
                 style={{
                   background: activeButton === "dealer" ? "#2a47cc" : "#4463ee",
                 }}
-               onClick={() => handleButtonClick("dealer")}
+                onClick={() => handleButtonClick("dealer")}
               >
                 Thống kê hoa tiêu
               </button>
@@ -553,6 +572,108 @@ useEffect(() => {
                       </div>
                       <div className="col-2"></div>
                     </div>
+                    <div className="row mt-4">
+                      <div className="col-1"></div>
+                      <div className="col-10">
+                        <h2 className="fs-4 mb-4 text-center text-secondary mt-4">
+                          Danh sách các xe đã bán trong{" "}
+                          {statType === "month" ? "tháng" : "quý"}{" "}
+                          {selectedMonthOrQuarter} năm {selectedYear}
+                        </h2>
+                        <div className="">
+                          <table className="table table-hover border">
+                            <thead>
+                              <tr>
+                                <th scope="col" className="text-center">
+                                  STT
+                                </th>
+                                <th scope="col" className="text-center">
+                                  Mã xe
+                                </th>
+                                <th scope="col" className="text-center">
+                                  Tên xe
+                                </th>
+
+                                <th scope="col" className="text-center">
+                                  Dòng xe
+                                </th>
+
+                                <th scope="col" className="text-center">
+                                  Giá
+                                </th>
+                                <th scope="col" className="text-center">
+                                  Năm sản xuất
+                                </th>
+                                <th scope="col" className="text-center">
+                                  Ngày bán
+                                </th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {topBestSelling?.carDb?.data?.length > 0 ? (
+                                topBestSelling?.carDb?.data?.map(
+                                  (car, index) => {
+                                    return (
+                                      <tr
+                                        key={index}
+                                        style={{
+                                          background: "rgb(247 247 247)",
+                                        }}
+                                      >
+                                        <td className="text-center">
+                                          {LIMIT * (page - 1) + (index + 1)}
+                                        </td>
+                                        <td className="text-center">
+                                          {car.car_id.slice(0, 6)}
+                                        </td>
+                                        <td className="text-center">
+                                          {car.name}
+                                        </td>
+                                        <td className="text-center">
+                                          {car.type}
+                                        </td>
+
+                                        <td className="text-center">
+                                          {formatCurrency(car.price)}
+                                        </td>
+                                        <td className="text-center">
+                                          {car.origin}
+                                        </td>
+                                        <td className="text-center">
+                                          {formatDateDetailShortened(
+                                            car.date_out
+                                          )}
+                                        </td>
+                                      </tr>
+                                    );
+                                  }
+                                )
+                              ) : (
+                                <tr>
+                                  <td colSpan="7" className="fst-italic">
+                                    Không có dữ liệu nào
+                                  </td>
+                                </tr>
+                              )}
+                            </tbody>
+                          </table>
+                          {topBestSelling?.carDb?.data?.length && (
+                            <div className="d-flex justify-content-center ">
+                              <PaginationControl
+                                page={page}
+                                total={totalPage * LIMIT || 0}
+                                limit={LIMIT}
+                                changePage={(page) => {
+                                  setPage(page);
+                                }}
+                                ellipsis={1}
+                              />
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                      <div className="col-1"></div>
+                    </div>
                   </div>
                   <div className="col-12">
                     <div className="row">
@@ -593,59 +714,74 @@ useEffect(() => {
               </>
             )}
             {activeButton === "dealer" && (
-               <div>
-               {/* <h2 style={{marginTop: "20px"}} className='text-center'>Thống Kê hoa tiêu</h2> */}
-               <div className='satistic-dealer-container'>
-                 <div className='satistic-dealer-item'>
-                    <div className='satistic-dealer-number'>
-                        {satistics?.totals?.totalNumOfCompletedTran ? satistics?.totals?.totalNumOfCompletedTran : 0}
+              <div>
+                {/* <h2 style={{marginTop: "20px"}} className='text-center'>Thống Kê hoa tiêu</h2> */}
+                <div className="satistic-dealer-container">
+                  <div className="satistic-dealer-item">
+                    <div className="satistic-dealer-number">
+                      {satistics?.totals?.totalNumOfCompletedTran
+                        ? satistics?.totals?.totalNumOfCompletedTran
+                        : 0}
                     </div>
-                    <div className='satistic-dealer-title'>Số giao dịch hoàn thành</div>
-                    
-                 </div>
-                 <div className='satistic-dealer-item'>
-                    <div className='satistic-dealer-comission'>{satistics?.totals?.totalAmount ? formatCurrency(satistics?.totals?.totalAmount) : formatCurrency(0)}</div>
-                    <div className='satistic-dealer-title'>Tổng số tiền đã chi cho Hoa tiêu</div>
-                 </div>
-               </div>
-               <h2 style={{marginTop: "35px"}} className='text-center'>Danh sách các Hoa tiêu đã giao dịch</h2>
-               <table className="table mt-4 table-hover">
-                       <thead>
-                         <tr>
-                           <th scope="col" className="text-center">
-                             STT
-                           </th>
-                           <th scope="col">Tên Salon</th>
-                           <th scope="col" className="text-center">
-                             Số điện thoại
-                           </th>
-                           <th scope="col" className="text-center">
-                             Số giao dịch hoàn thành
-                           </th>
-                           <th scope="col" className="text-center">
-                             Số tiền hoa hồng đã chi 
-                           </th>
-                         </tr>
-                       </thead>
-                       <tbody>
-                         {satistics?.data?.length > 0 ? satistics.data.map((item) => {
-                           return(
-                             <tr  style={{ background: "rgb(247 247 247)" }}>
-                             <td className="text-center">
-                               1
-                             </td>
-                             <td>{item?.user?.name}</td>
-                             <td className="text-center">{item?.user?.phone}</td>
-                             <td className="text-center">{item.numOfCompletedTran}</td>
-                             <td className="text-center">
-                               {item.amount ? formatCurrency(item.amount): ""}
-                             </td>
-                             </tr>
-                           )
-                         }): ""}
-                       </tbody>
-                     </table>
-             </div>
+                    <div className="satistic-dealer-title">
+                      Số giao dịch hoàn thành
+                    </div>
+                  </div>
+                  <div className="satistic-dealer-item">
+                    <div className="satistic-dealer-comission">
+                      {satistics?.totals?.totalAmount
+                        ? formatCurrency(satistics?.totals?.totalAmount)
+                        : formatCurrency(0)}
+                    </div>
+                    <div className="satistic-dealer-title">
+                      Tổng số tiền đã chi cho Hoa tiêu
+                    </div>
+                  </div>
+                </div>
+                <h2 style={{ marginTop: "35px" }} className="text-center">
+                  Danh sách các Hoa tiêu đã giao dịch
+                </h2>
+                <table className="table mt-4 table-hover">
+                  <thead>
+                    <tr>
+                      <th scope="col" className="text-center">
+                        STT
+                      </th>
+                      <th scope="col">Tên Salon</th>
+                      <th scope="col" className="text-center">
+                        Số điện thoại
+                      </th>
+                      <th scope="col" className="text-center">
+                        Số giao dịch hoàn thành
+                      </th>
+                      <th scope="col" className="text-center">
+                        Số tiền hoa hồng đã chi
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {satistics?.data?.length > 0
+                      ? satistics.data.map((item) => {
+                          return (
+                            <tr style={{ background: "rgb(247 247 247)" }}>
+                              <td className="text-center">1</td>
+                              <td>{item?.user?.name}</td>
+                              <td className="text-center">
+                                {item?.user?.phone}
+                              </td>
+                              <td className="text-center">
+                                {item.numOfCompletedTran}
+                              </td>
+                              <td className="text-center">
+                                {item.amount ? formatCurrency(item.amount) : ""}
+                              </td>
+                            </tr>
+                          );
+                        })
+                      : ""}
+                  </tbody>
+                </table>
+              </div>
             )}
           </div>
         </div>
