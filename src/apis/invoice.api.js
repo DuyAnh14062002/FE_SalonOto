@@ -21,6 +21,7 @@ const invoiceApi = {
       fullname: data.fullname,
       phone: data.phone,
       email: data.email,
+      note: data.note,
       licensePlate: data.licensePlate,
       expense: data.expense,
       processId,

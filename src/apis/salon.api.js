@@ -30,8 +30,11 @@ const salonApi = {
   getStatistic(body) {
     return http.post("/invoice/statistics", body);
   },
-  getTop(body) {
-    return http.post("/invoice/get-top", body);
+  getTop(body, page = 1, per_page = 5) {
+    return http.post(
+      `/invoice/get-top?page=${page}&&per_page=${per_page}`,
+      body
+    );
   },
   getAllEmployee(salonId) {
     return http.post("/salons/employees", {

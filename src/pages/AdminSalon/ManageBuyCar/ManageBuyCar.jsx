@@ -170,7 +170,7 @@ export default function ManageBuyCar() {
       selectedProcess,
       employeeId
     );
-    console.log("res invoice hahahhaa", res);
+
     if (res?.data?.status === "success") {
       toast.success("Thêm thông tin giao dịch thành công");
       handleCloseAdd();
@@ -269,7 +269,7 @@ export default function ManageBuyCar() {
                   <th scope="col" className="text-center">
                     STT
                   </th>
-                  <th scope="col" style={{ width: "12%" }}>
+                  <th scope="col" style={{ width: "18%" }}>
                     Tên khách hàng
                   </th>
                   <th scope="col">Số điện thoại</th>
@@ -361,7 +361,7 @@ export default function ManageBuyCar() {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="6" className="fst-italic">
+                    <td colSpan="8" className="fst-italic">
                       Không có dữ liệu nào
                     </td>
                   </tr>
@@ -457,6 +457,10 @@ export default function ManageBuyCar() {
                 name="expense"
                 onChange={onChange}
               />
+            </Form.Group>
+            <Form.Group className="mt-4">
+              <Form.Label>Chi tiết các khoản tiền</Form.Label>
+              <Form.Control as="textarea" name="note" onChange={onChange} />
             </Form.Group>
             <Form.Group className="mt-4">
               <Form.Label>Chọn loại quy trình</Form.Label>
@@ -565,10 +569,18 @@ export default function ManageBuyCar() {
             <Form.Label>Chính sách bảo hành</Form.Label>
             <Form.Control
               as="textarea"
-              //placeholder="Leave a comment here"
               style={{ minHeight: "150px" }}
               value={warranty?.policy}
               readOnly
+            />
+          </Form.Group>
+          <Form.Group className="mt-4">
+            <Form.Label>Chi tiết các khoản tiền</Form.Label>
+            <Form.Control
+              readOnly
+              as="textarea"
+              name="note"
+              value={warranty?.note}
             />
           </Form.Group>
         </Modal.Body>

@@ -1,8 +1,11 @@
 import http from "../utils/http";
 
 const adminApi = {
-  getStatistic(body) {
-    return http.post("/invoice/statistics-admin", body);
+  getStatistic(body, page, per_page) {
+    return http.post(
+      `/invoice/statistics-admin?page=${page}&&per_page=${per_page}`,
+      body
+    );
   },
   getAllSalon(page = 1, per_page = 1000, q = "") {
     return http.get(`/admin/salons?page=${page}&&per_page=${per_page}&&q=${q}`);
