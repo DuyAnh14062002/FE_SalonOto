@@ -163,31 +163,13 @@ export default function CarPostDetail() {
                   <div className="item-detail">
                     <div className="name-detail">Số chỗ</div>
                     <div className="text-detail">
-                      {post?.mfg != null ? post.mfg : "Đang cập nhật..."}
+                      {post?.seat !== "" ? post.seat : "Đang cập nhật..."}
                     </div>
                   </div>
                   <div className="item-detail">
-                    <div className="name-detail">Hãng</div>
+                    <div className="name-detail">Số kilomet đi được</div>
                     <div className="text-detail">
-                      {post?.mfg != null ? post.mfg : "Đang cập nhật..."}
-                    </div>
-                  </div>
-                  <div className="item-detail">
-                    <div className="name-detail">Hãng</div>
-                    <div className="text-detail">
-                      {post?.mfg != null ? post.mfg : "Đang cập nhật..."}
-                    </div>
-                  </div>
-                  <div className="item-detail">
-                    <div className="name-detail">Hãng</div>
-                    <div className="text-detail">
-                      {post?.mfg != null ? post.mfg : "Đang cập nhật..."}
-                    </div>
-                  </div>
-                  <div className="item-detail">
-                    <div className="name-detail">Hãng</div>
-                    <div className="text-detail">
-                      {post?.mfg != null ? post.mfg : "Đang cập nhật..."}
+                      {post?.kilometer !== "" ? post.kilometer : "Đang cập nhật..."}
                     </div>
                   </div>
                 </div>
@@ -195,13 +177,13 @@ export default function CarPostDetail() {
                   <div className="item-detail">
                     <div className="name-detail">Dòng xe</div>
                     <div className="text-detail">
-                      {post?.type != null ? post.type : "Đang cập nhật..."}
+                      {post?.type !== "" ? post.type : "Đang cập nhật..."}
                     </div>
                   </div>
                   <div className="item-detail">
                     <div className="name-detail">Phiên bản xe</div>
                     <div className="text-detail">
-                      {post?.version != null
+                      {post?.version !== ""
                         ? post.version
                         : "Đang cập nhật..."}
                     </div>
@@ -209,31 +191,13 @@ export default function CarPostDetail() {
                   <div className="item-detail">
                     <div className="name-detail">Xuất xứ</div>
                     <div className="text-detail">
-                      {post?.origin != null ? post.origin : "Đang cập nhật..."}
+                      {post?.origin !== "" ? post.origin : "Đang cập nhật..."}
                     </div>
                   </div>
                   <div className="item-detail">
-                    <div className="name-detail">Hãng</div>
+                    <div className="name-detail">Kiểu dáng</div>
                     <div className="text-detail">
-                      {post?.mfg != null ? post.mfg : "Đang cập nhật..."}
-                    </div>
-                  </div>
-                  <div className="item-detail">
-                    <div className="name-detail">Hãng</div>
-                    <div className="text-detail">
-                      {post?.mfg != null ? post.mfg : "Đang cập nhật..."}
-                    </div>
-                  </div>
-                  <div className="item-detail">
-                    <div className="name-detail">Hãng</div>
-                    <div className="text-detail">
-                      {post?.mfg != null ? post.mfg : "Đang cập nhật..."}
-                    </div>
-                  </div>
-                  <div className="item-detail">
-                    <div className="name-detail">Hãng</div>
-                    <div className="text-detail">
-                      {post?.mfg != null ? post.mfg : "Đang cập nhật..."}
+                      {post?.degign !== "" ? post.degign : "Đang cập nhật..."}
                     </div>
                   </div>
                 </div>
