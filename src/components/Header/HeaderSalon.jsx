@@ -385,7 +385,14 @@ export default function HeaderSalon() {
                         style={{ width: "56px", height: "56px" }}
                         onClick={() => {
                           updateReadNotification(notification.id);
-                          navigate("/adminSalon/managePayment");
+                          console.log("id: ", notification.id )
+                          console.log("type: ", notification.types )
+                          // navigate("/adminSalon/managePayment", {
+                          //   state: {
+                          //     id : notification.id,
+                          //     type: notification.types
+                          //   },
+                          // });
                         }}
                       />
                       <div style={{ marginLeft: "10px" }}>

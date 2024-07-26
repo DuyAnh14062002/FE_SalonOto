@@ -36,11 +36,12 @@ const AccountProfile = (props) => {
   const [image, setImage] = useState(null);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-
+  
   const removeDuplicate = (data) => {
     return data.filter((value, index) => data.indexOf(value) === index);
   };
-
+  
+  console.log("listKeyMap : ", listKeyMap)
   const getListKeyMap = (purchasedPackage) => {
     let list = [];
     purchasedPackage.forEach((item) => {

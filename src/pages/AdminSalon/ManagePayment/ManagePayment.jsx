@@ -4,6 +4,7 @@ import { PaginationControl } from "react-bootstrap-pagination-control";
 import paymentRequestApi from "../../../apis/paymentRequest.api";
 import userApi from "../../../apis/user.api";
 import { debounce } from "lodash";
+import { useLocation } from "react-router-dom";
 import {
   formatCurrency,
   formatDateDetail,
@@ -11,6 +12,7 @@ import {
 } from "../../../utils/common";
 import { toast } from "react-toastify";
 import salonApi from "../../../apis/salon.api";
+import invoiceApi from "../../../apis/invoice.api";
 
 const LIMIT = 5;
 export default function ManagePayment() {
@@ -20,11 +22,20 @@ export default function ManagePayment() {
   const [permissions, setPermission] = useState([]);
   const [showAdd, setShowAdd] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
+  const [showInfor, setShowInfor] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [listPaymentRequest, setListPaymentRequest] = useState([]);
   const [paymentRequestItem, setPaymentRequestItem] = useState({});
   const [salon, setSalon] = useState({});
-  console.log("listPaymentRequest", listPaymentRequest);
+  const [invoice, setInvoice] = useState({})
+
+  const location = useLocation()
+  let id = location?.state?.id;
+  let type = location?.state?.type;
+
+  console.log("id : ", id)
+  console.log("type :", type)
+
   const handleSearch = (e) => {
     setSearch(e.target.value);
     const searchValue = e.target.value;
@@ -47,6 +58,7 @@ export default function ManagePayment() {
   };
   const loadingPaymentRequest = async (page, search) => {
     let res = await paymentRequestApi.getAllPaymentRequest(page, LIMIT, search);
+    console.log("res payment : ", res)
     if (res?.data?.data.data) {
       setListPaymentRequest(res.data.data.data);
       setTotalPage(res.data.data.total_page);
@@ -60,6 +72,13 @@ export default function ManagePayment() {
     loadingPaymentRequest(page, search);
   }, [page, search]);
 
+  const handleShowInfo = () => {
+    setShowInfor(true)
+  }
+  const handleCloseInfo = () => {
+    setInvoice({})
+    setShowInfor(false)
+  }
   const handleShowAdd = () => setShowAdd(true);
   const handleCloseAdd = () => {
     setShowAdd(false);
@@ -135,6 +154,19 @@ export default function ManagePayment() {
       console.log(error);
     }
   };
+  const handleLoadingDetailInvoicePayment = async (invoiceId) => {
+    handleShowInfo()
+    try{
+         let res = await invoiceApi.LookupInvoiceMaintenance(invoiceId)
+         console.log("res : ", res)
+         if(res?.data?.invoice){
+          setInvoice(res.data.invoice)
+         }
+    }catch(e){
+         console.log(e)
+    }
+  }
+  console.log("invoice : ", invoice)
   return (
     <>
       <div id="content" className="container-fluid">
@@ -224,9 +256,18 @@ export default function ManagePayment() {
                       <td className="text-center">
                         {formatDateDetailShortened(item.create_date)}
                       </td>
-                      <td className="text-center">
+                      <td className="text-center" style={{width: "15%"}}>
                         {permissions?.includes("OWNER") && (
                           <>
+                            <button
+                              className="btn btn-warning btn-sm rounded-0 text-white"
+                              data-toggle="tooltip"
+                              data-placement="top"
+                              title="info"
+                              onClick={() => handleLoadingDetailInvoicePayment(item?.invoice_id)}
+                            >
+                              <i className="fa-solid fa-circle-question"></i>
+                            </button>
                             <button
                               to="/"
                               className="btn btn-success btn-sm rounded-0 text-white mx-2"
@@ -277,6 +318,36 @@ export default function ManagePayment() {
           </div>
         </div>
       </div>
+      <Modal
+        show={showInfor}
+        onHide={handleCloseInfo}
+        backdrop="static"
+        size="lg"
+      >
+        <Form>
+          <Modal.Header closeButton>
+            <Modal.Title> Thông tin chi tiết hóa đơn thanh toán </Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+              <div className="container">
+                <div className="row">
+                  <div className="col-12 mt-3">Mã hóa đơn: {invoice?.[0]?.invoice_id}</div>
+                  <div className="col-12 mt-3">Tên khách hàng: {invoice?.[0]?.fullname}</div>
+                  <div className="col-12 mt-3">Tổng số tiền: {formatCurrency(invoice?.[0]?.expense)}</div>
+                  <div className="col-12 mt-3">Tên xe: {invoice?.[0]?.carName} </div>
+                  <div className="col-12 mt-3">Mã xe: Mazda 3</div>
+                  <div className="col-12 mt-3">Ngày mua: {formatDateDetailShortened(invoice?.[0]?.create_at)}</div>
+                  <div className="col-12 mt-3">Chi tiết tiền: note</div>
+                </div>
+              </div>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleCloseInfo}>
+              Đóng
+            </Button>
+          </Modal.Footer>
+        </Form>
+      </Modal>
       <Modal show={showAdd} onHide={handleCloseAdd} backdrop="static">
         <Form onSubmit={handleAddPaymentRequest}>
           <Modal.Header closeButton>
